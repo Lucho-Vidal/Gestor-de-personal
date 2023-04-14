@@ -3,7 +3,8 @@ const { createApp } = Vue
 createApp({
     data() {
         return {
-            mensaje: 'Hola desde ',
+            today : new Date(),
+            mensaje: 'Hola desde VUE',
         }
     },
     created(){
