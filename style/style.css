@@ -8,3 +8,14 @@ body {
     background: #ddd;
     font-family: 'Open Sans', sans-serif;
 }
+
+header > nav{
+    border-bottom-right-radius: 0.3rem;
+}
+footer{
+    background: #000;
+    border-top-left-radius: 0.3rem;
+    color: #555;
+    font-size: small;
+    padding-top: 1rem;
+}
