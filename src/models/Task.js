@@ -1,6 +1,6 @@
 import {schema,model} from 'mongoose'
 
-const task = new Schema({
+const task = new schema({
 
 })
 

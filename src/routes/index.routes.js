@@ -1,8 +1,14 @@
-import { Router } from "express";
-const router = Router();
+/* import express from 'express'
 
-router.get("/", (req, res) => {
-    
-});
+const app = express()
+/* import { Router } from "express";
+const router = Router(); */
+
+/* router.get("/", (req, res) => {
+    //res.send('hi')
+    res.render('../../public')
+}); 
+app.use(express.static(__dirname + '/trenesArgentinos/public'))
 
 export default router;
+ */

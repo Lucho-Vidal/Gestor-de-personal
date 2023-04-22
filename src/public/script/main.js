@@ -1,4 +1,5 @@
-const { createApp } = Vue
+const socket = io();
+
 
 createApp({
     data() {
