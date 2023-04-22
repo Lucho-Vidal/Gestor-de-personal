@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "trenesargentinos",
   "version": "0.0.1",
   "description": "",
@@ -22,5 +23,30 @@
     "mongoose": "^7.0.4",
     "morgan": "^1.10.0",
     "socket.io": "^4.6.1"
+=======
+  "name": "gestor-personal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "@vue/eslint-config-typescript": "^9.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "typescript": "~4.5.5"
+>>>>>>> 9294b913e5c444acbabdf9e835faae672ba91399
   }
 }
