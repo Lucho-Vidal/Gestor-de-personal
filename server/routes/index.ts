@@ -1,14 +1,14 @@
 import { Router } from "express";
-import Task from "../models/task";
+import Indice from "../models/indice"
 
 const router = Router();
 
-router.get("/tasks", async (req, res) => {
-    const tasks = await Task.find();
+router.get("/indices", async (req, res) => {
+    const tasks = await Indice.find();
     res.json(tasks);
 });
 
-router.post("/tasks", async (req, res) => {
+/* router.post("/tasks", async (req, res) => {
     const { title, description } = req.body;
     const newTask = new Task({ title, description });
     const savedTask = await newTask.save();
@@ -31,5 +31,5 @@ router.delete("/tasks/:id", async (req, res) => {
     const tasks = await Task.findByIdAndDelete(req.params.id);
     res.json(tasks);
 });
-
+ */
 export default router;
