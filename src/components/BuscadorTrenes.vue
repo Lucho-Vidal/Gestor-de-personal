@@ -5,9 +5,17 @@
             <h1 class="d-flex justify-content-center m-3">
                 Buscador de trenes
             </h1>
-            <p class="d-flex justify-content-end m-2">Fecha: {{ today.toLocaleDateString() }}</p>
+            <p class="d-flex justify-content-end m-2">
+                Fecha: {{ today.toLocaleDateString() }}
+            </p>
             <div class="">
-                <input type="text" placeholder="Tren" v-model="tren"/>
+                <input
+                    type="text"
+                    placeholder="Buscar Tren"
+                    autofocus
+                    v-model="tren"
+                    v-on:change="buscar()"
+                />
                 <p>Tren: {{ tren }}</p>
             </div>
             <table class="table table-striped table-hover">
@@ -71,16 +79,47 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
+import { getIndice } from '../services/indicesService';
+import { Indice } from '../interfaces/Indice';
+
 
 export default defineComponent({
+
     data() {
         return {
-            tren: "",
+            tren: "" as string,
+            indice: [] as Indice[],
             today: new Date(),
         };
     },
-    methods: {},
-    computed: {},
+    methods: {
+        async loadIndices(){
+            const res = await getIndice()
+            this.indice = res.data
+            console.log(this.indice);
+            
+        },
+        buscar(){
+            console.log(this.tren);
+            
+            
+        }
+        /* ,
+        filtroTrenes(){
+        return this.indice.filter((trenInd:Indice)=>{
+            trenInd.toLowerCase().includes(this.tren.value.toLowerCase()) 
+    } )*/
+    },
+    mounted() {
+        this.loadIndices()
+
+
+
+
+    },
+    computed: {
+
+    },
     components: {
         NavBar,
     },
