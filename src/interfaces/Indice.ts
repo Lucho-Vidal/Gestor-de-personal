@@ -1,7 +1,5 @@
 export interface Indice {
     id: null;
-    ordenado: number;
-    vuelta: number;
     tren: number;
     refer: string;
     turno: string;
@@ -9,4 +7,7 @@ export interface Indice {
     sale: string;
     destino: string;
     llega: string;
+    observaciones: string;
+    itinerario: string;
+    vuelta: number;
 }

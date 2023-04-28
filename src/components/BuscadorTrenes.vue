@@ -14,7 +14,7 @@
                     placeholder="Buscar Tren"
                     autofocus
                     v-model="tren"
-                    v-on:change="buscar()"
+                    v-on:change="filtroTrenes()"
                 />
                 <p>Tren: {{ tren }}</p>
             </div>
@@ -54,21 +54,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="w-10">Titular</td>
-                        <td class="w-10">519</td>
-                        <td class="w-10">R/O 504.1</td>
+                    <tr v-for="(ind, index) in indFiltrado" :key="index">
+                        <td class="w-10">{{ ind.refer }}</td>
+                        <td class="w-10">{{ ind.turno }}</td>
+                        <td class="w-10">{{ ind.llega }}</td>
                         <td colspan="2" class="w-10">Humana Daniel</td>
                         <td class="w-10">8:40</td>
                         <td class="w-10">14:40</td>
-                    </tr>
-                    <tr>
-                        <td class="w-10">Titular</td>
-                        <td class="w-10">750</td>
-                        <td class="w-10"></td>
-                        <td colspan="2" class="w-10">Correa Pedro</td>
-                        <td class="w-10">9:00</td>
-                        <td class="w-10">15:00</td>
                     </tr>
                 </tbody>
             </table>
@@ -79,47 +71,34 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
-import { getIndice } from '../services/indicesService';
-import { Indice } from '../interfaces/Indice';
-
+import { getIndice } from "../services/indicesService";
+import { Indice } from "../interfaces/Indice";
 
 export default defineComponent({
-
     data() {
         return {
             tren: "" as string,
             indice: [] as Indice[],
+            indFiltrado: [] as Indice[],
             today: new Date(),
         };
     },
     methods: {
-        async loadIndices(){
-            const res = await getIndice()
-            this.indice = res.data
-            console.log(this.indice);
-            
+        async loadIndices() {
+            const res = await getIndice();
+            this.indice = res.data;
         },
-        buscar(){
-            console.log(this.tren);
-            
-            
-        }
-        /* ,
-        filtroTrenes(){
-        return this.indice.filter((trenInd:Indice)=>{
-            trenInd.toLowerCase().includes(this.tren.value.toLowerCase()) 
-    } )*/
+        filtroTrenes() {
+            this.indFiltrado = this.indice.filter((ind:Indice) => {
+                    return ind.tren == parseInt(this.tren);
+                });
+            console.log('DEBUG',this.indFiltrado);
+        },
     },
     mounted() {
-        this.loadIndices()
-
-
-
-
+        this.loadIndices();
     },
-    computed: {
-
-    },
+    computed: {},
     components: {
         NavBar,
     },
