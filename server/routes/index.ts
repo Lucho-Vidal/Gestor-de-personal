@@ -1,10 +1,16 @@
 import { Router } from "express";
-import Indice from "../models/indice"
+import Indice from "../models/indice";
+import Itinerario from "../models/itinerario";
 
 const router = Router();
 
 router.get("/indices", async (req, res) => {
     const tasks = await Indice.find();
+    res.json(tasks);
+});
+
+router.get("/itinerarioH", async (req, res) => {
+    const tasks = await Itinerario.find();
     res.json(tasks);
 });
 
