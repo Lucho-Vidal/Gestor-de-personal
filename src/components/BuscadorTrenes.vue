@@ -20,31 +20,31 @@
             </div>
             <table class="table table-striped table-hover">
                 <thead>
-                    <tr>
-                        <th colspan="1">PC</th>
-                        <th colspan="1">ALL</th>
-                        <th colspan="1">RE</th>
-                        <th colspan="1">TY</th>
-                        <th colspan="1">LLV</th>
-                        <th colspan="1">MG</th>
-                        <th colspan="1">ZZ</th>
+                    <tr v-for="(ind, index) in itFiltrado" :key="index">
+                        <th
+                            v-for="i in ind.estaciones.length"
+                            :key="i"
+                            colspan="1"
+                        >
+                            {{ ind.estaciones[i - 1] }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="w-10">4:23</td>
-                        <td class="w-10">4:31</td>
-                        <td class="w-10">4:40</td>
-                        <td class="w-10">4:52</td>
-                        <td class="w-10">4:59</td>
-                        <td class="w-10">5:06</td>
-                        <td class="w-10">5:15</td>
+                    <tr v-for="(ind, index) in itFiltrado" :key="index">
+                        <td
+                            v-for="i in ind.horarios.length"
+                            :key="i"
+                            class="w-10"
+                        >
+                            {{ ind.horarios[i - 1] }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <table class="table table-striped table-hover">
                 <thead>
-                    <tr>
+                    <tr v-if="indFiltrado.length != 0 ">
                         <th colspan="1">Ref</th>
                         <th colspan="1">Turno</th>
                         <th colspan="1">Observación</th>
@@ -84,6 +84,7 @@ export default defineComponent({
             tren: "" as string,
             indice: [] as Indice[],
             indFiltrado: [] as Indice[],
+            turnos: [],
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
             today: new Date(),
@@ -106,12 +107,12 @@ export default defineComponent({
         filtroTrenes() {
             this.indFiltrado = this.indice.filter((ind: Indice) => {
                 return ind.tren == parseInt(this.tren);
-                //https://dev.to/duxtech/5-maneras-de-iterar-un-objeto-en-javascript-jkn
-                //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/delete
             });
         },
         filtroItinerario() {
-            console.log("DEBUG2", this.itinerario);
+            this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
+                return horarios.tren == parseInt(this.tren);
+            });
         },
     },
     mounted() {
