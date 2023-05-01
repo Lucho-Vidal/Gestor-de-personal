@@ -1,8 +1,10 @@
 
 export interface Itinerario {
     id: null;
-    TREN: number;
-    PC: string;
+    tren: number;
+    estaciones: [];
+    horarios: [];
+    /* PC: string;
     ALL: string;
     RE: string;
     TY: string;
@@ -20,5 +22,5 @@ export interface Itinerario {
     HD: string;
     VE: string;
     OA: string;
-    LP: string;
+    LP: string; */
 }

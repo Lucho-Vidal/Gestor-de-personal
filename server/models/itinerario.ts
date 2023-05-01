@@ -6,7 +6,9 @@ const itinerarioSchema = new Schema({
         required: true,
         trim: true,
     },
-    PC:{
+    estaciones:[],
+    horarios:[],
+    /* PC:{
         type: String,
         required: true,
         trim: true,
@@ -100,7 +102,7 @@ const itinerarioSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-    }
+    } */
 },
     {
         versionKey: false,
