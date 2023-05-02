@@ -54,19 +54,20 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ind, index) in indFiltrado" :key="index">
-                        <td class="w-10">{{ ind.refer }}</td>
+                        <td class="w-10">{{ ind.diagrama.refer }}</td>
                         <td class="w-10">{{ ind.turno }}</td>
-                        <td class="w-10">{{ ind.observaciones }}</td>
-                        <td colspan="2" class="w-10">Humana Daniel</td>
-                        <td class="w-10">8:40</td>
-                        <td class="w-10">14:40</td>
+                        <td class="w-10">{{ ind.diagrama.observaciones }}</td>
+                        <td colspan="2" class="w-10">{{ ind.personal }}</td>
+                        <td class="w-10">{{ ind.toma }}</td>
+                        <td class="w-10">{{ ind.deja }}</td>
                     </tr>
                 </tbody>
             </table>
             <table v-for="(turno, index) in turnos" :key="index" class="table table-striped table-hover">
                 <thead>
+                    <h4 colspan="8" >{{ turno[0].turno }}</h4>
                     <tr >
-                        <th colspan="1">ID</th>
+                        <th colspan="1">ID </th>
                         <th colspan="1">Ref</th>
                         <th colspan="1">Tren</th>
                         <th colspan="1">Origen</th>
@@ -78,14 +79,14 @@
                 </thead>
                 <tbody>
                     <tr v-for="(vuelta, index) in turno" :key="index">
-                        <td class="w-10">{{ vuelta.vuelta }}</td>
-                        <td class="w-40">{{ vuelta.refer }}</td>
-                        <td class="w-10">{{ vuelta.tren }}</td>
-                        <td class="w-10">{{ vuelta.origen }}</td>
-                        <td class="w-10">{{ vuelta.sale }}</td>
-                        <td class="w-10">{{ vuelta.destino }}</td>
-                        <td class="w-10">{{ vuelta.llega }}</td>
-                        <td class="w-20">{{ vuelta.observaciones }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.vuelta }}</td>
+                        <td class="w-40">{{ vuelta.diagrama.refer }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.tren }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.origen }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.sale }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.destino }}</td>
+                        <td class="w-10">{{ vuelta.diagrama.llega }}</td>
+                        <td class="w-20">{{ vuelta.diagrama.observaciones }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -113,7 +114,6 @@ export default defineComponent({
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
             today: new Date(),
-            lstTurnos: [] as Array<string[]>,
         };
     },
     methods: {
@@ -131,8 +131,10 @@ export default defineComponent({
         },
         filtroTrenes() {
             this.indFiltrado = this.indice.filter((ind: Indice) => {
-                return ind.tren == parseInt(this.tren);
+                return ind.diagrama.tren == parseInt(this.tren);
             });
+            console.log(this.indFiltrado);
+            
         },
         filtroItinerario() {
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
@@ -163,6 +165,16 @@ export default defineComponent({
 });
 </script>
 <style>
+table h4{
+    background: #000;
+    color: #FFF;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    border-radius: 1rem;
+}
+
 /* main {
     height: 86.7vh;
 } */
