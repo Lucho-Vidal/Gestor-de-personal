@@ -214,5 +214,5 @@ export class Guarda extends Personal{
         )
     }
 }
-export const guar = new Conductor(555,'Vidal','Luciano','6',"Domingo","desarrollado","PCT","",1)
+
 
