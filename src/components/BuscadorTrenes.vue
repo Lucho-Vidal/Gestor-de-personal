@@ -65,7 +65,7 @@
             </table>
             <table v-for="(turno, index) in turnos" :key="index" class="table table-striped table-hover">
                 <thead>
-                    <h4 colspan="8" >{{ turno[0].turno }}</h4>
+                    <h4>{{ turno[0].turno}} - {{ turno[0].personal }}</h4>
                     <tr >
                         <th colspan="1">ID </th>
                         <th colspan="1">Ref</th>
