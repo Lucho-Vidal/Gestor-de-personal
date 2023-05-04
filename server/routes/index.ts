@@ -1,6 +1,8 @@
 import { Router } from "express";
 import Indice from "../models/indice";
 import Itinerario from "../models/itinerario";
+import Conductores from "../models/IPersonalCtor";
+import Guardas from "../models/IPersonalGda";
 
 const router = Router();
 
@@ -14,13 +16,13 @@ router.get("/itinerario", async (req, res) => {
     res.json(tasks);
 });
 
-router.get("/itinerarioH", async (req, res) => {
-    const tasks = await Itinerario.find();
+router.get("/Personal/Ctor", async (req, res) => {
+    const tasks = await Conductores.find();
     res.json(tasks);
 });
 
-router.get("/itinerarioH", async (req, res) => {
-    const tasks = await Itinerario.find();
+router.get("/Personal/Gda", async (req, res) => {
+    const tasks = await Guardas.find();
     res.json(tasks);
 });
 

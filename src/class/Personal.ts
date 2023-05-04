@@ -1,4 +1,5 @@
 class Personal {
+    
     protected legajo: number;
     protected apellido: string;
     protected nombre: string;
@@ -10,6 +11,7 @@ class Personal {
     protected orden: number;
 
     constructor(
+        
         legajo: number,
         apellido: string,
         nombre: string,
@@ -20,6 +22,7 @@ class Personal {
         observaciones: string,
         orden: number
     ) {
+        
         this.legajo = legajo;
         this.apellido = apellido;
         this.nombre = nombre;
