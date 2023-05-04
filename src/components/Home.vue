@@ -2,7 +2,9 @@
     <div>
         <NavBar/>
         <div class="container">
-            <h1>Home</h1>
+            <h1 class="d-flex justify-content-center m-3">
+                Home
+            </h1>
         <p>
             Esta es una aplicación desarrollada por personal de control trenes linea Roca, para control trenes linea Roca.
             Su usu esta sujeto a aprobación de los mismos.
