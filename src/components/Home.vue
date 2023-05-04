@@ -1,7 +1,13 @@
 <template>
     <div>
         <NavBar/>
-        <h1>Home</h1>
+        <div class="container">
+            <h1>Home</h1>
+        <p>
+            Esta es una aplicación desarrollada por personal de control trenes linea Roca, para control trenes linea Roca.
+            Su usu esta sujeto a aprobación de los mismos.
+        </p>
+        </div>
         <FooterPage/>
     </div>
 </template>
