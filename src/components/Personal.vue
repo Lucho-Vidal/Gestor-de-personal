@@ -1,16 +1,10 @@
 <template>
     <div>
-        <NavBar/>
+        <NavBar />
         <div class="container">
-            <h1 class="d-flex justify-content-center m-3">
-                Home
-            </h1>
-        <p>
-            Esta es una aplicación desarrollada por personal de control trenes linea Roca, para control trenes linea Roca.
-            Su usu esta sujeto a aprobación de los mismos.
-        </p>
+            <h1 class="d-flex justify-content-center m-3">Personal</h1>
         </div>
-        <FooterPage/>
+        <FooterPage />
     </div>
 </template>
 
@@ -23,12 +17,15 @@ export default defineComponent({
     name: "App",
     components: {
         NavBar,
-        FooterPage
+        FooterPage,
     },
 });
 </script>
 <style>
-    main {
-    height: 86.7vh;
-    }
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* ajustar el valor según sea necesario */
+}
 </style>

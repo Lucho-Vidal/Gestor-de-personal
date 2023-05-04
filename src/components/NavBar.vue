@@ -41,3 +41,15 @@
         </div>
     </nav>
 </template>
+<style>
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+</style>

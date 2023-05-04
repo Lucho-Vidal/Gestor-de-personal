@@ -63,11 +63,15 @@
                     </tr>
                 </tbody>
             </table>
-            <table v-for="(turno, index) in turnos" :key="index" class="table table-striped table-hover">
+            <table
+                v-for="(turno, index) in turnos"
+                :key="index"
+                class="table table-striped table-hover"
+            >
                 <thead>
-                    <h4>{{ turno[0].turno}} - {{ turno[0].personal }}</h4>
-                    <tr >
-                        <th colspan="1">ID </th>
+                    <h4>{{ turno[0].turno }} - {{ turno[0].personal }}</h4>
+                    <tr>
+                        <th colspan="1">ID</th>
                         <th colspan="1">Ref</th>
                         <th colspan="1">Tren</th>
                         <th colspan="1">Origen</th>
@@ -86,7 +90,9 @@
                         <td class="w-10">{{ vuelta.diagrama.sale }}</td>
                         <td class="w-10">{{ vuelta.diagrama.destino }}</td>
                         <td class="w-10">{{ vuelta.diagrama.llega }}</td>
-                        <td class="w-20">{{ vuelta.diagrama.observaciones }}</td>
+                        <td class="w-20">
+                            {{ vuelta.diagrama.observaciones }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -134,7 +140,6 @@ export default defineComponent({
                 return ind.diagrama.tren == parseInt(this.tren);
             });
             console.log(this.indFiltrado);
-            
         },
         filtroItinerario() {
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
@@ -143,14 +148,14 @@ export default defineComponent({
             this.filtroTurno();
         },
         filtroTurno() {
-            this.turnos = []
+            this.turnos = [];
             this.indFiltrado.forEach((turno: Indice) => {
                 this.turnos.push(
                     this.indice.filter((ind: Indice) => {
                         return ind.turno == turno.turno;
                     })
-                );                
-            });            
+                );
+            });
         },
     },
     mounted() {
@@ -165,9 +170,9 @@ export default defineComponent({
 });
 </script>
 <style>
-table h4{
+table h4 {
     background: #000;
-    color: #FFF;
+    color: #fff;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
@@ -175,7 +180,4 @@ table h4{
     border-radius: 1rem;
 }
 
-/* main {
-    height: 86.7vh;
-} */
 </style>
