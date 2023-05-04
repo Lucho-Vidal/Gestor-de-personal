@@ -7,7 +7,7 @@
             </h1>
         <p>
             Esta es una aplicación desarrollada por personal de control trenes linea Roca, para control trenes linea Roca.
-            Su uso esta sujeto a aprobación de los mismos.
+            Su usu esta sujeto a aprobación de los mismos.
         </p>
         </div>
         <FooterPage/>
@@ -27,3 +27,8 @@ export default defineComponent({
     },
 });
 </script>
+<style>
+    main {
+    height: 86.7vh;
+    }
+</style>

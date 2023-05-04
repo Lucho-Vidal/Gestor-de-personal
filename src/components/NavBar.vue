@@ -27,14 +27,13 @@
                             <a class="nav-link" href="/buscador">Buscador</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./pages/planillon.html"
-                                >Planillón diario</a
-                            >
+                            <a class="nav-link" href="/personal">Personal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./pages/ciclo.html"
-                                >Ciclo</a
-                            >
+                            <a class="nav-link" href="#">Planillón diario</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Ciclo</a>
                         </li>
                     </ul>
                 </div>
