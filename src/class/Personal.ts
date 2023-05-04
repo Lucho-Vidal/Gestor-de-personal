@@ -1,4 +1,3 @@
-
 class Personal {
     protected legajo: number;
     protected apellido: string;
@@ -9,7 +8,7 @@ class Personal {
     protected dotacion: string;
     protected observaciones: string;
     protected orden: number;
-    
+
     constructor(
         legajo: number,
         apellido: string,
@@ -105,17 +104,19 @@ class Personal {
     }
 }
 
-export class Conductor extends Personal{
+export class Conductor extends Personal {
+    private conocimiento : conocimientos = {
+        CML:false,
+        CKD: false,
+        RO: false,
+        MPN: false,
+        OL: false,
+        LCI: false,
+        ELEC: false,
+    };
     
-    private CML: boolean;
-    private CKD: boolean;
-    private RO: boolean;
-    private MPN: boolean;
-    private OL: boolean;
-    private LCI: boolean;
-    private ELEC: boolean;
-    
-    constructor(legajo: number,
+    constructor(
+        legajo: number,
         apellido: string,
         nombre: string,
         turno: string,
@@ -124,81 +125,38 @@ export class Conductor extends Personal{
         dotacion: string,
         observaciones: string,
         orden: number,
-
-        ){
+    ) {
         super(
-            legajo,apellido,nombre,turno,franco,especialidad,dotacion,observaciones,orden
-        )
-        this.CML = false;
-        this.CKD = false;
-        this.RO = false;
-        this.MPN = false;
-        this.OL = false;
-        this.LCI = false;
-        this.ELEC = false;
+            legajo,
+            apellido,
+            nombre,
+            turno,
+            franco,
+            especialidad,
+            dotacion,
+            observaciones,
+            orden);
+        this.conocimiento.CML = false;
+        this.conocimiento.CKD = false;
+        this.conocimiento.RO = false;
+        this.conocimiento.MPN = false;
+        this.conocimiento.OL = false;
+        this.conocimiento.LCI = false;
+        this.conocimiento.ELEC = false;
     }
-    
-
-    public isCML(): boolean {
-        return this.CML;
-    }
-
-    public setCML(CML: boolean): void {
-        this.CML = CML;
-    }
-
-    public isCKD(): boolean {
-        return this.CKD;
-    }
-
-    public setCKD(CKD: boolean): void {
-        this.CKD = CKD;
-    }
-
-    public isRO(): boolean {
-        return this.RO;
-    }
-
-    public setRO(RO: boolean): void {
-        this.RO = RO;
-    }
-
-    public isMPN(): boolean {
-        return this.MPN;
-    }
-
-    public setMPN(MPN: boolean): void {
-        this.MPN = MPN;
-    }
-
-    public isOL(): boolean {
-        return this.OL;
-    }
-
-    public setOL(OL: boolean): void {
-        this.OL = OL;
-    }
-
-    public isLCI(): boolean {
-        return this.LCI;
-    }
-
-    public setLCI(LCI: boolean): void {
-        this.LCI = LCI;
-    }
-
-    public isELEC(): boolean {
-        return this.ELEC;
-    }
-
-    public setELEC(ELEC: boolean): void {
-        this.ELEC = ELEC;
-    }   
 }
-export class Guarda extends Personal{
-    
-    
-    constructor(legajo: number,
+type conocimientos = {
+    CML: boolean;
+    CKD: boolean;
+    RO: boolean;
+    MPN: boolean;
+    OL: boolean;
+    LCI: boolean;
+    ELEC: boolean;
+};
+export class Guarda extends Personal {
+    constructor(
+        legajo: number,
         apellido: string,
         nombre: string,
         turno: string,
@@ -206,13 +164,18 @@ export class Guarda extends Personal{
         especialidad: string,
         dotacion: string,
         observaciones: string,
-        orden: number,
-
-        ){
+        orden: number
+    ) {
         super(
-            legajo,apellido,nombre,turno,franco,especialidad,dotacion,observaciones,orden
-        )
+            legajo,
+            apellido,
+            nombre,
+            turno,
+            franco,
+            especialidad,
+            dotacion,
+            observaciones,
+            orden
+        );
     }
 }
-
-
