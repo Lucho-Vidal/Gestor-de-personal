@@ -9,6 +9,16 @@ router.get("/indices", async (req, res) => {
     res.json(tasks);
 });
 
+router.get("/itinerario", async (req, res) => {
+    const tasks = await Itinerario.find();
+    res.json(tasks);
+});
+
+router.get("/itinerarioH", async (req, res) => {
+    const tasks = await Itinerario.find();
+    res.json(tasks);
+});
+
 router.get("/itinerarioH", async (req, res) => {
     const tasks = await Itinerario.find();
     res.json(tasks);
