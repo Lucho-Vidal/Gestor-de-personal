@@ -6,7 +6,7 @@
                 Buscador de trenes
             </h1>
             <p class="d-flex justify-content-end m-2">
-                Fecha: {{ today.toLocaleDateString() }}
+                Fecha: {{ days[today.getDay()] }} {{ today.toLocaleDateString() }}
             </p>
             <div class="">
                 <input
@@ -120,6 +120,7 @@ export default defineComponent({
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
             today: new Date(),
+            days: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado']
         };
     },
     methods: {
