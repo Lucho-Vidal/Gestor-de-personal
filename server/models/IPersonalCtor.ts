@@ -3,19 +3,19 @@ import { Schema, model, Document } from "mongoose";
 interface IPersonal extends Document {
     legajo: number;
     apellido: string;
-    nombre: string;
+    nombres: string;
     turno: string;
-    franco: string;
+    franco: number;
     especialidad: string;
     dotacion: string;
     observaciones: string;
     orden: number;
 }
 interface IConductor extends IPersonal{
-    conocimiento:conocimientos;
+    conocimiento:IConocimientos;
 }
 
-type conocimientos = {
+interface IConocimientos {
     CML: boolean;
     CKD: boolean;
     RO: boolean;
@@ -23,7 +23,7 @@ type conocimientos = {
     OL: boolean;
     LCI: boolean;
     ELEC: boolean;
-};
+}
 const conductorSchema = new Schema<IConductor>({
     legajo: {
         type:Number,
@@ -33,17 +33,16 @@ const conductorSchema = new Schema<IConductor>({
         type: String,
         required: true
     },
-    nombre: {
+    nombres: {
         type: String,
         required: true
     },
     turno: {
         type: String,
-        required: true
     },
     franco: {
-        type: String,
-        required: true
+        type: Number,
+        
     },
     especialidad: {
         type: String,
@@ -51,15 +50,13 @@ const conductorSchema = new Schema<IConductor>({
     },
     dotacion: {
         type: String,
-        required: true
     },
     observaciones: {
         type: String,
-        required: true
+        
     },
     orden: {
         type: Number,
-        required: true
     }
 });
 

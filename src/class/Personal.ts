@@ -1,17 +1,17 @@
-class Personal {
-    
-    protected legajo: number;
-    protected apellido: string;
-    protected nombre: string;
-    protected turno: string;
-    protected franco: string;
-    protected especialidad: string;
-    protected dotacion: string;
-    protected observaciones: string;
-    protected orden: number;
+import { IConductor, IConocimientos } from "@/interfaces/IConductores";
+
+abstract class Personal {
+    legajo: number;
+    apellido: string;
+    nombres: string;
+    turno: string;
+    franco: string;
+    especialidad: string;
+    dotacion: string;
+    observaciones: string;
+    orden: number;
 
     constructor(
-        
         legajo: number,
         apellido: string,
         nombre: string,
@@ -22,10 +22,9 @@ class Personal {
         observaciones: string,
         orden: number
     ) {
-        
         this.legajo = legajo;
         this.apellido = apellido;
-        this.nombre = nombre;
+        this.nombres = nombre;
         this.turno = turno;
         this.franco = franco;
         this.especialidad = especialidad;
@@ -51,11 +50,11 @@ class Personal {
     }
 
     public getNombre(): string {
-        return this.nombre;
+        return this.nombres;
     }
 
     public setNombre(nombre: string): void {
-        this.nombre = nombre;
+        this.nombres = nombre;
     }
 
     public getTurno(): string {
@@ -107,9 +106,9 @@ class Personal {
     }
 }
 
-export class Conductor extends Personal {
-    private conocimiento : conocimientos = {
-        CML:false,
+export class Conductor extends Personal implements IConductor{
+    conocimientos: IConocimientos = {
+        CML: false,
         CKD: false,
         RO: false,
         MPN: false,
@@ -117,7 +116,8 @@ export class Conductor extends Personal {
         LCI: false,
         ELEC: false,
     };
-    
+    /* conocimientos: conocimientos; */
+
     constructor(
         legajo: number,
         apellido: string,
@@ -128,6 +128,7 @@ export class Conductor extends Personal {
         dotacion: string,
         observaciones: string,
         orden: number,
+        conocimientos: IConocimientos
     ) {
         super(
             legajo,
@@ -138,17 +139,20 @@ export class Conductor extends Personal {
             especialidad,
             dotacion,
             observaciones,
-            orden);
-        this.conocimiento.CML = false;
-        this.conocimiento.CKD = false;
-        this.conocimiento.RO = false;
-        this.conocimiento.MPN = false;
-        this.conocimiento.OL = false;
-        this.conocimiento.LCI = false;
-        this.conocimiento.ELEC = false;
+            orden
+        );
+        this.conocimientos = conocimientos;
+        /* this.conocimientos.CML = false;
+        this.conocimientos.CKD = false;
+        this.conocimientos.RO = false;
+        this.conocimientos.MPN = false;
+        this.conocimientos.OL = false;
+        this.conocimientos.LCI = false;
+        this.conocimientos.ELEC = false; */
     }
 }
-type conocimientos = {
+
+/* type conocimientos = {
     CML: boolean;
     CKD: boolean;
     RO: boolean;
@@ -156,7 +160,7 @@ type conocimientos = {
     OL: boolean;
     LCI: boolean;
     ELEC: boolean;
-};
+}; */
 export class Guarda extends Personal {
     constructor(
         legajo: number,
