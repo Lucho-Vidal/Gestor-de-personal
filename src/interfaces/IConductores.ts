@@ -3,7 +3,7 @@ export interface IConductor {
     apellido: string;
     nombres: string;
     turno: string;
-    franco: string;
+    franco: number;
     especialidad: string;
     dotacion: string;
     observaciones: string;

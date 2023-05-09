@@ -5,7 +5,7 @@ abstract class Personal {
     apellido: string;
     nombres: string;
     turno: string;
-    franco: string;
+    franco: number;
     especialidad: string;
     dotacion: string;
     observaciones: string;
@@ -16,7 +16,7 @@ abstract class Personal {
         apellido: string,
         nombre: string,
         turno: string,
-        franco: string,
+        franco: number,
         especialidad: string,
         dotacion: string,
         observaciones: string,
@@ -65,11 +65,11 @@ abstract class Personal {
         this.turno = turno;
     }
 
-    public getFranco(): string {
+    public getFranco(): number {
         return this.franco;
     }
 
-    public setFranco(franco: string): void {
+    public setFranco(franco: number): void {
         this.franco = franco;
     }
 
@@ -123,7 +123,7 @@ export class Conductor extends Personal implements IConductor{
         apellido: string,
         nombre: string,
         turno: string,
-        franco: string,
+        franco: number,
         especialidad: string,
         dotacion: string,
         observaciones: string,
@@ -167,7 +167,7 @@ export class Guarda extends Personal {
         apellido: string,
         nombre: string,
         turno: string,
-        franco: string,
+        franco: number,
         especialidad: string,
         dotacion: string,
         observaciones: string,
