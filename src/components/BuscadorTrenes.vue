@@ -6,7 +6,8 @@
                 Buscador de trenes
             </h1>
             <p class="d-flex justify-content-end m-2">
-                Fecha: {{ days[today.getDay()] }} {{ today.toLocaleDateString() }}
+                Fecha:{{ days[today.getDay()] }}
+                {{ today.toLocaleDateString() }}
             </p>
             <div class="">
                 <input
@@ -109,6 +110,8 @@ import { Indice } from "../interfaces/Indice";
 import FooterPage from "./FooterPage.vue";
 import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
+import { IConductor } from "../interfaces/IConductores";
+import { getConductor } from "../services/personalService";
 
 export default defineComponent({
     data() {
@@ -119,8 +122,17 @@ export default defineComponent({
             turnos: [] as Array<Indice[]>,
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
+            personales: [] as IConductor[],
             today: new Date(),
-            days: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado']
+            days: [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado",
+            ],
         };
     },
     methods: {
@@ -132,6 +144,10 @@ export default defineComponent({
             const res = await getItinerario();
             this.itinerario = res.data;
         },
+        async loadPersonales() {
+            const res = await getConductor();
+            this.personales = res.data;
+        },
         buscar() {
             this.filtroTrenes();
             this.filtroItinerario();
@@ -140,7 +156,6 @@ export default defineComponent({
             this.indFiltrado = this.indice.filter((ind: Indice) => {
                 return ind.diagrama.tren == parseInt(this.tren);
             });
-            console.log(this.indFiltrado);
         },
         filtroItinerario() {
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
@@ -157,11 +172,71 @@ export default defineComponent({
                     })
                 );
             });
+            this.buscarPersonalACargo();
+        },
+        buscarPersonalACargo() {
+            let list = [];
+            list.push(
+                this.turnos.map((turno: Indice[]) => {
+                    return this.filtroPersonal(turno[0].turno);
+                })
+            );
+
+            list[0].forEach((personal) => {
+                this.indFiltrado.forEach((vuelta: Indice) => {
+                    if (vuelta.turno == personal.turno) {
+                        vuelta.personal = personal.nombres;
+                    }
+                });
+            });
+            list[0].forEach((personal) => {
+                this.turnos.forEach((turno: Indice[]) => {
+                    if (turno[0].turno == personal.turno) {
+                        turno[0].personal = personal.nombres;
+                    }
+                });
+            });
+            console.log("DEBUG1", this.turnos);
+            console.log("DEBUG2", this.indFiltrado);
+        },
+        dia_laboral(diaLaboral: number, hoy: number) {
+            //  # devuelve el día de la semana como un número entero donde el Domingo está indexado como 0 y el Sábado como 6
+            let diagrama = [
+                [0, 1, 2, 3, 4, 5, 6],
+                [6, 0, 1, 2, 3, 4, 5],
+                [5, 6, 0, 1, 2, 3, 4],
+                [4, 5, 6, 0, 1, 2, 3],
+                [3, 4, 5, 6, 0, 1, 2],
+                [2, 3, 4, 5, 6, 0, 1],
+                [1, 2, 3, 4, 5, 6, 0],
+            ];
+            return diagrama[diaLaboral][hoy]; //:franco
+        },
+        filtroPersonal(turno: string) {
+            let titular = [];
+            if (turno.indexOf(".") != -1 && !turno.includes("PROG")) {
+                const indexPunto = turno.indexOf(".");
+                const diaLab = Number(turno[indexPunto + 1]);
+                const diag = turno.split(".")[0];
+                const franco = this.dia_laboral(diaLab, this.today.getDay());
+                titular = this.personales.filter((p) => {
+                    return p.turno == diag && Number(p.franco) == franco;
+                });
+            } else {
+                titular = this.personales.filter((p) => p.turno == turno);
+            }
+
+            return {
+                turno: turno,
+                nombres: titular[0].apellido + " " + titular[0].nombres,
+            };
         },
     },
     mounted() {
         this.loadIndices();
         this.loadItinerario();
+        this.loadPersonales();
+        //this.loadGuardas();
     },
     computed: {},
     components: {
@@ -171,6 +246,9 @@ export default defineComponent({
 });
 </script>
 <style>
+main {
+    min-height: 81.6vh;
+}
 table h4 {
     background: #000;
     color: #fff;
@@ -180,5 +258,4 @@ table h4 {
     justify-content: space-around;
     border-radius: 1rem;
 }
-
 </style>
