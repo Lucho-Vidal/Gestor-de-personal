@@ -8,7 +8,7 @@ export interface IConductor {
     dotacion: string;
     observaciones: string;
     orden: number;
-    conocimientos: IConocimientos;
+    conocimientos?: IConocimientos;
 }
 export interface IConocimientos {
     CML: boolean;
