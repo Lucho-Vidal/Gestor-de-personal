@@ -7,14 +7,14 @@
             </h1>
             <div class="d-flex row">
                 <div class="row justify-content-end">
-                    <p class="col ">
-                    Fecha: {{ days[today.getDay()] }}
-                    {{ today.toLocaleDateString() }}
+                    <p class="col">
+                        Fecha: {{ days[today.getDay()] }}
+                        {{ today.toLocaleDateString() }}
                     </p>
                 </div>
                 <div class="row justify-content-between">
                     <input
-                        class="col-3  "
+                        class="col-3"
                         type="text"
                         placeholder="Buscar Tren"
                         autofocus
@@ -22,7 +22,7 @@
                         v-on:change="buscar()"
                     />
                     <input
-                        class="col-3 "
+                        class="col-3"
                         type="date"
                         v-model="inputDate"
                         @change="changeDate"
@@ -151,33 +151,45 @@ export default defineComponent({
     },
     methods: {
         async loadIndices() {
+            /* Trae todos los elementos de la base de datos  */
             const res = await getIndice();
             this.indice = res.data;
         },
         async loadItinerario() {
+            /* Trae todos los elementos de la base de datos */
             const res = await getItinerario();
             this.itinerario = res.data;
         },
         async loadPersonales() {
+            /* Trae todos los elementos de la base de datos */
             const res = await getConductor();
             this.personales = res.data;
         },
         buscar() {
+            /* Ejecuta en cada búsqueda todos los métodos necesarios. 
+            Se ejecuta por v-on:change en el input  */
             this.filtroTrenes();
             this.filtroItinerario();
+            this.filtroTurno();
+            this.buscarPersonalACargo();
         },
         filtroTrenes() {
+            /* Este método buscar y filtra en el array indice el tren que se desea buscar.
+            guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = this.indice.filter((ind: Indice) => {
                 return ind.diagrama.tren == parseInt(this.tren);
             });
         },
         filtroItinerario() {
+            /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
+            las guarda en el array itFiltrado  */
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
                 return horarios.tren == parseInt(this.tren);
             });
-            this.filtroTurno();
         },
         filtroTurno() {
+            /* Este método es el encargado de buscar los turno en cada búsqueda.
+            Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
             this.turnos = [];
             this.indFiltrado.forEach((turno: Indice) => {
                 this.turnos.push(
@@ -186,9 +198,12 @@ export default defineComponent({
                     })
                 );
             });
-            this.buscarPersonalACargo();
         },
         buscarPersonalACargo() {
+            /* Este método es el encargado de buscar y cambiar el nombre del personal en cada búsqueda. 
+            El método busca en el array turnos utilizando la función filtroPersonal, el resultado lo 
+            guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en 
+            el array indFiltrado y posterior en el mismo array turnos. */
             let list = [];
             list.push(
                 this.turnos.map((turno: Indice[]) => {
@@ -209,11 +224,12 @@ export default defineComponent({
                     }
                 });
             });
-            console.log("DEBUG1", this.turnos);
-            console.log("DEBUG2", this.indFiltrado);
         },
         dia_laboral(diaLaboral: number, hoy: number) {
-            //  # devuelve el día de la semana como un número entero donde el Domingo está indexado como 0 y el Sábado como 6
+            /*   # devuelve el día de la semana como un número entero donde el Domingo 
+            está indexado como 0 y el Sábado como 6
+            Al ingresarle por parámetros la cantidad de días del turno pos franco y 
+            el dia de la semana actual devuelve el dia del franco del turno mismo. */
             let diagrama = [
                 [0, 1, 2, 3, 4, 5, 6],
                 [6, 0, 1, 2, 3, 4, 5],
@@ -226,6 +242,9 @@ export default defineComponent({
             return diagrama[diaLaboral][hoy]; //:franco
         },
         filtroPersonal(turno: string) {
+            /* Recibe por parámetro un turno ej:405.5 en caso que sea un diagrama de 7 días
+            o 428 en caso de unipersonal. Según el caso separa por el punto el turno de la jornada pos franco
+            y devuelve un objeto con las llaves:turno y nombres  */
             let titular = [];
             if (turno.indexOf(".") != -1 && !turno.includes("PROG")) {
                 const indexPunto = turno.indexOf(".");
@@ -243,17 +262,16 @@ export default defineComponent({
                 nombres: titular[0].apellido + " " + titular[0].nombres,
             };
         },
-        changeDate(){
-            this.today = new Date(this.inputDate+' 12:00');
-        }
+        changeDate() {
+            this.today = new Date(this.inputDate + " 12:00");
+        },
     },
     mounted() {
         this.loadIndices();
         this.loadItinerario();
         this.loadPersonales();
     },
-    computed: {
-    },
+    computed: {},
     components: {
         NavBar,
         FooterPage,
