@@ -5,19 +5,32 @@
             <h1 class="d-flex justify-content-center m-3">
                 Buscador de trenes
             </h1>
-            <p class="d-flex justify-content-end m-2">
-                Fecha:{{ days[today.getDay()] }}
-                {{ today.toLocaleDateString() }}
-            </p>
-            <div class="">
-                <input
-                    type="text"
-                    placeholder="Buscar Tren"
-                    autofocus
-                    v-model="tren"
-                    v-on:change="buscar()"
-                />
+            <div class="d-flex row">
+                <div class="row justify-content-end">
+                    <p class="col ">
+                    Fecha: {{ days[today.getDay()] }}
+                    {{ today.toLocaleDateString() }}
+                    </p>
+                </div>
+                <div class="row justify-content-between">
+                    <input
+                        class="col-3  "
+                        type="text"
+                        placeholder="Buscar Tren"
+                        autofocus
+                        v-model="tren"
+                        v-on:change="buscar()"
+                    />
+                    <input
+                        class="col-3 "
+                        type="date"
+                        v-model="inputDate"
+                        @change="changeDate"
+                    />
+                </div>
             </div>
+
+            <div class=""></div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr v-for="(ind, index) in itFiltrado" :key="index">
@@ -124,6 +137,7 @@ export default defineComponent({
             itFiltrado: [] as Itinerario[],
             personales: [] as IConductor[],
             today: new Date(),
+            inputDate: "" as string,
             days: [
                 "Domingo",
                 "Lunes",
@@ -181,7 +195,6 @@ export default defineComponent({
                     return this.filtroPersonal(turno[0].turno);
                 })
             );
-
             list[0].forEach((personal) => {
                 this.indFiltrado.forEach((vuelta: Indice) => {
                     if (vuelta.turno == personal.turno) {
@@ -225,20 +238,22 @@ export default defineComponent({
             } else {
                 titular = this.personales.filter((p) => p.turno == turno);
             }
-
             return {
                 turno: turno,
                 nombres: titular[0].apellido + " " + titular[0].nombres,
             };
         },
+        changeDate(){
+            this.today = new Date(this.inputDate+' 12:00');
+        }
     },
     mounted() {
         this.loadIndices();
         this.loadItinerario();
         this.loadPersonales();
-        //this.loadGuardas();
     },
-    computed: {},
+    computed: {
+    },
     components: {
         NavBar,
         FooterPage,
