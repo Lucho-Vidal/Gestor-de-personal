@@ -3,7 +3,7 @@
         <div
             class="container-fluid container d-flex flex-wrap justify-content-between"
         >
-            <a class="navbar-brand" href="#">PCT - Gestión de Personal</a>
+            <a class="navbar-brand" href="#">PCT - Gestión de Novedades del Personal de Abordo</a>
             <div>
                 <button
                     class="navbar-toggler"
