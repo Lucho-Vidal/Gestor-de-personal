@@ -3,6 +3,7 @@ import Indice from "../models/indice";
 import Itinerario from "../models/itinerario";
 import Conductores from "../models/IPersonalCtor";
 import Guardas from "../models/IPersonalGda";
+import INovedad from "../models/novedades"
 
 const router = Router();
 
@@ -26,28 +27,49 @@ router.get("/Personal/Gda", async (req, res) => {
     res.json(tasks);
 });
 
-/* router.post("/tasks", async (req, res) => {
-    const { title, description } = req.body;
-    const newTask = new Task({ title, description });
-    const savedTask = await newTask.save();
-    res.json(savedTask);
+router.get("/novedades",async (req, res) => {
+    const novedades = await INovedad.find();
+    res.json(novedades);
 });
 
-router.get("/tasks/:id", async (req, res) => {
-    const tasks = await Task.findById(req.params.id);
-    res.json(tasks);
+router.get("/novedades/:id",async (req,res) => {
+    const novedad = await INovedad.findById(req.params.id);
+    res.json(novedad);
 });
 
-router.put("/tasks/:id", async (req, res) => {
-    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+router.post("/novedades",async (req,res) => {
+    const {
+        legajo,
+        tipoNovedad,
+        fechaBaja,
+        fechaAlta,
+        HNA,
+        detalle,
+        remplazo
+    } = req.body;
+    const newNovedad = new INovedad({
+        legajo,
+        tipoNovedad,
+        fechaBaja,
+        fechaAlta,
+        HNA,
+        detalle,
+        remplazo
+    })
+    const savedNovedad = await newNovedad.save();
+    res.json(savedNovedad);
+});
+
+router.put("/novedades/:id", async (req,res)=>{
+    const updateNovedad = await INovedad.findByIdAndUpdate(req.params.id, req.body,{
         new: true,
     });
-    res.json(updatedTask);
+    res.json(updateNovedad);
 });
 
-router.delete("/tasks/:id", async (req, res) => {
-    const tasks = await Task.findByIdAndDelete(req.params.id);
-    res.json(tasks);
-});
- */
+router.delete("/novedades/:id", async (req,res) =>{
+    const novedad = await INovedad.findByIdAndDelete(req.params.id);
+    res.json(novedad);
+})
+
 export default router;
