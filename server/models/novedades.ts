@@ -7,7 +7,7 @@ interface INovedad extends Document {
     fechaBaja:Date;
     fechaAlta:Date;
     HNA:boolean;
-    Detalle:string;
+    detalle:string;
     remplazo:Remplazo;
 }
 
@@ -23,6 +23,6 @@ const novedadSchema = new Schema<INovedad>({
     fechaBaja:Date,
     fechaAlta:Date,
     HNA: Boolean,
-    Detalle: String,
+    detalle: String,
 });
 export default model<INovedad>("Novedad",novedadSchema);
