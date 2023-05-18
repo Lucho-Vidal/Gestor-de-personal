@@ -30,11 +30,14 @@
                             <a class="nav-link" href="/personal">Personal</a>
                         </li>
                         <li class="nav-item">
+                            <a href="/novedades" class="nav-link">Novedades</a>
+                        </li>
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="#">Planillón diario</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Ciclo</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>

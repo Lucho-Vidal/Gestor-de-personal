@@ -39,7 +39,12 @@ router.get("/novedades/:id",async (req,res) => {
 
 router.post("/novedades",async (req,res) => {
     const {
+        _id,
         legajo,
+        apellido,
+        nombres,
+        puesto,
+        base,
         tipoNovedad,
         fechaBaja,
         fechaAlta,
@@ -48,7 +53,12 @@ router.post("/novedades",async (req,res) => {
         remplazo
     } = req.body;
     const newNovedad = new INovedad({
+        _id,
         legajo,
+        apellido,
+        nombres,
+        puesto,
+        base,
         tipoNovedad,
         fechaBaja,
         fechaAlta,
