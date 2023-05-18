@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
     {
         path:'/novedades',
         name:'Novedades',
-        component:()=> import('@/components/CargarNovedades.vue')
+        component:()=> import('@/components/Novedades.vue')
     }
 ]
 

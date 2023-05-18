@@ -1,6 +1,13 @@
 <template>
     <div>
         <NavBar/>
+
+        <main class="container">
+            <form action="">
+                
+            </form>
+        </main>
+
         <footer-page />
     </div>
 </template>
