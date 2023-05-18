@@ -55,6 +55,8 @@ export default defineComponent({
         async loadNovedades(){
             const res = await getNovedades();
             this.novedades = res.data;
+            console.log(this.novedades);
+            
         },
         view(){
             console.log('hola desde view');
