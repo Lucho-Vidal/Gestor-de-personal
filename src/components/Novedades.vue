@@ -4,6 +4,9 @@
 
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">Novedades del Personal de Abordo</h1>
+            <div class="d-flex">
+                <a class="btn btn-primary d-flex end" href="/newNovedades">Nueva Novedad</a>
+            </div>
             <table
                 class="table table-striped table-hover"
             >
@@ -70,6 +73,7 @@ export default defineComponent({
             
         },
         edit(){
+            this.$router.push({name: "editNovedades"})
             console.log('hola desde edit');
             
         }
