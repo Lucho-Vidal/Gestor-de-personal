@@ -8,6 +8,9 @@ interface INovedad extends Document {
     nombres: string;
     puesto: string;
     base: string;
+    especialidad: string;
+    turno: string;
+    franco: string;
     tipoNovedad:string;
     fechaBaja:Date;
     fechaAlta:Date;
