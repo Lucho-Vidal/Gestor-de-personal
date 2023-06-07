@@ -16,6 +16,7 @@
                             type="text"
                             name="legajo"
                             autofocus
+                            v-model="newNovedad.legajo"
                         />
                     </div>
                     <div class="col-3">
@@ -27,7 +28,7 @@
                             type="text"
                             name="apellido"
                             disabled
-                            autofocus
+                            v-model="newNovedad.apellido"
                         />
                     </div>
                     <div class="col-4">
@@ -38,6 +39,7 @@
                             placeholder=""
                             type="text"
                             name="Nombre"
+                            v-model="newNovedad.nombres"
                             disabled
                         />
                     </div>
@@ -51,6 +53,7 @@
                             placeholder=""
                             type="text"
                             name="legajo"
+                            v-model="newNovedad.puesto"
                             disabled
                         />
                     </div>
@@ -62,6 +65,7 @@
                             placeholder=""
                             type="text"
                             name="Base"
+                            v-model="newNovedad.base"
                             disabled
                         />
                     </div>
@@ -73,6 +77,7 @@
                             placeholder=""
                             type="text"
                             name="Especialidad"
+                            v-model="newNovedad.especialidad"
                             disabled
                         />
                     </div>
@@ -84,6 +89,7 @@
                             placeholder=""
                             type="text"
                             name="Turno"
+                            v-model="newNovedad.turno"
                             disabled
                         />
                     </div>
@@ -95,6 +101,7 @@
                             placeholder=""
                             type="text"
                             name="Franco"
+                            v-model="newNovedad.franco"
                             disabled
                         />
                     </div>
@@ -102,7 +109,7 @@
                 <div class="row">
                     <div class="col-3">
                         <label for="Tipo">Tipo de Novedad </label>
-                        <select name="Tipo" id="Tipo" class="form-control mb-3">
+                        <select name="Tipo" id="Tipo" class="form-control mb-3" v-model="newNovedad.tipoNovedad">
                             <option value="Ordenamiento">Ordenamiento</option>
                             <option value="Estudio">Estudio</option>
                             <option value="Enfermedad">Enfermedad</option>
@@ -130,7 +137,7 @@
                             class="form-control mb-3"
                             type="Datetime-local"
                             name="FechaBaja"
-                            autofocus
+                            v-model="newNovedad.fechaBaja"
                         />
                     </div>
                     <div class="col-3">
@@ -140,7 +147,7 @@
                             class="form-control mb-3"
                             type="Datetime-local"
                             name="FechaAlta"
-                            autofocus
+                            v-model="newNovedad.fechaAlta"
                         />
                     </div>
                 </div>
@@ -151,13 +158,60 @@
                             <textarea
                             class="form-control mb-3"
                             name="Detalle"
-                            autofocus
+                            v-model="newNovedad.Detalle"
                             ></textarea>
                     </div>
                 </div>
+                <button class="btn btn-success col-2">Agregar Remplazo</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Legajo
+                            </th>
+                            <th>
+                                Apellido
+                            </th>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
+                                Función
+                            </th>
+                            <th>
+                                Desde
+                            </th>
+                            <th>
+                                Hasta
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(remplazo, index) in newNovedad.remplazo" :key="index" >
+                            <td>
+                                {{remplazo.legajo}}
+                            </td>
+                            <td>
+                                {{ remplazo.apellido }}
+                            </td>
+                            <td>
+                                {{ remplazo.nombres }}
+                            </td>
+                            <td>
+                                {{ remplazo.puesto }}
+                            </td>
+                            <td>
+                                {{ remplazo.inicioRelevo }}
+                            </td>
+                            <td>
+                                {{ remplazo.inicioRelevo }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 
                 
-                <button class="btn btn-primary w-100">Guardar</button>
+                <button class="btn btn-primary col-1">Guardar</button>
             </form>
         </main>
 
