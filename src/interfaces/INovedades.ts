@@ -13,7 +13,7 @@ export interface Novedad {
     fechaAlta:Date;
     HNA:boolean;
     Detalle:string;
-    remplazo:Remplazo;
+    remplazo: Remplazo[];
 }
 
 interface Remplazo{
