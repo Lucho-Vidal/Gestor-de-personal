@@ -18,6 +18,14 @@ export interface Novedad {
 
 interface Remplazo{
     legajo:number;
+    apellido: string;
+    nombres: string;
+    puesto: string;
+    base: string;
+    especialidad: string;
+    turno: string;
+    franco: string;
     inicioRelevo:Date;
     finRelevo:Date;
+    HNA:boolean;
 }
