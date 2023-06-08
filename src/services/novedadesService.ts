@@ -5,6 +5,9 @@ import axios from "./axios"
 export const getNovedades = async (): Promise<AxiosResponse<Novedad[]>> =>
     await axios.get("/novedades");
 
+export const getUltimaNovedad = async (): Promise<AxiosResponse<Novedad[]>> =>
+    await axios.get("/ultimaNovedad");
+
 export const getNovedad = async (id: string): Promise<AxiosResponse<Novedad>> =>
     await axios.get(`/novedades/${id}`);
 
