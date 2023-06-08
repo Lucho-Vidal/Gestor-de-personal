@@ -5,6 +5,20 @@
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nueva Novedad
             </h1>
+            <div class="modal-overlay" v-if="showModal"></div>
+            <div class="Modal" v-if="showModal">
+                <h1>Buscar Personal</h1>
+                <input 
+                type="text" 
+                class="form-control"
+                placeholder="Ingrese Nombre o Apellido"
+
+                >
+                <button @click="showModal = false" class="btn btn-success m-3 ">OK</button>
+            </div>
+            
+            <button @click="showModal = true" class="btn btn-success">Buscar Personal</button>
+
             <form @submit.prevent="saveNovedad()" class="row">
                 <div class="row">
                     <div class="col-2">
@@ -27,8 +41,8 @@
                             placeholder=""
                             type="text"
                             name="apellido"
-                            disabled
                             v-model="newNovedad.apellido"
+                            disabled
                         />
                     </div>
                     <div class="col-4">
@@ -234,6 +248,7 @@ export default defineComponent({
             newNovedad: {} as Novedad,
             ultimoId: 0,
             personales:[] as IPersonal[],
+            showModal: false
         };
     },
     methods: {
@@ -253,13 +268,14 @@ export default defineComponent({
             const res = await getUltimaNovedad();
             this.ultimoId = res.data[0]._id
         },
-        async loadConductores(){
+        async loadPersonales(){
             const res = await getPersonales();
             this.personales = res.data;            
         }
     },
     mounted() {
         this.obtenerUltimoId();
+        this.loadPersonales();
     },
     components: {
         NavBar,
@@ -271,4 +287,26 @@ export default defineComponent({
 main {
     min-height: 87vh;
 }
+
+.modal-overlay{
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom:0;
+    right: 0;
+    z-index: 1;
+    background: rgba(0,0,0,0.8);
+}
+.Modal{
+    position: fixed;
+    top: 25%;
+    left: 40%;
+    transform: translate((-50%,-50%));
+    background: #fff;
+    padding: 70px;
+    border-radius: 15px;
+    box-shadow: 3px 3px rgba(0,0,0,0.4);
+    z-index: 101;
+}
+
 </style>
