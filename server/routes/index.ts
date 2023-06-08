@@ -31,6 +31,10 @@ router.get("/novedades",async (req, res) => {
     const novedades = await INovedad.find();
     res.json(novedades);
 });
+router.get("/ultimaNovedad",async (req, res) => {
+    const novedades = await INovedad.find().sort({$natural:-1}).limit(1);
+    res.json(novedades);
+});
 
 router.get("/novedades/:id",async (req,res) => {
     const novedad = await INovedad.findById(req.params.id);
