@@ -224,17 +224,19 @@ import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
 import FooterPage from "./FooterPage.vue";
 import { Novedad } from "../interfaces/INovedades";
-import { createNovedad } from "../services/novedadesService";
+import { createNovedad, getUltimaNovedad } from "../services/novedadesService";
 
 export default defineComponent({
     data() {
         return {
             newNovedad: {} as Novedad,
+            ultimoId: 0,
         };
     },
     methods: {
         async saveNovedad() {
             try {
+                this.newNovedad._id = this.ultimoId + 1
                 const res = await createNovedad(this.newNovedad);
                 console.log(res);
                 this.$router.push({name: "Novedades"})
@@ -244,6 +246,13 @@ export default defineComponent({
             }
             
         },
+        async obtenerUltimoId(){
+            const res = await getUltimaNovedad();
+            this.ultimoId = res.data[0]._id
+        }
+    },
+    mounted() {
+        this.obtenerUltimoId();
     },
     components: {
         NavBar,
