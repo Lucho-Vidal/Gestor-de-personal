@@ -225,12 +225,15 @@ import NavBar from "./NavBar.vue";
 import FooterPage from "./FooterPage.vue";
 import { Novedad } from "../interfaces/INovedades";
 import { createNovedad, getUltimaNovedad } from "../services/novedadesService";
+import { getPersonales } from "../services/personalService";
+import {  IPersonal } from "../interfaces/IPersonal";
 
 export default defineComponent({
     data() {
         return {
             newNovedad: {} as Novedad,
             ultimoId: 0,
+            personales:[] as IPersonal[],
         };
     },
     methods: {
@@ -249,6 +252,10 @@ export default defineComponent({
         async obtenerUltimoId(){
             const res = await getUltimaNovedad();
             this.ultimoId = res.data[0]._id
+        },
+        async loadConductores(){
+            const res = await getPersonales();
+            this.personales = res.data;            
         }
     },
     mounted() {

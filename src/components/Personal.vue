@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(personal, index) in conductores" :key="index" @dblclick="view()">
+                    <tr v-for="(personal, index) in personales" :key="index" @dblclick="view()">
                         <td class="col-1">{{ personal.legajo }}</td>
                         <td class="col-1">{{ personal.apellido }}</td>
                         <td class="col-2">{{ personal.nombres }}</td>
@@ -50,24 +50,22 @@
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
 import FooterPage from "./FooterPage.vue";
-import { getConductor } from '../services/personalService';
-import { IConductor } from "../interfaces/IConductores";
-import { IGuarda } from '../interfaces/IGuarda';
+import { getPersonales } from '../services/personalService';
+import { IPersonal } from "../interfaces/IPersonal";
 
 
 export default defineComponent({
     data(){
         return{
-            conductores:[] as IConductor[],
-            guardas:[] as IGuarda[],
+            personales:[] as IPersonal[],
             today: new Date(),
             days: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado']
         }
     },
     methods:{
-        async loadConductores(){
-            const res = await getConductor();
-            this.conductores = res.data;            
+        async loadPersonales(){
+            const res = await getPersonales();
+            this.personales = res.data;            
         },
         view(){
             console.log("hola desde view");   
@@ -78,7 +76,7 @@ export default defineComponent({
         }
     },
     mounted(){
-        this.loadConductores();
+        this.loadPersonales();
         
     },
     name: "App",

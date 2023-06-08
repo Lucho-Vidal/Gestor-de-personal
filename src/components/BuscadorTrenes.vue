@@ -123,8 +123,8 @@ import { Indice } from "../interfaces/Indice";
 import FooterPage from "./FooterPage.vue";
 import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
-import { IConductor } from "../interfaces/IConductores";
-import { getConductor } from "../services/personalService";
+import { IPersonal } from "../interfaces/IPersonal";
+import { getPersonales } from "../services/personalService";
 
 export default defineComponent({
     data() {
@@ -135,7 +135,7 @@ export default defineComponent({
             turnos: [] as Array<Indice[]>,
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
-            personales: [] as IConductor[],
+            personales: [] as IPersonal[],
             today: new Date(),
             inputDate: "" as string,
             days: [
@@ -162,7 +162,7 @@ export default defineComponent({
         },
         async loadPersonales() {
             /* Trae todos los elementos de la base de datos */
-            const res = await getConductor();
+            const res = await getPersonales();
             this.personales = res.data;
         },
         buscar() {

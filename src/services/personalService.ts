@@ -1,5 +1,5 @@
-import { IConductor } from "@/interfaces/IConductores";
+import { IPersonal } from "@/interfaces/IPersonal";
 import axios  from "./axios";
 import { AxiosResponse } from "axios";
 
-export const getConductor = async ():Promise<AxiosResponse<IConductor[]>> => await axios.get("/Personal/Ctor");
+export const getPersonales = async ():Promise<AxiosResponse<IPersonal[]>> => await axios.get("/Personal/Ctor");

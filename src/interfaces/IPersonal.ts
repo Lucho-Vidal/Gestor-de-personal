@@ -1,4 +1,4 @@
-export interface IConductor {
+export interface IPersonal {
     legajo: number;
     apellido: string;
     nombres: string;
