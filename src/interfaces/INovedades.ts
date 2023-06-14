@@ -3,7 +3,6 @@ export interface Novedad {
     legajo: number;
     apellido: string;
     nombres: string;
-    puesto: string;
     base: string;
     especialidad: string;
     turno: string;
@@ -20,7 +19,6 @@ interface Remplazo{
     legajo:number;
     apellido: string;
     nombres: string;
-    puesto: string;
     base: string;
     especialidad: string;
     turno: string;

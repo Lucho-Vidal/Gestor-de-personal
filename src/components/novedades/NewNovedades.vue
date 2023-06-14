@@ -5,20 +5,21 @@
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nueva Novedad
             </h1>
-            <!-- Button trigger modal -->
+
+            <!-- <modalBuscarPersonal :personales="personales" /> -->
+
             <button
                 type="button"
                 class="btn btn-success"
                 data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
+                data-bs-target="#modalBuscar"
             >
                 Buscar Personal
             </button>
 
-            <!-- Modal -->
             <div
                 class="modal fade"
-                id="exampleModal"
+                id="modalBuscar"
                 tabindex="-1"
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
@@ -283,7 +284,104 @@
                         ></textarea>
                     </div>
                 </div>
-                <button class="btn btn-success col-2">Agregar Remplazo</button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-success col-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalRemplazo"
+                >
+                Agregar Remplazo
+                </button>
+
+                <div
+                    class="modal fade"
+                    id="modalRemplazo"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Buscar Personal
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <input
+                                    type="text"
+                                    class="form-control my-3"
+                                    placeholder="Ingrese algo"
+                                    v-model="search"
+                                    autofocus
+                                    @keyup="searchPersonal()"
+                                />
+                                <table class="table table-hover" v-if="search">
+                                    <thead>
+                                        <tr>
+                                            <th>Legajo</th>
+                                            <th>Apellido</th>
+                                            <th>Nombre</th>
+                                            <th>Dotacion</th>
+                                            <th>Turno</th>
+                                            <th>Franco</th>
+                                            <th>Especialidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(
+                                                personal, index
+                                            ) in personalEncontrado"
+                                            :key="index"
+                                            @click="selectRemplazo(personal)"
+                                        >
+                                            <td class="col-1">
+                                                {{ personal.legajo }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.apellido }}
+                                            </td>
+                                            <td class="col-2">
+                                                {{ personal.nombres }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.dotacion }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.turno }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ days[personal.franco] }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.especialidad }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <table>
                     <thead>
                         <tr>
@@ -310,9 +408,6 @@
                                 {{ remplazo.nombres }}
                             </td>
                             <td>
-                                {{ remplazo.puesto }}
-                            </td>
-                            <td>
                                 {{ remplazo.inicioRelevo }}
                             </td>
                             <td>
@@ -335,7 +430,10 @@ import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { Novedad } from "../../interfaces/INovedades";
-import { createNovedad, getUltimaNovedad } from "../../services/novedadesService";
+import {
+    createNovedad,
+    getUltimaNovedad,
+} from "../../services/novedadesService";
 import { getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 
@@ -362,7 +460,7 @@ export default defineComponent({
         async saveNovedad() {
             try {
                 this.newNovedad._id = this.ultimoId + 1;
-                if(this.newNovedad.HNA){
+                if (this.newNovedad.HNA) {
                     this.newNovedad.fechaAlta = new Date("");
                 }
                 const res = await createNovedad(this.newNovedad);
@@ -392,11 +490,26 @@ export default defineComponent({
             this.newNovedad.franco = this.days[personal.franco];
             this.newNovedad.base = personal.dotacion;
         },
+        selectRemplazo(personal: IPersonal){
+            let remplazo = {
+                legajo : personal.legajo,
+                apellido : personal.apellido,
+                nombres : personal.nombres,
+                base : personal.dotacion,
+                especialidad : personal.especialidad,
+                turno : personal.turno,
+                franco : personal.franco,
+                inicioRelevo : Date(),
+                finRelevo: Date(),
+                HNA: false
+            }
+            this.newNovedad.remplazo.push(remplazo); 
+        },
         searchPersonal() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return (
-                        personal.apellido.toLowerCase() +
+                        personal.apellido.toLowerCase() + ' ' +
                         personal.nombres.toLowerCase()
                     ).includes(this.search.toLowerCase());
                 }

@@ -16,7 +16,7 @@ interface INovedad extends Document {
     fechaAlta:Date;
     HNA:boolean;
     detalle:string;
-    remplazo:Remplazo;
+    remplazo:Remplazo[];
 }
 
 interface Remplazo{
@@ -46,5 +46,6 @@ const novedadSchema = new Schema<INovedad>({
     fechaAlta:Date,
     HNA: Boolean,
     detalle: String,
+    remplazo: [] 
 });
 export default model<INovedad>("Novedad",novedadSchema);
