@@ -20,17 +20,17 @@ const routes: RouteRecordRaw[] = [
     {
         path:'/novedades',
         name:'Novedades',
-        component:()=> import('@/components/Novedades.vue')
+        component:()=> import('@/components/novedades/Novedades.vue')
     },
     {
         path:'/NewNovedades',
         name:'NewNovedades',
-        component:()=> import('@/components/NewNovedades.vue')
+        component:()=> import('@/components/novedades/NewNovedades.vue')
     },
     {
         path:'/editNovedades',
         name:'editNovedades',
-        component:()=> import('@/components/EditNovedades.vue')
+        component:()=> import('@/components/novedades/EditNovedades.vue')
     }
 ]
 

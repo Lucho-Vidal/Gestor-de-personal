@@ -3,22 +3,8 @@
         <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">
-                Cargar Nueva Novedad
+                Editar Novedad
             </h1>
-            <div class="modal-overlay" v-if="showModal"></div>
-            <div class="Modal" v-if="showModal">
-                <h1>Buscar Personal</h1>
-                <input 
-                type="text" 
-                class="form-control"
-                placeholder="Ingrese Nombre o Apellido"
-
-                >
-                <button @click="showModal = false" class="btn btn-success m-3 ">OK</button>
-            </div>
-            
-            <button @click="showModal = true" class="btn btn-success">Buscar Personal</button>
-
             <form @submit.prevent="saveNovedad()" class="row">
                 <div class="row">
                     <div class="col-2">
@@ -30,7 +16,6 @@
                             type="text"
                             name="legajo"
                             autofocus
-                            v-model="newNovedad.legajo"
                         />
                     </div>
                     <div class="col-3">
@@ -41,8 +26,8 @@
                             placeholder=""
                             type="text"
                             name="apellido"
-                            v-model="newNovedad.apellido"
                             disabled
+                            autofocus
                         />
                     </div>
                     <div class="col-4">
@@ -53,7 +38,6 @@
                             placeholder=""
                             type="text"
                             name="Nombre"
-                            v-model="newNovedad.nombres"
                             disabled
                         />
                     </div>
@@ -67,7 +51,6 @@
                             placeholder=""
                             type="text"
                             name="legajo"
-                            v-model="newNovedad.puesto"
                             disabled
                         />
                     </div>
@@ -79,7 +62,6 @@
                             placeholder=""
                             type="text"
                             name="Base"
-                            v-model="newNovedad.base"
                             disabled
                         />
                     </div>
@@ -91,7 +73,6 @@
                             placeholder=""
                             type="text"
                             name="Especialidad"
-                            v-model="newNovedad.especialidad"
                             disabled
                         />
                     </div>
@@ -103,7 +84,6 @@
                             placeholder=""
                             type="text"
                             name="Turno"
-                            v-model="newNovedad.turno"
                             disabled
                         />
                     </div>
@@ -115,7 +95,6 @@
                             placeholder=""
                             type="text"
                             name="Franco"
-                            v-model="newNovedad.franco"
                             disabled
                         />
                     </div>
@@ -123,7 +102,7 @@
                 <div class="row">
                     <div class="col-3">
                         <label for="Tipo">Tipo de Novedad </label>
-                        <select name="Tipo" id="Tipo" class="form-control mb-3" v-model="newNovedad.tipoNovedad">
+                        <select name="Tipo" id="Tipo" class="form-control mb-3">
                             <option value="Ordenamiento">Ordenamiento</option>
                             <option value="Estudio">Estudio</option>
                             <option value="Enfermedad">Enfermedad</option>
@@ -151,7 +130,7 @@
                             class="form-control mb-3"
                             type="Datetime-local"
                             name="FechaBaja"
-                            v-model="newNovedad.fechaBaja"
+                            autofocus
                         />
                     </div>
                     <div class="col-3">
@@ -161,7 +140,7 @@
                             class="form-control mb-3"
                             type="Datetime-local"
                             name="FechaAlta"
-                            v-model="newNovedad.fechaAlta"
+                            autofocus
                         />
                     </div>
                 </div>
@@ -172,60 +151,13 @@
                             <textarea
                             class="form-control mb-3"
                             name="Detalle"
-                            v-model="newNovedad.Detalle"
+                            autofocus
                             ></textarea>
                     </div>
                 </div>
-                <button class="btn btn-success col-2">Agregar Remplazo</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Legajo
-                            </th>
-                            <th>
-                                Apellido
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Función
-                            </th>
-                            <th>
-                                Desde
-                            </th>
-                            <th>
-                                Hasta
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(remplazo, index) in newNovedad.remplazo" :key="index" >
-                            <td>
-                                {{remplazo.legajo}}
-                            </td>
-                            <td>
-                                {{ remplazo.apellido }}
-                            </td>
-                            <td>
-                                {{ remplazo.nombres }}
-                            </td>
-                            <td>
-                                {{ remplazo.puesto }}
-                            </td>
-                            <td>
-                                {{ remplazo.inicioRelevo }}
-                            </td>
-                            <td>
-                                {{ remplazo.inicioRelevo }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
                 
                 
-                <button class="btn btn-primary col-1">Guardar</button>
+                <button class="btn btn-primary w-80">Guardar</button>
             </form>
         </main>
 
@@ -235,26 +167,20 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "./NavBar.vue";
-import FooterPage from "./FooterPage.vue";
-import { Novedad } from "../interfaces/INovedades";
-import { createNovedad, getUltimaNovedad } from "../services/novedadesService";
-import { getPersonales } from "../services/personalService";
-import {  IPersonal } from "../interfaces/IPersonal";
+import NavBar from "../NavBar.vue";
+import FooterPage from "../FooterPage.vue";
+import { Novedad } from "../../interfaces/INovedades";
+import { createNovedad } from "../../services/novedadesService";
 
 export default defineComponent({
     data() {
         return {
             newNovedad: {} as Novedad,
-            ultimoId: 0,
-            personales:[] as IPersonal[],
-            showModal: false
         };
     },
     methods: {
         async saveNovedad() {
             try {
-                this.newNovedad._id = this.ultimoId + 1
                 const res = await createNovedad(this.newNovedad);
                 console.log(res);
                 this.$router.push({name: "Novedades"})
@@ -264,18 +190,6 @@ export default defineComponent({
             }
             
         },
-        async obtenerUltimoId(){
-            const res = await getUltimaNovedad();
-            this.ultimoId = res.data[0]._id
-        },
-        async loadPersonales(){
-            const res = await getPersonales();
-            this.personales = res.data;            
-        }
-    },
-    mounted() {
-        this.obtenerUltimoId();
-        this.loadPersonales();
     },
     components: {
         NavBar,
@@ -287,26 +201,4 @@ export default defineComponent({
 main {
     min-height: 87vh;
 }
-
-.modal-overlay{
-    position: absolute;
-    top:0;
-    left: 0;
-    bottom:0;
-    right: 0;
-    z-index: 1;
-    background: rgba(0,0,0,0.8);
-}
-.Modal{
-    position: fixed;
-    top: 25%;
-    left: 40%;
-    transform: translate((-50%,-50%));
-    background: #fff;
-    padding: 70px;
-    border-radius: 15px;
-    box-shadow: 3px 3px rgba(0,0,0,0.4);
-    z-index: 101;
-}
-
 </style>

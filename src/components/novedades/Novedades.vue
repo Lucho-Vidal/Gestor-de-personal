@@ -1,15 +1,17 @@
 <template>
     <div>
-        <NavBar/>
+        <NavBar />
 
         <main class="container">
-            <h1 class="d-flex justify-content-center m-3">Novedades del Personal de Abordo</h1>
+            <h1 class="d-flex justify-content-center m-3">
+                Novedades del Personal de Abordo
+            </h1>
             <div class="d-flex">
-                <a class="btn btn-primary d-flex end" href="/newNovedades">Nueva Novedad</a>
+                <a class="btn btn-primary d-flex end" href="/newNovedades"
+                    >Nueva Novedad</a
+                >
             </div>
-            <table
-                class="table table-striped table-hover"
-            >
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th class="col-1" colspan="1">Num</th>
@@ -27,7 +29,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(novedad, index) in novedades" :key="index" @dblclick="view()">
+                    <tr
+                        v-for="(novedad, index) in novedades"
+                        :key="index"
+                        @dblclick="view()"
+                    >
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
@@ -37,10 +43,19 @@
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
                         <td class="col-1">{{ novedad.fechaBaja }}</td>
                         <td class="col-1">{{ novedad.fechaAlta }}</td>
-                        <td class="col-1">{{ novedad.remplazo }}</td>                        
-                        <td class="col-1"><i class="fa-solid fa-folder-open" @click="view()"></i></td>
-                        <td class="col-1"><i class="fa-solid fa-pen-to-square" @click="edit()"></i></td>
-                        
+                        <td class="col-1">{{ novedad.remplazo }}</td>
+                        <td class="col-1">
+                            <i
+                                class="fa-solid fa-folder-open"
+                                @click="view()"
+                            ></i>
+                        </td>
+                        <td class="col-1">
+                            <i
+                                class="fa-solid fa-pen-to-square"
+                                @click="edit()"
+                            ></i>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -52,31 +67,28 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "./NavBar.vue";
-import FooterPage from './FooterPage.vue'
-import {Novedad} from '../interfaces/INovedades';
-import { getNovedades } from '../services/novedadesService';
+import NavBar from "../NavBar.vue";
+import FooterPage from "../FooterPage.vue";
+import { Novedad } from "../../interfaces/INovedades";
+import { getNovedades } from "../../services/novedadesService";
 
 export default defineComponent({
-    data(){
-        return{
-            novedades:[] as Novedad[],
-        }
+    data() {
+        return {
+            novedades: [] as Novedad[],
+        };
     },
-    methods:{
-        async loadNovedades(){
+    methods: {
+        async loadNovedades() {
             const res = await getNovedades();
             this.novedades = res.data;
         },
-        view(){
-            console.log('hola desde view');
-            
+        view() {
+            console.log("hola desde view");
         },
-        edit(){
-            this.$router.push({name: "editNovedades"})
-            console.log('hola desde edit');
-            
-        }
+        edit() {
+            this.$router.push({ name: "editNovedades" });
+        },
     },
     mounted() {
         this.loadNovedades();
@@ -84,12 +96,12 @@ export default defineComponent({
     name: "App",
     components: {
         NavBar,
-        FooterPage
+        FooterPage,
     },
-
 });
 </script>
 <style>
 main {
     min-height: 81.6vh;
-}</style>
+}
+</style>
