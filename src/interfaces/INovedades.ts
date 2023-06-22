@@ -6,16 +6,16 @@ export interface Novedad {
     base: string;
     especialidad: string;
     turno: string;
-    franco: string;
+    franco: number;
     tipoNovedad:string;
-    fechaBaja:Date;
-    fechaAlta:Date;
+    fechaBaja:string;
+    fechaAlta:string;
     HNA:boolean;
-    Detalle:string;
-    remplazo: Remplazo[];
+    detalle:string;
+    remplazo: Array<Remplazo>;
 }
 
-interface Remplazo{
+export interface Remplazo{
     legajo:number;
     apellido: string;
     nombres: string;

@@ -1,28 +1,33 @@
 import { Document, model, Schema } from "mongoose";
 
-
 interface INovedad extends Document {
     _id:number;
     legajo: number;
     apellido: string;
     nombres: string;
-    puesto: string;
     base: string;
     especialidad: string;
     turno: string;
     franco: string;
     tipoNovedad:string;
-    fechaBaja:Date;
-    fechaAlta:Date;
+    fechaBaja:string;
+    fechaAlta:string;
     HNA:boolean;
     detalle:string;
-    remplazo:Remplazo[];
+    remplazo: Array<Remplazo>;
 }
 
 interface Remplazo{
     legajo:number;
-    inicioRelevo:Date;
-    finRelevo:Date;
+    apellido: string;
+    nombres: string;
+    base: string;
+    especialidad: string;
+    turno: string;
+    franco: string;
+    inicioRelevo:string;
+    finRelevo:string;
+    HNA:boolean;
 }
 
 const novedadSchema = new Schema<INovedad>({
@@ -36,14 +41,16 @@ const novedadSchema = new Schema<INovedad>({
     },
     apellido: String,
     nombres: String,
-    puesto: String,
     base: String,
+    especialidad: String,
+    turno: String,
+    franco: String,
     tipoNovedad: String,
     fechaBaja:{
-        type:Date,
+        type:String,
         required: true
     },
-    fechaAlta:Date,
+    fechaAlta:String,
     HNA: Boolean,
     detalle: String,
     remplazo: [] 

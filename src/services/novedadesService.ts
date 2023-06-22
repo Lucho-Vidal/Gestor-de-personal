@@ -11,8 +11,11 @@ export const getUltimaNovedad = async (): Promise<AxiosResponse<Novedad[]>> =>
 export const getNovedad = async (id: string): Promise<AxiosResponse<Novedad>> =>
     await axios.get(`/novedades/${id}`);
 
-export const createNovedad = async (novedad: Novedad): Promise<AxiosResponse> =>
-    await axios.post("/novedades", novedad);
+export const createNovedad = async (novedad: Novedad): Promise<AxiosResponse> => {
+    const res = await axios.post("/novedades", novedad);
+    return res
+}
+    
 
 export const updateNovedad = async (
     id: string,

@@ -3,7 +3,7 @@ export interface IPersonal {
     apellido: string;
     nombres: string;
     turno: string;
-    franco: number;
+    franco: string;
     especialidad: string;
     dotacion: string;
     observaciones: string;

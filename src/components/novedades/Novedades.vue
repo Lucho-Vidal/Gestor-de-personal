@@ -18,42 +18,31 @@
                         <th class="col-1" colspan="1">Legajo</th>
                         <th class="col-1" colspan="1">Apellido</th>
                         <th class="col-1" colspan="1">Nombres</th>
-                        <th class="col-1" colspan="1">Puesto</th>
                         <th class="col-1" colspan="1">Base</th>
                         <th class="col-1" colspan="1">Novedad</th>
                         <th class="col-1" colspan="1">Fecha de Baja</th>
                         <th class="col-1" colspan="1">Fecha de Alta</th>
-                        <th class="col-1" colspan="1">Relevo</th>
                         <th class="col-1">Ver</th>
-                        <th class="col-1">Editar</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr
                         v-for="(novedad, index) in novedades"
                         :key="index"
-                        @dblclick="view()"
+                        @dblclick="edit(novedad._id)"
                     >
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
                         <td class="col-1">{{ novedad.nombres }}</td>
-                        <td class="col-1">{{ novedad.puesto }}</td>
                         <td class="col-1">{{ novedad.base }}</td>
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
                         <td class="col-1">{{ novedad.fechaBaja }}</td>
                         <td class="col-1">{{ novedad.fechaAlta }}</td>
-                        <td class="col-1">{{ novedad.remplazo }}</td>
-                        <td class="col-1">
-                            <i
-                                class="fa-solid fa-folder-open"
-                                @click="view()"
-                            ></i>
-                        </td>
                         <td class="col-1">
                             <i
                                 class="fa-solid fa-pen-to-square"
-                                @click="edit()"
+                                @click="edit(novedad._id)"
                             ></i>
                         </td>
                     </tr>
@@ -83,12 +72,9 @@ export default defineComponent({
             const res = await getNovedades();
             this.novedades = res.data;
         },
-        view() {
-            console.log("hola desde view");
-        },
-        edit() {
-            this.$router.push({ name: "editNovedades" });
-        },
+        edit(id:number){
+            this.$router.push( `/editNovedades/${id}`)
+        }
     },
     mounted() {
         this.loadNovedades();

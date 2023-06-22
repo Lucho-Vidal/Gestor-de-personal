@@ -83,7 +83,7 @@
                                             {{ personal.turno }}
                                         </td>
                                         <td class="col-1">
-                                            {{ days[personal.franco] }}
+                                            {{ personal.franco }}
                                         </td>
                                         <td class="col-1">
                                             {{ personal.especialidad }}
@@ -134,13 +134,13 @@
                         />
                     </div>
                     <div class="col-4">
-                        <label for="Nombre"></label>
+                        <label for="nombres"></label>
                         Nombre
                         <input
                             class="form-control mb-3"
                             placeholder=""
                             type="text"
-                            name="Nombre"
+                            name="nombres"
                             v-model="newNovedad.nombres"
                             disabled
                         />
@@ -148,60 +148,60 @@
                 </div>
                 <div class="row">
                     <div class="col-1">
-                        <label for="Base"></label>
+                        <label for="base"></label>
                         Base
                         <input
                             class="form-control mb-3"
                             placeholder=""
                             type="text"
-                            name="Base"
+                            name="base"
                             v-model="newNovedad.base"
                             disabled
                         />
                     </div>
                     <div class="col-3">
-                        <label for="Especialidad"></label>
+                        <label for="especialidad"></label>
                         Especialidad
                         <input
                             class="form-control mb-3"
                             placeholder=""
                             type="text"
-                            name="Especialidad"
+                            name="especialidad"
                             v-model="newNovedad.especialidad"
                             disabled
                         />
                     </div>
                     <div class="col-2">
-                        <label for="Turno"></label>
+                        <label for="turno"></label>
                         Turno
                         <input
                             class="form-control mb-3"
                             placeholder=""
                             type="text"
-                            name="Turno"
+                            name="turno"
                             v-model="newNovedad.turno"
                             disabled
                         />
                     </div>
                     <div class="col-2">
-                        <label for="Franco"></label>
+                        <label for="franco"></label>
                         Franco
                         <input
                             class="form-control mb-3"
                             placeholder=""
                             type="text"
-                            name="Franco"
-                            v-model="newNovedad.franco"
+                            name="franco"
+                            v-model="days[newNovedad.franco]"
                             disabled
                         />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <label for="Tipo">Tipo de Novedad </label>
+                        <label for="tipoNovedad">Tipo de Novedad </label>
                         <select
-                            name="Tipo"
-                            id="Tipo"
+                            name="tipoNovedad"
+                            id="tipoNovedad"
                             class="form-control mb-3"
                             v-model="newNovedad.tipoNovedad"
                             required
@@ -241,13 +241,13 @@
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <label for="FechaBaja"></label>
+                        <label for="fechaBaja"></label>
                         Fecha de inicio
                         <input
                             required
                             class="form-control mb-3"
-                            type="Datetime-local"
-                            name="FechaBaja"
+                            type="Date"
+                            name="fechaBaja"
                             v-model="newNovedad.fechaBaja"
                         />
                     </div>
@@ -263,28 +263,27 @@
                         <label class="form-check-label" for="HNA">HNA</label>
                     </div>
                     <div class="col-3" v-if="!newNovedad.HNA">
-                        <label for="FechaAlta"></label>
+                        <label for="fechaAlta"></label>
                         Fecha de fin
                         <input
                             class="form-control mb-3"
-                            type="Datetime-local"
-                            name="FechaAlta"
+                            type="Date"
+                            name="fechaAlta"
                             v-model="newNovedad.fechaAlta"
                         />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="Detalle"></label>
+                        <label for="detalle"></label>
                         Detalle
                         <textarea
                             class="form-control mb-3"
-                            name="Detalle"
-                            v-model="newNovedad.Detalle"
+                            name="detalle"
+                            v-model="newNovedad.detalle"
                         ></textarea>
                     </div>
                 </div>
-
 
                 <button
                     type="button"
@@ -292,7 +291,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#modalRemplazo"
                 >
-                Agregar Remplazo
+                    Agregar Remplazo
                 </button>
 
                 <div
@@ -360,7 +359,13 @@
                                                 {{ personal.turno }}
                                             </td>
                                             <td class="col-1">
-                                                {{ days[personal.franco] }}
+                                                {{
+                                                    days[
+                                                        parseInt(
+                                                            personal.franco
+                                                        )
+                                                    ]
+                                                }}
                                             </td>
                                             <td class="col-1">
                                                 {{ personal.especialidad }}
@@ -391,6 +396,7 @@
                             <th>Función</th>
                             <th>Desde</th>
                             <th>Hasta</th>
+                            <th>Borrar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -408,10 +414,31 @@
                                 {{ remplazo.nombres }}
                             </td>
                             <td>
-                                {{ remplazo.inicioRelevo }}
+                                {{ remplazo.especialidad }}
                             </td>
                             <td>
-                                {{ remplazo.inicioRelevo }}
+                                <input
+                                    required
+                                    class="form-control mb-3"
+                                    type="Date"
+                                    name="FechaBaja"
+                                    v-model="remplazo.inicioRelevo"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    class="form-control mb-3"
+                                    type="Date"
+                                    name="FechaBaja"
+                                    v-model="remplazo.finRelevo"
+                                />
+                            </td>
+                            <td>
+                                <i
+                                    class="fa-solid fa-x fa-xl"
+                                    style="color: #ff0000"
+                                    @click="newNovedad.remplazo.splice( index, 1 )"
+                                ></i>
                             </td>
                         </tr>
                     </tbody>
@@ -429,7 +456,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad } from "../../interfaces/INovedades";
+import { Novedad, Remplazo } from '../../interfaces/INovedades';
 import {
     createNovedad,
     getUltimaNovedad,
@@ -461,8 +488,10 @@ export default defineComponent({
             try {
                 this.newNovedad._id = this.ultimoId + 1;
                 if (this.newNovedad.HNA) {
-                    this.newNovedad.fechaAlta = new Date("");
+                    this.newNovedad.fechaAlta = "";
                 }
+                console.log(this.newNovedad);
+                
                 const res = await createNovedad(this.newNovedad);
                 console.log(res);
                 this.$router.push({ name: "Novedades" });
@@ -487,29 +516,35 @@ export default defineComponent({
             this.newNovedad.nombres = personal.nombres;
             this.newNovedad.especialidad = personal.especialidad;
             this.newNovedad.turno = personal.turno;
-            this.newNovedad.franco = this.days[personal.franco];
+            this.newNovedad.franco = parseInt(personal.franco);
             this.newNovedad.base = personal.dotacion;
         },
-        selectRemplazo(personal: IPersonal){
+        selectRemplazo(personal: IPersonal) {
             let remplazo = {
-                legajo : personal.legajo,
-                apellido : personal.apellido,
-                nombres : personal.nombres,
-                base : personal.dotacion,
-                especialidad : personal.especialidad,
-                turno : personal.turno,
-                franco : personal.franco,
-                inicioRelevo : Date(),
-                finRelevo: Date(),
-                HNA: false
+                legajo: personal.legajo,
+                apellido: personal.apellido,
+                nombres: personal.nombres,
+                base: personal.dotacion,
+                especialidad: personal.especialidad,
+                turno: personal.turno,
+                franco: personal.franco,
+                HNA: false,
+            } as Remplazo;
+
+            if (this.newNovedad.remplazo === undefined) {
+                this.newNovedad.remplazo = [remplazo];
+            } else {
+                this.newNovedad.remplazo.push(remplazo);
             }
-            this.newNovedad.remplazo.push(remplazo); 
+
+            console.log(this.newNovedad);
         },
         searchPersonal() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return (
-                        personal.apellido.toLowerCase() + ' ' +
+                        personal.apellido.toLowerCase() +
+                        " " +
                         personal.nombres.toLowerCase()
                     ).includes(this.search.toLowerCase());
                 }
