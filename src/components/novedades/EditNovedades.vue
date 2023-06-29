@@ -112,6 +112,7 @@
                             type="text"
                             name="legajo"
                             v-model="novedad.legajo"
+                            @change="searchPersonalPorLegajo()"
                             autofocus
                         />
                     </div>
@@ -319,7 +320,7 @@
                                             <th>Legajo</th>
                                             <th>Apellido</th>
                                             <th>Nombre</th>
-                                            <th>Dotacion</th>
+                                            <th>Dotación</th>
                                             <th>Turno</th>
                                             <th>Franco</th>
                                             <th>Especialidad</th>
@@ -349,13 +350,7 @@
                                                 {{ personal.turno }}
                                             </td>
                                             <td class="col-1">
-                                                {{
-                                                    days[
-                                                        parseInt(
-                                                            personal.franco
-                                                        )
-                                                    ]
-                                                }}
+                                                {{ days[personal.franco] }}
                                             </td>
                                             <td class="col-1">
                                                 {{ personal.especialidad }}
@@ -469,6 +464,7 @@ export default defineComponent({
         };
     },
     methods: {
+        /* Este método busca la novedad en el backend por medio de una consulta HTML:GET */
         async loadNovedad(id: string) {
             try {
                 const { data } = await getNovedad(id);
@@ -477,10 +473,15 @@ export default defineComponent({
                 console.error(error);
             }
         },
+        /* Este método trae la lista de todos los personales.
+        DADO QUE EL TIEMPO DE ESTA CONSULTA ES SUPERIOR AL DE LA NOVEDAD. Tuve que llamar a la función 
+        searchPersonalPorLegajo desde selectPersonal*/
         async loadPersonales() {
             const res = await getPersonales();
             this.personales = res.data;
+            this.searchPersonalPorLegajo();
         },
+        /* Este método actualiza los cambios en el formulario */
         async handleUpdateNovedad() {
             try {
                 if (typeof this.$route.params.id === "string") {
@@ -491,15 +492,14 @@ export default defineComponent({
                 console.error(error);
             }
         },
+        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y 
+        llama a el método de búsqueda por legajo */
         selectPersonal(personal: IPersonal) {
             this.novedad.legajo = personal.legajo;
-            this.novedad.apellido = personal.apellido;
-            this.novedad.nombres = personal.nombres;
-            this.novedad.especialidad = personal.especialidad;
-            this.novedad.turno = personal.turno;
-            this.novedad.franco = parseInt(personal.franco);
-            this.novedad.base = personal.dotacion;
+            this.searchPersonalPorLegajo();
         },
+        /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
+         pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
             let remplazo = {
                 legajo: personal.legajo,
@@ -508,7 +508,7 @@ export default defineComponent({
                 base: personal.dotacion,
                 especialidad: personal.especialidad,
                 turno: personal.turno,
-                franco: personal.franco,
+                franco: this.days[personal.franco],
                 HNA: false,
             } as Remplazo;
 
@@ -517,9 +517,9 @@ export default defineComponent({
             } else {
                 this.novedad.remplazo.push(remplazo);
             }
-
-            console.log(this.novedad);
         },
+        /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
+        nombre y apellido el personal */
         searchPersonal() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
@@ -531,13 +531,29 @@ export default defineComponent({
                 }
             );
         },
+        /*  realiza la búsqueda por el legajo introducido en el respectivo input */
+        searchPersonalPorLegajo() {
+            this.personalEncontrado = this.personales.filter(
+                (personal: IPersonal) => {
+                    return personal.legajo == Number(this.novedad.legajo);
+                }
+            );
+
+            if (this.personalEncontrado[0]) {
+                this.novedad.apellido = this.personalEncontrado[0].apellido;
+                this.novedad.nombres = this.personalEncontrado[0].nombres;
+                this.novedad.base = this.personalEncontrado[0].dotacion;
+                this.novedad.especialidad = this.personalEncontrado[0].especialidad;
+                this.novedad.turno = this.personalEncontrado[0].turno;
+                this.novedad.franco = this.days[this.personalEncontrado[0].franco];
+            }
+        },
     },
     mounted() {
+        this.loadPersonales();
         if (typeof this.$route.params.id === "string") {
             this.loadNovedad(this.$route.params.id);
         }
-        this.loadPersonales();
-        this.novedad.HNA = true;
     },
     components: {
         NavBar,

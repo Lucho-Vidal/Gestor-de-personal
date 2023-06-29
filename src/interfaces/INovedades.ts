@@ -6,7 +6,7 @@ export interface Novedad {
     base: string;
     especialidad: string;
     turno: string;
-    franco: number;
+    franco: string;
     tipoNovedad:string;
     fechaBaja:string;
     fechaAlta:string;
@@ -14,7 +14,6 @@ export interface Novedad {
     detalle:string;
     remplazo: Array<Remplazo>;
 }
-
 export interface Remplazo{
     legajo:number;
     apellido: string;

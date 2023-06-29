@@ -117,7 +117,7 @@
                             name="legajo"
                             autofocus
                             required
-                            @change="searchPersonalById()"
+                            @change="searchPersonalPorLegajo()"
                             v-model="newNovedad.legajo"
                         />
                     </div>
@@ -191,7 +191,7 @@
                             placeholder=""
                             type="text"
                             name="franco"
-                            v-model="days[newNovedad.franco]"
+                            v-model="newNovedad.franco"
                             disabled
                         />
                     </div>
@@ -320,7 +320,6 @@
                                     class="form-control my-3"
                                     placeholder="Ingrese algo"
                                     v-model="search"
-                                    autofocus
                                     @keyup="searchPersonal()"
                                 />
                                 <table class="table table-hover" v-if="search">
@@ -359,13 +358,7 @@
                                                 {{ personal.turno }}
                                             </td>
                                             <td class="col-1">
-                                                {{
-                                                    days[
-                                                        parseInt(
-                                                            personal.franco
-                                                        )
-                                                    ]
-                                                }}
+                                                {{ days[personal.franco] }}
                                             </td>
                                             <td class="col-1">
                                                 {{ personal.especialidad }}
@@ -437,7 +430,9 @@
                                 <i
                                     class="fa-solid fa-x fa-xl"
                                     style="color: #ff0000"
-                                    @click="newNovedad.remplazo.splice( index, 1 )"
+                                    @click="
+                                        newNovedad.remplazo.splice(index, 1)
+                                    "
                                 ></i>
                             </td>
                         </tr>
@@ -456,7 +451,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad, Remplazo } from '../../interfaces/INovedades';
+import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import {
     createNovedad,
     getUltimaNovedad,
@@ -484,41 +479,49 @@ export default defineComponent({
         };
     },
     methods: {
+        /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
         async saveNovedad() {
             try {
                 this.newNovedad._id = this.ultimoId + 1;
                 if (this.newNovedad.HNA) {
                     this.newNovedad.fechaAlta = "";
                 }
-                console.log(this.newNovedad);
-                
-                const res = await createNovedad(this.newNovedad);
-                console.log(res);
-                this.$router.push({ name: "Novedades" });
+                if (
+                    this.newNovedad.remplazo.length > 0 
+                ) {
+                    alert(
+                        "La fecha de inicio de la Novedad no puede ser posterior a la del inicio del relevo"
+                    );
+                    return;
+                }
+
+                console.log(new Date(this.newNovedad.fechaBaja));
+
+                /* await createNovedad(this.newNovedad);
+                this.$router.push({ name: "Novedades" }); */
             } catch (error) {
                 console.log(error);
             }
         },
+        /* Este método obtiene a traves de una consulta HTML:GET el ultimo 
+        Id de los documentos guardados con el fin de asignarle a la nueva novedad el id proximo */
         async obtenerUltimoId() {
             const res = await getUltimaNovedad();
             this.ultimoId = res.data[0]._id;
         },
+        /* Este método trae la lista de todos los personales */
         async loadPersonales() {
             const res = await getPersonales();
             this.personales = res.data;
         },
-        cargarPersonal() {
-            console.log();
-        },
+        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el newNovedad.legajo y 
+        llama a el método de búsqueda por legajo  */
         selectPersonal(personal: IPersonal) {
             this.newNovedad.legajo = personal.legajo;
-            this.newNovedad.apellido = personal.apellido;
-            this.newNovedad.nombres = personal.nombres;
-            this.newNovedad.especialidad = personal.especialidad;
-            this.newNovedad.turno = personal.turno;
-            this.newNovedad.franco = parseInt(personal.franco);
-            this.newNovedad.base = personal.dotacion;
+            this.searchPersonalPorLegajo();
         },
+        /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
+         pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
             let remplazo = {
                 legajo: personal.legajo,
@@ -527,7 +530,7 @@ export default defineComponent({
                 base: personal.dotacion,
                 especialidad: personal.especialidad,
                 turno: personal.turno,
-                franco: personal.franco,
+                franco: this.days[personal.franco],
                 HNA: false,
             } as Remplazo;
 
@@ -536,9 +539,9 @@ export default defineComponent({
             } else {
                 this.newNovedad.remplazo.push(remplazo);
             }
-
-            console.log(this.newNovedad);
         },
+        /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
+        nombre y apellido el personal */
         searchPersonal() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
@@ -550,14 +553,22 @@ export default defineComponent({
                 }
             );
         },
-        searchPersonalById() {
+        /*  realiza la búsqueda por el legajo introducido en el respectivo input */
+        searchPersonalPorLegajo() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.newNovedad.legajo;
                 }
             );
             if (this.personalEncontrado[0]) {
-                this.selectPersonal(this.personalEncontrado[0]);
+                this.newNovedad.apellido = this.personalEncontrado[0].apellido;
+                this.newNovedad.nombres = this.personalEncontrado[0].nombres;
+                this.newNovedad.base = this.personalEncontrado[0].dotacion;
+                this.newNovedad.especialidad =
+                    this.personalEncontrado[0].especialidad;
+                this.newNovedad.turno = this.personalEncontrado[0].turno;
+                this.newNovedad.franco =
+                    this.days[this.personalEncontrado[0].franco];
             }
         },
     },
