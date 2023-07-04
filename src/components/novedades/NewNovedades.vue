@@ -5,7 +5,9 @@
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nueva Novedad
             </h1>
-
+            <div class="alert alert-danger" role="alert" v-if="alerta">
+                {{ alerta }}
+            </div>
             <!-- <modalBuscarPersonal :personales="personales" /> -->
 
             <button
@@ -45,7 +47,7 @@
                                 list="personales"
                                 v-model="search"
                                 autofocus
-                                @keyup="searchPersonal()"
+                                @keyup="searchPersonal(false)"
                             />
                             <table class="table table-hover" v-if="search">
                                 <thead>
@@ -320,7 +322,7 @@
                                     class="form-control my-3"
                                     placeholder="Ingrese algo"
                                     v-model="search"
-                                    @keyup="searchPersonal()"
+                                    @keyup="searchPersonal(true)"
                                 />
                                 <table class="table table-hover" v-if="search">
                                     <thead>
@@ -451,9 +453,10 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad, Remplazo } from "../../interfaces/INovedades";
+import { Novedad, Remplazo } from '../../interfaces/INovedades';
 import {
     createNovedad,
+    getNovedades,
     getUltimaNovedad,
 } from "../../services/novedadesService";
 import { getPersonales } from "../../services/personalService";
@@ -462,6 +465,7 @@ import { IPersonal } from "../../interfaces/IPersonal";
 export default defineComponent({
     data() {
         return {
+            novedades: [] as Novedad[],
             newNovedad: {} as Novedad,
             ultimoId: 0,
             personales: [] as IPersonal[],
@@ -476,6 +480,7 @@ export default defineComponent({
             ],
             search: "" as string,
             personalEncontrado: [] as IPersonal[],
+            alerta: "" as string,
         };
     },
     methods: {
@@ -486,39 +491,108 @@ export default defineComponent({
                 if (this.newNovedad.HNA) {
                     this.newNovedad.fechaAlta = "";
                 }
-                if (
-                    this.newNovedad.remplazo.length > 0 
-                ) {
-                    alert(
-                        "La fecha de inicio de la Novedad no puede ser posterior a la del inicio del relevo"
-                    );
-                    return;
+                if (this.newNovedad.remplazo !== undefined) {
+                    if (
+                        new Date(this.newNovedad.fechaBaja) >
+                        new Date(this.newNovedad.remplazo[0].inicioRelevo)
+                    ) {
+                        this.alerta =
+                            "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                        return;
+                    }
+                    if (
+                        new Date(this.newNovedad.fechaAlta) <
+                        new Date(this.newNovedad.remplazo[0].finRelevo)
+                    ) {
+                        this.alerta =
+                            "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
+                        return;
+                    }
+                    if (this.newNovedad.remplazo.length > 1) {
+                        console.log();
+                        for (
+                            let i = 0;
+                            i < this.newNovedad.remplazo.length - 1;
+                            i++
+                        ) {
+                            if (!this.newNovedad.remplazo[i].finRelevo) {
+                                this.alerta =
+                                    "No puede haber mas de un relevo sin fecha de finalización ";
+                                return;
+                            }
+                            if (
+                                new Date(
+                                    this.newNovedad.remplazo[i].finRelevo
+                                ) >=
+                                new Date(
+                                    this.newNovedad.remplazo[i + 1].inicioRelevo
+                                )
+                            ) {
+                                this.alerta =
+                                    "Un turno no puede ser relevado por dos personas el mismo dia";
+                                return;
+                            }
+                        }
+                    }
                 }
-
-                console.log(new Date(this.newNovedad.fechaBaja));
-
-                /* await createNovedad(this.newNovedad);
-                this.$router.push({ name: "Novedades" }); */
+                await createNovedad(this.newNovedad);
+                this.$router.push({ name: "Novedades" });
             } catch (error) {
                 console.log(error);
             }
         },
-        /* Este método obtiene a traves de una consulta HTML:GET el ultimo 
+        /* Este método obtiene a traves de una consulta HTML:GET el ultimo
         Id de los documentos guardados con el fin de asignarle a la nueva novedad el id proximo */
         async obtenerUltimoId() {
             const res = await getUltimaNovedad();
             this.ultimoId = res.data[0]._id;
+        },
+        async loadNovedades() {
+            const res = await getNovedades();
+            this.novedades = res.data;
         },
         /* Este método trae la lista de todos los personales */
         async loadPersonales() {
             const res = await getPersonales();
             this.personales = res.data;
         },
-        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el newNovedad.legajo y 
+        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el newNovedad.legajo y
         llama a el método de búsqueda por legajo  */
         selectPersonal(personal: IPersonal) {
             this.newNovedad.legajo = personal.legajo;
             this.searchPersonalPorLegajo();
+            //si es de ciclo voy a verificar que no este en un turno
+            //if(personal.turno.includes("Ciclo")){
+                this.novedadConRelevoAsignado(personal.legajo);
+            //}
+            
+        },
+        novedadConRelevoAsignado(legajo:number) {
+            /* Primero busco todas las novedades que tienen al personal relevando */
+            let resultado:Novedad[] = []; 
+            this.novedades.forEach((novedad: Novedad )=>{
+
+                novedad.remplazo.forEach((remp:Remplazo) =>{
+                    if (remp){
+                        if (remp.legajo == legajo){
+                            resultado.push(novedad)
+                        } 
+                    }                    
+                })
+                
+            })
+            if(resultado){
+                resultado.forEach(nov=>{
+                    nov.remplazo.filter(rem=>{
+                        console.log(rem.finRelevo);
+                        
+                        console.log( new Date() < new Date(rem.finRelevo) )
+                        
+                    })
+                })
+            }
+            console.log(resultado);
+            
         },
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
@@ -540,16 +614,30 @@ export default defineComponent({
                 this.newNovedad.remplazo.push(remplazo);
             }
         },
-        /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
+
+        searchPersonal(soloCiclo: boolean) {
+            /* Este método funciona dentro del modal, al escribir dentro del input filtra por
         nombre y apellido el personal */
-        searchPersonal() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
-                    return (
-                        personal.apellido.toLowerCase() +
-                        " " +
-                        personal.nombres.toLowerCase()
-                    ).includes(this.search.toLowerCase());
+                    if (!soloCiclo) {
+                        return (
+                            personal.apellido.toLowerCase() +
+                            " " +
+                            personal.nombres.toLowerCase()
+                        ).includes(this.search.toLowerCase());
+                    } else {
+                        //el remplazo debe ser personal de ciclo y de la misma base
+                        return (
+                            (
+                                personal.apellido.toLowerCase() +
+                                " " +
+                                personal.nombres.toLowerCase()
+                            ).includes(this.search.toLowerCase()) &&
+                            personal.turno.toLowerCase().includes("ciclo") &&
+                            personal.dotacion === this.newNovedad.base
+                        );
+                    }
                 }
             );
         },
@@ -575,6 +663,7 @@ export default defineComponent({
     mounted() {
         this.obtenerUltimoId();
         this.loadPersonales();
+        this.loadNovedades();
         this.newNovedad.HNA = true;
     },
     components: {

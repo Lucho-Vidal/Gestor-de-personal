@@ -41,7 +41,7 @@
                                 list="personales"
                                 v-model="search"
                                 autofocus
-                                @keyup="searchPersonal()"
+                                @keyup="searchPersonal(false)"
                             />
                             <table class="table table-hover" v-if="search">
                                 <thead>
@@ -312,7 +312,7 @@
                                     placeholder="Ingrese algo"
                                     v-model="search"
                                     autofocus
-                                    @keyup="searchPersonal()"
+                                    @keyup="searchPersonal(true)"
                                 />
                                 <table class="table table-hover" v-if="search">
                                     <thead>
@@ -485,6 +485,60 @@ export default defineComponent({
         async handleUpdateNovedad() {
             try {
                 if (typeof this.$route.params.id === "string") {
+                    if (this.novedad.HNA) {
+                        this.novedad.fechaAlta = "";
+                    }
+                    if (this.novedad.remplazo !== undefined) {
+                        if (
+                            new Date(this.novedad.fechaBaja) >
+                            new Date(this.novedad.remplazo[0].inicioRelevo)
+                        ) {
+                            alert(
+                                "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad"
+                            );
+                            return;
+                        }
+                        if (
+                            new Date(this.novedad.fechaAlta) <
+                            new Date(this.novedad.remplazo[0].finRelevo)
+                        ) {
+                            alert(
+                                "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad"
+                            );
+                            return;
+                        }
+                        if (this.novedad.remplazo.length > 1) {
+                            console.log();
+                            for (
+                                let i = 0;
+                                i < this.novedad.remplazo.length - 1;
+                                i++
+                            ) {
+                                if (!this.novedad.remplazo[i].finRelevo) {
+                                    alert(
+                                        "No puede haber mas de un relevo sin fecha de finalización "
+                                    );
+                                    return;
+                                }
+                                if (
+                                    new Date(
+                                        this.novedad.remplazo[i].finRelevo
+                                    ) >=
+                                    new Date(
+                                        this.novedad.remplazo[
+                                            i + 1
+                                        ].inicioRelevo
+                                    )
+                                ) {
+                                    alert(
+                                        "Un turno no puede ser relevado por dos personas el mismo dia"
+                                    );
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
                     await updateNovedad(this.$route.params.id, this.novedad);
                     this.$router.push(`/novedades`);
                 }
@@ -520,16 +574,24 @@ export default defineComponent({
         },
         /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
         nombre y apellido el personal */
-        searchPersonal() {
-            this.personalEncontrado = this.personales.filter(
-                (personal: IPersonal) => {
-                    return (
-                        personal.apellido.toLowerCase() +
-                        " " +
-                        personal.nombres.toLowerCase()
-                    ).includes(this.search.toLowerCase());
+        searchPersonal(soloCiclo:boolean) {
+            this.personalEncontrado = this.personales.filter((personal: IPersonal) => {
+                if(!soloCiclo)  {
+                    return(
+                    personal.apellido.toLowerCase() +
+                    " " +
+                    personal.nombres.toLowerCase()
+                ).includes(this.search.toLowerCase())
+                }else{//el remplazo debe ser personal de ciclo y de la misma base
+                    return(
+                    personal.apellido.toLowerCase() +
+                    " " +
+                    personal.nombres.toLowerCase()
+                ).includes(this.search.toLowerCase()) &&
+                personal.turno.toLowerCase().includes("ciclo")&&
+                personal.dotacion === this.novedad.base
                 }
-            );
+            })
         },
         /*  realiza la búsqueda por el legajo introducido en el respectivo input */
         searchPersonalPorLegajo() {
@@ -543,9 +605,11 @@ export default defineComponent({
                 this.novedad.apellido = this.personalEncontrado[0].apellido;
                 this.novedad.nombres = this.personalEncontrado[0].nombres;
                 this.novedad.base = this.personalEncontrado[0].dotacion;
-                this.novedad.especialidad = this.personalEncontrado[0].especialidad;
+                this.novedad.especialidad =
+                    this.personalEncontrado[0].especialidad;
                 this.novedad.turno = this.personalEncontrado[0].turno;
-                this.novedad.franco = this.days[this.personalEncontrado[0].franco];
+                this.novedad.franco =
+                    this.days[this.personalEncontrado[0].franco];
             }
         },
     },
