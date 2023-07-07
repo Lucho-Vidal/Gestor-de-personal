@@ -85,7 +85,7 @@
                                             {{ personal.turno }}
                                         </td>
                                         <td class="col-1">
-                                            {{ personal.franco }}
+                                            {{days[ personal.franco] }}
                                         </td>
                                         <td class="col-1">
                                             {{ personal.especialidad }}
@@ -119,7 +119,7 @@
                             name="legajo"
                             autofocus
                             required
-                            @change="searchPersonalPorLegajo()"
+                            @change="searchPersonalPorLegajo(newNovedad.legajo)"
                             v-model="newNovedad.legajo"
                         />
                     </div>
@@ -560,10 +560,10 @@ export default defineComponent({
         llama a el método de búsqueda por legajo  */
         selectPersonal(personal: IPersonal) {
             this.newNovedad.legajo = personal.legajo;
-            this.searchPersonalPorLegajo();
+            this.searchPersonalPorLegajo(personal.legajo);
             //si es de ciclo voy a verificar que no este en un turno
             //if(personal.turno.includes("Ciclo")){
-                this.novedadConRelevoAsignado(personal.legajo);
+                //this.novedadConRelevoAsignado(personal.legajo);
             //}
             
         },
@@ -574,14 +574,20 @@ export default defineComponent({
 
                 novedad.remplazo.forEach((remp:Remplazo) =>{
                     if (remp){
-                        if (remp.legajo == legajo){
+                        if (remp.legajo == legajo && (remp.finRelevo.length == 0 || new Date() < new Date(remp.finRelevo) )){
                             resultado.push(novedad)
+                            //TODO 
+                            console.log(remp.finRelevo.length);
+                            
+                            if(remp.finRelevo.length == 0){
+                                console.log("entro a remp.finRelevo");
+                            }
                         } 
                     }                    
                 })
                 
             })
-            if(resultado){
+            /* if(resultado){
                 resultado.forEach(nov=>{
                     nov.remplazo.filter(rem=>{
                         console.log(rem.finRelevo);
@@ -590,7 +596,7 @@ export default defineComponent({
                         
                     })
                 })
-            }
+            } */
             console.log(resultado);
             
         },
@@ -642,7 +648,7 @@ export default defineComponent({
             );
         },
         /*  realiza la búsqueda por el legajo introducido en el respectivo input */
-        searchPersonalPorLegajo() {
+        searchPersonalPorLegajo(legajo:number) {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.newNovedad.legajo;
@@ -658,6 +664,7 @@ export default defineComponent({
                 this.newNovedad.franco =
                     this.days[this.personalEncontrado[0].franco];
             }
+            this.novedadConRelevoAsignado(legajo);
         },
     },
     mounted() {

@@ -22,7 +22,7 @@ export interface Remplazo{
     especialidad: string;
     turno: string;
     franco: string;
-    inicioRelevo:Date;
-    finRelevo:Date;
+    inicioRelevo:string;
+    finRelevo:string;
     HNA:boolean;
 }
