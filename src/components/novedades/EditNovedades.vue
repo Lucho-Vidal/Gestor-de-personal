@@ -428,7 +428,8 @@
                     </tbody>
                 </table>
 
-                <button class="btn btn-primary col-1">Guardar</button>
+                <button class="btn btn-primary col-1 m-2">Guardar</button>
+                <i class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</i>
             </form>
         </main>
 
@@ -545,6 +546,9 @@ export default defineComponent({
             } catch (error) {
                 console.error(error);
             }
+        },
+        cerrar(){
+            this.$router.push({ name: "Novedades" });
         },
         /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y 
         llama a el método de búsqueda por legajo */

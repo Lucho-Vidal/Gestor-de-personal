@@ -6,6 +6,8 @@
                 Cargar Nueva Novedad
             </h1>
             <div class="alert alert-danger" role="alert" v-if="alerta">
+                <h4 class="alert-heading">ATENCIÓN!</h4>
+                <hr>
                 {{ alerta }}
             </div>
             <!-- <modalBuscarPersonal :personales="personales" /> -->
@@ -85,7 +87,7 @@
                                             {{ personal.turno }}
                                         </td>
                                         <td class="col-1">
-                                            {{days[ personal.franco] }}
+                                            {{ days[personal.franco] }}
                                         </td>
                                         <td class="col-1">
                                             {{ personal.especialidad }}
@@ -119,7 +121,7 @@
                             name="legajo"
                             autofocus
                             required
-                            @change="searchPersonalPorLegajo(newNovedad.legajo)"
+                            @change="searchPersonalPorLegajo()"
                             v-model="newNovedad.legajo"
                         />
                     </div>
@@ -268,6 +270,7 @@
                         <label for="fechaAlta"></label>
                         Fecha de fin
                         <input
+                            required
                             class="form-control mb-3"
                             type="Date"
                             name="fechaAlta"
@@ -441,7 +444,8 @@
                     </tbody>
                 </table>
 
-                <button class="btn btn-primary col-1">Guardar</button>
+                <button class="btn btn-primary col-1 m-2">Guardar</button>
+                <i class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</i>
             </form>
         </main>
 
@@ -453,7 +457,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad, Remplazo } from '../../interfaces/INovedades';
+import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import {
     createNovedad,
     getNovedades,
@@ -534,12 +538,39 @@ export default defineComponent({
                             }
                         }
                     }
+                    if (
+                        !this.newNovedad.HNA &&
+                        (this.newNovedad.remplazo[
+                            this.newNovedad.remplazo.length - 1
+                        ].finRelevo == undefined ||
+                            this.newNovedad.remplazo[
+                                this.newNovedad.remplazo.length - 1
+                            ].finRelevo == "")
+                    ) {
+                        //si la novedad no es HNA y la ultima novedad no tiene fecha de fin, le asigna la fecha de alta a el fin del ultimo remplazo
+                        this.newNovedad.remplazo[
+                            this.newNovedad.remplazo.length - 1
+                        ].finRelevo = this.newNovedad.fechaAlta;
+                    }
+                    
+                }
+                if(this.alerta){
+                    if (this.alerta.includes("ATENCIÓN")){
+                        this.$router.push({ name: "Novedades" });
+                    }else if(this.alerta.includes("finalice el relevo")){
+                        this.alerta =  " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " + this.alerta 
+                    }
+                    
+                    return;
                 }
                 await createNovedad(this.newNovedad);
                 this.$router.push({ name: "Novedades" });
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
+        },
+        cerrar(){
+            this.$router.push({ name: "Novedades" });
         },
         /* Este método obtiene a traves de una consulta HTML:GET el ultimo
         Id de los documentos guardados con el fin de asignarle a la nueva novedad el id proximo */
@@ -560,45 +591,44 @@ export default defineComponent({
         llama a el método de búsqueda por legajo  */
         selectPersonal(personal: IPersonal) {
             this.newNovedad.legajo = personal.legajo;
-            this.searchPersonalPorLegajo(personal.legajo);
+            this.searchPersonalPorLegajo();
             //si es de ciclo voy a verificar que no este en un turno
             //if(personal.turno.includes("Ciclo")){
-                //this.novedadConRelevoAsignado(personal.legajo);
+            //this.novedadConRelevoAsignado(personal.legajo);
             //}
-            
         },
-        novedadConRelevoAsignado(legajo:number) {
+        personalConNovedadActiva(personal:IPersonal) {
             /* Primero busco todas las novedades que tienen al personal relevando */
-            let resultado:Novedad[] = []; 
-            this.novedades.forEach((novedad: Novedad )=>{
-
-                novedad.remplazo.forEach((remp:Remplazo) =>{
-                    if (remp){
-                        if (remp.legajo == legajo && (remp.finRelevo.length == 0 || new Date() < new Date(remp.finRelevo) )){
-                            resultado.push(novedad)
-                            //TODO 
-                            console.log(remp.finRelevo.length);
-                            
-                            if(remp.finRelevo.length == 0){
-                                console.log("entro a remp.finRelevo");
-                            }
-                        } 
-                    }                    
-                })
-                
-            })
-            /* if(resultado){
-                resultado.forEach(nov=>{
-                    nov.remplazo.filter(rem=>{
-                        console.log(rem.finRelevo);
-                        
-                        console.log( new Date() < new Date(rem.finRelevo) )
-                        
-                    })
-                })
-            } */
-            console.log(resultado);
+            let dateHoy = new Date()
+            dateHoy.setHours(12)
             
+            this.novedades.forEach((novedad: Novedad) => {
+                if(personal.turno.includes("Ciclo")){
+                    novedad.remplazo.forEach((remp: Remplazo) => {
+                        if (remp) {
+                            if (remp.legajo == personal.legajo) {
+                                
+                                
+                                                            
+                                if (
+                                    (remp.finRelevo === undefined || remp.finRelevo === "") 
+                                    ||dateHoy < new Date(remp.finRelevo)
+                                ) {
+                                    this.alerta =
+                                "Este personal se encuentra relevando la novedad N°"+ novedad._id + ". Por favor, finalice el relevo para poder continuar";
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                if (novedad.legajo == personal.legajo){
+                    if (novedad.HNA){
+                        this.alerta =
+                                "Este personal se encuentra de baja por la siguiente novedad N°"+ novedad._id + ". Por favor, finalice el relevo para poder continuar";
+                    }  
+                }
+            });
         },
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
@@ -648,13 +678,16 @@ export default defineComponent({
             );
         },
         /*  realiza la búsqueda por el legajo introducido en el respectivo input */
-        searchPersonalPorLegajo(legajo:number) {
+        searchPersonalPorLegajo() {
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.newNovedad.legajo;
                 }
             );
             if (this.personalEncontrado[0]) {
+                
+                this.personalConNovedadActiva(this.personalEncontrado[0]);
+                
                 this.newNovedad.apellido = this.personalEncontrado[0].apellido;
                 this.newNovedad.nombres = this.personalEncontrado[0].nombres;
                 this.newNovedad.base = this.personalEncontrado[0].dotacion;
@@ -664,7 +697,6 @@ export default defineComponent({
                 this.newNovedad.franco =
                     this.days[this.personalEncontrado[0].franco];
             }
-            this.novedadConRelevoAsignado(legajo);
         },
     },
     mounted() {
