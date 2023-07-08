@@ -54,5 +54,7 @@ const novedadSchema = new Schema<INovedad>({
     HNA: Boolean,
     detalle: String,
     remplazo: [] 
+},{
+    timestamps: true
 });
 export default model<INovedad>("Novedad",novedadSchema);
