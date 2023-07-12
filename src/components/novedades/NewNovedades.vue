@@ -679,6 +679,7 @@ export default defineComponent({
         },
         /*  realiza la búsqueda por el legajo introducido en el respectivo input */
         searchPersonalPorLegajo() {
+            this.alerta = "";
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.newNovedad.legajo;
