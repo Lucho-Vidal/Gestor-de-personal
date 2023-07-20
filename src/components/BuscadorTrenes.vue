@@ -68,9 +68,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ind, index) in indFiltrado" :key="index">
-                        <td class="w-10">{{ ind.diagrama.refer }}</td>
+                        <td class="w-10">{{ ind.vueltas[0] }}</td>
                         <td class="w-10">{{ ind.turno }}</td>
-                        <td class="w-10">{{ ind.diagrama.observaciones }}</td>
+                        <td class="w-10">{{ ind.vueltas[0].observaciones }}</td>
                         <td colspan="2" class="w-10">{{ ind.personal }}</td>
                         <td class="w-10">{{ ind.toma }}</td>
                         <td class="w-10">{{ ind.deja }}</td>
@@ -97,15 +97,15 @@
                 </thead>
                 <tbody>
                     <tr v-for="(vuelta, index) in turno" :key="index">
-                        <td class="w-10">{{ vuelta.diagrama.vuelta }}</td>
-                        <td class="w-40">{{ vuelta.diagrama.refer }}</td>
-                        <td class="w-10">{{ vuelta.diagrama.tren }}</td>
-                        <td class="w-10">{{ vuelta.diagrama.origen }}</td>
-                        <td class="w-10">{{ vuelta.diagrama.sale }}</td>
-                        <td class="w-10">{{ vuelta.diagrama.destino }}</td>
-                        <td class="w-10">{{ vuelta.diagrama.llega }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].vuelta }}</td>
+                        <td class="w-40">{{ vuelta.vueltas[0].refer }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].tren }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].origen }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].sale }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].destino }}</td>
+                        <td class="w-10">{{ vuelta.vueltas[0].llega }}</td>
                         <td class="w-20">
-                            {{ vuelta.diagrama.observaciones }}
+                            {{ vuelta.vueltas[0].observaciones }}
                         </td>
                     </tr>
                 </tbody>
@@ -118,7 +118,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
-import { getIndice } from "../services/indicesService";
+import { getTurnos } from "../services/turnosService";
 import { ITurno } from "../interfaces/ITurno";
 import FooterPage from "./FooterPage.vue";
 import { Itinerario } from "../interfaces/Itinerario";
@@ -152,8 +152,8 @@ export default defineComponent({
     methods: {
         async loadIndices() {
             /* Trae todos los elementos de la base de datos  */
-            const res = await getIndice();
-            this.indice = res.data;
+            const res = await getTurnos();
+            this.turno = res.data;
         },
         async loadItinerario() {
             /* Trae todos los elementos de la base de datos */
@@ -176,8 +176,8 @@ export default defineComponent({
         filtroTrenes() {
             /* Este método buscar y filtra en el array indice el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
-            this.indFiltrado = this.indice.filter((ind: Indice) => {
-                return ind.diagrama.tren == parseInt(this.tren);
+            this.indFiltrado = this.turno.filter((ind: ITurno) => {
+                return ind.vueltas[0].tren == parseInt(this.tren);
             });
         },
         filtroItinerario() {
@@ -191,9 +191,9 @@ export default defineComponent({
             /* Este método es el encargado de buscar los turno en cada búsqueda.
             Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
             this.turnos = [];
-            this.indFiltrado.forEach((turno: Indice) => {
+            this.indFiltrado.forEach((turno: ITurno) => {
                 this.turnos.push(
-                    this.indice.filter((ind: Indice) => {
+                    this.turno.filter((ind: ITurno) => {
                         return ind.turno == turno.turno;
                     })
                 );
@@ -206,19 +206,19 @@ export default defineComponent({
             el array indFiltrado y posterior en el mismo array turnos. */
             let list = [];
             list.push(
-                this.turnos.map((turno: Indice[]) => {
+                this.turnos.map((turno: ITurno[]) => {
                     return this.filtroPersonal(turno[0].turno);
                 })
             );
             list[0].forEach((personal) => {
-                this.indFiltrado.forEach((vuelta: Indice) => {
+                this.indFiltrado.forEach((vuelta: ITurno) => {
                     if (vuelta.turno == personal.turno) {
                         vuelta.personal = personal.nombres;
                     }
                 });
             });
             list[0].forEach((personal) => {
-                this.turnos.forEach((turno: Indice[]) => {
+                this.turnos.forEach((turno: ITurno[]) => {
                     if (turno[0].turno == personal.turno) {
                         turno[0].personal = personal.nombres;
                     }
