@@ -1,5 +1,5 @@
-import { Indice } from "@/interfaces/Indice";
+import { ITurno } from "@/interfaces/ITurno";
 import axios  from "./axios";
 import { AxiosResponse } from "axios";
 
-export const getIndice = async ():Promise<AxiosResponse<Indice[]>> => await axios.get("/indices");
+export const getIndice = async ():Promise<AxiosResponse<ITurno[]>> => await axios.get("/turnos");
