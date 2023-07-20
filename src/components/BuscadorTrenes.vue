@@ -68,7 +68,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(ind, index) in indFiltrado" :key="index">
-                        <td class="w-10">{{ ind.vueltas[0] }}</td>
+                        <td class="w-10">{{ ind.vueltas[0].refer }}</td>
                         <td class="w-10">{{ ind.turno }}</td>
                         <td class="w-10">{{ ind.vueltas[0].observaciones }}</td>
                         <td colspan="2" class="w-10">{{ ind.personal }}</td>
@@ -85,7 +85,7 @@
                 <thead>
                     <h4>{{ turno[0].turno }} - {{ turno[0].personal }}</h4>
                     <tr>
-                        <th colspan="1">ID</th>
+                        <th colspan="1">Vuelta</th>
                         <th colspan="1">Ref</th>
                         <th colspan="1">Tren</th>
                         <th colspan="1">Origen</th>
@@ -95,17 +95,18 @@
                         <th colspan="1">Observaciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(vuelta, index) in turno" :key="index">
-                        <td class="w-10">{{ vuelta.vueltas[0].vuelta }}</td>
-                        <td class="w-40">{{ vuelta.vueltas[0].refer }}</td>
-                        <td class="w-10">{{ vuelta.vueltas[0].tren }}</td>
-                        <td class="w-10">{{ vuelta.vueltas[0].origen }}</td>
-                        <td class="w-10">{{ vuelta.vueltas[0].sale }}</td>
-                        <td class="w-10">{{ vuelta.vueltas[0].destino }}</td>
-                        <td class="w-10">{{ vuelta.vueltas[0].llega }}</td>
+                <tbody v-for="(vueltas, index) in turno" :key="index">
+                    <tr v-for="(vuelta, index) in vueltas.vueltas" :key="index">
+
+                        <td class="w-10">{{ vuelta.vuelta }}</td>
+                        <td class="w-10">{{ vuelta.refer }}</td>
+                        <td class="w-10">{{ vuelta.tren }}</td>
+                        <td class="w-10">{{ vuelta.origen }}</td>
+                        <td class="w-10">{{ vuelta.sale }}</td>
+                        <td class="w-10">{{ vuelta.destino }}</td>
+                        <td class="w-10">{{ vuelta.llega }}</td>
                         <td class="w-20">
-                            {{ vuelta.vueltas[0].observaciones }}
+                            {{ vuelta.observaciones }}
                         </td>
                     </tr>
                 </tbody>
@@ -150,7 +151,7 @@ export default defineComponent({
         };
     },
     methods: {
-        async loadIndices() {
+        async loadTurnos() {
             /* Trae todos los elementos de la base de datos  */
             const res = await getTurnos();
             this.turno = res.data;
@@ -173,12 +174,18 @@ export default defineComponent({
             this.filtroTurno();
             this.buscarPersonalACargo();
         },
-        filtroTrenes() {
-            /* Este método buscar y filtra en el array indice el tren que se desea buscar.
+        filtroTrenes(){
+            /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
-            this.indFiltrado = this.turno.filter((ind: ITurno) => {
-                return ind.vueltas[0].tren == parseInt(this.tren);
-            });
+            this.indFiltrado = [];
+            this.turno.forEach((diag: ITurno) => {
+                for(let i = 0; i < diag.vueltas.length; i ++){
+                    
+                    if (diag.vueltas[i].tren == parseInt(this.tren)){
+                        this.indFiltrado.push(diag);
+                    }
+                }
+            });  
         },
         filtroItinerario() {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
@@ -267,7 +274,7 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadIndices();
+        this.loadTurnos();
         this.loadItinerario();
         this.loadPersonales();
     },
