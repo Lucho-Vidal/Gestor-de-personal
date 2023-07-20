@@ -1,14 +1,13 @@
 import { Router } from "express";
-import Indice from "../models/indice";
 import Itinerario from "../models/itinerario";
 import Conductores from "../models/IPersonalCtor";
-import Guardas from "../models/IPersonalGda";
 import INovedad from "../models/novedades"
+import ITurno from "../models/ITurno";
 
 const router = Router();
 
-router.get("/indices", async (req, res) => {
-    const tasks = await Indice.find();
+router.get("/turnos", async (req, res) => {
+    const tasks = await ITurno.find();
     res.json(tasks);
 });
 
@@ -19,11 +18,6 @@ router.get("/itinerario", async (req, res) => {
 
 router.get("/Personal/Ctor", async (req, res) => {
     const tasks = await Conductores.find();
-    res.json(tasks);
-});
-
-router.get("/Personal/Gda", async (req, res) => {
-    const tasks = await Guardas.find();
     res.json(tasks);
 });
 

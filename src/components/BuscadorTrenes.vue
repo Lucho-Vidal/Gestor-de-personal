@@ -119,7 +119,7 @@
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
 import { getIndice } from "../services/indicesService";
-import { Indice } from "../interfaces/Indice";
+import { ITurno } from "../interfaces/ITurno";
 import FooterPage from "./FooterPage.vue";
 import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
@@ -130,9 +130,9 @@ export default defineComponent({
     data() {
         return {
             tren: "" as string,
-            indice: [] as Indice[],
-            indFiltrado: [] as Indice[],
-            turnos: [] as Array<Indice[]>,
+            turno: [] as ITurno[],
+            indFiltrado: [] as ITurno[],
+            turnos: [] as Array<ITurno[]>,
             itinerario: [] as Itinerario[],
             itFiltrado: [] as Itinerario[],
             personales: [] as IPersonal[],

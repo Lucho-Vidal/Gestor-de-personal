@@ -3,7 +3,12 @@
         <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">Editar Novedad</h1>
-
+            
+            <div class="alert alert-danger" role="alert" v-if="alerta">
+                <h4 class="alert-heading">ATENCIÓN!</h4>
+                <hr>
+                {{ alerta }}
+            </div>
             <button
                 type="button"
                 class="btn btn-success"
@@ -462,6 +467,7 @@ export default defineComponent({
             ],
             search: "" as string,
             personalEncontrado: [] as IPersonal[],
+            alerta: "" as string,
         };
     },
     methods: {
@@ -538,10 +544,32 @@ export default defineComponent({
                                 }
                             }
                         }
+                        if (
+                            !this.novedad.HNA &&
+                            (this.novedad.remplazo[
+                                this.novedad.remplazo.length - 1
+                            ].finRelevo == undefined ||
+                                this.novedad.remplazo[
+                                    this.novedad.remplazo.length - 1
+                                ].finRelevo == "")
+                        ) {
+                            //si la novedad no es HNA y la ultima novedad no tiene fecha de fin, le asigna la fecha de alta a el fin del ultimo remplazo
+                            this.novedad.remplazo[
+                                this.novedad.remplazo.length - 1
+                            ].finRelevo = this.novedad.fechaAlta;
+                        }
                     }
-
-                    await updateNovedad(this.$route.params.id, this.novedad);
-                    this.$router.push(`/novedades`);
+                    if(this.alerta){
+                    if (this.alerta.includes("ATENCIÓN")){
+                        this.$router.push({ name: "Novedades" });
+                    }else if(this.alerta.includes("finalice el relevo")){
+                        this.alerta =  " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " + this.alerta 
+                    }
+                    
+                    return;
+                }
+                await updateNovedad(this.$route.params.id, this.novedad);
+                this.$router.push(`/novedades`);
                 }
             } catch (error) {
                 console.error(error);
