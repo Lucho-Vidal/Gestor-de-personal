@@ -77,13 +77,20 @@
                     </tr>
                 </tbody>
             </table>
-            <table
-                v-for="(turno, index) in turnos"
+            <div
+            
+            v-for="(turno, index) in turnos"
                 :key="index"
+            class="row ">
+                        <h4 class="Personal col-1 ">{{ turno[0].turno }}</h4>
+                        <h4 class="col-7 ">{{ turno[0].personal }}</h4>
+                        <h5 class="col-2 "> Toma: {{ turno[0].toma }} </h5>
+                        <h5 class="col-2 "> Deja: {{ turno[0].deja }} </h5>
+            <table
                 class="table table-striped table-hover"
             >
-                <thead>
-                    <h4>{{ turno[0].turno }} - {{ turno[0].personal }}</h4>
+                <thead class="">
+                    
                     <tr>
                         <th colspan="1">Vuelta</th>
                         <th colspan="1">Ref</th>
@@ -97,20 +104,20 @@
                 </thead>
                 <tbody v-for="(vueltas, index) in turno" :key="index">
                     <tr v-for="(vuelta, index) in vueltas.vueltas" :key="index">
-
-                        <td class="w-10">{{ vuelta.vuelta }}</td>
-                        <td class="w-10">{{ vuelta.refer }}</td>
-                        <td class="w-10">{{ vuelta.tren }}</td>
-                        <td class="w-10">{{ vuelta.origen }}</td>
-                        <td class="w-10">{{ vuelta.sale }}</td>
-                        <td class="w-10">{{ vuelta.destino }}</td>
-                        <td class="w-10">{{ vuelta.llega }}</td>
-                        <td class="w-20">
+                        <td class="col-3">{{ vuelta.vuelta }}</td>
+                        <td class="col-1">{{ vuelta.refer }}</td>
+                        <td class="col-1">{{ vuelta.tren }}</td>
+                        <td class="col-1">{{ vuelta.origen }}</td>
+                        <td class="col-1">{{ vuelta.sale }}</td>
+                        <td class="col-1">{{ vuelta.destino }}</td>
+                        <td class="col-1">{{ vuelta.llega }}</td>
+                        <td class="col-3">
                             {{ vuelta.observaciones }}
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
         </main>
         <footer-page />
     </div>
@@ -126,6 +133,7 @@ import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
 import { IPersonal } from "../interfaces/IPersonal";
 import { getPersonales } from "../services/personalService";
+
 
 export default defineComponent({
     data() {
@@ -169,6 +177,8 @@ export default defineComponent({
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
             Se ejecuta por v-on:change en el input  */
+            console.log(this.inputDate);
+            
             this.filtroTrenes();
             this.filtroItinerario();
             this.filtroTurno();
@@ -180,6 +190,11 @@ export default defineComponent({
             this.indFiltrado = [];
             this.turno.forEach((diag: ITurno) => {
                 for(let i = 0; i < diag.vueltas.length; i ++){
+                    
+                    if(this.inputDate==""){
+                        console.log("hey hey hey!");
+                        
+                    }
                     
                     if (diag.vueltas[i].tren == parseInt(this.tren)){
                         this.indFiltrado.push(diag);
@@ -289,13 +304,13 @@ export default defineComponent({
 main {
     min-height: 81.6vh;
 }
-table h4 {
+.Personal {
     background: #000;
+    border-top: #000;
     color: #fff;
-    width: 100%;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-around;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
 }
 </style>
