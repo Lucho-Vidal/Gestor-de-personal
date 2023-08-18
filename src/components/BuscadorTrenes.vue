@@ -7,10 +7,10 @@
             </h1>
             <div class="d-flex row">
                 <div class="row justify-content-end">
-                    <p class="col">
+                    <!-- <p class="col">
                         Fecha: {{ days[today.getDay()] }}
                         {{ today.toLocaleDateString() }}
-                    </p>
+                    </p> -->
                 </div>
                 <div class="row justify-content-between">
                     <input
@@ -25,7 +25,7 @@
                         class="col-3"
                         type="date"
                         v-model="inputDate"
-                        @change="changeDate"
+                        
                     />
                 </div>
             </div>
@@ -133,6 +133,8 @@ import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
 import { IPersonal } from "../interfaces/IPersonal";
 import { getPersonales } from "../services/personalService";
+import { Novedad } from "../interfaces/INovedades";
+import { getNovedades } from "../services/novedadesService";
 
 
 export default defineComponent({
@@ -146,6 +148,7 @@ export default defineComponent({
             itFiltrado: [] as Itinerario[],
             personales: [] as IPersonal[],
             today: new Date(),
+            novedades: [] as Novedad[],
             inputDate: "" as string,
             days: [
                 "Domingo",
@@ -174,11 +177,13 @@ export default defineComponent({
             const res = await getPersonales();
             this.personales = res.data;
         },
+        async loadNovedades() {
+            const res = await getNovedades();
+            this.novedades = res.data;
+        },
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
-            Se ejecuta por v-on:change en el input  */
-            console.log(this.inputDate);
-            
+            Se ejecuta por v-on:change en el input  */            
             this.filtroTrenes();
             this.filtroItinerario();
             this.filtroTurno();
@@ -188,19 +193,30 @@ export default defineComponent({
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = [];
+            //fecha obtiene el valor del input si el input es empty entonces la fecha es del dia de hoy y siempre 12hs
+            //por otra parte today siempre es la fecha de hoy a las 12hs se modifica en mounted
+            let fecha: Date;
+            if(this.inputDate == ""){
+                fecha = this.today;
+            }else{
+                fecha = new Date(this.inputDate+ " 12:00");
+            }
             this.turno.forEach((diag: ITurno) => {
                 for(let i = 0; i < diag.vueltas.length; i ++){
                     
-                    if(this.inputDate==""){
-                        console.log("hey hey hey!");
+                    if(this.today.getTime() == fecha.getTime() ){
+                        console.log("La fecha seleccionada es la del dia de hoy");
                         
+                    } else if (this.today.getTime() > fecha.getTime() ){
+                        console.log("La fecha seleccionada es anterior al dia de hoy");
                     }
-                    
+
                     if (diag.vueltas[i].tren == parseInt(this.tren)){
                         this.indFiltrado.push(diag);
                     }
                 }
-            });  
+            });
+            console.log(this.indFiltrado);
         },
         filtroItinerario() {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
@@ -292,6 +308,8 @@ export default defineComponent({
         this.loadTurnos();
         this.loadItinerario();
         this.loadPersonales();
+        this.loadNovedades();
+        this.today.setHours(12,0,0,0)
     },
     computed: {},
     components: {
