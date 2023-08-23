@@ -21,12 +21,7 @@
                         v-model="tren"
                         v-on:change="buscar()"
                     />
-                    <input
-                        class="col-3"
-                        type="date"
-                        v-model="inputDate"
-                        
-                    />
+                    <input class="col-3" type="date" v-model="inputDate" />
                 </div>
             </div>
 
@@ -77,47 +72,43 @@
                     </tr>
                 </tbody>
             </table>
-            <div
-            
-            v-for="(turno, index) in turnos"
-                :key="index"
-            class="row ">
-                        <h4 class="Personal col-1 ">{{ turno[0].turno }}</h4>
-                        <h4 class="col-7 ">{{ turno[0].personal }}</h4>
-                        <h5 class="col-2 "> Toma: {{ turno[0].toma }} </h5>
-                        <h5 class="col-2 "> Deja: {{ turno[0].deja }} </h5>
-            <table
-                class="table table-striped table-hover"
-            >
-                <thead class="">
-                    
-                    <tr>
-                        <th colspan="1">Vuelta</th>
-                        <th colspan="1">Ref</th>
-                        <th colspan="1">Tren</th>
-                        <th colspan="1">Origen</th>
-                        <th colspan="1">Sale</th>
-                        <th colspan="1">Destino</th>
-                        <th colspan="1">Llega</th>
-                        <th colspan="1">Observaciones</th>
-                    </tr>
-                </thead>
-                <tbody v-for="(vueltas, index) in turno" :key="index">
-                    <tr v-for="(vuelta, index) in vueltas.vueltas" :key="index">
-                        <td class="col-3">{{ vuelta.vuelta }}</td>
-                        <td class="col-1">{{ vuelta.refer }}</td>
-                        <td class="col-1">{{ vuelta.tren }}</td>
-                        <td class="col-1">{{ vuelta.origen }}</td>
-                        <td class="col-1">{{ vuelta.sale }}</td>
-                        <td class="col-1">{{ vuelta.destino }}</td>
-                        <td class="col-1">{{ vuelta.llega }}</td>
-                        <td class="col-3">
-                            {{ vuelta.observaciones }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div v-for="(turno, index) in turnos" :key="index" class="row">
+                <h4 class="Personal col-1">{{ turno[0].turno }}</h4>
+                <h4 class="col-7">{{ turno[0].personal }}</h4>
+                <h5 class="col-2">Toma: {{ turno[0].toma }}</h5>
+                <h5 class="col-2">Deja: {{ turno[0].deja }}</h5>
+                <table class="table table-striped table-hover">
+                    <thead class="">
+                        <tr>
+                            <th colspan="1">Vuelta</th>
+                            <th colspan="1">Ref</th>
+                            <th colspan="1">Tren</th>
+                            <th colspan="1">Origen</th>
+                            <th colspan="1">Sale</th>
+                            <th colspan="1">Destino</th>
+                            <th colspan="1">Llega</th>
+                            <th colspan="1">Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(vueltas, index) in turno" :key="index">
+                        <tr
+                            v-for="(vuelta, index) in vueltas.vueltas"
+                            :key="index"
+                        >
+                            <td class="col-3">{{ vuelta.vuelta }}</td>
+                            <td class="col-1">{{ vuelta.refer }}</td>
+                            <td class="col-1">{{ vuelta.tren }}</td>
+                            <td class="col-1">{{ vuelta.origen }}</td>
+                            <td class="col-1">{{ vuelta.sale }}</td>
+                            <td class="col-1">{{ vuelta.destino }}</td>
+                            <td class="col-1">{{ vuelta.llega }}</td>
+                            <td class="col-3">
+                                {{ vuelta.observaciones }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
         <footer-page />
     </div>
@@ -135,7 +126,6 @@ import { IPersonal } from "../interfaces/IPersonal";
 import { getPersonales } from "../services/personalService";
 import { Novedad } from "../interfaces/INovedades";
 import { getNovedades } from "../services/novedadesService";
-
 
 export default defineComponent({
     data() {
@@ -183,40 +173,39 @@ export default defineComponent({
         },
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
-            Se ejecuta por v-on:change en el input  */            
+            Se ejecuta por v-on:change en el input  */
             this.filtroTrenes();
             this.filtroItinerario();
             this.filtroTurno();
             this.buscarPersonalACargo();
         },
-        filtroTrenes(){
+        filtroTrenes() {
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = [];
             //fecha obtiene el valor del input si el input es empty entonces la fecha es del dia de hoy y siempre 12hs
             //por otra parte today siempre es la fecha de hoy a las 12hs se modifica en mounted
-            let fecha: Date;
-            if(this.inputDate == ""){
-                fecha = this.today;
-            }else{
-                fecha = new Date(this.inputDate+ " 12:00");
-            }
+            // let fecha: Date;
+            // if(this.inputDate == ""){
+            //     fecha = this.today;
+            // }else{
+            //     fecha = new Date(this.inputDate+ " 12:00");
+            // }
             this.turno.forEach((diag: ITurno) => {
-                for(let i = 0; i < diag.vueltas.length; i ++){
-                    
-                    if(this.today.getTime() == fecha.getTime() ){
-                        console.log("La fecha seleccionada es la del dia de hoy");
-                        
-                    } else if (this.today.getTime() > fecha.getTime() ){
-                        console.log("La fecha seleccionada es anterior al dia de hoy");
-                    }
+                for (let i = 0; i < diag.vueltas.length; i++) {
+                    // if(this.today.getTime() == fecha.getTime() ){
+                    //     console.log("La fecha seleccionada es la del dia de hoy");
 
-                    if (diag.vueltas[i].tren == parseInt(this.tren)){
+                    // } else if (this.today.getTime() > fecha.getTime() ){
+                    //     console.log("La fecha seleccionada es anterior al dia de hoy");
+                    // }
+
+                    if (diag.vueltas[i].tren == parseInt(this.tren)) {
                         this.indFiltrado.push(diag);
                     }
                 }
             });
-            console.log(this.indFiltrado);
+            // console.log(this.indFiltrado);
         },
         filtroItinerario() {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
@@ -226,7 +215,7 @@ export default defineComponent({
             });
         },
         filtroTurno() {
-            /* Este método es el encargado de buscar los turno en cada búsqueda.
+            /* Este método es el encargado de buscar los turnos en cada búsqueda.
             Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
             this.turnos = [];
             this.indFiltrado.forEach((turno: ITurno) => {
@@ -243,24 +232,39 @@ export default defineComponent({
             guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en 
             el array indFiltrado y posterior en el mismo array turnos. */
             let list = [];
+
+            //busco el personal titular
             list.push(
                 this.turnos.map((turno: ITurno[]) => {
                     return this.filtroPersonal(turno[0].turno);
                 })
             );
+
             list[0].forEach((personal) => {
-                this.indFiltrado.forEach((vuelta: ITurno) => {
-                    if (vuelta.turno == personal.turno) {
-                        vuelta.personal = personal.nombres;
+                this.novedades.forEach((novedad) => {
+                    //si tiene novedad cargada y vigente se cambia por el remplazo
+                    if (
+                        novedad.legajo == personal.legajo &&
+                        novedad.HNA &&
+                        new Date(novedad.fechaBaja) <= this.today
+                    ) {                        
+                        if (novedad.remplazo != undefined) {
+                            personal.legajo =
+                                novedad.remplazo[novedad.remplazo.length - 1].legajo;
+                                personal.nombres =
+                                novedad.remplazo[novedad.remplazo.length - 1].apellido + " " +
+                                novedad.remplazo[novedad.remplazo.length - 1].nombres
+                            
+                        }
                     }
-                });
-            });
-            list[0].forEach((personal) => {
-                this.turnos.forEach((turno: ITurno[]) => {
-                    if (turno[0].turno == personal.turno) {
-                        turno[0].personal = personal.nombres;
-                    }
-                });
+                        //asigno personal al array indFiltrado
+                            this.indFiltrado.forEach((vuelta: ITurno) => {
+                                if (vuelta.turno == personal.turno) {
+                                    vuelta.personal = personal.nombres;
+                                }
+                            });
+                        
+                })
             });
         },
         dia_laboral(diaLaboral: number, hoy: number) {
@@ -297,6 +301,7 @@ export default defineComponent({
             }
             return {
                 turno: turno,
+                legajo: titular[0].legajo,
                 nombres: titular[0].apellido + " " + titular[0].nombres,
             };
         },
@@ -309,7 +314,7 @@ export default defineComponent({
         this.loadItinerario();
         this.loadPersonales();
         this.loadNovedades();
-        this.today.setHours(12,0,0,0)
+        this.today.setHours(12, 0, 0, 0);
     },
     computed: {},
     components: {
