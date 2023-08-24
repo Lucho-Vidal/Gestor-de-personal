@@ -495,7 +495,7 @@ export default defineComponent({
                     if (this.novedad.HNA) {
                         this.novedad.fechaAlta = "";
                     }
-                    if (this.novedad.remplazo !== undefined) {
+                    if (this.novedad.remplazo !== undefined && this.novedad.remplazo.length > 0) {
                         if (
                             new Date(this.novedad.fechaBaja) >
                             new Date(this.novedad.remplazo[0].inicioRelevo)
