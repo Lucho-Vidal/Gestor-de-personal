@@ -21,7 +21,7 @@
                         v-model="tren"
                         v-on:change="buscar()"
                     />
-                    <input class="col-3" type="date" v-model="inputDate" />
+                    <input class="col-3" type="date" v-model="inputDate" v-on:change="buscar()" />
                 </div>
             </div>
 
@@ -124,7 +124,7 @@ import { Itinerario } from "../interfaces/Itinerario";
 import { getItinerario } from "../services/itinerarioService";
 import { IPersonal } from "../interfaces/IPersonal";
 import { getPersonales } from "../services/personalService";
-import { Novedad } from "../interfaces/INovedades";
+import { Novedad } from '../interfaces/INovedades';
 import { getNovedades } from "../services/novedadesService";
 
 export default defineComponent({
@@ -183,22 +183,8 @@ export default defineComponent({
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = [];
-            //fecha obtiene el valor del input si el input es empty entonces la fecha es del dia de hoy y siempre 12hs
-            //por otra parte today siempre es la fecha de hoy a las 12hs se modifica en mounted
-            // let fecha: Date;
-            // if(this.inputDate == ""){
-            //     fecha = this.today;
-            // }else{
-            //     fecha = new Date(this.inputDate+ " 12:00");
-            // }
             this.turno.forEach((diag: ITurno) => {
                 for (let i = 0; i < diag.vueltas.length; i++) {
-                    // if(this.today.getTime() == fecha.getTime() ){
-                    //     console.log("La fecha seleccionada es la del dia de hoy");
-
-                    // } else if (this.today.getTime() > fecha.getTime() ){
-                    //     console.log("La fecha seleccionada es anterior al dia de hoy");
-                    // }
 
                     if (diag.vueltas[i].tren == parseInt(this.tren)) {
                         this.indFiltrado.push(diag);
@@ -233,7 +219,7 @@ export default defineComponent({
             el array indFiltrado y posterior en el mismo array turnos. */
             let list = [];
 
-            //busco el personal titular
+            //   busco el personal titular
             list.push(
                 this.turnos.map((turno: ITurno[]) => {
                     return this.filtroPersonal(turno[0].turno);
@@ -242,27 +228,34 @@ export default defineComponent({
 
             list[0].forEach((personal) => {
                 this.novedades.forEach((novedad) => {
-                    //si tiene novedad cargada y vigente se cambia por el remplazo
+                    //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
                     if (
                         novedad.legajo == personal.legajo &&
                         novedad.HNA &&
                         new Date(novedad.fechaBaja) <= this.today
                     ) {                        
-                        if (novedad.remplazo != undefined) {
-                            personal.legajo =
-                                novedad.remplazo[novedad.remplazo.length - 1].legajo;
-                                personal.nombres =
-                                novedad.remplazo[novedad.remplazo.length - 1].apellido + " " +
-                                novedad.remplazo[novedad.remplazo.length - 1].nombres
-                            
+                        if (novedad.remplazo != undefined && novedad.remplazo.length > 0) {
+                            let remplazo  = novedad.remplazo.filter(remp=>{
+                                return (new Date(remp.inicioRelevo) <= new Date(this.inputDate) && (new Date(remp.finRelevo) >= new Date(this.inputDate) || remp.finRelevo == undefined))
+                            })
+
+                            if(remplazo.length>0){
+                                personal.legajo = remplazo[0].legajo
+                                personal.nombres = remplazo[0].apellido + " " + remplazo[0].nombres
+                            }else{//si el personal asignado no es para la fecha
+                                personal.nombres = "Sin Cubrir"
+                            }
+
+                        }else{//si no hay personal asignado
+                            personal.nombres = "Sin Cubrir"
                         }
                     }
-                        //asigno personal al array indFiltrado
-                            this.indFiltrado.forEach((vuelta: ITurno) => {
-                                if (vuelta.turno == personal.turno) {
-                                    vuelta.personal = personal.nombres;
-                                }
-                            });
+                    //asigno personal al array indFiltrado
+                    this.indFiltrado.forEach((vuelta: ITurno) => {
+                        if (vuelta.turno == personal.turno) {
+                            vuelta.personal = personal.nombres;
+                        }
+                    });
                         
                 })
             });
@@ -288,11 +281,20 @@ export default defineComponent({
             o 428 en caso de unipersonal. Según el caso separa por el punto el turno de la jornada pos franco
             y devuelve un objeto con las llaves:turno y nombres  */
             let titular = [];
+            //fecha obtiene el valor del input si el input es empty entonces la fecha es del dia de hoy y siempre 12hs
+            //por otra parte today siempre es la fecha de hoy a las 12hs se modifica en mounted
+            let fecha: Date;
+            if(this.inputDate == ""){
+                fecha = this.today;
+            }else{
+                fecha = new Date(this.inputDate+ " 12:00");
+            }
+            
             if (turno.indexOf(".") != -1 && !turno.includes("PROG")) {
                 const indexPunto = turno.indexOf(".");
                 const diaLab = Number(turno[indexPunto + 1]);
                 const diag = turno.split(".")[0];
-                const franco = this.dia_laboral(diaLab, this.today.getDay());
+                const franco = this.dia_laboral(diaLab, fecha.getDay());
                 titular = this.personales.filter((p) => {
                     return p.turno == diag && Number(p.franco) == franco;
                 });
