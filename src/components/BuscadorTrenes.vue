@@ -174,6 +174,22 @@ export default defineComponent({
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
             Se ejecuta por v-on:change en el input  */
+            let fecha: Date;
+            let itinerario = "";
+            
+            if(this.inputDate == ""){
+                fecha = this.today;
+            }else{
+                fecha = new Date(this.inputDate+ " 12:00");
+            }
+            
+            if (fecha.getDay()=== 0){
+                itinerario = "D"
+            }else if(fecha.getDay()=== 6){
+                itinerario = "S"
+            }else{
+                itinerario = "H"
+            }
             this.filtroTrenes();
             this.filtroItinerario();
             this.filtroTurno();
