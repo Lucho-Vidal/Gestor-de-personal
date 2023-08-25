@@ -621,7 +621,8 @@ export default defineComponent({
                     personal.nombres.toLowerCase()
                 ).includes(this.search.toLowerCase()) &&
                 personal.turno.toLowerCase().includes("ciclo")&&
-                personal.dotacion === this.novedad.base
+                personal.dotacion === this.novedad.base &&
+                personal.especialidad == this.novedad.especialidad
                 }
             })
         },

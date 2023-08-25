@@ -607,9 +607,7 @@ export default defineComponent({
                     novedad.remplazo.forEach((remp: Remplazo) => {
                         if (remp) {
                             if (remp.legajo == personal.legajo) {
-                                
-                                
-                                                            
+
                                 if (
                                     (remp.finRelevo === undefined || remp.finRelevo === "") 
                                     ||dateHoy < new Date(remp.finRelevo)
@@ -671,7 +669,8 @@ export default defineComponent({
                                 personal.nombres.toLowerCase()
                             ).includes(this.search.toLowerCase()) &&
                             personal.turno.toLowerCase().includes("ciclo") &&
-                            personal.dotacion === this.newNovedad.base
+                            personal.dotacion === this.newNovedad.base &&
+                            personal.especialidad == this.newNovedad.especialidad
                         );
                     }
                 }
