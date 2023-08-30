@@ -192,7 +192,7 @@ export default defineComponent({
             }
             this.filtroTrenes();
             this.filtroItinerario();
-            this.filtroTurno();
+            this.filtroTurno(itinerario);
             this.buscarPersonalACargo();
         },
         filtroTrenes() {
@@ -213,17 +213,17 @@ export default defineComponent({
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
             las guarda en el array itFiltrado  */
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
-                return horarios.tren == parseInt(this.tren);
+                return horarios.tren == parseInt(this.tren) ;
             });
         },
-        filtroTurno() {
+        filtroTurno(itinerario : string) {
             /* Este método es el encargado de buscar los turnos en cada búsqueda.
             Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
             this.turnos = [];
             this.indFiltrado.forEach((turno: ITurno) => {
                 this.turnos.push(
                     this.turno.filter((ind: ITurno) => {
-                        return ind.turno == turno.turno;
+                        return (ind.turno == turno.turno && ind.itinerario == itinerario);
                     })
                 );
             });
