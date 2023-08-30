@@ -6,6 +6,7 @@ const itinerarioSchema = new Schema({
         required: true,
         trim: true,
     },
+    itinerario: String,
     estaciones:[],
     horarios:[],
 
