@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Itinerario from "../models/itinerario";
-import Conductores from "../models/IPersonalCtor";
+import Personal from "../models/IPersonalCtor";
 import INovedad from "../models/novedades"
 import ITurno from "../models/ITurno";
 
@@ -17,7 +17,7 @@ router.get("/itinerario", async (req, res) => {
 });
 
 router.get("/Personal/Ctor", async (req, res) => {
-    const tasks = await Conductores.find();
+    const tasks = await Personal.find();
     res.json(tasks);
 });
 

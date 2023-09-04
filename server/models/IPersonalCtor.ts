@@ -24,7 +24,7 @@ interface IConocimientos {
     LCI: boolean;
     ELEC: boolean;
 }
-const conductorSchema = new Schema<IConductor>({
+const personalSchema = new Schema<IConductor>({
     legajo: {
         type:Number,
         required: true
@@ -60,4 +60,4 @@ const conductorSchema = new Schema<IConductor>({
     }
 });
 
-export default model<IConductor>("Conductores", conductorSchema);
+export default model<IConductor>("Personal", personalSchema);
