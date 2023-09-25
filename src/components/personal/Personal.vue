@@ -9,6 +9,11 @@
                 Fecha: {{ days[today.getDay()] }}
                 {{ today.toLocaleDateString() }}
             </p>
+            <div class="d-flex">
+                <a class="btn btn-primary d-flex end" href="/newPersonal"
+                    >Nuevo Personal</a
+                >
+            </div>
             <div class="form-check">
                 <input
                     class="form-check-input"
