@@ -82,10 +82,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "./NavBar.vue";
-import FooterPage from "./FooterPage.vue";
-import { getPersonales } from "../services/personalService";
-import { IPersonal } from "../interfaces/IPersonal";
+import NavBar from "../NavBar.vue";
+import FooterPage from "../FooterPage.vue";
+import { getPersonales } from "../../services/personalService";
+import { IPersonal } from "../../interfaces/IPersonal";
 
 export default defineComponent({
     data() {
