@@ -1,0 +1,420 @@
+[{
+  "_id": 1,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": null,
+  "HNA": true,
+  "detalle": "algo",
+  "remplazo": [
+    null
+  ],
+  "__v": 0
+},
+{
+  "_id": 2,
+  "legajo": 3484,
+  "apellido": "Ortellado",
+  "nombres": "Alberto ,Antonio",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": null,
+  "HNA": true,
+  "detalle": "detalle 1",
+  "remplazo": [],
+  "__v": 0
+},
+{
+  "_id": 3,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Arrollamiento 558",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": null,
+  "HNA": true,
+  "remplazo": [],
+  "__v": 0
+},
+{
+  "_id": 4,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": null,
+  "HNA": true,
+  "remplazo": [],
+  "__v": 0
+},
+{
+  "_id": 5,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Estudio",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": "",
+  "HNA": true,
+  "detalle": "ddd",
+  "remplazo": [],
+  "__v": 0
+},
+{
+  "_id": 6,
+  "legajo": 2677,
+  "apellido": "Cabrera",
+  "nombres": "Gabriel ,Oscar",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": "",
+  "HNA": true,
+  "detalle": "detalle 2",
+  "remplazo": [
+    {
+      "legajo": 5919,
+      "apellido": "Barrios",
+      "nombres": "Fernando ,Nicolas",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "408",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2023-06-29"
+    }
+  ],
+  "__v": 0
+},
+{
+  "_id": 7,
+  "legajo": 2677,
+  "apellido": "Cabrera",
+  "nombres": "Gabriel ,Oscar",
+  "base": "PC",
+  "tipoNovedad": "Licencia Gremial",
+  "fechaBaja": "2023-06-10",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 7941,
+      "apellido": "Damico",
+      "nombres": "Fabricio ,Martin",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 24",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2023-06-30",
+      "finRelevo": ""
+    }
+  ],
+  "__v": 0,
+  "especialidad": "Conductor electrico",
+  "franco": "Domingo",
+  "turno": "429"
+},
+{
+  "_id": 8,
+  "legajo": 9028,
+  "apellido": "Quevedo",
+  "nombres": "Francisco ,Rene",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-22",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [],
+  "__v": 0
+},
+{
+  "_id": 9,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Ordenamiento",
+  "fechaBaja": "2023-06-27",
+  "fechaAlta": null,
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 7995,
+      "apellido": "Suarez",
+      "nombres": "Edgardo ,Daniel",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "403",
+      "franco": 0,
+      "HNA": false,
+      "inicioRelevo": "2023-06-27"
+    }
+  ],
+  "__v": 0,
+  "especialidad": "Conductor electrico",
+  "franco": "Sábado",
+  "turno": "464"
+},
+{
+  "_id": 10,
+  "legajo": 492,
+  "apellido": "Mulhall",
+  "nombres": "Mirko ,Eduardo",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-29",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 492,
+      "apellido": "Mulhall",
+      "nombres": "Mirko ,Eduardo",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "464",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2023-06-29"
+    },
+    {
+      "legajo": 492,
+      "apellido": "Mulhall",
+      "nombres": "Mirko ,Eduardo",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "464",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2023-07-01"
+    }
+  ],
+  "__v": 0,
+  "especialidad": "Conductor electrico",
+  "franco": "Sábado",
+  "turno": "464"
+},
+{
+  "_id": 11,
+  "legajo": 3484,
+  "apellido": "Ortellado",
+  "nombres": "Alberto ,Antonio",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-06-30",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 492,
+      "apellido": "Mulhall",
+      "nombres": "Mirko ,Eduardo",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "464",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2023-06-30"
+    },
+    {
+      "legajo": 3484,
+      "apellido": "Ortellado",
+      "nombres": "Alberto ,Antonio",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "463",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2023-07-01"
+    }
+  ],
+  "__v": 0
+},
+{
+  "_id": 12,
+  "legajo": 14213,
+  "apellido": "Castellano",
+  "nombres": "Marcos ,Ezequiel",
+  "base": "CÑ",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-07-19",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 14576,
+      "apellido": "Galvan",
+      "nombres": "Jonathan ,Matias",
+      "base": "CÑ",
+      "especialidad": "Conductor diesel",
+      "turno": "Ciclo 03",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2023-07-19"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-07-19T15:52:04.870Z"
+  },
+  "updatedAt": {
+    "$date": "2023-07-19T15:52:31.903Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 13,
+  "legajo": 15948,
+  "apellido": "Pessacg",
+  "nombres": "Alejandro ,Nicolas",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-08-23",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 7945,
+      "apellido": "Dimcheff",
+      "nombres": "German ,Andres",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 18",
+      "franco": "Miércoles",
+      "HNA": false,
+      "inicioRelevo": "2023-08-23"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-08-23T10:09:12.205Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-23T10:09:12.205Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 14,
+  "legajo": 20640,
+  "apellido": "Lozano",
+  "nombres": "Nazareno ,Jesus",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-08-17",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 11468,
+      "apellido": "Vaca",
+      "nombres": "Estela ,Maria",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 06",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2023-08-17",
+      "finRelevo": "2023-08-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-08-23T11:52:42.219Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-23T13:18:13.787Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Lunes",
+  "turno": "605"
+},
+{
+  "_id": 15,
+  "legajo": 15930,
+  "apellido": "Espinosa",
+  "nombres": "Franco ,Emanuel",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-08-20",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 7962,
+      "apellido": "Latrille",
+      "nombres": "Damian ,Emmanuel",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 13",
+      "franco": "Martes",
+      "HNA": false,
+      "inicioRelevo": "2023-08-21",
+      "finRelevo": "2023-08-23"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-08-24T09:54:16.464Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-24T10:05:32.921Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 16,
+  "legajo": 11468,
+  "apellido": "Vaca",
+  "nombres": "Estela ,Maria",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-08-24",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2023-08-24T12:54:47.643Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-24T12:54:47.643Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 17,
+  "legajo": 3753,
+  "apellido": "Alonso",
+  "nombres": "Eduardo ,Higinio",
+  "base": "PC",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2023-09-27",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [
+    {
+      "legajo": 7945,
+      "apellido": "Dimcheff",
+      "nombres": "German ,Andres",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 18",
+      "franco": "Miércoles",
+      "HNA": false,
+      "inicioRelevo": "2023-09-27"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-09-27T14:13:24.389Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-27T14:13:24.389Z"
+  },
+  "__v": 0
+}]
