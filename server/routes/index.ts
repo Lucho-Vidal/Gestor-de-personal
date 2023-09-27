@@ -16,7 +16,7 @@ router.get("/itinerario", async (req, res) => {
     res.json(tasks);
 });
 
-router.get("/Personal/Ctor", async (req, res) => {
+router.get("/Personal", async (req, res) => {
     const tasks = await Personal.find();
     res.json(tasks);
 });
@@ -48,11 +48,22 @@ router.post("/Personal",async (req,res) => {
         orden,
         conocimientos
     })
-    console.log(newPersonal);
-    //const savedPersonal = await newPersonal.save();
-    //res.json(savedPersonal);
+    //console.log(newPersonal);
+    const savedPersonal = await newPersonal.save();
+    res.json(savedPersonal);
 });
 
+router.put("/Personal/:id", async (req,res)=>{
+    const updatePersonal = await Personal.findByIdAndUpdate(req.params.id, req.body,{
+        new: true,
+    });
+    res.json(updatePersonal);
+});
+
+router.delete("/Personal/:id", async (req,res) =>{
+    const personal = await Personal.findByIdAndDelete(req.params.id);
+    res.json(personal);
+})
 
 router.get("/novedades",async (req, res) => {
     const novedades = await INovedad.find();
