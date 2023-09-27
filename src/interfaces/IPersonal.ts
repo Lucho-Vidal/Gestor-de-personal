@@ -8,14 +8,14 @@ export interface IPersonal {
     dotacion: string;
     observaciones: string;
     orden: number;
-    conocimientos?: IConocimientos;
+    conocimientos: IConocimientos;
 }
 export interface IConocimientos {
-    CML: boolean;
-    CKD: boolean;
-    RO: boolean;
-    MPN: boolean;
-    OL: boolean;
-    LCI: boolean;
-    ELEC: boolean;
+    CML: string;
+    CKD: string;
+    RO: string;
+    MPN: string;
+    OL: string;
+    LCI: string;
+    ELEC: string;
 }
