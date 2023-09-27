@@ -21,6 +21,39 @@ router.get("/Personal/Ctor", async (req, res) => {
     res.json(tasks);
 });
 
+router.post("/Personal",async (req,res) => {
+    const {
+        legajo,
+        apellido,
+        nombres,
+        turno,
+        franco,
+        puesto,
+        especialidad,
+        dotacion,
+        observaciones,
+        orden,
+        conocimientos
+    } = req.body;
+    const newPersonal = new Personal({
+        legajo,
+        apellido,
+        nombres,
+        turno,
+        franco,
+        puesto,
+        especialidad,
+        dotacion,
+        observaciones,
+        orden,
+        conocimientos
+    })
+    console.log(newPersonal);
+    //const savedPersonal = await newPersonal.save();
+    //res.json(savedPersonal);
+});
+
+
 router.get("/novedades",async (req, res) => {
     const novedades = await INovedad.find();
     res.json(novedades);
