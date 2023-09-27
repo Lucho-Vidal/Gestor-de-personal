@@ -10,24 +10,26 @@ interface IPersonal extends Document {
     dotacion: string;
     observaciones: string;
     orden: number;
+    //conocimientos:IConocimientos;
 }
 interface IConductor extends IPersonal{
-    conocimiento:IConocimientos;
+    conocimientos:IConocimientos;
 }
 
 interface IConocimientos {
-    CML: boolean;
-    CKD: boolean;
-    RO: boolean;
-    MPN: boolean;
-    OL: boolean;
-    LCI: boolean;
-    ELEC: boolean;
+    CML: string;
+    CKD: string;
+    RO: string;
+    MPN: string;
+    OL: string;
+    LCI: string;
+    ELEC: string;
 }
 const personalSchema = new Schema<IConductor>({
     legajo: {
         type:Number,
-        required: true
+        required: true,
+        unique: true
     },
     apellido: {
         type: String,
@@ -57,6 +59,15 @@ const personalSchema = new Schema<IConductor>({
     },
     orden: {
         type: Number,
+    },
+    conocimientos: {
+        CML: String,
+        CKD: String,
+        RO: String,
+        MPN: String,
+        OL: String,
+        LCI: String,
+        ELEC: String
     }
 });
 
