@@ -1,14 +1,14 @@
-export interface Indice {
+export interface ITurno {
     id: null;
     turno: string;
     itinerario: string;
     personal: string;
     toma: string;
     deja: string;
-    diagrama: Diagrama;
+    vueltas: Vueltas[];
 }
 
-interface Diagrama {
+interface Vueltas {
     vuelta: number;
     tren: number;
     refer: string;

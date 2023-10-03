@@ -4,6 +4,7 @@
     </footer>
 </template>
 
+
 <style>
 footer {
     background: #000;
@@ -11,5 +12,11 @@ footer {
     color: #555;
     font-size: small;
     padding-top: 1rem;
+    
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* ajustar el valor según sea necesario */
+
 }
 </style>

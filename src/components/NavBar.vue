@@ -3,7 +3,7 @@
         <div
             class="container-fluid container d-flex flex-wrap justify-content-between"
         >
-            <a class="navbar-brand" href="#">PCT - Gestión de Personal</a>
+            <a class="navbar-brand" href="#">PCT - Gestión de Novedades del Personal de Abordo</a>
             <div>
                 <button
                     class="navbar-toggler"
@@ -27,18 +27,32 @@
                             <a class="nav-link" href="/buscador">Buscador</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./pages/planillon.html"
-                                >Planillón diario</a
-                            >
+                            <a class="nav-link" href="/personal">Personal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="./pages/ciclo.html"
-                                >Ciclo</a
-                            >
+                            <a href="/novedades" class="nav-link">Novedades</a>
                         </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#">Planillón diario</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Ciclo</a>
+                        </li> -->
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
 </template>
+<style>
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+</style>
