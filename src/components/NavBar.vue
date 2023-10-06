@@ -29,7 +29,7 @@
                         </li>
                         <li class="nav-item">
                             <!-- <a class="nav-link" href="/personal">Personal</a> -->
-                            <router-link class="nav-link" to="/personal">Buscador</router-link>
+                            <router-link class="nav-link" to="/personal">Personal</router-link>
                         </li>
                         <li class="nav-item">
                            <!--  <a href="/novedades" class="nav-link">Novedades</a> -->
