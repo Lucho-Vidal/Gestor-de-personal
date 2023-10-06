@@ -24,13 +24,16 @@
                             >
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/buscador">Buscador</a>
+                            <!-- <a class="nav-link" href="/buscador">Buscador</a> -->
+                            <router-link class="nav-link" to="/buscador">Buscador</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/personal">Personal</a>
+                            <!-- <a class="nav-link" href="/personal">Personal</a> -->
+                            <router-link class="nav-link" to="/personal">Buscador</router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="/novedades" class="nav-link">Novedades</a>
+                           <!--  <a href="/novedades" class="nav-link">Novedades</a> -->
+                            <router-link class="nav-link" to="/novedades">Novedades</router-link>
                         </li>
                         <!-- <li class="nav-item">
                             <a class="nav-link" href="#">Planillón diario</a>
