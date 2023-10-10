@@ -14,26 +14,189 @@
                     >Nuevo Personal</a
                 >
             </div>
-            <div class="form-check">
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                />
-                <label class="form-check-label" for="flexCheckDefault">
-                    Default checkbox
-                </label>
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault2"
-                />
-                <label class="form-check-label" for="flexCheckDefault2">
-                    Default checkbox
-                </label>
-            </div>
+            <details>
+                <summary>Filtros:</summary>
+                <div class="my-3">
+                    <h6>Filtro por Dotación:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="PC"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        PC 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LLV"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        LLV 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="TY"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        TY
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LP"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        LP
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="K5"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        K5
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="RE"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        RE
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="CÑ"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        CÑ
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="AK"
+                            v-model="checkboxDotacion"
+                            @change="filtrarPersonales()"
+                        />
+                        AK
+                    </label>              
+                </div>
+            
+                <div class="my-3">
+                    <h6>Filtro por Especialidad:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="conductorElectrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Conductor eléctrico 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="conductorDiesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Conductor Diesel 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="ayudanteHabilitado"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Ayudante Habilitado 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="ayudanteConductor"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Ayudante Conductor
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="guardatrenElectrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Guarda Tren Electrico
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="guardatrenDiesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrarPersonales()"
+                        />
+                        Guarda Tren Diesel
+                    </label>              
+                </div>
+                <div class="my-3">
+                    <h6>Filtro por Turno:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="turno"
+                            v-model="checkboxTurno"
+                            @change="filtrarPersonales()"
+                        />
+                        Turnos 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="prog"
+                            v-model="checkboxTurno"
+                            @change="filtrarPersonales()"
+                        />
+                        Programas 
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="ciclo"
+                            v-model="checkboxTurno"
+                            @change="filtrarPersonales()"
+                        />
+                        Ciclos
+                    </label>
+                </div>
+            </details>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -78,6 +241,7 @@
                             ></i>
                         </td>
                     </tr>
+                    
                 </tbody>
             </table>
         </div>
@@ -96,6 +260,10 @@ export default defineComponent({
     data() {
         return {
             personales: [] as IPersonal[],
+            personalesFiltrados: [] as IPersonal[],
+            checkboxDotacion:[],
+            checkboxEspecialidad:[],
+            checkboxTurno:[],
             today: new Date(),
             days: [
                 "Domingo",
@@ -113,8 +281,27 @@ export default defineComponent({
             const res = await getPersonales();
             this.personales = res.data;
         },
+        filtrarPersonales(){
+            /* let keys = Object.entries(this.checkboxTurno).forEach(([key, value]) => console.log(key, value));
+            
+            console.log(keys); */
+
+            console.log(this.checkboxTurno);
+            
+            
+
+            this.personalesFiltrados = this.personales.filter((personal:IPersonal) => {
+                
+                return personal.dotacion =='LLV'
+            }) 
+            //console.log(this.personalesFiltrados);
+            //console.log((this.personales[0].dotacion));
+            
+        },
+
         view() {
-            console.log("hola desde view");
+            console.log();
+            
         },
         edit() {
             console.log("hola desde Edit");
