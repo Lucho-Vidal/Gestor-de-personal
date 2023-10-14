@@ -17,6 +17,14 @@
             <details>
                 <summary>Filtros:</summary>
                 <div class="my-3">
+                    <input
+                        class="col-3 gap"
+                        type="text"
+                        placeholder="Buscar por apellido y/o nombre"
+                        autofocus
+                        v-model="search"
+                        v-on:change="filtrarPersonales()"
+                    />
                     <h6>Filtro por Dotación:</h6>
                     <label class="form-check-label mx-2">
                         <input
@@ -264,6 +272,7 @@ export default defineComponent({
             checkboxEspecialidad: [] as string[],
             checkboxTurno: [] as string[],
             today: new Date(),
+            search: "" as string,
             days: [
                 "Domingo",
                 "Lunes",
@@ -284,6 +293,7 @@ export default defineComponent({
         filtrarPersonales() {
             /* let keys = Object.entries(this.checkboxTurno).forEach(([key, value]) => console.log(key, value));
             console.log(keys); */
+            console.log(this.search);
 
             let cDotacion = [];
             let cEspecialidad = [];
@@ -291,6 +301,9 @@ export default defineComponent({
             let filtrar = false;
             this.personalesFiltrados = [];
 
+            if (this.search.length != 0) {
+                filtrar = true;
+            }
             if (
                 this.checkboxDotacion.length == 0 ||
                 this.checkboxDotacion == undefined
@@ -345,32 +358,45 @@ export default defineComponent({
 
                 cTurno.forEach((turno: string) => {
                     for (let i = 0; i < this.personales.length; i++) {
-                        
-                        if (auxPersonales[i] != undefined ){
-                            if (turno.toLowerCase().includes("ciclo") && auxPersonales[i].turno.toLowerCase().includes("ciclo")){
+                        if (auxPersonales[i] != undefined) {
+                            if (
+                                turno.toLowerCase().includes("ciclo") &&
+                                auxPersonales[i].turno
+                                    .toLowerCase()
+                                    .includes("ciclo")
+                            ) {
                                 this.personalesFiltrados.push(auxPersonales[i]);
-                        
-                            }else if(turno.toLowerCase().includes("prog") && auxPersonales[i].turno.toLowerCase().includes("prog")){
+                            } else if (
+                                turno.toLowerCase().includes("prog") &&
+                                auxPersonales[i].turno
+                                    .toLowerCase()
+                                    .includes("prog")
+                            ) {
                                 this.personalesFiltrados.push(auxPersonales[i]);
-                            }else if(turno.toLowerCase().includes("turno") && !auxPersonales[i].turno.toLowerCase().includes("prog") && !auxPersonales[i].turno.toLowerCase().includes("ciclo")){
+                            } else if (
+                                turno.toLowerCase().includes("turno") &&
+                                !auxPersonales[i].turno
+                                    .toLowerCase()
+                                    .includes("prog") &&
+                                !auxPersonales[i].turno
+                                    .toLowerCase()
+                                    .includes("ciclo")
+                            ) {
                                 this.personalesFiltrados.push(auxPersonales[i]);
                             }
+                        }
                     }
-                }
                 });
-                /* this.personalesFiltrados.sort((a, b) => {
-                    if (a.orden > b.orden) {
-                        return 1;
-                    }
-                    if (a.orden < b.orden && a.dotacion == b.dotacion) {
-                        return -1;
-                    }
-                    return 0;
-                }); */
-            }else{
+
+                if (this.search.length != 0) {
+                    auxPersonales = this.personalesFiltrados;
+                    this.personalesFiltrados = auxPersonales.filter(personal => {
+                        return personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().includes(this.search.toLowerCase())
+                    })
+                }
+            } else {
                 this.personalesFiltrados = this.personales;
             }
-
         },
 
         view() {
