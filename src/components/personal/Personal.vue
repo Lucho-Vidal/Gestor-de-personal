@@ -291,10 +291,7 @@ export default defineComponent({
             this.filtrarPersonales();
         },
         filtrarPersonales() {
-            /* let keys = Object.entries(this.checkboxTurno).forEach(([key, value]) => console.log(key, value));
-            console.log(keys); */
-            console.log(this.search);
-
+            
             let cDotacion = [];
             let cEspecialidad = [];
             let cTurno = [];
@@ -391,7 +388,7 @@ export default defineComponent({
                 if (this.search.length != 0) {
                     auxPersonales = this.personalesFiltrados;
                     this.personalesFiltrados = auxPersonales.filter(personal => {
-                        return personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().includes(this.search.toLowerCase())
+                        return (personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().trim()).includes(this.search.toLowerCase().trim())
                     })
                 }
             } else {
