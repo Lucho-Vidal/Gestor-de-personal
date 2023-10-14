@@ -26,7 +26,7 @@
                             v-model="checkboxDotacion"
                             @change="filtrarPersonales()"
                         />
-                        PC 
+                        PC
                     </label>
                     <label class="form-check-label mx-2">
                         <input
@@ -36,7 +36,7 @@
                             v-model="checkboxDotacion"
                             @change="filtrarPersonales()"
                         />
-                        LLV 
+                        LLV
                     </label>
                     <label class="form-check-label mx-2">
                         <input
@@ -97,46 +97,46 @@
                             @change="filtrarPersonales()"
                         />
                         AK
-                    </label>              
+                    </label>
                 </div>
-            
+
                 <div class="my-3">
                     <h6>Filtro por Especialidad:</h6>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="conductorElectrico"
+                            value="Conductor electrico"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
-                        Conductor eléctrico 
+                        Conductor eléctrico
                     </label>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="conductorDiesel"
+                            value="Conductor diesel"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
-                        Conductor Diesel 
+                        Conductor Diesel
                     </label>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="ayudanteHabilitado"
+                            value="Ayudante habilitado"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
-                        Ayudante Habilitado 
+                        Ayudante Habilitado
                     </label>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="ayudanteConductor"
+                            value="Ayudante conductor"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
@@ -146,7 +146,7 @@
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="guardatrenElectrico"
+                            value="Guardatren electrico"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
@@ -156,12 +156,12 @@
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="guardatrenDiesel"
+                            value="Guardatren diesel"
                             v-model="checkboxEspecialidad"
                             @change="filtrarPersonales()"
                         />
                         Guarda Tren Diesel
-                    </label>              
+                    </label>
                 </div>
                 <div class="my-3">
                     <h6>Filtro por Turno:</h6>
@@ -173,17 +173,17 @@
                             v-model="checkboxTurno"
                             @change="filtrarPersonales()"
                         />
-                        Turnos 
+                        Turnos
                     </label>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value="prog"
+                            value="PROG"
                             v-model="checkboxTurno"
                             @change="filtrarPersonales()"
                         />
-                        Programas 
+                        Programas
                     </label>
                     <label class="form-check-label mx-2">
                         <input
@@ -215,7 +215,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(personal, index) in personales"
+                        v-for="(personal, index) in personalesFiltrados"
                         :key="index"
                         @dblclick="view()"
                     >
@@ -241,7 +241,6 @@
                             ></i>
                         </td>
                     </tr>
-                    
                 </tbody>
             </table>
         </div>
@@ -261,9 +260,9 @@ export default defineComponent({
         return {
             personales: [] as IPersonal[],
             personalesFiltrados: [] as IPersonal[],
-            checkboxDotacion:[],
-            checkboxEspecialidad:[],
-            checkboxTurno:[],
+            checkboxDotacion: [] as string[],
+            checkboxEspecialidad: [] as string[],
+            checkboxTurno: [] as string[],
             today: new Date(),
             days: [
                 "Domingo",
@@ -280,28 +279,102 @@ export default defineComponent({
         async loadPersonales() {
             const res = await getPersonales();
             this.personales = res.data;
+            this.filtrarPersonales();
         },
-        filtrarPersonales(){
+        filtrarPersonales() {
             /* let keys = Object.entries(this.checkboxTurno).forEach(([key, value]) => console.log(key, value));
-            
             console.log(keys); */
 
-            console.log(this.checkboxTurno);
-            
-            
+            let cDotacion = [];
+            let cEspecialidad = [];
+            let cTurno = [];
+            let filtrar = false;
+            this.personalesFiltrados = [];
 
-            this.personalesFiltrados = this.personales.filter((personal:IPersonal) => {
-                
-                return personal.dotacion =='LLV'
-            }) 
-            //console.log(this.personalesFiltrados);
-            //console.log((this.personales[0].dotacion));
-            
+            if (
+                this.checkboxDotacion.length == 0 ||
+                this.checkboxDotacion == undefined
+            ) {
+                cDotacion = ["PC", "LLV", "TY", "LP", "K5", "RE", "CÑ", "AK"];
+            } else {
+                cDotacion = this.checkboxDotacion;
+                filtrar = true;
+            }
+            if (this.checkboxEspecialidad.length == 0) {
+                cEspecialidad = [
+                    "Conductor electrico",
+                    "Conductor diesel",
+                    "Ayudante habilitado",
+                    "Guardatren diesel",
+                    "Ayudante conductor",
+                    "Guardatren electrico",
+                ];
+            } else {
+                cEspecialidad = this.checkboxEspecialidad;
+                filtrar = true;
+            }
+            if (this.checkboxTurno.length == 0) {
+                cTurno = ["turno", "prog", "ciclo"];
+            } else {
+                cTurno = this.checkboxTurno;
+                filtrar = true;
+            }
+
+            if (filtrar) {
+                cDotacion.forEach((dotacion: string) => {
+                    for (let i = 0; i < this.personales.length; i++) {
+                        if (this.personales[i].dotacion == dotacion) {
+                            this.personalesFiltrados.push(this.personales[i]);
+                        }
+                    }
+                });
+
+                let auxPersonales: IPersonal[] = this.personalesFiltrados;
+                this.personalesFiltrados = [];
+
+                cEspecialidad.forEach((especialidad: string) => {
+                    for (let i = 0; i < auxPersonales.length; i++) {
+                        if (auxPersonales[i].especialidad == especialidad) {
+                            this.personalesFiltrados.push(auxPersonales[i]);
+                        }
+                    }
+                });
+
+                auxPersonales = this.personalesFiltrados;
+                this.personalesFiltrados = [];
+
+                cTurno.forEach((turno: string) => {
+                    for (let i = 0; i < this.personales.length; i++) {
+                        
+                        if (auxPersonales[i] != undefined ){
+                            if (turno.toLowerCase().includes("ciclo") && auxPersonales[i].turno.toLowerCase().includes("ciclo")){
+                                this.personalesFiltrados.push(auxPersonales[i]);
+                        
+                            }else if(turno.toLowerCase().includes("prog") && auxPersonales[i].turno.toLowerCase().includes("prog")){
+                                this.personalesFiltrados.push(auxPersonales[i]);
+                            }else if(turno.toLowerCase().includes("turno") && !auxPersonales[i].turno.toLowerCase().includes("prog") && !auxPersonales[i].turno.toLowerCase().includes("ciclo")){
+                                this.personalesFiltrados.push(auxPersonales[i]);
+                            }
+                    }
+                }
+                });
+                /* this.personalesFiltrados.sort((a, b) => {
+                    if (a.orden > b.orden) {
+                        return 1;
+                    }
+                    if (a.orden < b.orden && a.dotacion == b.dotacion) {
+                        return -1;
+                    }
+                    return 0;
+                }); */
+            }else{
+                this.personalesFiltrados = this.personales;
+            }
+
         },
 
         view() {
             console.log();
-            
         },
         edit() {
             console.log("hola desde Edit");
