@@ -205,7 +205,8 @@
                     </label>
                 </div>
             </details>
-            <table class="table table-striped table-hover">
+            <h1 v-if="personalesFiltrados.length == 0">No se encontró ningún personal</h1>
+            <table class="table table-striped table-hover" v-if="personalesFiltrados.length > 0">
                 <thead>
                     <tr>
                         <th class="col-1" colspan="1">legajo</th>
@@ -260,7 +261,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getPersonales } from "../../services/personalService";
+import { getPersonales, getPersonal } from '../../services/personalService';
 import { IPersonal } from "../../interfaces/IPersonal";
 
 export default defineComponent({
