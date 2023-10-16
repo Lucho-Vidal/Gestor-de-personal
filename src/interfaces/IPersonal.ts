@@ -1,4 +1,5 @@
 export interface IPersonal {
+    _id: string;
     legajo: number;
     apellido: string;
     nombres: string;
@@ -18,4 +19,5 @@ export interface IConocimientos {
     OL: string;
     LCI: string;
     ELEC: string;
+    DUAL: string;
 }

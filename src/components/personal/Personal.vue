@@ -218,7 +218,6 @@
                         <th class="col-1" colspan="1">Dotacion</th>
                         <th class="col-1" colspan="1">Observaciones</th>
                         <th class="col-1" colspan="1">Orden</th>
-                        <th class="col-1">Ver</th>
                         <th class="col-1">Editar</th>
                     </tr>
                 </thead>
@@ -226,7 +225,7 @@
                     <tr
                         v-for="(personal, index) in personalesFiltrados"
                         :key="index"
-                        @dblclick="view()"
+                        @dblclick="edit(personal._id)"
                     >
                         <td class="col-1">{{ personal.legajo }}</td>
                         <td class="col-1">{{ personal.apellido }}</td>
@@ -239,14 +238,8 @@
                         <td class="col-1">{{ personal.orden }}</td>
                         <td class="col-1">
                             <i
-                                class="fa-solid fa-folder-open"
-                                @click="view()"
-                            ></i>
-                        </td>
-                        <td class="col-1">
-                            <i
                                 class="fa-solid fa-pen-to-square"
-                                @click="edit()"
+                                @click="edit(personal._id)"
                             ></i>
                         </td>
                     </tr>
@@ -261,7 +254,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getPersonales, getPersonal } from '../../services/personalService';
+import { getPersonales } from '../../services/personalService';
 import { IPersonal } from "../../interfaces/IPersonal";
 
 export default defineComponent({
@@ -397,11 +390,9 @@ export default defineComponent({
             }
         },
 
-        view() {
-            console.log();
-        },
-        edit() {
-            console.log("hola desde Edit");
+        
+        edit(id:string) {
+            this.$router.push( `/editPersonal/${id}`)
         },
     },
     mounted() {

@@ -133,6 +133,123 @@
                         />
                     </div>
                 </div>
+
+                <div class="row" v-if="newPersonal.especialidad.includes('Conductor') || newPersonal.especialidad.includes('Ayudante')" >
+                    <h5>Conocimientos</h5>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        CML
+                        <select
+                            name="CML"
+                            id="CML"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.CML"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        CKD
+                        <select
+                            name="CKD"
+                            id="CKD"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.CKD"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        RO
+                        <select
+                            name="RO"
+                            id="RO"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.RO"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        MPN
+                        <select
+                            name="MPN"
+                            id="MPN"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.MPN"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        OL
+                        <select
+                            name="OL"
+                            id="OL"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.OL"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        LCI
+                        <select
+                            name="LCI"
+                            id="LCI"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.LCI"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        ELEC
+                        <select
+                            name="ELEC"
+                            id="ELEC"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.ELEC"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <label for="turno"></label>
+                        DUAL
+                        <select
+                            name="DUAL"
+                            id="DUAL"
+                            class="form-control mb-3"
+                            v-model="newPersonal.conocimientos.DUAL"
+                            required
+                        >
+                            <option value="NO">NO</option>
+                            <option value="SI">SI</option>
+                        </select>
+                    </div>
+                    
+                </div>
                 
                 <div class="row">
                     <div class="col">

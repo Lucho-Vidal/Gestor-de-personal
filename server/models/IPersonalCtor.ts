@@ -67,7 +67,8 @@ const personalSchema = new Schema<IConductor>({
         MPN: String,
         OL: String,
         LCI: String,
-        ELEC: String
+        ELEC: String,
+        DUAL: String
     }
 });
 

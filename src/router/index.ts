@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         component:()=> import('@/components/personal/newPersonal.vue')
     },
     {
+        path:'/editPersonal/:id',
+        name:'editPersonal',
+        component:()=> import('@/components/personal/editPersonal.vue')
+    },
+    {
         path:'/novedades',
         name:'Novedades',
         component:()=> import('@/components/novedades/Novedades.vue')

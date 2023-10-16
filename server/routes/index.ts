@@ -21,6 +21,13 @@ router.get("/Personal", async (req, res) => {
     res.json(tasks);
 });
 
+router.get("/Personal/:id", async (req, res) => {
+    const tasks = await Personal.findByIdAndUpdate(req.params.id, req.body,{
+        new: true,
+    });
+    res.json(tasks);
+});
+
 router.post("/Personal",async (req,res) => {
     const {
         legajo,
