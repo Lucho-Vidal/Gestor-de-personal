@@ -12,6 +12,7 @@ export interface Novedad {
     fechaAlta:string;
     HNA:boolean;
     detalle:string;
+    viewDetail:boolean;
     remplazo: Array<Remplazo>;
 }
 export interface Remplazo{

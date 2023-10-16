@@ -25,12 +25,13 @@
                         <th class="col-1">Ver</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr
-                        v-for="(novedad, index) in novedades"
+                <tbody
+                v-for="(novedad, index) in novedades"
                         :key="index"
                         @dblclick="edit(novedad._id)"
-                    >
+                        @click="viewDetail(novedad)"
+                >
+                    <tr >
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
@@ -44,6 +45,18 @@
                                 class="fa-solid fa-pen-to-square"
                                 @click="edit(novedad._id)"
                             ></i>
+                        </td>
+                    </tr>
+                    <tr v-if="novedad.viewDetail">
+                        <td colspan="11">
+                            <p v-if="novedad.remplazo"> Releva: {{ novedad.remplazo[novedad.remplazo.length -1].apellido +" "+  novedad.remplazo[novedad.remplazo.length -1].nombres  }}</p>
+                            
+                        </td>
+                        
+                    </tr>
+                    <tr v-if="novedad.viewDetail">
+                        <td colspan="11">
+                            <p>{{ novedad.detalle }}</p>
                         </td>
                     </tr>
                 </tbody>
@@ -62,6 +75,7 @@ import { Novedad } from "../../interfaces/INovedades";
 import { getNovedades } from "../../services/novedadesService";
 
 export default defineComponent({
+    
     data() {
         return {
             novedades: [] as Novedad[],
@@ -74,6 +88,18 @@ export default defineComponent({
         },
         edit(id:number){
             this.$router.push( `/editNovedades/${id}`)
+        },
+        viewDetail(novedad : Novedad){
+            if(novedad.viewDetail){
+                novedad.viewDetail = false;
+            }else{
+                console.log(novedad.remplazo.length);
+                
+                if(novedad.remplazo.length != 0){
+                    novedad.viewDetail = true;
+                }
+                
+            }
         }
     },
     mounted() {
@@ -90,4 +116,9 @@ export default defineComponent({
 main {
     min-height: 81.6vh;
 }
+
+.hidden-row {
+    display: none;
+}
+
 </style>
