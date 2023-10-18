@@ -38,8 +38,8 @@
                         <td class="col-1">{{ novedad.nombres }}</td>
                         <td class="col-1">{{ novedad.base }}</td>
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
-                        <td class="col-1">{{ novedad.fechaBaja }}</td>
-                        <td class="col-1">{{ novedad.fechaAlta }}</td>
+                        <td class="col-1">{{ new Date(novedad.fechaBaja + " 12:00").toLocaleDateString() }}</td>
+                        <td class="col-1">{{ !novedad.HNA   ? new Date(novedad.fechaAlta + " 12:00").toLocaleDateString() : "" }}</td>
                         <td class="col-1">
                             <i
                                 class="fa-solid fa-pen-to-square"
@@ -48,17 +48,35 @@
                         </td>
                     </tr>
                     <tr v-if="novedad.viewDetail">
-                        <td colspan="11">
-                            <p v-if="novedad.remplazo"> Releva: {{ novedad.remplazo[novedad.remplazo.length -1].apellido +" "+  novedad.remplazo[novedad.remplazo.length -1].nombres  }}</p>
+                        <td colspan="12">
+                            <div class="row" v-if="novedad.remplazo[0]"> 
+                                <h6 class="col-1">Releva:</h6> 
+                                <p class="col-3">
+                                    {{ novedad.remplazo[novedad.remplazo.length -1].apellido +" "+
+                                    novedad.remplazo[novedad.remplazo.length -1].nombres  }}
+                                </p>
+                                <h6 class="col-1">Desde:</h6>
+                                <p class="col-1">
+                                    {{ novedad.remplazo[novedad.remplazo.length -1].inicioRelevo }}
+                                </p>
+                                <h6 class="col-1">Hasta:</h6>
+                                <p class="col-1">
+                                    {{ novedad.remplazo[novedad.remplazo.length -1].finRelevo }}
+                                </p>
+                                
+                            </div>
+                            <div v-else>
+                                <h6>Sin Relevo</h6>
+                            </div>
+                            <div v-if="novedad.detalle">
+                                <h6>Detalle:</h6>
+                                <p>{{ novedad.detalle }}</p>
+                            </div>
                             
                         </td>
                         
                     </tr>
-                    <tr v-if="novedad.viewDetail">
-                        <td colspan="11">
-                            <p>{{ novedad.detalle }}</p>
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </main>
@@ -85,6 +103,7 @@ export default defineComponent({
         async loadNovedades() {
             const res = await getNovedades();
             this.novedades = res.data;
+            
         },
         edit(id:number){
             this.$router.push( `/editNovedades/${id}`)
@@ -93,17 +112,13 @@ export default defineComponent({
             if(novedad.viewDetail){
                 novedad.viewDetail = false;
             }else{
-                console.log(novedad.remplazo.length);
-                
-                if(novedad.remplazo.length != 0){
-                    novedad.viewDetail = true;
-                }
-                
+                novedad.viewDetail = true;
             }
         }
     },
     mounted() {
         this.loadNovedades();
+        
     },
     name: "App",
     components: {
