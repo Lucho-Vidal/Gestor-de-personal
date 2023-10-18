@@ -1,5 +1,4 @@
-//aca solo se arranca la application
-import app from "./app";
+import app from './app'
 import { startConnection } from "./database";
 
 startConnection();
