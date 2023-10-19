@@ -30,11 +30,10 @@ export const singUp = async (req, res) => {
 
     res.status(200).json({ token });
 };
-export const singIn = async (req, res) => {
+export const singIn = async (req, res) => { 
     const userFound = await User.findOne({ email: req.body.email }).populate(
         "roles"
     );
-
     if (!userFound) return res.status(400).json({ message: "User not found" });
 
     const matchPassword = await User.comparePassword(

@@ -9,6 +9,10 @@ router.post('/signup',[
     verifySignup.checkRolesExisted
 ]
 ,authCtrl.singUp)
-router.post('/signin',authCtrl.singIn)
+
+router.post(
+    '/signin',
+    authCtrl.singIn
+)
 
 export default router;

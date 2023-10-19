@@ -4,8 +4,8 @@ import * as personalCtrl from "../controllers/personal.controller";
 
 const router = Router();
 
-router.get("Personal", [authJwt.verifyToken], personalCtrl.getPersonales);
-router.get("Personal/:id", [authJwt.verifyToken], personalCtrl.getPersonal);
+router.get("/Personal", [authJwt.verifyToken], personalCtrl.getPersonales);
+router.get("/Personal/:id", [authJwt.verifyToken], personalCtrl.getPersonal);
 router.post(
     "Personal",
     [authJwt.verifyToken, authJwt.isModerator],
