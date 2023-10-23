@@ -700,10 +700,15 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.obtenerUltimoId();
-        this.loadPersonales();
-        this.loadNovedades();
-        this.newNovedad.HNA = true;
+        if(localStorage.getItem('token')){
+            this.obtenerUltimoId();
+            this.loadPersonales();
+            this.loadNovedades();
+            this.newNovedad.HNA = true;
+        }else{
+            this.$router.push('/login')
+        }
+        
     },
     components: {
         NavBar,
