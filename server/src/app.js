@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 import pkg from "../package.json";
 import path from "path";
 import { createRoles } from "./libs/initialSetup";
@@ -19,30 +20,15 @@ app.set("pkg", pkg);
 app.use(morgan("dev"));
 app.use(express.json());
 
-/*const whiteList = [process.env.ORIGIN1,process.env.ORIGIN2];
+const corsOptions = {
+    origin: "http://localhost:8080", // Reemplaza con la URL de tu frontend
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    optionsSuccessStatus: 204,
+    credentials: true
+};
 
- app.use(
-    cors({
-        origin:function (origen,callback){
-            console.log("====>",origin);
-            if(!origin || whiteList.includes(origin)){
-                return callback(null, origin);
-            }
-            return callback(
-                "Error de CORS origin: " + origin + " No autorizado!"
-            );
-        },
-    })
-) */
+app.use(cors(corsOptions));
 
-/* app.get("/", (req, res) => {
-    res.json({
-        name: app.get("pkg").name,
-        author: app.get("pkg").author,
-        description: app.get("pkg").description,
-        version: app.get("pkg").version,
-    });
-}); */
 
 app.use("/api", personales);
 app.use("/api", itinerario);
@@ -52,6 +38,5 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 
 app.use(express.static(path.join(__dirname,"..","..","dist")));
-//console.log(path.join(__dirname,"..","dist"));
 
 export default app;
