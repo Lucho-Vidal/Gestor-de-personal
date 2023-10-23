@@ -11,7 +11,7 @@
             >
                 <div class="input-group-text col-5 row p-5">
                     <div>
-                        <label for="email" class="mb-3" style="width: 300px">
+                        <label for="email" class="mb-3  text-align: center" style="width: 100%">
                             <input
                                 type="text"
                                 name="email"
@@ -24,7 +24,7 @@
                         </label>
                     </div>
                     <div>
-                        <label for="password" class="mb-3" style="width: 300px">
+                        <label for="password" class="mb-3" style="width: 100%">
                             <input
                                 type="password"
                                 name="password"
