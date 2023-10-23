@@ -46,6 +46,15 @@
                     </div>
                 </div>
             </form>
+            <div
+                    class="alert alert-danger row"
+                    role="alert"
+                    v-if="message.status == 'danger'"
+                >
+                    <h4 class="alert-heading">{{ message.title }}</h4>
+                    <hr />
+                    {{ message.message }}
+                </div>
         </main>
         <FooterPage />
     </div>
@@ -55,53 +64,42 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { signIn } from '../../services/signService';
+import { signIn } from "../../services/signService";
 import { User } from '../../interfaces/IUser';
-import axios from "axios";
 
 export default defineComponent({
     name: "editPersonal",
 
     data() {
         return {
-            user: {
-                email: "",
-                password: "",
-            } as User,
+            user: {} as User,
+            message: {
+                status: "",
+                title: "",
+                message: "",
+            },
         };
     },
     methods: {
         async procesar() {
-            try{
-                const res = await axios.post(
-                    "http://localhost:3000/api/auth/signin",
-                    {
-                        email:"luciano.vidal@trenesargentinos.gob.ar",
-                        password:"lucho777"
-                    },
-                    //console.log(res.data);
-                    
-                )
-            }catch(error){
-                console.log(error);
-                
+            try {
+                const res = await signIn(this.user);
+
+                if (res.status === 200) {
+                    window.localStorage.setItem("token", res.data.token);
+                    window.localStorage.setItem("username", res.data.username);
+                    this.$router.push('/')
+                }
+            } catch (error) {
+                this.message = {
+                    status: "danger",
+                    title: "ATENCIÓN!",
+                    message: "Los datos ingresados no son validos.",
+                };
+                this.user.email = "";
+                this.user.password = "";
+                setTimeout(()=> this.message.status = '' ,5000)
             }
-            
-            
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
         },
     },
     components: {
@@ -111,6 +109,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-    
-</style>
+<style></style>
