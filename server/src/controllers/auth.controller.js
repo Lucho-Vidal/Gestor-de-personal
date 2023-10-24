@@ -51,7 +51,7 @@ export const singIn = async (req, res) => {
     res.json({
         token,
         username: userFound.username,
-        role: userFound.roles[0].name,
+        role: userFound.roles.map(rol => rol.name),
     });
 };
 
@@ -67,7 +67,7 @@ export const refreshToken = async (req,res) => {
         res.json({
             token: newToken,
             username: user.username,
-            role: user.roles[0].name,
+            role: user.roles.map(rol => rol.name),
         });
     } catch (error) {
         console.log(error);
