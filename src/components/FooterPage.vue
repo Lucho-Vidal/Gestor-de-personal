@@ -1,7 +1,9 @@
 <template>
     <footer class="d-flex justify-content-center align-item-center">
-        <p>Desarrollo de app's Luciano Vidal</p>
+        <p class="my-2">Desarrollo de app's Luciano Vidal</p>
+        <a target="_blank" href="https://www.linkedin.com/in/luciano-vidal-6b50b295/"><img src="../assets/linkedin.png" alt="LinkedIn" class="mx-3" style="height: 30px;"></a>
     </footer>
+    
 </template>
 
 
@@ -16,7 +18,7 @@ footer {
     position: relative;
     bottom: 0;
     width: 100%;
-    height: 60px; /* ajustar el valor según sea necesario */
+    height: 86px; /* ajustar el valor según sea necesario */
 
 }
 </style>
