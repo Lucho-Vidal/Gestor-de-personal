@@ -2,9 +2,9 @@
     <div>
         <NavBar />
         <main class="container">
-            <h1 class="d-flex justify-content-center m-3">
+            <h2 class="d-flex justify-content-center m-3">
                 Buscador de trenes
-            </h1>
+            </h2>
             <div class="d-flex row">
                 <div class="row justify-content-end">
                     <!-- <p class="col">
@@ -127,6 +127,7 @@ import { IPersonal } from "../interfaces/IPersonal";
 import { getPersonales } from "../services/personalService";
 import { Novedad } from '../interfaces/INovedades';
 import { getNovedades } from "../services/novedadesService";
+import { newToken } from "../services/signService";
 
 export default defineComponent({
     data() {
@@ -349,11 +350,16 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadTurnos();
-        this.loadItinerario();
-        this.loadPersonales();
-        this.loadNovedades();
-        this.today.setHours(12, 0, 0, 0);
+        if (localStorage.getItem("token")) {
+            this.loadTurnos();
+            this.loadItinerario();
+            this.loadPersonales();
+            this.loadNovedades();
+            this.today.setHours(12, 0, 0, 0);
+            newToken();
+        } else {
+            this.$router.push("/login");
+        }
     },
     computed: {},
     components: {
