@@ -2,9 +2,9 @@
     <main>
         <NavBar />
         <div class="container">
-            <h1 class="d-flex justify-content-center m-3">
+            <h2 class="d-flex justify-content-center m-3">
                 Listado Personal de Abordo
-            </h1>
+            </h2>
             <p class="d-flex justify-content-end m-2">
                 Fecha: {{ days[today.getDay()] }}
                 {{ today.toLocaleDateString() }}
@@ -205,7 +205,7 @@
                     </label>
                 </div>
             </details>
-            <h1 v-if="personalesFiltrados.length == 0">No se encontró ningún personal</h1>
+            <h3 v-if="personalesFiltrados.length == 0">No se encontró ningún personal</h3>
             <table class="table table-striped table-hover" v-if="personalesFiltrados.length > 0">
                 <thead>
                     <tr>
@@ -256,6 +256,7 @@ import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { getPersonales } from '../../services/personalService';
 import { IPersonal } from "../../interfaces/IPersonal";
+import { newToken } from "../../services/signService";
 
 export default defineComponent({
     data() {
@@ -396,7 +397,13 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadPersonales();
+        
+        if (localStorage.getItem("token")) {
+            this.loadPersonales();
+            newToken();
+        } else {
+            this.$router.push("/login");
+        }
     },
     name: "App",
     components: {

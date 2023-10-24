@@ -281,6 +281,7 @@ import FooterPage from "../FooterPage.vue";
 
 import { getPersonales , createPersonal } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
+import { newToken } from "../../services/signService";
 
 
 
@@ -354,7 +355,13 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadPersonales();
+        
+        if (localStorage.getItem("token")) {
+            this.loadPersonales();
+            newToken();
+        } else {
+            this.$router.push("/login");
+        }
     },
     components: {
         NavBar,

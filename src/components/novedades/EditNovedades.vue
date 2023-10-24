@@ -3,10 +3,10 @@
         <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">Editar Novedad</h1>
-            
+
             <div class="alert alert-danger" role="alert" v-if="alerta">
                 <h4 class="alert-heading">ATENCIÓN!</h4>
-                <hr>
+                <hr />
                 {{ alerta }}
             </div>
             <button
@@ -434,7 +434,9 @@
                 </table>
 
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</i>
+                <i class="btn btn-secondary col-1 m-2" @click="cerrar()"
+                    >Cerrar</i
+                >
             </form>
         </main>
 
@@ -450,6 +452,7 @@ import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import { getNovedad, updateNovedad } from "../../services/novedadesService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
+import { newToken } from "../../services/signService";
 
 export default defineComponent({
     data() {
@@ -495,7 +498,10 @@ export default defineComponent({
                     if (this.novedad.HNA) {
                         this.novedad.fechaAlta = "";
                     }
-                    if (this.novedad.remplazo !== undefined && this.novedad.remplazo.length > 0) {
+                    if (
+                        this.novedad.remplazo !== undefined &&
+                        this.novedad.remplazo.length > 0
+                    ) {
                         if (
                             new Date(this.novedad.fechaBaja) >
                             new Date(this.novedad.remplazo[0].inicioRelevo)
@@ -559,23 +565,25 @@ export default defineComponent({
                             ].finRelevo = this.novedad.fechaAlta;
                         }
                     }
-                    if(this.alerta){
-                    if (this.alerta.includes("ATENCIÓN")){
-                        this.$router.push({ name: "Novedades" });
-                    }else if(this.alerta.includes("finalice el relevo")){
-                        this.alerta =  " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " + this.alerta 
+                    if (this.alerta) {
+                        if (this.alerta.includes("ATENCIÓN")) {
+                            this.$router.push({ name: "Novedades" });
+                        } else if (this.alerta.includes("finalice el relevo")) {
+                            this.alerta =
+                                " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " +
+                                this.alerta;
+                        }
+
+                        return;
                     }
-                    
-                    return;
-                }
-                await updateNovedad(this.$route.params.id, this.novedad);
-                this.$router.push(`/novedades`);
+                    await updateNovedad(this.$route.params.id, this.novedad);
+                    this.$router.push(`/novedades`);
                 }
             } catch (error) {
                 console.error(error);
             }
         },
-        cerrar(){
+        cerrar() {
             this.$router.push({ name: "Novedades" });
         },
         /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y 
@@ -606,25 +614,30 @@ export default defineComponent({
         },
         /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
         nombre y apellido el personal */
-        searchPersonal(soloCiclo:boolean) {
-            this.personalEncontrado = this.personales.filter((personal: IPersonal) => {
-                if(!soloCiclo)  {
-                    return(
-                    personal.apellido.toLowerCase() +
-                    " " +
-                    personal.nombres.toLowerCase()
-                ).includes(this.search.toLowerCase())
-                }else{//el remplazo debe ser personal de ciclo y de la misma base
-                    return(
-                    personal.apellido.toLowerCase() +
-                    " " +
-                    personal.nombres.toLowerCase()
-                ).includes(this.search.toLowerCase()) &&
-                personal.turno.toLowerCase().includes("ciclo")&&
-                personal.dotacion === this.novedad.base &&
-                personal.especialidad == this.novedad.especialidad
+        searchPersonal(soloCiclo: boolean) {
+            this.personalEncontrado = this.personales.filter(
+                (personal: IPersonal) => {
+                    if (!soloCiclo) {
+                        return (
+                            personal.apellido.toLowerCase() +
+                            " " +
+                            personal.nombres.toLowerCase()
+                        ).includes(this.search.toLowerCase());
+                    } else {
+                        //el remplazo debe ser personal de ciclo y de la misma base
+                        return (
+                            (
+                                personal.apellido.toLowerCase() +
+                                " " +
+                                personal.nombres.toLowerCase()
+                            ).includes(this.search.toLowerCase()) &&
+                            personal.turno.toLowerCase().includes("ciclo") &&
+                            personal.dotacion === this.novedad.base &&
+                            personal.especialidad == this.novedad.especialidad
+                        );
+                    }
                 }
-            })
+            );
         },
         /*  realiza la búsqueda por el legajo introducido en el respectivo input */
         searchPersonalPorLegajo() {
@@ -647,9 +660,14 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadPersonales();
-        if (typeof this.$route.params.id === "string") {
-            this.loadNovedad(this.$route.params.id);
+        if (localStorage.getItem("token")) {
+            this.loadPersonales();
+            if (typeof this.$route.params.id === "string") {
+                this.loadNovedad(this.$route.params.id);
+            }
+            newToken();
+        } else {
+            this.$router.push("/login");
         }
     },
     components: {

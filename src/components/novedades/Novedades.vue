@@ -3,9 +3,9 @@
         <NavBar />
 
         <main class="container">
-            <h1 class="d-flex justify-content-center m-3">
+            <h2 class="d-flex justify-content-center m-3">
                 Novedades del Personal de Abordo
-            </h1>
+            </h2>
             <div class="d-flex">
                 <a class="btn btn-primary d-flex end" href="/newNovedades"
                     >Nueva Novedad</a
@@ -87,8 +87,8 @@
                             {{
                                 !novedad.HNA
                                     ? new Date(
-                                          novedad.fechaAlta + " 12:00"
-                                      ).toLocaleDateString()
+                                            novedad.fechaAlta + " 12:00"
+                                        ).toLocaleDateString()
                                     : ""
                             }}
                         </td>

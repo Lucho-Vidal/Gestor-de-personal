@@ -619,7 +619,6 @@ export default defineComponent({
                         }
                     });
                 }
-                
                 if (novedad.legajo == personal.legajo){
                     if (novedad.HNA){
                         this.alerta =

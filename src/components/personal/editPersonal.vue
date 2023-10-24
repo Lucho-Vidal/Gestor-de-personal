@@ -280,6 +280,7 @@ import FooterPage from "../FooterPage.vue";
 
 import { getPersonal , updatePersonal } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
+import { newToken } from "../../services/signService";
 
 
 
@@ -334,9 +335,13 @@ export default defineComponent({
         
     },
     mounted() {
-        
-        if (typeof this.$route.params.id === "string") {
+        if (localStorage.getItem("token")) {
+            if (typeof this.$route.params.id === "string") {
             this.loadPersonal(this.$route.params.id);
+        }
+            newToken();
+        } else {
+            this.$router.push("/login");
         }
     },
     components: {
