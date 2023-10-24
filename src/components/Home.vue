@@ -21,6 +21,7 @@
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
 import FooterPage from "./FooterPage.vue";
+import { newToken } from '../services/signService';
 
 export default defineComponent({
     name: "App",
@@ -28,9 +29,19 @@ export default defineComponent({
         NavBar,
         FooterPage
     },
+    data(){
+        return{
+
+        }
+    },
+    methods:{},
+    mounted(){
+        newToken();
+    }
 });
 </script>
 <style>
-main {
-    min-height: 81.6vh;
-}</style>
+    main {
+        min-height: 81.6vh;
+    }
+</style>

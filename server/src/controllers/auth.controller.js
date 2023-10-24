@@ -35,7 +35,6 @@ export const singIn = async (req, res) => {
     const userFound = await User.findOne({ email: req.body.email }).populate(
         "roles"
     );
-    console.log(userFound);
     if (!userFound) return res.status(400).json({ message: "User not found" });
     const matchPassword = await User.comparePassword(
         req.body.password,
@@ -51,7 +50,7 @@ export const singIn = async (req, res) => {
     res.json({
         token,
         username: userFound.username,
-        role: userFound.roles[0].name,
+        role: userFound.roles.map(rol => rol.name),
     });
 };
 
@@ -60,17 +59,16 @@ export const refreshToken = async (req,res) => {
     try {
         const token = req.headers["x-access-token"];
         const decoded = jwt.verify(token, config.SECRET);
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.id).populate('roles');
         const newToken = jwt.sign({ id: user._id }, config.SECRET, {
             expiresIn: 900 //86400,
         });
         res.json({
             token: newToken,
             username: user.username,
-            role: user.roles[0].name,
+            role: user.roles.map(rol => rol.name),
         });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({error: "error de server"});
     }
 

@@ -3,6 +3,14 @@ import axios from "./axios";
 import { AxiosResponse } from "axios";
 import router from '../router'
 
+let roles = [] as string[];
+
+export const getRoles = ():string[] =>{
+    return roles
+}
+export const setRoles = (newRoles:string[]):void =>{
+    roles = newRoles
+}
 export const signIn = async (user: User): Promise<AxiosResponse> => {
     const res = await axios.post("/auth/signin", {
         "email":user.email,
@@ -19,6 +27,7 @@ export const refreshToken = async (): Promise<AxiosResponse> => {
 export const signUp = async (user: User): Promise<AxiosResponse> => {
     const res = await axios.post("/auth/signup", user);
     return res;
+    
 };
 
 export const newToken = async() => {
@@ -27,6 +36,7 @@ export const newToken = async() => {
         if (res.status === 200) {
             window.localStorage.setItem("token", res.data.token);
             window.localStorage.setItem("username", res.data.username);
+            window.localStorage.setItem("roles", res.data.role);
             console.log('hola desde refreshToken');
             
         }
