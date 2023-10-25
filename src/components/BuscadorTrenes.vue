@@ -370,7 +370,7 @@ export default defineComponent({
             this.loadPersonales();
             this.loadNovedades();
             this.today.setHours(12, 0, 0, 0);
-            newToken();
+            newToken()
         } else {
             this.$router.push("/login");
         }

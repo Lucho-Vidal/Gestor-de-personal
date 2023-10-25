@@ -64,7 +64,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { signIn } from "../../services/signService";
+import { setRoles, signIn } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
 
 export default defineComponent({
@@ -88,6 +88,8 @@ export default defineComponent({
                 if (res.status === 200) {
                     window.localStorage.setItem("token", res.data.token);
                     window.localStorage.setItem("username", res.data.username);
+                    window.localStorage.setItem("roles", res.data.role);
+                    setRoles(res.data.role); 
                     this.$router.push('/')
                 }
             } catch (error) {
@@ -109,4 +111,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+    main {
+        min-height: 81.6vh;
+    }
+</style>

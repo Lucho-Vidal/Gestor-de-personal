@@ -57,6 +57,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { getRoles } from "../services/signService";
 
 
 export default defineComponent({
@@ -64,7 +65,8 @@ export default defineComponent({
     data(){
         return{
             login: false as boolean,
-            username: '' as string
+            username: '' as string,
+            roles: [] as string[]
         }
             
     },
@@ -72,11 +74,19 @@ export default defineComponent({
         logOut(){
             localStorage.clear();
             this.$router.push('/login');
+        },
+        getRole(){
+            if (getRoles().length == 0 && localStorage.getItem('roles') != null){
+                this.roles = localStorage.getItem('roles')?.split(',') || [] 
+            }else{
+                this.roles = getRoles();
+            }
         }
     },
     mounted() {
         this.login =  localStorage.getItem('token') ? true : false;
         this.username = localStorage.getItem("username") || "";
+        this.getRole()
     },
     
 })</script>
