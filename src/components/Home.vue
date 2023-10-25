@@ -35,9 +35,9 @@ export default defineComponent({
         }
     },
     methods:{},
-    mounted(){
+    /* mounted(){
         newToken();
-    }
+    } */
 });
 </script>
 <style>

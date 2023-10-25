@@ -3,8 +3,9 @@
         <div
             class="container-fluid container d-flex flex-wrap justify-content-between"
         >
-            
-            <router-link class="navbar-brand" to="/">GNPA - Trenes Argentinos</router-link>
+            <router-link class="navbar-brand" to="/"
+                >GNPA - Trenes Argentinos</router-link
+            >
             <div>
                 <button
                     class="navbar-toggler"
@@ -19,35 +20,68 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <h5 class="mt-2">
-                                {{ username }} |
-                            </h5>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' ||
+                                rolMayor == 'admin' ||
+                                rolMayor == 'user'
+                            "
+                        >
+                            <h5 class="mt-2">{{ username }} |</h5>
                         </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/">Home</router-link>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' ||
+                                rolMayor == 'admin' ||
+                                rolMayor == 'user'
+                            "
+                        >
+                            <router-link class="nav-link" to="/"
+                                >Home</router-link
+                            >
                         </li>
-                        <li class="nav-item">
-                            <!-- <a class="nav-link" href="/buscador">Buscador</a> -->
-                            <router-link class="nav-link" to="/buscador">Buscador</router-link>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' ||
+                                rolMayor == 'admin' ||
+                                rolMayor == 'user'
+                            "
+                        >
+                            <router-link class="nav-link" to="/buscador"
+                                >Buscador</router-link
+                            >
                         </li>
-                        <li class="nav-item">
-                            <!-- <a class="nav-link" href="/personal">Personal</a> -->
-                            <router-link class="nav-link" to="/personal">Personal</router-link>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' || rolMayor == 'admin'
+                            "
+                        >
+                            <router-link class="nav-link" to="/personal"
+                                >Personal</router-link
+                            >
                         </li>
-                        <li class="nav-item">
-                            <!--  <a href="/novedades" class="nav-link">Novedades</a> -->
-                            <router-link class="nav-link" to="/novedades">Novedades</router-link>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' || rolMayor == 'admin'
+                            "
+                        >
+                            <router-link class="nav-link" to="/novedades"
+                                >Novedades</router-link
+                            >
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="#">Planillón diario</a>
-                        </li> -->
-                        <li class="nav-item" v-if="!login">
-                            <router-link class="btn btn-secondary" to="/login">Iniciar Sesión</router-link>
-                        </li> 
                         <li class="nav-item" v-if="login">
-                            <button class="btn btn-secondary" v-on:click="logOut" >Cerrar Sesión</button>
-                        </li> 
+                            <button
+                                class="btn btn-secondary"
+                                v-on:click="logOut"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -59,38 +93,47 @@
 import { defineComponent } from "vue";
 import { getRoles } from "../services/signService";
 
-
 export default defineComponent({
-
-    data(){
-        return{
+    data() {
+        return {
             login: false as boolean,
-            username: '' as string,
-            roles: [] as string[]
-        }
-            
+            username: "" as string,
+            roles: [] as string[],
+            rolMayor: "" as string,
+        };
     },
-    methods:{
-        logOut(){
+    methods: {
+        logOut() {
             localStorage.clear();
-            this.$router.push('/login');
+            this.rolMayor = "";
+            this.$router.push("/login");
         },
-        getRole(){
-            if (getRoles().length == 0 && localStorage.getItem('roles') != null){
-                this.roles = localStorage.getItem('roles')?.split(',') || [] 
-            }else{
+        getRol() {
+            if (
+                getRoles().length == 0 &&
+                localStorage.getItem("roles") != null
+            ) {
+                this.roles = localStorage.getItem("roles")?.split(",") || [];
+            } else {
                 this.roles = getRoles();
             }
-        }
+        },
+        getRolMayor() {
+            this.rolMayor =
+                this.roles.find((rol: string) => rol == "admin") ||
+                this.roles.find((rol: string) => rol == "moderator") ||
+                this.roles.find((rol: string) => rol == "user") ||
+                "";
+        },
     },
     mounted() {
-        this.login =  localStorage.getItem('token') ? true : false;
+        this.login = localStorage.getItem("token") ? true : false;
         this.username = localStorage.getItem("username") || "";
-        this.getRole()
+        this.getRol();
+        this.getRolMayor();
     },
-    
-})</script>
-
+});
+</script>
 
 <style>
 nav {

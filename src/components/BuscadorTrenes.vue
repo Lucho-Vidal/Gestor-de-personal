@@ -364,16 +364,12 @@ export default defineComponent({
         },
     },
     mounted() {
-        if (localStorage.getItem("token")) {
-            this.loadTurnos();
-            this.loadItinerario();
-            this.loadPersonales();
-            this.loadNovedades();
-            this.today.setHours(12, 0, 0, 0);
-            newToken()
-        } else {
-            this.$router.push("/login");
-        }
+        this.loadTurnos();
+        this.loadItinerario();
+        this.loadPersonales();
+        this.loadNovedades();
+        this.today.setHours(12, 0, 0, 0);
+        newToken()
     },
     computed: {},
     components: {
