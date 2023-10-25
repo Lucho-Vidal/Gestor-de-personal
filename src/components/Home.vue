@@ -6,12 +6,12 @@
                 Gestión de Novedades del Personal de Abordo
             </h1>
         <p>
-            Esta es una aplicación fue desarrollada por personal de control trenes de la linea Roca para la gestión del personal de abordo. 
+            Esta es una aplicación que fue desarrollada por personal de control trenes de la linea Roca para la gestión del personal de abordo. 
         </p>
 
         
 
-        <p>Ante cualquier inconveniente comuníquese con el administrador o envie un mail a: <a href="mailto:luciano.vidal@trenesargentinos.gob.ar">luciano.vidal@trenesargentinos.gob.ar</a></p>
+        <p>Ante cualquier inconveniente comuníquese con el administrador o envié un mail a: <a href="mailto:luciano.vidal@trenesargentinos.gob.ar">luciano.vidal@trenesargentinos.gob.ar</a></p>
         </main>
         <FooterPage/>
     </div>
@@ -21,7 +21,6 @@
 import { defineComponent } from "vue";
 import NavBar from "./NavBar.vue";
 import FooterPage from "./FooterPage.vue";
-import { newToken } from '../services/signService';
 
 export default defineComponent({
     name: "App",
