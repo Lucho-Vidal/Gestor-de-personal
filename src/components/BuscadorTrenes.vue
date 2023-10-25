@@ -16,7 +16,7 @@
                     <input
                         class="col-3"
                         type="text"
-                        placeholder="Buscar Tren"
+                        placeholder="Buscar por tren o por turno"
                         autofocus
                         v-model="tren"
                         v-on:change="buscar()"
@@ -200,7 +200,21 @@ export default defineComponent({
                 this.filtroItinerario(itinerario);
                 this.filtroTurno(itinerario);
                 this.buscarPersonalACargo(fecha);
-            }            
+            }else{
+                this.filtrarPorTurno(itinerario);
+                this.filtroTurno(itinerario);
+                this.buscarPersonalACargo(fecha);
+            }         
+
+        },
+        filtrarPorTurno(itinerario : string){
+
+            this.indFiltrado = [];
+            this.turno.forEach((diag: ITurno) => {
+                if (diag.turno.toLowerCase().includes(this.tren.toLowerCase()) && diag.itinerario == itinerario) {
+                    this.indFiltrado.push(diag);
+                }
+            });
 
         },
         filtroTrenes(itinerario : string) {
