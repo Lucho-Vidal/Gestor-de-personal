@@ -397,13 +397,9 @@ export default defineComponent({
         },
     },
     created() {
+        this.loadPersonales();
+        newToken();
         
-        if (localStorage.getItem("token")) {
-            this.loadPersonales();
-            newToken();
-        } else {
-            this.$router.push("/login");
-        }
     },
     name: "App",
     components: {

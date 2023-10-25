@@ -211,13 +211,9 @@ export default defineComponent({
         },
     },
     created() {
-        if (localStorage.getItem("token")) {
-            this.loadNovedades();
-            newToken();
-            this.username = localStorage.getItem("username") || '';
-        } else {
-            this.$router.push("/login");
-        }
+        this.loadNovedades();
+        newToken();
+        this.username = localStorage.getItem("username") || '';
         
     },
     name: "App",

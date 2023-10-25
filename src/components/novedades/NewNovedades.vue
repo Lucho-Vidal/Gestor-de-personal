@@ -699,14 +699,10 @@ export default defineComponent({
         },
     },
     mounted() {
-        if(localStorage.getItem('token')){
-            this.obtenerUltimoId();
-            this.loadPersonales();
-            this.loadNovedades();
-            this.newNovedad.HNA = true;
-        }else{
-            this.$router.push('/login')
-        }
+        this.obtenerUltimoId();
+        this.loadPersonales();
+        this.loadNovedades();
+        this.newNovedad.HNA = true;
         
     },
     components: {

@@ -660,15 +660,11 @@ export default defineComponent({
         },
     },
     mounted() {
-        if (localStorage.getItem("token")) {
-            this.loadPersonales();
-            if (typeof this.$route.params.id === "string") {
-                this.loadNovedad(this.$route.params.id);
-            }
-            newToken();
-        } else {
-            this.$router.push("/login");
+        this.loadPersonales();
+        if (typeof this.$route.params.id === "string") {
+            this.loadNovedad(this.$route.params.id);
         }
+        newToken();
     },
     components: {
         NavBar,

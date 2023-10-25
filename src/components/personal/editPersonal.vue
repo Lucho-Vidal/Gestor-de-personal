@@ -335,14 +335,10 @@ export default defineComponent({
         
     },
     mounted() {
-        if (localStorage.getItem("token")) {
-            if (typeof this.$route.params.id === "string") {
+        if (typeof this.$route.params.id === "string") {
             this.loadPersonal(this.$route.params.id);
         }
-            newToken();
-        } else {
-            this.$router.push("/login");
-        }
+        newToken();
     },
     components: {
         NavBar,

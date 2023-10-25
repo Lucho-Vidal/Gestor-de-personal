@@ -355,13 +355,8 @@ export default defineComponent({
         },
     },
     mounted() {
-        
-        if (localStorage.getItem("token")) {
-            this.loadPersonales();
-            newToken();
-        } else {
-            this.$router.push("/login");
-        }
+        this.loadPersonales();
+        newToken();
     },
     components: {
         NavBar,
