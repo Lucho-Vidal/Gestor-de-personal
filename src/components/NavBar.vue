@@ -57,6 +57,18 @@
                         <li
                             class="nav-item"
                             v-if="
+                                rolMayor == 'moderator' ||
+                                rolMayor == 'admin' ||
+                                rolMayor == 'user'
+                            "
+                        >
+                            <router-link class="nav-link" to="/Sabana"
+                                >Sabana</router-link
+                            >
+                        </li>
+                        <li
+                            class="nav-item"
+                            v-if="
                                 rolMayor == 'moderator' || rolMayor == 'admin'
                             "
                         >

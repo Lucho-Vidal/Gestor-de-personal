@@ -117,17 +117,17 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "./NavBar.vue";
-import { getTurnos } from "../services/turnosService";
-import { ITurno } from "../interfaces/ITurno";
-import FooterPage from "./FooterPage.vue";
-import { Itinerario } from '../interfaces/Itinerario';
-import { getItinerario } from "../services/itinerarioService";
-import { IPersonal } from "../interfaces/IPersonal";
-import { getPersonales } from "../services/personalService";
-import { Novedad } from '../interfaces/INovedades';
-import { getNovedades } from "../services/novedadesService";
-import { newToken } from "../services/signService";
+import NavBar from "../NavBar.vue";
+import { getTurnos } from "../../services/turnosService";
+import { ITurno } from "../../interfaces/ITurno";
+import FooterPage from "../FooterPage.vue";
+import { Itinerario } from '../../interfaces/Itinerario';
+import { getItinerario } from "../../services/itinerarioService";
+import { IPersonal } from "../../interfaces/IPersonal";
+import { getPersonales } from "../../services/personalService";
+import { Novedad } from '../../interfaces/INovedades';
+import { getNovedades } from "../../services/novedadesService";
+import { newToken } from "../../services/signService";
 
 export default defineComponent({
     data() {
