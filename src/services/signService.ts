@@ -4,12 +4,19 @@ import { AxiosResponse } from "axios";
 import router from '../router'
 
 let roles = [] as string[];
+let rolMayor = '';
 
+export const getRolMayor = ():string =>{
+    return rolMayor;
+}
+export const setRolMayor = (newRol:string):void =>{
+    rolMayor = newRol;
+}
 export const getRoles = ():string[] =>{
     return roles
 }
 export const setRoles = (newRoles:string[]):void =>{
-    roles = newRoles
+    roles = newRoles;
 }
 export const signIn = async (user: User): Promise<AxiosResponse> => {
     const res = await axios.post("/auth/signin", {
@@ -37,14 +44,12 @@ export const newToken = async() => {
             window.localStorage.setItem("token", res.data.token);
             window.localStorage.setItem("username", res.data.username);
             window.localStorage.setItem("roles", res.data.role);
-            console.log('hola desde refreshToken');
-            
+            setRoles(res.data.role); 
         }
 
     } catch (error){
-        
-        console.log('hola desde el error refreshToken'+ error);
-        //window.localStorage.clear()
+        console.log('hi');
+        window.localStorage.clear()
         router.push('/login')
     }
     
