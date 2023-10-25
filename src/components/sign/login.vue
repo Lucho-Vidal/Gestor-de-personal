@@ -47,9 +47,11 @@
                 </div>
             </form>
             <div
-                    class="alert alert-danger row"
+                    class="alert  row"
+                    
+                    :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':'']"
                     role="alert"
-                    v-if="message.status == 'danger'"
+                    v-if="message.status == 'danger'|| message.status == 'success'"
                 >
                     <h4 class="alert-heading">{{ message.title }}</h4>
                     <hr />
@@ -90,7 +92,16 @@ export default defineComponent({
                     window.localStorage.setItem("username", res.data.username);
                     window.localStorage.setItem("roles", res.data.role);
                     setRoles(res.data.role); 
-                    this.$router.push('/')
+                    this.message = {
+                        status: "success",
+                        title: "ATENCIÓN!",
+                        message: "Hola "+localStorage.getItem('username')+", El inicio de sesión fue exitoso. seras redirigido en un momento...",
+                    };
+                    setTimeout(()=> {
+                        
+                        this.$router.push('/')
+                    },3500)
+                    
                 }
             } catch (error) {
                 this.message = {
