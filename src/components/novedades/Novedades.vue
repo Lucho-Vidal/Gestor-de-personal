@@ -69,11 +69,11 @@
                     @dblclick="edit(novedad._id)"
                     @click="viewDetail(novedad)"
                 >
-                    <tr>
+                    <tr class="Small shadow">
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
-                        <td class="col-1">{{ novedad.nombres }}</td>
+                        <td class="col-2">{{ novedad.nombres }}</td>
                         <td class="col-1">{{ novedad.base }}</td>
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
                         <td class="col-1">
@@ -210,7 +210,7 @@ export default defineComponent({
             }
         },
     },
-    mounted() {
+    created() {
         if (localStorage.getItem("token")) {
             this.loadNovedades();
             newToken();

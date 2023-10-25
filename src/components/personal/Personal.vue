@@ -396,7 +396,7 @@ export default defineComponent({
             this.$router.push( `/editPersonal/${id}`)
         },
     },
-    mounted() {
+    created() {
         
         if (localStorage.getItem("token")) {
             this.loadPersonales();

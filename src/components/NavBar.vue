@@ -126,12 +126,15 @@ export default defineComponent({
                 "";
         },
     },
-    mounted() {
+    created() {
         this.login = localStorage.getItem("token") ? true : false;
         this.username = localStorage.getItem("username") || "";
         this.getRol();
         this.getRolMayor();
     },
+    beforeUnmount(){
+        this.rolMayor = "";
+    }
 });
 </script>
 
