@@ -3,6 +3,7 @@
         <NavBar />
         <main class="container">
             <h2 class="d-flex justify-content-center m-3">Sabana de Trenes</h2>
+            <input class="col-3" type="date" v-model="inputDate" v-on:change="buscar()" />
             <!-- <h3 v-if="novedadesFiltradas.length == 0">
                 No se encontró ninguna novedad con los requerimientos
                 especificados.
@@ -11,14 +12,103 @@
             <div class="d-flex row">
                 <ul class="nav nav-tabs">
                     <li class="nav item">
-                        <router-link class="nav-link active" to="">Sabana descendente</router-link>
+                        <a class="nav-link " :class="[currentTab ? '':'active']" href="#" @click="cambiarPestaña()">Sabana descendente</a>
                     </li>
                     <li class="nav item">
-                        <router-link class="nav-link " to="">Sabana ascendente</router-link>
+                        <a class="nav-link " :class="[currentTab ? 'active':'']" href="#" @click="cambiarPestaña()">Sabana ascendente</a>
                     </li>
                 </ul>
                 
             </div>
+            
+            <table v-if="!currentTab" class="col-6 table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="" colspan="1" rowspan="2">Tren</th>
+                            <th class="" colspan="1" rowspan="2">Desde</th>
+                            <th class="" colspan="1" rowspan="2">Hasta</th>
+                            <th class="" colspan="1" rowspan="2">LLega</th>
+                            <th class="" colspan="5" rowspan="1">Conductor</th>
+                            <th class="" colspan="5" rowspan="1">Guarda</th>
+                        </tr>
+                        <tr>
+                            <!-- Conductor -->
+                            <th class="" colspan="1" rowspan="1">Turno</th>
+                            <th class="" colspan="1" rowspan="1">Nombre</th>
+                            <th class="" colspan="1" rowspan="1">Sale</th>
+                            <th class="" colspan="1" rowspan="1">Hora</th>
+                            <th class="" colspan="1" rowspan="1">Observación</th>
+                            <!-- Guarda -->
+                            <th class="" colspan="1" rowspan="1">Turno</th>
+                            <th class="" colspan="1" rowspan="1">Nombre</th>
+                            <th class="" colspan="1" rowspan="1">Sale</th>
+                            <th class="" colspan="1" rowspan="1">Hora</th>
+                            <th class="" colspan="1" rowspan="1">Observación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="Small shadow">
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table v-if="currentTab" class="col-6 table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="" colspan="1" rowspan="2">Tren</th>
+                            <th class="" colspan="1" rowspan="2">Sale</th>
+                            <th class="" colspan="1" rowspan="2">Origen</th>
+                            <th class="" colspan="1" rowspan="2">Destino</th>
+                            <th class="" colspan="2" rowspan="1">Para tren</th>
+                            <th class="" colspan="4" rowspan="1">Conductor</th>
+                            <th class="" colspan="4" rowspan="1">Guarda</th>
+                        </tr>
+                        <tr>
+                            <th class="" colspan="1" rowspan="1" >Hora en</th>
+                            <!-- Conductor -->
+                            <th class="" colspan="1" rowspan="1">Turno</th>
+                            <th class="" colspan="1" rowspan="1">Nombre</th>
+                            <th class="" colspan="1" rowspan="1">Llega con</th>
+                            <th class="" colspan="1" rowspan="1">Relevo</th>
+                            <!-- Guarda -->
+                            <th class="" colspan="1" rowspan="1">Turno</th>
+                            <th class="" colspan="1" rowspan="1">Nombre</th>
+                            <th class="" colspan="1" rowspan="1">Llega con</th>
+                            <th class="" colspan="1" rowspan="1">Relevo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="Small shadow">
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            
         </main>
         <footer-page />
     </div>
@@ -30,17 +120,26 @@ import NavBar from "../NavBar.vue";
 import { getTurnos } from "../../services/turnosService";
 import { ITurno } from "../../interfaces/ITurno";
 import FooterPage from "../FooterPage.vue";
-import { Itinerario } from "../../interfaces/Itinerario";
+import { Itinerario } from '../../interfaces/Itinerario';
 import { getItinerario } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
 import { Novedad } from "../../interfaces/INovedades";
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
+import { Descendente, Ascendente } from '../../interfaces/ISabana';
 
 export default defineComponent({
     data() {
         return {
+            currentTab: false,
+            Descendente: {} as Descendente,
+            ascendente: {} as Ascendente,
+            descendentes: [] as Descendente[],  
+            ascendentes: [] as Ascendente[],
+
+
+
             tren: "" as string,
             turno: [] as ITurno[],
             indFiltrado: [] as ITurno[],
@@ -82,60 +181,94 @@ export default defineComponent({
             const res = await getNovedades();
             this.novedades = res.data;
         },
+        cambiarPestaña() {
+            this.currentTab = !this.currentTab;            
+        },
+        cargarTrenDescendente(tren:string){
+            const fecha: Date = this.obtenerFecha();
+            const itinerario: string = this.itinerarioType(fecha);
+            console.log(itinerario);
+            
+            //cargo la vuelta en this.indFiltrado
+            this.filtroTrenes(itinerario,this.tren);
+            //cargamos los turnos en this.turnos
+            this.filtroTurno(itinerario);
+            //buscamos personal
+            this.buscarPersonalACargo(fecha);
+            let trenIt = this.buscarTrenItinerario(tren,itinerario);
+            console.log(trenIt);
+            
+            this.Descendente.tren = tren;
+            //this.Descendente.desde = 
+
+
+            
+        },
+        buscarTrenItinerario(tren:string,itinerario:string ){
+            console.log(tren,itinerario,this.itinerario);
+            
+            return this.itinerario.filter(it => {
+                return (it.itinerario == itinerario && it.tren == parseInt(tren))
+            })
+        },
+        itinerarioType(fecha:Date){
+            if (fecha.getDay() === 0) {
+                return "D";
+            } else if (fecha.getDay() === 6) {
+                return "S";
+            } else {
+                return "H";
+            }
+        },
+        obtenerFecha(){
+            if (this.inputDate == "") {
+                return this.today;
+            } else {
+                return new Date(this.inputDate + " 12:00");
+            }
+        },
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
             Se ejecuta por v-on:change en el input  */
-            let fecha: Date;
-            let itinerario = "";
+            const fecha: Date = this.obtenerFecha();
+            const itinerario: string = this.itinerarioType(fecha);
             //reinicio variables globales
             this.turnos = [];
             this.itFiltrado = [];
 
-            if (this.inputDate == "") {
-                fecha = this.today;
-            } else {
-                fecha = new Date(this.inputDate + " 12:00");
-            }
-            if (fecha.getDay() === 0) {
-                itinerario = "D";
-            } else if (fecha.getDay() === 6) {
-                itinerario = "S";
-            } else {
-                itinerario = "H";
-            }
-            //si no se encuentra tren no continuo con la búsqueda
-            this.filtroTrenes(itinerario);
+            //si no se encuentra tren busco turnos
+            this.filtroTrenes(itinerario,this.tren);
             if (this.indFiltrado.length > 0) {
-                this.filtroItinerario(itinerario);
+                this.filtroItinerario(itinerario,this.tren);
                 this.filtroTurno(itinerario);
                 this.buscarPersonalACargo(fecha);
             } else {
-                this.filtrarPorTurno(itinerario);
+                this.filtrarPorTurno(itinerario,this.tren);
                 this.filtroTurno(itinerario);
                 this.buscarPersonalACargo(fecha);
             }
         },
-        filtrarPorTurno(itinerario: string) {
+        filtrarPorTurno(itinerario: string,tren: string) {
             this.indFiltrado = [];
             this.turno.forEach((diag: ITurno) => {
                 if (
                     diag.turno
                         .toLowerCase()
-                        .includes(this.tren.toLowerCase()) &&
+                        .includes(tren.toLowerCase()) &&
                     diag.itinerario == itinerario
                 ) {
                     this.indFiltrado.push(diag);
                 }
             });
         },
-        filtroTrenes(itinerario: string) {
+        filtroTrenes(itinerario: string,tren: string) {
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = [];
             this.turno.forEach((diag: ITurno) => {
                 for (let i = 0; i < diag.vueltas.length; i++) {
                     if (
-                        diag.vueltas[i].tren == parseInt(this.tren) &&
+                        diag.vueltas[i].tren == parseInt(tren) &&
                         diag.itinerario == itinerario
                     ) {
                         this.indFiltrado.push(diag);
@@ -144,12 +277,12 @@ export default defineComponent({
             });
             // console.log(this.indFiltrado);
         },
-        filtroItinerario(itinerario: string) {
+        filtroItinerario(itinerario: string,tren: string) {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
             las guarda en el array itFiltrado  */
             this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
                 return (
-                    horarios.tren == parseInt(this.tren) &&
+                    horarios.tren == parseInt(tren) &&
                     horarios.itinerario == itinerario
                 );
             });
@@ -304,6 +437,7 @@ export default defineComponent({
         this.loadNovedades();
         this.today.setHours(12, 0, 0, 0);
         newToken();
+        this.cargarTrenDescendente('5555')
     },
     computed: {},
     components: {

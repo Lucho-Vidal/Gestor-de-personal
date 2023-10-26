@@ -30,7 +30,19 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/buscador',
         name: 'Buscador',
-        component: () => import('@/components/BuscadorTrenes.vue'),
+        component: () => import('@/components/appTrabajo/BuscadorTrenes.vue'),
+        beforeEnter:(to,from,next)=>{
+            if(localStorage.getItem('token')){ 
+                next();
+            }else{
+                next('/login')
+            }
+        }
+    },
+    {
+        path: '/Sabana',
+        name: 'Sabana',
+        component: () => import('@/components/appTrabajo/SabanaTrenes.vue'),
         beforeEnter:(to,from,next)=>{
             if(localStorage.getItem('token')){ 
                 next();
