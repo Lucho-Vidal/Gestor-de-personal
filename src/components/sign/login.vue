@@ -100,7 +100,7 @@ export default defineComponent({
                     setTimeout(()=> {
                         
                         this.$router.push('/')
-                    },3500)
+                    },1000)
                     
                 }
             } catch (error) {

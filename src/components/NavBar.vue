@@ -6,7 +6,7 @@
             <router-link class="navbar-brand" to="/"
                 >GNPA - Trenes Argentinos</router-link
             >
-            <div>
+            <div v-if="login">
                 <button
                     class="navbar-toggler"
                     type="button"
