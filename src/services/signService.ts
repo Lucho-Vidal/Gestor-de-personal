@@ -32,7 +32,13 @@ export const refreshToken = async (): Promise<AxiosResponse> => {
 };
 
 export const signUp = async (user: User): Promise<AxiosResponse> => {
-    const res = await axios.post("/auth/signup", user);
+    const res = await axios.post("/auth/signup", {
+        "legajo": user.legajo,
+        "username": user.username,
+        "email":user.email,
+        "password":user.password,
+        "roles": user.roles
+    });
     return res;
     
 };

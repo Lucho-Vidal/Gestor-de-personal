@@ -23,4 +23,9 @@ router.get('/refresh',[
     authJwt.verifyToken
 ],authCtrl.refreshToken)
 
+router.get('/users',[
+    authJwt.verifyToken,
+    authJwt.isAdmin
+],authCtrl.getUsers)
+
 export default router;

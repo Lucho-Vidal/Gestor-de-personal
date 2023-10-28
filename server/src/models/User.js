@@ -3,10 +3,14 @@ import bcrypt from 'bcryptjs'
 
 const userSchema = new Schema(
     {
+        legajo: {
+            type: Number,
+            required: true,
+            unique: true,
+        },
         username: {
             type: String,
             required: true,
-            unique: true,
         },
         email: {
             type: String,

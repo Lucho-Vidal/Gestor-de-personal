@@ -86,6 +86,15 @@
                                 >Novedades</router-link
                             >
                         </li>
+                        <li
+                            class="nav-item"
+                            v-if="rolMayor == 'admin'
+                            "
+                        >
+                            <router-link class="nav-link" to="/logup"
+                                >Usuarios</router-link
+                            >
+                        </li>
                         <li class="nav-item" v-if="login">
                             <button
                                 class="btn btn-secondary"

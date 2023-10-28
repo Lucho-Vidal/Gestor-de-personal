@@ -1,4 +1,3 @@
-import { getRoles,  setRoles } from "@/services/signService";
 import {
     RouteRecordRaw,
     createRouter,
@@ -42,7 +41,7 @@ function requireAdmin(
     from: RouteLocationNormalized,
     next: NavigationGuardNext
 ) {
-    const roles = getRoles();
+    const roles = localStorage.getItem('roles')?.split(',')||[]
     if (roles.includes("admin")) {
         next();
     } else {
@@ -76,16 +75,10 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/login",
-        name: "login",
-        component: () => import("@/components/sign/login.vue"),
-        beforeEnter: (to, from, next) => {
-            if (localStorage.getItem("token")) {
-                next("/");
-            } else {
-                next();
-            }
-        },
+        path: "/logup",
+        name: "logup",
+        component: () => import("@/components/sign/logup.vue"),
+        beforeEnter: requireAdmin,
     },
     {
         path: "/buscador",
