@@ -5,9 +5,25 @@ import config from "../config";
 
 export const getUsers = async (req, res) => {
     const users = await User.find().populate("roles");
-
-    res.json(users);
+    const clearUsers = limpiarPass(users);
+    res.json(clearUsers);
 };
+
+const limpiarPass = (users) => {
+    return users.map(user =>{
+        let {legajo,username, email, roles} = user;
+        roles = roles.map((rol) => {
+            return rol.name
+        })
+        return {
+            legajo,
+            username,
+            email,
+            roles 
+        }
+    })
+} 
+
 
 export const singUp = async (req, res) => {
     const { legajo, username, email, password, roles } = req.body;
@@ -20,15 +36,20 @@ export const singUp = async (req, res) => {
         email,
         password: await User.encryptPassword(password),
     });
-    console.log(newUser);
-    if (roles) {
+    if (roles.length > 0) {
+        if (roles.includes('admin')){
+            roles.push('moderator')
+            roles.push('user')
+        }else if(roles.includes('moderator')){
+            roles.push('user')
+        }
+
         const foundRoles = await Role.find({ name: { $in: roles } });
         newUser.roles = foundRoles.map((role) => role._id);
     } else {
         const role = await Role.findOne({ name: "user" });
         newUser.roles = [role._id];
     }
-    console.log(newUser);
     const savedUser = await newUser.save();
 
     const token = jwt.sign({ id: savedUser._id }, config.SECRET, {
