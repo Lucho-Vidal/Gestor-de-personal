@@ -3,27 +3,6 @@ import jwt from "jsonwebtoken";
 import Role from "../models/Role.js";
 import config from "../config";
 
-export const getUsers = async (req, res) => {
-    const users = await User.find().populate("roles");
-    const clearUsers = limpiarPass(users);
-    res.json(clearUsers);
-};
-
-const limpiarPass = (users) => {
-    return users.map(user =>{
-        let {legajo,username, email, roles} = user;
-        roles = roles.map((rol) => {
-            return rol.name
-        })
-        return {
-            legajo,
-            username,
-            email,
-            roles 
-        }
-    })
-} 
-
 
 export const singUp = async (req, res) => {
     const { legajo, username, email, password, roles } = req.body;
@@ -71,7 +50,7 @@ export const singIn = async (req, res) => {
 
     if (!matchPassword)return res.status(401).json({ token: null, message: "Invalid password" });
     const token = jwt.sign({ id: userFound._id }, config.SECRET, {
-        expiresIn: 900 //86400,
+        expiresIn: 5 //86400,
     });
     userFound.password = "";
 
@@ -83,7 +62,6 @@ export const singIn = async (req, res) => {
 };
 
 export const refreshToken = async (req,res) => {
-
     try {
         const token = req.headers["x-access-token"];
         const decoded = jwt.verify(token, config.SECRET);
@@ -99,5 +77,4 @@ export const refreshToken = async (req,res) => {
     } catch (error) {
         return res.status(500).json({error: "error de server"});
     }
-
 }

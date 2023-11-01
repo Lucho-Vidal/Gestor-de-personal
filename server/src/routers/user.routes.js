@@ -2,12 +2,16 @@ import { Router } from "express";
 const router = Router()
 
 import * as userCtrl from '../controllers/user.controller'
-import { authJwt, verifySignup } from "../middlewares";
+import { authJwt } from "../middlewares";
 
-router.post('/',[
+router.get('/users',[
     authJwt.verifyToken,
-    authJwt.isAdmin,
-    verifySignup.checkRolesExisted
-], userCtrl.createUser)
+    authJwt.isAdmin
+],userCtrl.getUsers)
+
+router.get("/user/:id",[
+    authJwt.verifyToken,
+    authJwt.isAdmin
+],userCtrl.getUser)
 
 export default router;

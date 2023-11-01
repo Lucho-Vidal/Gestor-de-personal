@@ -75,9 +75,21 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/logup",
-        name: "logup",
-        component: () => import("@/components/sign/logup.vue"),
+        path: "/users",
+        name: "users",
+        component: () => import("@/components/sign/lstUsers.vue"),
+        beforeEnter: requireAdmin,
+    },
+    {
+        path: "/newUser",
+        name: "newUser",
+        component: () => import("@/components/sign/newUser.vue"),
+        beforeEnter: requireAdmin,
+    },
+    {
+        path: "/editUser/:id",
+        name: "editUser",
+        component: () => import("@/components/sign/editUser.vue"),
         beforeEnter: requireAdmin,
     },
     {

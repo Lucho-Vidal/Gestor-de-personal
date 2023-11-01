@@ -18,6 +18,17 @@ export const getRoles = ():string[] =>{
 export const setRoles = (newRoles:string[]):void =>{
     roles = newRoles;
 }
+
+export const getUsers = async ():Promise<AxiosResponse> => {
+    const res = await axios.get("/users");
+    return res;
+}
+
+export const getUser = async (id: string):Promise<AxiosResponse<User>> => {
+    const res = await axios.get(`/user/${id}`);
+    return res;
+}
+
 export const signIn = async (user: User): Promise<AxiosResponse> => {
     const res = await axios.post("/auth/signin", {
         "email":user.email,
@@ -54,7 +65,6 @@ export const newToken = async() => {
         }
 
     } catch (error){
-        console.log('hi');
         window.localStorage.clear()
         router.push('/login')
     }

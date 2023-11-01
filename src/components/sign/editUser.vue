@@ -3,7 +3,7 @@
         <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">
-                Crear nuevo Usuario
+                Editar usuario
             </h1>
             <div
                 class="alert row d-flex align-content-center justify-content-center nowrap"
@@ -101,6 +101,7 @@
                                 v-model="user.password"
                                 autocomplete="off"
                                 required
+                                disabled
                             />
                         </label>
                     </div>
@@ -122,8 +123,8 @@
                     <div>
                         <input
                             type="submit"
-                            value="Crear Usuario"
-                            name="Crear Usuario"
+                            value="Editar Usuario"
+                            name="Editar Usuario"
                             class="btn btn-primary col-5"
                         />
                     </div>
@@ -146,7 +147,7 @@
                 </ul>
                 </div>
             </div>
-            <div v-if="user.roles.includes('moderator')">
+            <div v-if="rol.includes('moderator')">
                 <h3 class="text-center">Supervisor:</h3>
                 <p class="text-center">
                     Tiene acceso a:
@@ -169,7 +170,7 @@
                 </div>
             </div>
 
-            <div v-if="user.roles.includes('admin')">
+            <div v-if="rol.includes('admin')">
                 <h3 class="text-center">Administrador: </h3>
                 <p class="text-center">
                     Tiene acceso a:
@@ -205,7 +206,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { signUp } from "../../services/signService";
+import { getUser, signUp } from "../../services/signService";
 import { User } from "../../interfaces/IUser";
 
 export default defineComponent({
@@ -225,6 +226,18 @@ export default defineComponent({
         };
     },
     methods: {
+        async loadUser(id: string){
+            try {
+                const res = await getUser(id);
+                console.log(id);
+                
+                this.user = res.data;
+                console.log(res);
+                
+            } catch (error) {
+                console.error(error)
+            }
+        },
         async procesar() {
             try {
                 this.user.roles[0] = this.rol;                
@@ -263,6 +276,11 @@ export default defineComponent({
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },
+    },
+    created(){
+        if (typeof this.$route.params.id === "string") {
+            this.loadUser(this.$route.params.id);
+        }
     },
     components: {
         NavBar,

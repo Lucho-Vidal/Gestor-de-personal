@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { authJwt } from "../middlewares";
 const router = Router();
 
 import * as authCtrl from '../controllers/auth.controller'
 import { verifySignup } from "../middlewares";
+import { authJwt } from "../middlewares";
 
 router.post('/signup',[
     verifySignup.checkDuplicateUsernameOrEmail,
@@ -23,9 +23,6 @@ router.get('/refresh',[
     authJwt.verifyToken
 ],authCtrl.refreshToken)
 
-router.get('/users',[
-    authJwt.verifyToken,
-    authJwt.isAdmin
-],authCtrl.getUsers)
+
 
 export default router;

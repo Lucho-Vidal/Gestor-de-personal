@@ -91,7 +91,7 @@
                             v-if="rolMayor == 'admin'
                             "
                         >
-                            <router-link class="nav-link" to="/logup"
+                            <router-link class="nav-link" to="/users"
                                 >Usuarios</router-link
                             >
                         </li>

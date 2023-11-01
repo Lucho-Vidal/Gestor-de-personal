@@ -35,7 +35,7 @@ app.use("/api", itinerario);
 app.use("/api", novedades);
 app.use("/api", turno);
 app.use("/api/auth", authRoutes);
-app.use("/api/users", usersRoutes);
+app.use("/api", usersRoutes);
 
 app.use(express.static(path.join(__dirname,"..","..","dist")));
 
