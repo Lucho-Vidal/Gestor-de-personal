@@ -48,20 +48,20 @@
                     </thead>
                     <tbody>
                         <tr class="Small shadow">
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
-                            <td class="col-1"></td>
+                            <td class="col-1">{{ descendente.tren }}</td>
+                            <td class="col-1">{{ descendente.desde }}</td>
+                            <td class="col-1">{{ descendente.hasta }}</td>
+                            <td class="col-1">{{ descendente.llega }}</td>
+                            <td class="col-1">{{ descendente.CtTurno }}</td>
+                            <td class="col-1">{{ descendente.CtNombre }}</td>
+                            <td class="col-1">{{ descendente.CtSale }}</td>
+                            <td class="col-1">{{ descendente.CtHora }}</td>
+                            <td class="col-1">{{ descendente.CtObs }}</td>
+                            <td class="col-1">{{ descendente.GdTurno }}</td>
+                            <td class="col-1">{{ descendente.GdNombre }}</td>
+                            <td class="col-1">{{ descendente.GdSale }}</td>
+                            <td class="col-1">{{ descendente.GdHora }}</td>
+                            <td class="col-1">{{ descendente.GdObs }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -133,7 +133,7 @@ export default defineComponent({
     data() {
         return {
             currentTab: false,
-            Descendente: {} as Descendente,
+            descendente: {} as Descendente,
             ascendente: {} as Ascendente,
             descendentes: [] as Descendente[],  
             ascendentes: [] as Ascendente[],
@@ -182,31 +182,61 @@ export default defineComponent({
             this.novedades = res.data;
         },
         cambiarPestaña() {
-            this.currentTab = !this.currentTab;            
+            this.currentTab = !this.currentTab;  
+            this.cargarTrenDescendente('7402')          
         },
         cargarTrenDescendente(tren:string){
             const fecha: Date = this.obtenerFecha();
             const itinerario: string = this.itinerarioType(fecha);
-            console.log(itinerario);
+            
             
             //cargo la vuelta en this.indFiltrado
-            this.filtroTrenes(itinerario,this.tren);
+            this.filtroTrenes(itinerario,tren);
             //cargamos los turnos en this.turnos
             this.filtroTurno(itinerario);
             //buscamos personal
             this.buscarPersonalACargo(fecha);
             let trenIt = this.buscarTrenItinerario(tren,itinerario);
-            console.log(trenIt);
             
-            this.Descendente.tren = tren;
-            //this.Descendente.desde = 
+            console.log(this.indFiltrado);
+            console.log(trenIt[0].estaciones.length);
+            
+            
+            let desde = trenIt[0].estaciones.length -1
+            let hasta = 0
 
 
             
+            try {
+                this.descendente.tren = parseInt(tren);
+                this.descendente.desde = trenIt[0].estaciones[desde];
+                this.descendente.hasta = trenIt[0].estaciones[hasta];
+                this.descendente.llega = trenIt[0].horarios[hasta];
+                //Ctor
+                this.descendente.CtTurno = this.indFiltrado[0].turno
+                this.descendente.CtNombre = this.indFiltrado[0].personal 
+                let vuelta = this.indFiltrado[0].vueltas.filter(vuelta =>{
+                    if (vuelta.tren != undefined && tren != undefined){
+                        return vuelta.tren == parseInt(tren)
+                    }
+                    
+                })
+                let vueltaNum = vuelta[0].vuelta
+                console.log(this.indFiltrado[0].vueltas.length);
+                console.log(vueltaNum);
+                console.log(this.indFiltrado[0].vueltas.length);
+                this.descendente.CtSale = vuelta[vueltaNum].tren.toString()
+            } catch (error) {
+                console.log(error);
+                
+            }
+            
+            //this.descendente.CtTurno = this.indFiltrado[0]
+            this.descendente.CtTurno = this.indFiltrado[0].turno
+            this.descendente.CtTurno = this.indFiltrado[0].turno
+
         },
         buscarTrenItinerario(tren:string,itinerario:string ){
-            console.log(tren,itinerario,this.itinerario);
-            
             return this.itinerario.filter(it => {
                 return (it.itinerario == itinerario && it.tren == parseInt(tren))
             })
@@ -275,7 +305,6 @@ export default defineComponent({
                     }
                 }
             });
-            // console.log(this.indFiltrado);
         },
         filtroItinerario(itinerario: string,tren: string) {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
@@ -430,14 +459,17 @@ export default defineComponent({
             this.today = new Date(this.inputDate + " 12:00");
         },
     },
-    mounted() {
-        this.loadTurnos();
-        this.loadItinerario();
-        this.loadPersonales();
-        this.loadNovedades();
-        this.today.setHours(12, 0, 0, 0);
-        newToken();
-        this.cargarTrenDescendente('5555')
+    created() {
+        try {
+            this.loadTurnos();
+            this.loadItinerario();
+            this.loadPersonales();
+            this.loadNovedades();
+            this.today.setHours(12, 0, 0, 0);
+            newToken();
+        } catch (error) {
+            console.error(error);
+        }
     },
     computed: {},
     components: {

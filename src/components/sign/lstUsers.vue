@@ -38,7 +38,7 @@
                         <td class="col-1">{{ user.legajo }}</td>
                         <td class="col-1">{{ user.username }}</td>
                         <td class="col-1">{{ user.email }}</td>
-                        <td class="col-2">{{ user.roles }}</td>
+                        <td class="col-2">{{ getRolMayor(user) }}</td>
                         <td class="col-1">
                             <i
                                 class="fa-solid fa-pen-to-square"
@@ -58,13 +58,14 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getUsers, newToken } from "../../services/signService";
-import { User } from "../../interfaces/IUser";
+import { getUsers, newToken } from '../../services/signService';
+import { User } from '../../interfaces/IUser';
 
 export default defineComponent({
     data() {
         return {
             users:[] as User[],
+            rolMayor: "" as string,
         };
     },
     methods: {
@@ -75,6 +76,14 @@ export default defineComponent({
         edit(id: string) {
             this.$router.push(`/editUser/${id}`);
         },
+        getRolMayor(user:User):string {
+            const rol = user.roles.find((rol: string) => rol == "admin") || 
+            user.roles.find((rol: string) => rol == "moderator") ||
+            user.roles.find((rol: string) => rol == "user") ||
+            '';
+            return (rol == 'admin'? 'Administrador' : rol == 'moderator'? 'Supervisor': rol == 'user' ? 'Usuario' : '')
+            }
+        ,
         
     },
     created() {

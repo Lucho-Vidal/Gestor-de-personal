@@ -1,5 +1,5 @@
 export interface Descendente {
-    tren: string,
+    tren: number,
     desde: string,
     hasta: string,
     llega: string,

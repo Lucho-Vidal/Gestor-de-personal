@@ -14,4 +14,9 @@ router.get("/user/:id",[
     authJwt.isAdmin
 ],userCtrl.getUser)
 
+router.put("/user/:id",[
+    authJwt.verifyToken,
+    authJwt.isAdmin
+],userCtrl.updateUser)
+
 export default router;

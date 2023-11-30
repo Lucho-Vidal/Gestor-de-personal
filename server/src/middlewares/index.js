@@ -1,5 +1,5 @@
 import * as authJwt from "./authJwt";
 import * as verifySignup from "./verifySignup";
-import * as clearPass from "./user"
+import * as ClearUser from "./clearUser"
 
-export { authJwt , verifySignup, clearPass };
+export { authJwt , verifySignup, ClearUser };

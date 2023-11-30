@@ -10,7 +10,9 @@ export const getRolMayor = ():string =>{
     return rolMayor;
 }
 export const setRolMayor = (newRol:string):void =>{
-    rolMayor = newRol;
+    rolMayor = newRol.includes('admin') ? 'admin' :
+    newRol.includes('moderator') ? 'moderator':
+    newRol.includes('user') ? 'user': ''
 }
 export const getRoles = ():string[] =>{
     return roles
@@ -28,6 +30,12 @@ export const getUser = async (id: string):Promise<AxiosResponse<User>> => {
     const res = await axios.get(`/user/${id}`);
     return res;
 }
+
+export const updateUser = async (
+    id: string,
+    newUser: User
+): Promise<AxiosResponse<User>> =>
+    await axios.put(`/user/${id}`, newUser);
 
 export const signIn = async (user: User): Promise<AxiosResponse> => {
     const res = await axios.post("/auth/signin", {

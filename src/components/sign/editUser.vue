@@ -99,8 +99,6 @@
                                 placeholder="password"
                                 class="form-control mb-3 text-center"
                                 v-model="user.password"
-                                autocomplete="off"
-                                required
                                 disabled
                             />
                         </label>
@@ -206,7 +204,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getUser, signUp } from "../../services/signService";
+import { getUser, signUp, updateUser } from "../../services/signService";
 import { User } from "../../interfaces/IUser";
 
 export default defineComponent({
@@ -229,13 +227,20 @@ export default defineComponent({
         async loadUser(id: string){
             try {
                 const res = await getUser(id);
-                console.log(id);
-                
                 this.user = res.data;
-                console.log(res);
+                this.rol = this.getRolMayor(res.data)
+                console.log(this.rol);
                 
             } catch (error) {
                 console.error(error)
+            }
+        },
+        async updateUser(){
+            try {
+                await updateUser(this.user._id,this.user)
+            } catch (error) {
+                console.error(error);
+                
             }
         },
         async procesar() {
@@ -276,6 +281,14 @@ export default defineComponent({
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },
+        getRolMayor(user:User):string {
+            const rol = user.roles.find((rol: string) => rol == "admin") || 
+            user.roles.find((rol: string) => rol == "moderator") ||
+            user.roles.find((rol: string) => rol == "user") ||
+            '';
+            return (rol == 'admin'? 'Administrador' : rol == 'moderator'? 'Supervisor': rol == 'user' ? 'Usuario' : '')
+            }
+        ,
     },
     created(){
         if (typeof this.$route.params.id === "string") {

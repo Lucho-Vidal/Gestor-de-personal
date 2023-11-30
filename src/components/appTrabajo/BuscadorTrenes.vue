@@ -364,12 +364,16 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.loadTurnos();
-        this.loadItinerario();
-        this.loadPersonales();
-        this.loadNovedades();
-        this.today.setHours(12, 0, 0, 0);
-        newToken()
+        try {
+            this.loadTurnos();
+            this.loadItinerario();
+            this.loadPersonales();
+            this.loadNovedades();
+            this.today.setHours(12, 0, 0, 0);
+            newToken();
+        } catch (error) {
+            console.error(error);
+        }
     },
     computed: {},
     components: {
