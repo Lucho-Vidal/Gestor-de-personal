@@ -54,7 +54,7 @@
                                 >Buscador</router-link
                             >
                         </li>
-                        <li
+                        <!-- <li
                             class="nav-item"
                             v-if="
                                 rolMayor == 'moderator' ||
@@ -65,7 +65,7 @@
                             <router-link class="nav-link" to="/Sabana"
                                 >Sabana</router-link
                             >
-                        </li>
+                        </li> -->
                         <li
                             class="nav-item"
                             v-if="
