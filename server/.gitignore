@@ -6,3 +6,6 @@ build
 dist
 # environment variables
 .env
+dist
+build
+*.py

@@ -152,7 +152,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad } from "../../interfaces/INovedades";
+import { Novedad } from '../../interfaces/INovedades';
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 
