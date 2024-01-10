@@ -1,10 +1,12 @@
 export interface ITurno {
-    id: null;
+    _id: string;
     turno: string;
     itinerario: string;
+    circular: string;
     personal: string;
     toma: string;
     deja: string;
+    viewDetail:boolean;
     vueltas: Vueltas[];
 }
 

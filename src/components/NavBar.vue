@@ -54,6 +54,11 @@
                                 >Buscador</router-link
                             >
                         </li>
+                        <li class="nav-item" v-if="rolMayor == 'admin'">
+                            <router-link class="nav-link" to="/Turnos"
+                                >Turnos</router-link
+                            >
+                        </li>
                         <!-- <li
                             class="nav-item"
                             v-if="
@@ -86,11 +91,7 @@
                                 >Novedades</router-link
                             >
                         </li>
-                        <li
-                            class="nav-item"
-                            v-if="rolMayor == 'admin'
-                            "
-                        >
+                        <li class="nav-item" v-if="rolMayor == 'admin'">
                             <router-link class="nav-link" to="/users"
                                 >Usuarios</router-link
                             >
@@ -153,9 +154,9 @@ export default defineComponent({
         this.getRol();
         this.getRolMayor();
     },
-    beforeUnmount(){
+    beforeUnmount() {
         this.rolMayor = "";
-    }
+    },
 });
 </script>
 

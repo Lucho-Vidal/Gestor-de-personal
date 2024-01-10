@@ -14,12 +14,12 @@ router.get(
     turnoCtrl.getTurno
 );
 router.post(
-    "/turnos",
+    "/turno",
     [authJwt.verifyToken, authJwt.isAdmin],
     turnoCtrl.createTurno
 );
 router.put(
-    "/turnos",
+    "/turno/:id",
     [authJwt.verifyToken, authJwt.isAdmin],
     turnoCtrl.updateTurno
 );

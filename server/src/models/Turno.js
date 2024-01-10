@@ -1,9 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const turnoSchema = new Schema({
-    _id:{
-        type: String
-    },
+    
     turno: {
         type: String,
         required: true,
@@ -22,12 +20,10 @@ const turnoSchema = new Schema({
     },
     toma: {
         type: String,
-        required: true,
         trim: true,
     },
     deja: {
         type: String,
-        required: true,
         trim: true,
     },
     vueltas:[]

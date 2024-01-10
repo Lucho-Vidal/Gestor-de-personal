@@ -152,6 +152,30 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireModerator(to, from, next));
         }
     },
+    {
+        path: "/turnos",
+        name: "Turnos",
+        component: () => import("@/components/turnos/Turnos.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireAdmin(to, from, next));
+        }
+    },
+    {
+        path: "/newTurno",
+        name: "newTurno",
+        component: () => import("@/components/turnos/NewTurno.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireAdmin(to, from, next));
+        }
+    },
+    {
+        path: "/editTurno/:id",
+        name: "editTurno",
+        component: () => import("@/components/turnos/EditTurno.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireAdmin(to, from, next));
+        }
+    },
 ];
 
 const router = createRouter({
