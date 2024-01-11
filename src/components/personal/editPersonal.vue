@@ -138,114 +138,42 @@
                     <div class="col-1">
                         <label for="turno"></label>
                         CML
-                        <select
-                            name="CML"
-                            id="CML"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.CML"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.CML" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
                         CKD
-                        <select
-                            name="CKD"
-                            id="CKD"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.CKD"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.CKD" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
-                        RO
-                        <select
-                            name="RO"
-                            id="RO"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.RO"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        RO                        
+                        <input type="checkbox" v-model="personal.conocimientos.RO" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
-                        MPN
-                        <select
-                            name="MPN"
-                            id="MPN"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.MPN"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        MPN                        
+                        <input type="checkbox" v-model="personal.conocimientos.MPN" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
                         OL
-                        <select
-                            name="OL"
-                            id="OL"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.OL"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.OL" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
                         LCI
-                        <select
-                            name="LCI"
-                            id="LCI"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.LCI"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.LCI" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
                         ELEC
-                        <select
-                            name="ELEC"
-                            id="ELEC"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.ELEC"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.ELEC" />
                     </div>
                     <div class="col-1">
                         <label for="turno"></label>
                         DUAL
-                        <select
-                            name="DUAL"
-                            id="DUAL"
-                            class="form-control mb-3"
-                            v-model="personal.conocimientos.DUAL"
-                            required
-                        >
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
+                        <input type="checkbox" v-model="personal.conocimientos.DUAL" />
                     </div>
                     
                 </div>
