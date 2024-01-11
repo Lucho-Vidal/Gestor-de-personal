@@ -21,7 +21,8 @@
                         type="text"
                         placeholder="Buscar por nombre"
                         autofocus
-                        
+                        @change="filtrar"
+                        v-model="search"
                     />
                 </div>
             </details>
@@ -129,6 +130,7 @@ import { newToken } from "../../services/signService";
 export default defineComponent({
     data() {
         return {
+            search:"",
             turnos: [] as ITurno[],
             Filtradas: [] as ITurno[],
             username: '' as string
@@ -159,36 +161,9 @@ export default defineComponent({
             
         },
         filtrar() {
-            /* let auxFiltrados: ITurno[] = this.Filtrados;
-            this.Filtrados = auxFiltrados.filter(personal => {
-                return (personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().trim()).includes(this.search.toLowerCase().trim())
-            }) */
-            /* if (this.checkboxHna && this.checkboxDescubierto) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return (
-                            (novedad.HNA && novedad.remplazo.length == 0) ||
-                            novedad.remplazo[novedad.remplazo.length - 1]
-                                .finRelevo
-                        );
-                    }
-                );
-            } else if (this.checkboxDescubierto) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return novedad.remplazo.length == 0;
-                    }
-                );
-            } else if (this.checkboxHna) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return novedad.HNA;
-                    }
-                );
-            } else {
-                this.novedadesFiltradas = this.novedades;
-            } */
-            this.Filtradas = this.turnos
+            this.Filtradas = this.turnos.filter(t => {
+                return (t.turno.toLocaleLowerCase().includes(this.search.toLowerCase()))
+            })
         },
     },
     created() {
