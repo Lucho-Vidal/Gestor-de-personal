@@ -57,10 +57,13 @@
                         <th class="col-1" colspan="1">Apellido</th>
                         <th class="col-1" colspan="1">Nombres</th>
                         <th class="col-1" colspan="1">Base</th>
+                        <th class="col-1" colspan="1">Turno</th>
+                        <th class="col-1" colspan="1">Franco</th>
                         <th class="col-1" colspan="1">Novedad</th>
                         <th class="col-1" colspan="1">Fecha de Baja</th>
                         <th class="col-1" colspan="1">Fecha de Alta</th>
                         <th class="col-1">Ver</th>
+                        <th class="col-1">Borrar</th>
                     </tr>
                 </thead>
                 <tbody
@@ -75,6 +78,10 @@
                         <td class="col-1">{{ novedad.apellido }}</td>
                         <td class="col-2">{{ novedad.nombres }}</td>
                         <td class="col-1">{{ novedad.base }}</td>
+                        <td class="col-1">
+                            {{ novedad.turno + " / " + dia_laboral(obtenerNumeroDia(novedad.franco),today.getDay()) }}
+                        </td>
+                        <td class="col-1">{{ novedad.franco }}</td>
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
                         <td class="col-1">
                             {{
@@ -87,8 +94,8 @@
                             {{
                                 !novedad.HNA
                                     ? new Date(
-                                            novedad.fechaAlta + " 12:00"
-                                        ).toLocaleDateString()
+                                        novedad.fechaAlta + " 12:00"
+                                    ).toLocaleDateString()
                                     : ""
                             }}
                         </td>
@@ -96,6 +103,11 @@
                             <i
                                 class="fa-solid fa-pen-to-square"
                                 @click="edit(novedad._id)"
+                            ></i>
+                        </td>
+                        <td class="col-1">
+                            <i class="fa-solid fa-trash-can"
+                                @click="deleteNovedad(novedad._id,index)"
                             ></i>
                         </td>
                     </tr>
@@ -152,8 +164,8 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad } from '../../interfaces/INovedades';
-import { getNovedades } from "../../services/novedadesService";
+import { Novedad } from "../../interfaces/INovedades";
+import { getNovedades, deleteNovedad } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 
 export default defineComponent({
@@ -163,7 +175,8 @@ export default defineComponent({
             novedadesFiltradas: [] as Novedad[],
             checkboxHna: false,
             checkboxDescubierto: false,
-            username: '' as string
+            username: "" as string,
+            today: new Date()
         };
     },
     methods: {
@@ -181,6 +194,51 @@ export default defineComponent({
             } else {
                 novedad.viewDetail = true;
             }
+        },
+        obtenerNumeroDia(dia: string) {
+            const diasDeLaSemana = [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado",
+            ];
+
+            // Obtén el índice del día en el array
+            const indice = diasDeLaSemana.findIndex((nombre) => nombre === dia);
+
+            // Si se encuentra, devuelve el índice (0-6); de lo contrario, devuelve -1
+            return indice;
+        },
+        dia_laboral(diaLaboral: number, hoy: number) {
+            /*   # devuelve el día de la semana como un número entero donde el Domingo
+            está indexado como 0 y el Sábado como 6
+            Al ingresarle por parámetros la cantidad de días del turno pos franco y
+            el dia de la semana actual devuelve el dia del franco del turno mismo. */
+            if(diaLaboral === -1){
+                return "S/F"
+            }else{
+                let diagrama = [
+                    [0, 1, 2, 3, 4, 5, 6],
+                    [6, 0, 1, 2, 3, 4, 5],
+                    [5, 6, 0, 1, 2, 3, 4],
+                    [4, 5, 6, 0, 1, 2, 3],
+                    [3, 4, 5, 6, 0, 1, 2],
+                    [2, 3, 4, 5, 6, 0, 1],
+                    [1, 2, 3, 4, 5, 6, 0],
+                ];
+                return diagrama[diaLaboral][hoy]; //:franco
+            }
+        },
+        async deleteNovedad(id:number,index:number){
+            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar esta novedad?");
+            if(confirmacion){
+                await deleteNovedad(id);
+                this.novedadesFiltradas.splice(index,1);
+            }
+            
         },
         filtrar() {
             if (this.checkboxHna && this.checkboxDescubierto) {
@@ -213,8 +271,7 @@ export default defineComponent({
     created() {
         this.loadNovedades();
         newToken();
-        this.username = localStorage.getItem("username") || '';
-        
+        this.username = localStorage.getItem("username") || "";
     },
     name: "App",
     components: {
