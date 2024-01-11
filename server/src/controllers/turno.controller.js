@@ -47,7 +47,7 @@ export const createTurno = async (req,res) => {
         } = req.body;
 
         // Validar que todos los campos requeridos estén presentes
-        if (!turno || !itinerario || !circular || !personal || !toma || !deja || !vueltas) {
+        if (!turno || !itinerario) {
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
 
