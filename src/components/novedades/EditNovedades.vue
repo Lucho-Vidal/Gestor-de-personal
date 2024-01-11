@@ -475,7 +475,7 @@ export default defineComponent({
     },
     methods: {
         /* Este método busca la novedad en el backend por medio de una consulta HTML:GET */
-        async loadNovedad(id: string) {
+        async loadNovedad(id: number) {
             try {
                 const { data } = await getNovedad(id);
                 this.novedad = data;
@@ -576,7 +576,7 @@ export default defineComponent({
 
                         return;
                     }
-                    await updateNovedad(this.$route.params.id, this.novedad);
+                    await updateNovedad(parseInt(this.$route.params.id), this.novedad);
                     this.$router.push(`/novedades`);
                 }
             } catch (error) {
@@ -662,7 +662,7 @@ export default defineComponent({
     mounted() {
         this.loadPersonales();
         if (typeof this.$route.params.id === "string") {
-            this.loadNovedad(this.$route.params.id);
+            this.loadNovedad(parseInt(this.$route.params.id));
         }
         newToken();
     },
