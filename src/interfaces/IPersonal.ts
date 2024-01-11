@@ -10,14 +10,15 @@ export interface IPersonal {
     observaciones: string;
     orden: number;
     conocimientos: IConocimientos;
+    viewDetail:boolean;
 }
 export interface IConocimientos {
-    CML: string;
-    CKD: string;
-    RO: string;
-    MPN: string;
-    OL: string;
-    LCI: string;
-    ELEC: string;
-    DUAL: string;
+    CML: boolean;
+    CKD: boolean;
+    RO: boolean;
+    MPN: boolean;
+    OL: boolean;
+    LCI: boolean;
+    ELEC: boolean;
+    DUAL: boolean;
 }

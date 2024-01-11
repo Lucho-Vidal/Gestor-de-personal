@@ -36,14 +36,14 @@ const personalSchema = new Schema({
         type: Number,
     },
     conocimientos: {
-        CML: String,
-        CKD: String,
-        RO: String,
-        MPN: String,
-        OL: String,
-        LCI: String,
-        ELEC: String,
-        DUAL: String
+        CML: Boolean,
+        CKD: Boolean,
+        RO: Boolean,
+        MPN: Boolean,
+        OL: Boolean,
+        LCI: Boolean,
+        ELEC: Boolean,
+        DUAL: Boolean
     }
 });
 
