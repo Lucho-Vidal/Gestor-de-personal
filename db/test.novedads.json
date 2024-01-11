@@ -1,0 +1,115 @@
+[{
+  "_id": 1,
+  "legajo": 20184,
+  "apellido": "Cuello Bustos",
+  "nombres": "Samuel",
+  "base": "LP/PC",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-01",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2023-12-21T00:50:07.993Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:22:39.757Z"
+  },
+  "__v": 0,
+  "detalle": "prueba",
+  "especialidad": "Ayudante habilitado",
+  "franco": "Lunes",
+  "turno": "401"
+},
+{
+  "_id": 2,
+  "legajo": 4111,
+  "apellido": "Contreras",
+  "nombres": "Javier ,Sebastian",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-07",
+  "fechaAlta": "2024-01-26",
+  "HNA": false,
+  "detalle": "",
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2023-12-21T00:51:16.163Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:17:40.305Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Sábado",
+  "turno": "718"
+},
+{
+  "_id": 3,
+  "legajo": 7895,
+  "apellido": "Gomez",
+  "nombres": "Pablo ,David",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 18013,
+      "apellido": "Rota",
+      "nombres": "Jonathan ,Matias ,Eric",
+      "base": "LLV",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 03",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-02-03"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-12-21T16:13:00.090Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:40:35.806Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Domingo",
+  "turno": "702",
+  "detalle": "ok"
+},
+{
+  "_id": 4,
+  "legajo": 4992,
+  "apellido": "Robledo",
+  "nombres": "Hector ,Omar",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "detalle": "ok",
+  "remplazo": [
+    {
+      "legajo": 20889,
+      "apellido": "Macclymont",
+      "nombres": "Eduardo ,Daniel",
+      "base": "LLV",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 02",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-02-03"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-09T17:41:53.435Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:41:53.435Z"
+  },
+  "__v": 0
+}]
