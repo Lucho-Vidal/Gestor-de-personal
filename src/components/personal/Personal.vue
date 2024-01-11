@@ -219,13 +219,17 @@
                         <th class="col-1" colspan="1">Observaciones</th>
                         <th class="col-1" colspan="1">Orden</th>
                         <th class="col-1">Editar</th>
+                        <th class="col-1">Eliminar</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr
+                <tbody
                         v-for="(personal, index) in personalesFiltrados"
                         :key="index"
                         @dblclick="edit(personal._id)"
+                        @click="viewDetail(personal)"
+                        >
+                    <tr
+                        
                     >
                         <td class="col-1">{{ personal.legajo }}</td>
                         <td class="col-1">{{ personal.apellido }}</td>
@@ -242,6 +246,30 @@
                                 @click="edit(personal._id)"
                             ></i>
                         </td>
+                        <td class="col-1">
+                            
+                            <i class="fa-solid fa-trash-can"
+                                @click="deletePersonal(personal._id,index)"
+                            ></i>
+                        </td>
+                    </tr>
+                    <tr v-if="personal.viewDetail">
+                        <td colspan="12">
+                            <div class="row" >
+                                <h6 class="col-12">Conocimientos:</h6>
+                                <p class="col-1">
+                                    {{ personal.conocimientos.CML === true ? "CML": "" }}
+                                    {{ personal.conocimientos.CKD  === true ? "CKD": "" }}
+                                    {{ personal.conocimientos.RO  === true ? "RO ": "" }}
+                                    {{ personal.conocimientos.MPN  === true ? "MPN ": "" }}
+                                    {{ personal.conocimientos.OL  === true ? "OL ": "" }}
+                                    {{ personal.conocimientos.LCI  === true ? "LCI ": "" }}
+                                    {{ personal.conocimientos.ELEC  === true ? "ELEC ": "" }}
+                                    {{ personal.conocimientos.DUAL === true ? "DUAL": "" }}
+                                </p>
+                            </div>
+                            
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -254,7 +282,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getPersonales } from '../../services/personalService';
+import { deletePersonal, getPersonales } from '../../services/personalService';
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 
@@ -284,6 +312,13 @@ export default defineComponent({
             const res = await getPersonales();
             this.personales = res.data;
             this.filtrarPersonales();
+        },
+        viewDetail(personal: IPersonal) {
+            if (personal.viewDetail) {
+                personal.viewDetail = false;
+            } else {
+                personal.viewDetail = true;
+            }
         },
         filtrarPersonales() {
             
@@ -390,7 +425,14 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-
+        async deletePersonal(id:string,index:number){
+            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este Personal?");
+            if(confirmacion){
+                await deletePersonal(id);
+                this.personalesFiltrados.splice(index,1);
+            }
+            
+        },
         
         edit(id:string) {
             this.$router.push( `/editPersonal/${id}`)
