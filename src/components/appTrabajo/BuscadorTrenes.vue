@@ -21,16 +21,46 @@
                         v-model="tren"
                         v-on:change="buscar()"
                     />
-                    <input class="col-3" type="date" v-model="inputDate" v-on:change="buscar()" />
+
+                    <input
+                        class="col-3"
+                        type="date"
+                        v-model="inputDate"
+                        v-on:change="buscar()"
+                    />
                 </div>
+                <details>
+                    <summary>Circular:</summary>
+                    <div class="my-3">
+                        <h6>Aplicar circular:</h6>
+                        <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Dic23"
+                            checked
+                            @change="buscar()"
+                        />
+                        Dic23
+                        </label>
+                        <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="HD4105"
+                            @change="buscar()"
+                        />
+                        HD4105
+                        </label>
+                    </div>
+                </details>
             </div>
 
             <div class=""></div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr v-for="(ind, index) in itFiltrado" :key="index">
-                        <th 
-                            
+                        <th
                             v-for="i in ind.estaciones.length"
                             :key="i"
                             colspan="1"
@@ -121,11 +151,11 @@ import NavBar from "../NavBar.vue";
 import { getTurnos } from "../../services/turnosService";
 import { ITurno } from "../../interfaces/ITurno";
 import FooterPage from "../FooterPage.vue";
-import { Itinerario } from '../../interfaces/Itinerario';
+import { Itinerario } from "../../interfaces/Itinerario";
 import { getItinerario } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
-import { Novedad } from '../../interfaces/INovedades';
+import { Novedad } from "../../interfaces/INovedades";
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 
@@ -182,82 +212,90 @@ export default defineComponent({
             this.turnos = [];
             this.itFiltrado = [];
 
-            if(this.inputDate == ""){
+            if (this.inputDate == "") {
                 fecha = this.today;
-            }else{
-                fecha = new Date(this.inputDate+ " 12:00");
+            } else {
+                fecha = new Date(this.inputDate + " 12:00");
             }
-            if (fecha.getDay()=== 0){
-                itinerario = "D"
-            }else if(fecha.getDay()=== 6){
-                itinerario = "S"
-            }else{
-                itinerario = "H"
+            if (fecha.getDay() === 0) {
+                itinerario = "D";
+            } else if (fecha.getDay() === 6) {
+                itinerario = "S";
+            } else {
+                itinerario = "H";
             }
             //si no se encuentra tren no continuo con la búsqueda
             this.filtroTrenes(itinerario);
-            if(this.indFiltrado.length > 0){
+            if (this.indFiltrado.length > 0) {
                 this.filtroItinerario(itinerario);
                 this.filtroTurno(itinerario);
                 this.buscarPersonalACargo(fecha);
-            }else{
+            } else {
                 this.filtrarPorTurno(itinerario);
                 this.filtroTurno(itinerario);
                 this.buscarPersonalACargo(fecha);
-            }         
-
+            }
         },
-        filtrarPorTurno(itinerario : string){
-
+        filtrarPorTurno(itinerario: string) {
             this.indFiltrado = [];
             this.turno.forEach((diag: ITurno) => {
-                if (diag.turno.toLowerCase().includes(this.tren.toLowerCase()) && diag.itinerario == itinerario) {
+                if (
+                    diag.turno
+                        .toLowerCase()
+                        .includes(this.tren.toLowerCase()) &&
+                    diag.itinerario == itinerario
+                ) {
                     this.indFiltrado.push(diag);
                 }
             });
-
         },
-        filtroTrenes(itinerario : string) {
+        filtroTrenes(itinerario: string) {
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
             this.indFiltrado = [];
             this.turno.forEach((diag: ITurno) => {
                 for (let i = 0; i < diag.vueltas.length; i++) {
-                    if (diag.vueltas[i].tren == parseInt(this.tren) && diag.itinerario == itinerario) {
+                    if (
+                        diag.vueltas[i].tren == parseInt(this.tren) &&
+                        diag.itinerario == itinerario
+                    ) {
                         this.indFiltrado.push(diag);
                     }
                 }
             });
             // console.log(this.indFiltrado);
         },
-        filtroItinerario(itinerario : string) {
+        filtroItinerario(itinerario: string) {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
             las guarda en el array itFiltrado  */
-            this.itFiltrado  = this.itinerario.filter((horarios: Itinerario) => {
-                return (horarios.tren == parseInt(this.tren) && horarios.itinerario == itinerario ) ;
+            this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
+                return (
+                    horarios.tren == parseInt(this.tren) &&
+                    horarios.itinerario == itinerario
+                );
             });
             try {
-                if ( this.itFiltrado[0].tren % 2 == 0){
-                this.itFiltrado[0].estaciones.reverse();
-                this.itFiltrado[0].horarios.reverse();
-            }    
+                if (this.itFiltrado[0].tren % 2 == 0) {
+                    this.itFiltrado[0].estaciones.reverse();
+                    this.itFiltrado[0].horarios.reverse();
+                }
             } catch (e) {
                 console.error(e);
-                
             }
-
         },
-        filtroTurno(itinerario : string) {
+        filtroTurno(itinerario: string) {
             /* Este método es el encargado de buscar los turnos en cada búsqueda.
             Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
             this.indFiltrado.forEach((turno: ITurno) => {
                 this.turnos.push(
                     this.turno.filter((ind: ITurno) => {
-                        return (ind.turno.includes(turno.turno) && ind.itinerario == itinerario);
+                        return (
+                            ind.turno.includes(turno.turno) &&
+                            ind.itinerario == itinerario
+                        );
                     })
                 );
             });
-            
         },
         buscarPersonalACargo(fecha: Date) {
             /* Este método es el encargado de buscar y cambiar el nombre del personal en cada búsqueda. 
@@ -269,45 +307,58 @@ export default defineComponent({
             //   busco el personal titular
             list.push(
                 this.turnos.map((turno: ITurno[]) => {
-                    return this.filtroPersonal(turno[0].turno,fecha);
+                    return this.filtroPersonal(turno[0].turno, fecha);
                 })
             );
             try {
                 list[0].forEach((personal) => {
-                this.novedades.forEach((novedad) => {
-                    //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
-                    if (
-                        novedad.legajo == personal.legajo &&
-                        novedad.HNA &&
-                        new Date(novedad.fechaBaja) <= this.today
-                    ) {                        
-                        if (novedad.remplazo != undefined && novedad.remplazo.length > 0) {
-                            let remplazo  = novedad.remplazo.filter(remp=>{
-                                return (new Date(remp.inicioRelevo) <= new Date(this.inputDate) && (new Date(remp.finRelevo) >= new Date(this.inputDate) || remp.finRelevo == undefined))
-                            })
-
-                            if(remplazo.length>0){
-                                personal.legajo = remplazo[0].legajo
-                                personal.nombres = remplazo[0].apellido + " " + remplazo[0].nombres
-                            }else{//si el personal asignado no es para la fecha
-                                personal.nombres = "Sin Cubrir"
+                    this.novedades.forEach((novedad) => {
+                        //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
+                        
+                        if (
+                            novedad.legajo === personal.legajo &&
+                            (novedad.HNA ||
+                            new Date(novedad.fechaAlta) >= this.today)
+                        ) {
+                            if (
+                                novedad.remplazo !== undefined && novedad.remplazo.length > 0
+                            ) {
+                                let fecha = this.inputDate == '' ? new Date(): new Date(this.inputDate)
+                                
+                                let remplazo = novedad.remplazo.filter((remp) => {
+                                        return (
+                                            new Date(remp.inicioRelevo) <= fecha &&
+                                            (new Date(remp.finRelevo) >= fecha ||
+                                                remp.finRelevo == undefined)
+                                        );
+                                    }
+                                );
+                                if (remplazo.length > 0) {
+                                    personal.legajo = remplazo[0].legajo;
+                                    personal.nombres =
+                                        remplazo[0].apellido +
+                                        " " +
+                                        remplazo[0].nombres;
+                                } else {
+                                    //si el personal asignado no es para la fecha
+                                    personal.nombres = "Sin Cubrir";
+                                }
+                            } else {
+                                //si no hay personal asignado
+                                personal.nombres = "Sin Cubrir";
                             }
+                        }
 
-                        }else{//si no hay personal asignado
-                            personal.nombres = "Sin Cubrir"
-                        }
-                    }
-                    
-                    //asigno personal al array indFiltrado
-                    this.indFiltrado.forEach((vuelta: ITurno) => {
-                        if (vuelta.turno.trim() === personal.turno) {
-                            vuelta.personal = personal.nombres;
-                        }
+                        //asigno personal al array indFiltrado
+                        this.indFiltrado.forEach((vuelta: ITurno) => {
+                            if (vuelta.turno.trim() === personal.turno) {
+                                vuelta.personal = personal.nombres;
+                            }
+                        });
                     });
-                })
-            });
+                });
             } catch (e) {
-                    console.error(e);
+                console.error(e);
             }
         },
         dia_laboral(diaLaboral: number, hoy: number) {
@@ -326,16 +377,19 @@ export default defineComponent({
             ];
             return diagrama[diaLaboral][hoy]; //:franco
         },
-        filtroPersonal(turno: string,fecha: Date) {
+        filtroPersonal(turno: string, fecha: Date) {
             /* Recibe por parámetro un turno ej:405.5 en caso que sea un diagrama de 7 días
             o 428 en caso de unipersonal. Según el caso separa por el punto el turno de la jornada pos franco
             y devuelve un objeto con las llaves:turno y nombres  */
-            
+
             try {
                 let titular = [];
-                turno = turno.trim()
-                
-                if (turno.indexOf(".") != -1 && !turno.toLowerCase().includes("PROG".toLowerCase())) {
+                turno = turno.trim();
+
+                if (
+                    turno.indexOf(".") != -1 &&
+                    !turno.toLowerCase().includes("PROG".toLowerCase())
+                ) {
                     const indexPunto = turno.indexOf(".");
                     const diaLab = Number(turno[indexPunto + 1]);
                     const diag = turno.split(".")[0];
@@ -343,21 +397,20 @@ export default defineComponent({
                     titular = this.personales.filter((p) => {
                         return p.turno == diag && Number(p.franco) == franco;
                     });
-                    
                 } else {
-                    titular = this.personales.filter((p) => p.turno.toLowerCase() == turno.toLowerCase());
+                    titular = this.personales.filter(
+                        (p) => p.turno.toLowerCase() == turno.toLowerCase()
+                    );
                 }
-            return {
-                turno: turno,
-                legajo: titular[0].legajo,
-                nombres: titular[0].apellido + " " + titular[0].nombres,
-            };
+                return {
+                    turno: turno,
+                    legajo: titular[0].legajo,
+                    nombres: titular[0].apellido + " " + titular[0].nombres,
+                };
             } catch (e) {
                 console.error(e);
-                return{};
-            }           
-            
-            
+                return {};
+            }
         },
         changeDate() {
             this.today = new Date(this.inputDate + " 12:00");
