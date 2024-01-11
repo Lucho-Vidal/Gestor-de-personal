@@ -67,7 +67,7 @@ export const refreshToken = async (req,res) => {
         const decoded = jwt.verify(token, config.SECRET);
         const user = await User.findById(decoded.id).populate('roles');
         const newToken = jwt.sign({ id: user._id }, config.SECRET, {
-            expiresIn: 900 //86400,
+            expiresIn: 3600 //86400,
         });
         res.json({
             token: newToken,
