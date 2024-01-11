@@ -8,7 +8,7 @@ export const getNovedades = async (): Promise<AxiosResponse<Novedad[]>> =>
 export const getUltimaNovedad = async (): Promise<AxiosResponse<Novedad[]>> =>
     await axios.get("/ultimaNovedad");
 
-export const getNovedad = async (id: string): Promise<AxiosResponse<Novedad>> =>
+export const getNovedad = async (id: number): Promise<AxiosResponse<Novedad>> =>
     await axios.get(`/novedades/${id}`);
 
 export const createNovedad = async (novedad: Novedad): Promise<AxiosResponse> => {
@@ -18,10 +18,10 @@ export const createNovedad = async (novedad: Novedad): Promise<AxiosResponse> =>
     
 
 export const updateNovedad = async (
-    id: string,
+    id: number,
     newNovedad: Novedad
 ): Promise<AxiosResponse<Novedad>> =>
     await axios.put(`/novedades/${id}`, newNovedad);
 
-export const deleteNovedad = async (id: string): Promise<AxiosResponse> =>
+export const deleteNovedad = async (id: number): Promise<AxiosResponse> =>
     await axios.delete(`/novedades/${id}`);
