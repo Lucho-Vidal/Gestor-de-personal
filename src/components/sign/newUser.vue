@@ -22,7 +22,6 @@
                 <p class="col-5">
                     {{ message.message }}
                 </p>
-                
             </div>
             <form
                 name="form"
@@ -86,7 +85,7 @@
                             />
                         </label>
                     </div>
-                    <div>
+                    <!-- <div>
                         <label
                             for="password"
                             class="mb-3 text-start"
@@ -100,10 +99,11 @@
                                 class="form-control mb-3 text-center"
                                 v-model="user.password"
                                 autocomplete="off"
+                                disabled
                                 required
                             />
                         </label>
-                    </div>
+                    </div> -->
                     <div class="col">
                         <label for="rol" class="text-start" style="width: 100%">
                             Rol
@@ -111,7 +111,7 @@
                                 name="rol"
                                 id="rol"
                                 class="form-control mb-3 text-center"
-                                v-model="rol"
+                                v-model="user.roles[0]"
                             >
                                 <option value="user">Usuario</option>
                                 <option value="moderator">Supervisor</option>
@@ -129,73 +129,50 @@
                     </div>
                 </div>
             </form>
-            <div v-if="rol.includes('user')" class="text-center  ">
-                
-                    <h3 class="text-center">Usuario:</h3>
-                <p class="text-center">
-                    Tiene acceso a:
-                </p>
-                <div class="d-flex align-content-center justify-content-center nowrap">
-                <ul class="text-center list-group  col-5">
-                    <li class="list-group-item">
-                        Buscador de trenes
-                    </li>
-                    <li class="list-group-item">
-                        Sabana de trenes
-                    </li>
-                </ul>
+            <div v-if="hasRole('user')" class="text-center">
+                <h3 class="text-center">Usuario:</h3>
+                <p class="text-center">Tiene acceso a:</p>
+                <div
+                    class="d-flex align-content-center justify-content-center nowrap"
+                >
+                    <ul class="text-center list-group col-5">
+                        <li class="list-group-item">Buscador de trenes</li>
+                        <li class="list-group-item">Sabana de trenes</li>
+                    </ul>
                 </div>
             </div>
-            <div v-if="rol.includes('moderator')">
+            <div v-if="hasRole('moderator')">
                 <h3 class="text-center">Supervisor:</h3>
-                <p class="text-center">
-                    Tiene acceso a:
-                </p>
-                <div class="d-flex align-content-center justify-content-center nowrap">
-                <ul class="text-center list-group  col-5">
-                    <li class="list-group-item">
-                        Buscador de trenes
-                    </li>
-                    <li class="list-group-item">
-                        Sabana de trenes
-                    </li>
-                    <li class="list-group-item">
-                        Personal
-                    </li>
-                    <li class="list-group-item">
-                        Novedades
-                    </li>
-                </ul>
+                <p class="text-center">Tiene acceso a:</p>
+                <div
+                    class="d-flex align-content-center justify-content-center nowrap"
+                >
+                    <ul class="text-center list-group col-5">
+                        <li class="list-group-item">Buscador de trenes</li>
+                        <li class="list-group-item">Sabana de trenes</li>
+                        <li class="list-group-item">Personal</li>
+                        <li class="list-group-item">Novedades</li>
+                    </ul>
                 </div>
             </div>
 
-            <div v-if="rol.includes('admin')">
-                <h3 class="text-center">Administrador: </h3>
-                <p class="text-center">
-                    Tiene acceso a:
-                </p>
-                <div class="d-flex align-content-center justify-content-center nowrap">
-                <ul class="text-center list-group  col-5">
-                    <li class="list-group-item">
-                        Buscador de trenes
-                    </li>
-                    <li class="list-group-item">
-                        Sabana de trenes
-                    </li>
-                    <li class="list-group-item">
-                        Personal
-                    </li>
-                    <li class="list-group-item">
-                        Novedades
-                    </li>
-                    <li class="list-group-item">
-                        Administración de Usuarios
-                    </li>
-                </ul>
+            <div v-if="hasRole('admin')">
+                <h3 class="text-center">Administrador:</h3>
+                <p class="text-center">Tiene acceso a:</p>
+                <div
+                    class="d-flex align-content-center justify-content-center nowrap"
+                >
+                    <ul class="text-center list-group col-5">
+                        <li class="list-group-item">Buscador de trenes</li>
+                        <li class="list-group-item">Sabana de trenes</li>
+                        <li class="list-group-item">Personal</li>
+                        <li class="list-group-item">Novedades</li>
+                        <li class="list-group-item">
+                            Administración de Usuarios
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-            
         </main>
         <FooterPage />
     </div>
@@ -206,16 +183,15 @@ import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { signUp } from "../../services/signService";
-import { User } from "../../interfaces/IUser";
+import { User, Role } from "../../interfaces/IUser";
 
 export default defineComponent({
     name: "editPersonal",
 
     data() {
         return {
-            rol:'' as string,
             user: {
-                roles: [""],
+                roles: [] as Role[],
             } as User,
             message: {
                 status: "",
@@ -225,28 +201,32 @@ export default defineComponent({
         };
     },
     methods: {
+        hasRole(roleName: string): boolean {
+            return (
+                Array.isArray(this.user.roles) &&
+                this.user.roles.some((role) => role.name === roleName)
+            );
+        },
         async procesar() {
             try {
-                this.user.roles[0] = this.rol;                
+                this.user.password = "Inicio1";
                 const res = await signUp(this.user);
 
                 if (res.status === 200) {
-                    
                     this.message = {
                         status: "success",
                         title: "ATENCIÓN!",
                         message:
                             "Hola " +
                             localStorage.getItem("username") +
-                            ", El inicio de sesión fue exitoso. seras redirigido en un momento...",
+                            ", La creación del nuevo usuario fue exitosa, su contraseña sera Inicio1 y deberá ser cambiada en el primer inicio.",
                     };
+
+                    setTimeout(() => (this.message.status = ""), 10000);
                     this.user.legajo = 0;
                     this.user.username = "";
                     this.user.email = "";
                     this.user.password = "";
-                    this.user.roles = [""];
-                
-                    setTimeout(() => (this.message.status = ""), 10000);
                 }
             } catch (error) {
                 this.message = {
@@ -258,8 +238,7 @@ export default defineComponent({
                 this.user.username = "";
                 this.user.email = "";
                 this.user.password = "";
-                this.user.roles = [""];
-                
+
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },

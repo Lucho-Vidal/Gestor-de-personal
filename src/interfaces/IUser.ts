@@ -4,5 +4,10 @@ export interface User{
     username: string;
     email: string;
     password: string;
-    roles: Array<string>;
+    roles: Role[];
+}
+
+export interface Role{
+    _id: string,
+    name: string
 }

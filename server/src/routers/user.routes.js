@@ -19,4 +19,6 @@ router.put("/user/:id",[
     authJwt.isAdmin
 ],userCtrl.updateUser)
 
+router.delete("/user/:id", [authJwt.verifyToken,authJwt.isAdmin],userCtrl.deleteUser )
+
 export default router;

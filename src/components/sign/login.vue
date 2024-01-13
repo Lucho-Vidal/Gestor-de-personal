@@ -26,7 +26,7 @@
                     <div>
                         <label for="password" class="mb-3" style="width: 100%">
                             <input
-                                type="password"
+                            :type="showPassword ? 'text' : 'password'"
                                 name="password"
                                 placeholder="password"
                                 class="form-control mb-3"
@@ -34,6 +34,17 @@
                                 autocomplete="off"
                                 required
                             />
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                @click="togglePasswordVisibility"
+                            >
+                                {{
+                                    showPassword
+                                        ? "Ocultar Contraseña"
+                                        : "Mostrar Contraseña"
+                                }}
+                            </button>
                         </label>
                     </div>
                     <div>
@@ -75,6 +86,7 @@ export default defineComponent({
     data() {
         return {
             user: {} as User,
+            showPassword: false,
             message: {
                 status: "",
                 title: "",
@@ -83,6 +95,9 @@ export default defineComponent({
         };
     },
     methods: {
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
         async procesar() {
             try {
                 const res = await signIn(this.user);

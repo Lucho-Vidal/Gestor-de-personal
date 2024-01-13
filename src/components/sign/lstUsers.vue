@@ -27,6 +27,7 @@
                         <th class="col-1" colspan="1">Email</th>
                         <th class="col-1" colspan="1">Roles</th>
                         <th class="col-1">Editar</th>
+                        <th class="col-1">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody
@@ -45,6 +46,11 @@
                                 @click="edit(user._id)"
                             ></i>
                         </td>
+                        <td class="col-1">
+                            <i class="fa-solid fa-trash-can"
+                                @click="eliminarUsuario(user._id,index)"
+                            ></i>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -58,7 +64,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { getUsers, newToken } from '../../services/signService';
+import { deleteUser, getUsers, newToken } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
 
 export default defineComponent({
@@ -77,13 +83,16 @@ export default defineComponent({
             this.$router.push(`/editUser/${id}`);
         },
         getRolMayor(user:User):string {
-            const rol = user.roles.find((rol: string) => rol == "admin") || 
-            user.roles.find((rol: string) => rol == "moderator") ||
-            user.roles.find((rol: string) => rol == "user") ||
-            '';
+            const rol = user.roles[user.roles.length -1].name
             return (rol == 'admin'? 'Administrador' : rol == 'moderator'? 'Supervisor': rol == 'user' ? 'Usuario' : '')
+        },
+        async eliminarUsuario(id:string,index:number){
+            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+            if(confirmacion){
+                await deleteUser(id);
+                this.users.splice(index,1);
             }
-        ,
+        },
         
     },
     created() {
