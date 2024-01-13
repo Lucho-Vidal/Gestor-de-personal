@@ -97,6 +97,12 @@
                             >
                         </li>
                         <li class="nav-item" v-if="login">
+                            <router-link
+                                class="btn btn-success mx-1"
+                                to="/changePassword"
+                            >Contraseña</router-link>
+                        </li>
+                        <li class="nav-item" v-if="login">
                             <button
                                 class="btn btn-secondary"
                                 v-on:click="logOut"

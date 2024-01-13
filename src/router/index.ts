@@ -75,6 +75,12 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
+        path: "/changePassword",
+        name: "changePassword",
+        component: () => import("@/components/sign/changePassword.vue"),
+        beforeEnter: requireAuth
+    },
+    {
         path: "/users",
         name: "users",
         component: () => import("@/components/sign/lstUsers.vue"),
