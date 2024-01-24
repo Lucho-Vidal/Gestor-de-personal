@@ -21,7 +21,19 @@
                         v-model="tren"
                         v-on:change="buscar()"
                     />
-
+                    <select
+                        name="itinerario"
+                        id="itinerario"
+                        class="col-2"
+                        required
+                        v-model="inputIt"
+                        v-on:change="buscar()"
+                    >
+                        <option value=""></option>
+                        <option value="H">Hábil</option>
+                        <option value="S">Sábado</option>
+                        <option value="D">Domingo</option>
+                    </select>
                     <input
                         class="col-3"
                         type="date"
@@ -34,23 +46,23 @@
                     <div class="my-3">
                         <h6>Aplicar circular:</h6>
                         <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Dic23"
-                            checked
-                            @change="buscar()"
-                        />
-                        Dic23
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value="Dic23"
+                                checked
+                                @change="buscar()"
+                            />
+                            Dic23
                         </label>
                         <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="HD4105"
-                            @change="buscar()"
-                        />
-                        HD4105
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value="HD4105"
+                                @change="buscar()"
+                            />
+                            HD4105
                         </label>
                     </div>
                 </details>
@@ -172,6 +184,7 @@ export default defineComponent({
             today: new Date(),
             novedades: [] as Novedad[],
             inputDate: "" as string,
+            inputIt: "" as string,
             days: [
                 "Domingo",
                 "Lunes",
@@ -203,37 +216,58 @@ export default defineComponent({
             const res = await getNovedades();
             this.novedades = res.data;
         },
+        buscarTrenItinerario(tren: string, itinerario: string) {
+            return this.itinerario.filter((it) => {
+                return it.itinerario == itinerario && it.tren == parseInt(tren);
+            });
+        },
+        itinerarioType(fecha: Date) {
+            if (this.inputIt === "") {
+                if (fecha.getDay() === 0) {
+                    this.inputIt = "D";
+                    return "D";
+                } else if (fecha.getDay() === 6) {
+                    this.inputIt = "S";
+                    return "S";
+                } else {
+                    this.inputIt = "H";
+                    return "H";
+                }
+            } else {
+                return this.inputIt;
+            }
+        },
+        obtenerFecha() {
+            if (this.inputDate == "") {
+                // Formatear la fecha en formato ISO (YYYY-MM-DD)
+                const formattedDate = this.today.toISOString().split("T")[0];
+                // Asignar el valor al input
+                this.inputDate = formattedDate;
+                return this.today;
+            } else {
+                return new Date(this.inputDate + " 12:00");
+            }
+        },
         buscar() {
             /* Ejecuta en cada búsqueda todos los métodos necesarios. 
             Se ejecuta por v-on:change en el input  */
-            let fecha: Date;
-            let itinerario = "";
+            const fecha: Date = this.obtenerFecha();
+            const itinerario: string = this.itinerarioType(fecha);
             //reinicio variables globales
-            this.turnos = [];
-            this.itFiltrado = [];
-
-            if (this.inputDate == "") {
-                fecha = this.today;
-            } else {
-                fecha = new Date(this.inputDate + " 12:00");
-            }
-            if (fecha.getDay() === 0) {
-                itinerario = "D";
-            } else if (fecha.getDay() === 6) {
-                itinerario = "S";
-            } else {
-                itinerario = "H";
-            }
-            //si no se encuentra tren no continuo con la búsqueda
-            this.filtroTrenes(itinerario);
-            if (this.indFiltrado.length > 0) {
-                this.filtroItinerario(itinerario);
-                this.filtroTurno(itinerario);
-                this.buscarPersonalACargo(fecha);
-            } else {
-                this.filtrarPorTurno(itinerario);
-                this.filtroTurno(itinerario);
-                this.buscarPersonalACargo(fecha);
+            if (this.tren !== "") {
+                this.turnos = [];
+                this.itFiltrado = [];
+                //si no se encuentra tren no continuo con la búsqueda
+                this.filtroTrenes(itinerario);
+                if (this.indFiltrado.length > 0) {
+                    this.filtroItinerario(itinerario);
+                    this.filtroTurno(itinerario);
+                    this.buscarPersonalACargo(fecha);
+                } else {
+                    this.filtrarPorTurno(itinerario);
+                    this.filtroTurno(itinerario);
+                    this.buscarPersonalACargo(fecha);
+                }
             }
         },
         filtrarPorTurno(itinerario: string) {
@@ -314,21 +348,28 @@ export default defineComponent({
                 list[0].forEach((personal) => {
                     this.novedades.forEach((novedad) => {
                         //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
-                        
+
                         if (
                             novedad.legajo === personal.legajo &&
                             (novedad.HNA ||
-                            new Date(novedad.fechaAlta) >= this.today)
+                                new Date(novedad.fechaAlta) >= this.today)
                         ) {
                             if (
-                                novedad.remplazo !== undefined && novedad.remplazo.length > 0
+                                novedad.remplazo !== undefined &&
+                                novedad.remplazo.length > 0
                             ) {
-                                let fecha = this.inputDate == '' ? new Date(): new Date(this.inputDate)
-                                
-                                let remplazo = novedad.remplazo.filter((remp) => {
+                                let fecha =
+                                    this.inputDate == ""
+                                        ? new Date()
+                                        : new Date(this.inputDate);
+
+                                let remplazo = novedad.remplazo.filter(
+                                    (remp) => {
                                         return (
-                                            new Date(remp.inicioRelevo) <= fecha &&
-                                            (new Date(remp.finRelevo) >= fecha ||
+                                            new Date(remp.inicioRelevo) <=
+                                                fecha &&
+                                            (new Date(remp.finRelevo) >=
+                                                fecha ||
                                                 remp.finRelevo == undefined)
                                         );
                                     }
