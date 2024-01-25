@@ -79,7 +79,14 @@
                         <td class="col-2">{{ novedad.nombres }}</td>
                         <td class="col-1">{{ novedad.base }}</td>
                         <td class="col-1">
-                            {{ novedad.turno + " / " + dia_laboral(obtenerNumeroDia(novedad.franco),today.getDay()) }}
+                            {{
+                                novedad.turno +
+                                " / " +
+                                dia_laboral(
+                                    obtenerNumeroDia(novedad.franco),
+                                    today.getDay()
+                                )
+                            }}
                         </td>
                         <td class="col-1">{{ novedad.franco }}</td>
                         <td class="col-1">{{ novedad.tipoNovedad }}</td>
@@ -94,8 +101,8 @@
                             {{
                                 !novedad.HNA
                                     ? new Date(
-                                        novedad.fechaAlta + " 12:00"
-                                    ).toLocaleDateString()
+                                          novedad.fechaAlta + " 12:00"
+                                      ).toLocaleDateString()
                                     : ""
                             }}
                         </td>
@@ -106,8 +113,9 @@
                             ></i>
                         </td>
                         <td class="col-1">
-                            <i class="fa-solid fa-trash-can"
-                                @click="deleteNovedad(novedad._id,index)"
+                            <i
+                                class="fa-solid fa-trash-can"
+                                @click="deleteNovedad(novedad._id, index)"
                             ></i>
                         </td>
                     </tr>
@@ -185,6 +193,9 @@ export default defineComponent({
             this.novedades = res.data;
             this.filtrar();
         },
+        ordenarNovedades() {
+            this.novedadesFiltradas.sort((a, b) => b._id > a._id ? 1 : -1);
+        },
         edit(id: number) {
             this.$router.push(`/editNovedades/${id}`);
         },
@@ -238,7 +249,7 @@ export default defineComponent({
                 await deleteNovedad(id);
                 this.novedadesFiltradas.splice(index,1);
             }
-            
+
         },
         filtrar() {
             if (this.checkboxHna && this.checkboxDescubierto) {
@@ -266,12 +277,18 @@ export default defineComponent({
             } else {
                 this.novedadesFiltradas = this.novedades;
             }
+            this.ordenarNovedades()
         },
     },
     created() {
-        this.loadNovedades();
-        newToken();
-        this.username = localStorage.getItem("username") || "";
+        try{
+            this.loadNovedades();
+            newToken();
+            this.username = localStorage.getItem("username") || "";
+        }catch (error) {
+            console.error(error);
+        }
+        
     },
     name: "App",
     components: {

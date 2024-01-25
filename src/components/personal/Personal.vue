@@ -16,12 +16,19 @@
             </div>
             <details>
                 <summary>Filtros:</summary>
-                <div class="my-3">
+                <div class="my-2">
                     <input
-                        class="col-3 gap"
+                        class="col-2 gap mx-3 rounded-3"
+                        type="number"
+                        placeholder="Buscar Legajo"
+                        autofocus
+                        v-model="searchLegajo"
+                        v-on:change="filtrarPersonales()"
+                    />
+                    <input
+                        class="col-3 gap rounded"
                         type="text"
                         placeholder="Buscar por apellido y/o nombre"
-                        autofocus
                         v-model="search"
                         v-on:change="filtrarPersonales()"
                     />
@@ -296,6 +303,7 @@ export default defineComponent({
             checkboxTurno: [] as string[],
             today: new Date(),
             search: "" as string,
+            searchLegajo: 0,
             days: [
                 "Domingo",
                 "Lunes",
@@ -329,6 +337,9 @@ export default defineComponent({
             this.personalesFiltrados = [];
 
             if (this.search.length != 0) {
+                filtrar = true;
+            }
+            if (this.searchLegajo != 0) {
                 filtrar = true;
             }
             if (
@@ -421,6 +432,12 @@ export default defineComponent({
                         return (personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().trim()).includes(this.search.toLowerCase().trim())
                     })
                 }
+                if (this.searchLegajo != 0) {
+                    auxPersonales = this.personalesFiltrados;
+                    this.personalesFiltrados = auxPersonales.filter(personal => {
+                        return (personal.legajo === (this.searchLegajo))
+                    })
+                }
             } else {
                 this.personalesFiltrados = this.personales;
             }
@@ -439,9 +456,12 @@ export default defineComponent({
         },
     },
     created() {
-        this.loadPersonales();
-        newToken();
-        
+        try {
+            this.loadPersonales();
+            newToken();    
+        } catch (error) {
+            console.error(error);   
+        }
     },
     name: "App",
     components: {
