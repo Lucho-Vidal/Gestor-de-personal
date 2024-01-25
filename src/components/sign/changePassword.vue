@@ -96,7 +96,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { changePassword, setRoles } from "../../services/signService";
+import { changePassword } from "../../services/signService";
 import { User } from "../../interfaces/IUser";
 
 export default defineComponent({

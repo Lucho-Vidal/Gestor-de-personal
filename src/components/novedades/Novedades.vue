@@ -220,7 +220,7 @@ export default defineComponent({
             if(diaLaboral === -1){
                 return "S/F"
             }else{
-                let diagrama = [
+                const diagrama = [
                     [0, 1, 2, 3, 4, 5, 6],
                     [6, 0, 1, 2, 3, 4, 5],
                     [5, 6, 0, 1, 2, 3, 4],

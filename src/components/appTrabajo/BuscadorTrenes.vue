@@ -336,7 +336,7 @@ export default defineComponent({
             El método busca en el array turnos utilizando la función filtroPersonal, el resultado lo 
             guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en 
             el array indFiltrado y posterior en el mismo array turnos. */
-            let list = [];
+            const list = [];
 
             //   busco el personal titular
             list.push(
@@ -358,12 +358,12 @@ export default defineComponent({
                                 novedad.remplazo !== undefined &&
                                 novedad.remplazo.length > 0
                             ) {
-                                let fecha =
+                                const fecha =
                                     this.inputDate == ""
                                         ? new Date()
                                         : new Date(this.inputDate);
 
-                                let remplazo = novedad.remplazo.filter(
+                                const remplazo = novedad.remplazo.filter(
                                     (remp) => {
                                         return (
                                             new Date(remp.inicioRelevo) <=
@@ -407,7 +407,7 @@ export default defineComponent({
             está indexado como 0 y el Sábado como 6
             Al ingresarle por parámetros la cantidad de días del turno pos franco y 
             el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            let diagrama = [
+            const diagrama = [
                 [0, 1, 2, 3, 4, 5, 6],
                 [6, 0, 1, 2, 3, 4, 5],
                 [5, 6, 0, 1, 2, 3, 4],

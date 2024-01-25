@@ -595,7 +595,7 @@ export default defineComponent({
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
-            let remplazo = {
+            const remplazo = {
                 legajo: personal.legajo,
                 apellido: personal.apellido,
                 nombres: personal.nombres,

@@ -142,7 +142,7 @@ import { getTurnos } from "../../services/turnosService";
 import { ITurno } from "../../interfaces/ITurno";
 import FooterPage from "../FooterPage.vue";
 import { Itinerario } from "../../interfaces/Itinerario";
-import { getItinerario, getItinerarioPaginado } from "../../services/itinerarioService";
+import {  getItinerarioPaginado } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
 import { Novedad } from "../../interfaces/INovedades";
@@ -247,9 +247,9 @@ export default defineComponent({
                 //buscamos personal
                 this.buscarPersonalACargo(fecha);
 
-                let trenIt = this.buscarTrenItinerario(tren, itinerario);
-                let desde = trenIt[0].estaciones.length - 1;
-                let hasta = 0;
+                const trenIt = this.buscarTrenItinerario(tren, itinerario);
+                const desde = trenIt[0].estaciones.length - 1;
+                const hasta = 0;
 
                 //cargo tabla
                 this.descendente.tren = parseInt(tren);
@@ -281,11 +281,11 @@ export default defineComponent({
             })
         },
         cargarInfoTren(infoTren: Descendente, tren: string, esCtor: boolean) {
-            let vuelta = this.obtenerNumVuelta(tren);
-            let vueltaNum: number = vuelta[0].vuelta;
+            const vuelta = this.obtenerNumVuelta(tren);
+            const vueltaNum: number = vuelta[0].vuelta;
 
             // Busco próximo tren
-            let proximoTren = this.obtenerVueltaSiguiente(vueltaNum, tren);
+            const proximoTren = this.obtenerVueltaSiguiente(vueltaNum, tren);
 
             if (proximoTren.length > 0) {
                 infoTren[esCtor ? "CtSale" : "GdSale"] =
@@ -425,7 +425,7 @@ export default defineComponent({
             El método busca en el array turnos utilizando la función filtroPersonal, el resultado lo
             guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en
             el array indFiltrado y posterior en el mismo array turnos. */
-            let list = [];
+            const list = [];
 
             //   busco el personal titular
             list.push(
@@ -446,7 +446,7 @@ export default defineComponent({
                                 novedad.remplazo != undefined &&
                                 novedad.remplazo.length > 0
                             ) {
-                                let remplazo = novedad.remplazo.filter(
+                                const remplazo = novedad.remplazo.filter(
                                     (remp) => {
                                         return (
                                             new Date(remp.inicioRelevo) <=
@@ -491,7 +491,7 @@ export default defineComponent({
             está indexado como 0 y el Sábado como 6
             Al ingresarle por parámetros la cantidad de días del turno pos franco y
             el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            let diagrama = [
+            const diagrama = [
                 [0, 1, 2, 3, 4, 5, 6],
                 [6, 0, 1, 2, 3, 4, 5],
                 [5, 6, 0, 1, 2, 3, 4],

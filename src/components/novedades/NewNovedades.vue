@@ -599,7 +599,7 @@ export default defineComponent({
         },
         personalConNovedadActiva(personal:IPersonal) {
             /* Primero busco todas las novedades que tienen al personal relevando */
-            let dateHoy = new Date()
+            const dateHoy = new Date()
             dateHoy.setHours(12)
             
             this.novedades.forEach((novedad: Novedad) => {
@@ -630,7 +630,7 @@ export default defineComponent({
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
-            let remplazo = {
+            const remplazo = {
                 legajo: personal.legajo,
                 apellido: personal.apellido,
                 nombres: personal.nombres,
