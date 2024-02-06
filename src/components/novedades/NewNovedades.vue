@@ -7,7 +7,7 @@
             </h1>
             <div class="alert alert-danger" role="alert" v-if="alerta">
                 <h4 class="alert-heading">ATENCIÓN!</h4>
-                <hr>
+                <hr />
                 {{ alerta }}
             </div>
             <!-- <modalBuscarPersonal :personales="personales" /> -->
@@ -296,7 +296,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#modalRemplazo"
                 >
-                    Agregar Remplazo
+                    Buscar Remplazo por Apellido
                 </button>
 
                 <div
@@ -395,6 +395,12 @@
                             <th>Desde</th>
                             <th>Hasta</th>
                             <th>Borrar</th>
+                            <th class="col-1 px-5">
+                                <i
+                                    class="fa-solid fa-circle-plus"
+                                    @click="agregarRemplazo()"
+                                ></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -403,7 +409,17 @@
                             :key="index"
                         >
                             <td>
-                                {{ remplazo.legajo }}
+                                <input
+                                    type="number"
+                                    name="legajo"
+                                    v-model="remplazo.legajo"
+                                    @change="
+                                        asignarRelevoPorLegajo(
+                                            remplazo.legajo,
+                                            index
+                                        )
+                                    "
+                                />
                             </td>
                             <td>
                                 {{ remplazo.apellido }}
@@ -445,7 +461,9 @@
                 </table>
 
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</i>
+                <i class="btn btn-secondary col-1 m-2" @click="cerrar()"
+                    >Cerrar</i
+                >
             </form>
         </main>
 
@@ -472,6 +490,7 @@ export default defineComponent({
             novedades: [] as Novedad[],
             newNovedad: {} as Novedad,
             ultimoId: 0,
+            today: new Date(),
             personales: [] as IPersonal[],
             days: [
                 "Domingo",
@@ -552,16 +571,24 @@ export default defineComponent({
                             this.newNovedad.remplazo.length - 1
                         ].finRelevo = this.newNovedad.fechaAlta;
                     }
-                    
                 }
-                if(this.alerta){
-                    if (this.alerta.includes("ATENCIÓN")){
+                if (this.alerta) {
+                    if (this.alerta.includes("ATENCIÓN")) {
                         this.$router.push({ name: "Novedades" });
-                    }else if(this.alerta.includes("finalice el relevo")){
-                        this.alerta =  " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " + this.alerta 
+                    } else if (this.alerta.includes("finalice el relevo")) {
+                        this.alerta =
+                            " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " +
+                            this.alerta;
                     }
-                    
+
                     return;
+                }
+                if (this.newNovedad.remplazo !== undefined) {
+                    this.newNovedad.remplazo.forEach((remp, index: number) => {
+                        if (remp.apellido === "") {
+                            this.newNovedad.remplazo.splice(index, 1);
+                        }
+                    });
                 }
                 await createNovedad(this.newNovedad);
                 this.$router.push({ name: "Novedades" });
@@ -569,7 +596,38 @@ export default defineComponent({
                 console.error(error);
             }
         },
-        cerrar(){
+        agregarRemplazo() {
+            if (this.newNovedad.remplazo !== undefined) {
+                this.newNovedad.remplazo.push({
+                    legajo: 0,
+                    apellido: "",
+                    nombres: "",
+                    especialidad: "",
+                    inicioRelevo: this.today.toISOString().split("T")[0],
+                    finRelevo: "",
+                    base: "",
+                    turno: "",
+                    franco: "",
+                    HNA: true,
+                });
+            } else {
+                this.newNovedad.remplazo = [
+                    {
+                        legajo: 0,
+                        apellido: "",
+                        nombres: "",
+                        especialidad: "",
+                        inicioRelevo: this.today.toISOString().split("T")[0],
+                        finRelevo: "",
+                        base: "",
+                        turno: "",
+                        franco: "",
+                        HNA: true,
+                    },
+                ];
+            }
+        },
+        cerrar() {
             this.$router.push({ name: "Novedades" });
         },
         /* Este método obtiene a traves de una consulta HTML:GET el ultimo
@@ -597,40 +655,44 @@ export default defineComponent({
             //this.novedadConRelevoAsignado(personal.legajo);
             //}
         },
-        personalConNovedadActiva(personal:IPersonal) {
+        personalConNovedadActiva(personal: IPersonal) {
             /* Primero busco todas las novedades que tienen al personal relevando */
-            let dateHoy = new Date()
-            dateHoy.setHours(12)
-            
+            const dateHoy = new Date();
+            dateHoy.setHours(12);
+
             this.novedades.forEach((novedad: Novedad) => {
-                if(personal.turno.includes("Ciclo")){
+                if (personal.turno.includes("Ciclo")) {
                     novedad.remplazo.forEach((remp: Remplazo) => {
                         if (remp) {
                             if (remp.legajo == personal.legajo) {
-
                                 if (
-                                    (remp.finRelevo === undefined || remp.finRelevo === "") 
-                                    ||dateHoy < new Date(remp.finRelevo)
+                                    remp.finRelevo === undefined ||
+                                    remp.finRelevo === "" ||
+                                    dateHoy < new Date(remp.finRelevo)
                                 ) {
                                     this.alerta =
-                                "Este personal se encuentra relevando la novedad N°"+ novedad._id + ". Por favor, finalice el relevo para poder continuar";
+                                        "Este personal se encuentra relevando la novedad N°" +
+                                        novedad._id +
+                                        ". Por favor, finalice el relevo para poder continuar";
                                 }
                             }
                         }
                     });
                 }
-                if (novedad.legajo == personal.legajo){
-                    if (novedad.HNA){
+                if (novedad.legajo == personal.legajo) {
+                    if (novedad.HNA) {
                         this.alerta =
-                                "Este personal se encuentra de baja por la siguiente novedad N°"+ novedad._id + ". Por favor, finalice el relevo para poder continuar";
-                    }  
+                            "Este personal se encuentra de baja por la siguiente novedad N°" +
+                            novedad._id +
+                            ". Por favor, finalice el relevo para poder continuar";
+                    }
                 }
             });
         },
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
-            let remplazo = {
+            const remplazo = {
                 legajo: personal.legajo,
                 apellido: personal.apellido,
                 nombres: personal.nombres,
@@ -668,8 +730,14 @@ export default defineComponent({
                                 personal.nombres.toLowerCase()
                             ).includes(this.search.toLowerCase()) &&
                             personal.turno.toLowerCase().includes("ciclo") &&
-                            personal.dotacion === this.newNovedad.base &&
-                            personal.especialidad == this.newNovedad.especialidad
+                            personal.dotacion
+                                .toUpperCase()
+                                .includes(this.newNovedad.base.toUpperCase()) &&
+                            (this.newNovedad.especialidad.includes("Conductor")
+                                ? personal.especialidad.includes("Conductor") ||
+                                    personal.especialidad.includes("Ayudante habilitado")
+                                : personal.especialidad ==
+                                    this.newNovedad.especialidad)
                         );
                     }
                 }
@@ -684,9 +752,8 @@ export default defineComponent({
                 }
             );
             if (this.personalEncontrado[0]) {
-                
                 this.personalConNovedadActiva(this.personalEncontrado[0]);
-                
+
                 this.newNovedad.apellido = this.personalEncontrado[0].apellido;
                 this.newNovedad.nombres = this.personalEncontrado[0].nombres;
                 this.newNovedad.base = this.personalEncontrado[0].dotacion;
@@ -695,15 +762,44 @@ export default defineComponent({
                 this.newNovedad.turno = this.personalEncontrado[0].turno;
                 this.newNovedad.franco =
                     this.days[this.personalEncontrado[0].franco];
+                this.newNovedad.fechaBaja = this.today.toISOString().split("T")[0];
+            }
+        },
+        asignarRelevoPorLegajo(legajo: number, index: number) {
+            this.personalEncontrado = this.personales.filter(
+                (personal: IPersonal) => {
+                    return personal.legajo == legajo;
+                }
+            );
+            if (this.personalEncontrado[0]) {
+                this.newNovedad.remplazo[index].apellido =
+                    this.personalEncontrado[0].apellido;
+                this.newNovedad.remplazo[index].nombres =
+                    this.personalEncontrado[0].nombres;
+                this.newNovedad.remplazo[index].especialidad =
+                    this.personalEncontrado[0].especialidad;
+                this.newNovedad.remplazo[index].base =
+                    this.personalEncontrado[0].dotacion;
+                this.newNovedad.remplazo[index].turno =
+                    this.personalEncontrado[0].turno;
+            } else {
+                this.newNovedad.remplazo[index].apellido = "";
+                this.newNovedad.remplazo[index].nombres = "";
+                this.newNovedad.remplazo[index].especialidad = "";
+                this.newNovedad.remplazo[index].base = "";
+                this.newNovedad.remplazo[index].turno = "";
             }
         },
     },
     mounted() {
-        this.obtenerUltimoId();
-        this.loadPersonales();
-        this.loadNovedades();
-        this.newNovedad.HNA = true;
-        
+        try {
+            this.obtenerUltimoId();
+            this.loadPersonales();
+            this.loadNovedades();
+            this.newNovedad.HNA = true;
+        } catch (error) {
+            console.error(error);
+        }
     },
     components: {
         NavBar,

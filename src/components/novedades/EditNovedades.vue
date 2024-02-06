@@ -287,7 +287,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#modalRemplazo"
                 >
-                    Agregar Remplazo
+                    Buscar Remplazo por Apellido    
                 </button>
 
                 <div
@@ -386,6 +386,12 @@
                             <th>Desde</th>
                             <th>Hasta</th>
                             <th>Borrar</th>
+                            <th class="col-1 px-5">
+                                <i
+                                    class="fa-solid fa-circle-plus"
+                                    @click="agregarRemplazo()"
+                                ></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -394,7 +400,17 @@
                             :key="index"
                         >
                             <td>
-                                {{ remplazo.legajo }}
+                                <input
+                                    type="number"
+                                    name="legajo"
+                                    v-model="remplazo.legajo"
+                                    @change="
+                                        asignarRelevoPorLegajo(
+                                            remplazo.legajo,
+                                            index
+                                        )
+                                    "
+                                />
                             </td>
                             <td>
                                 {{ remplazo.apellido }}
@@ -459,6 +475,7 @@ export default defineComponent({
         return {
             novedad: {} as Novedad,
             personales: [] as IPersonal[],
+            today: new Date(),
             days: [
                 "Domingo",
                 "Lunes",
@@ -576,11 +593,49 @@ export default defineComponent({
 
                         return;
                     }
+                    if (this.novedad.remplazo !== undefined) {
+                    this.novedad.remplazo.forEach((remp, index: number) => {
+                        if (remp.apellido === "") {
+                            this.novedad.remplazo.splice(index, 1);
+                        }
+                    });
+                }
                     await updateNovedad(parseInt(this.$route.params.id), this.novedad);
                     this.$router.push(`/novedades`);
                 }
             } catch (error) {
                 console.error(error);
+            }
+        },
+        agregarRemplazo() {
+            if (this.novedad.remplazo !== undefined) {
+                this.novedad.remplazo.push({
+                    legajo: 0,
+                    apellido: "",
+                    nombres: "",
+                    especialidad: "",
+                    inicioRelevo: this.today.toISOString().split("T")[0],
+                    finRelevo: "",
+                    base: "",
+                    turno: "",
+                    franco: "",
+                    HNA: true,
+                });
+            } else {
+                this.novedad.remplazo = [
+                    {
+                        legajo: 0,
+                        apellido: "",
+                        nombres: "",
+                        especialidad: "",
+                        inicioRelevo: this.today.toISOString().split("T")[0],
+                        finRelevo: "",
+                        base: "",
+                        turno: "",
+                        franco: "",
+                        HNA: true,
+                    },
+                ];
             }
         },
         cerrar() {
@@ -595,11 +650,12 @@ export default defineComponent({
         /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
          pero esta vez a la lista de remplazo */
         selectRemplazo(personal: IPersonal) {
-            let remplazo = {
+            const remplazo = {
                 legajo: personal.legajo,
                 apellido: personal.apellido,
                 nombres: personal.nombres,
                 base: personal.dotacion,
+                inicioRelevo: this.today.toISOString().split("T")[0],
                 especialidad: personal.especialidad,
                 turno: personal.turno,
                 franco: this.days[personal.franco],
@@ -632,8 +688,14 @@ export default defineComponent({
                                 personal.nombres.toLowerCase()
                             ).includes(this.search.toLowerCase()) &&
                             personal.turno.toLowerCase().includes("ciclo") &&
-                            personal.dotacion === this.novedad.base &&
-                            personal.especialidad == this.novedad.especialidad
+                            personal.dotacion
+                                .toUpperCase()
+                                .includes(this.novedad.base.toUpperCase()) &&
+                            (this.novedad.especialidad.includes("Conductor")
+                                ? personal.especialidad.includes("Conductor") ||
+                                    personal.especialidad.includes("Ayudante habilitado")
+                                : personal.especialidad ==
+                                    this.novedad.especialidad)
                         );
                     }
                 }
@@ -658,13 +720,44 @@ export default defineComponent({
                     this.days[this.personalEncontrado[0].franco];
             }
         },
+        asignarRelevoPorLegajo(legajo: number, index: number) {
+            this.personalEncontrado = this.personales.filter(
+                (personal: IPersonal) => {
+                    return personal.legajo == legajo;
+                }
+            );
+            if (this.personalEncontrado[0]) {
+                this.novedad.remplazo[index].apellido =
+                    this.personalEncontrado[0].apellido;
+                this.novedad.remplazo[index].nombres =
+                    this.personalEncontrado[0].nombres;
+                this.novedad.remplazo[index].especialidad =
+                    this.personalEncontrado[0].especialidad;
+                this.novedad.remplazo[index].base =
+                    this.personalEncontrado[0].dotacion;
+                this.novedad.remplazo[index].turno =
+                    this.personalEncontrado[0].turno;
+            } else {
+                this.novedad.remplazo[index].apellido = "";
+                this.novedad.remplazo[index].nombres = "";
+                this.novedad.remplazo[index].especialidad = "";
+                this.novedad.remplazo[index].base = "";
+                this.novedad.remplazo[index].turno = "";
+            }
+        },
     },
     mounted() {
-        this.loadPersonales();
-        if (typeof this.$route.params.id === "string") {
-            this.loadNovedad(parseInt(this.$route.params.id));
+        try {
+            this.loadPersonales();
+            if (typeof this.$route.params.id === "string") {
+                this.loadNovedad(parseInt(this.$route.params.id));
+            }
+            newToken();
+        } catch (error) {
+            console.error(error);
+            
         }
-        newToken();
+        
     },
     components: {
         NavBar,

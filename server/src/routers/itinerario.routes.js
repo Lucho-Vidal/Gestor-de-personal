@@ -10,4 +10,10 @@ router.get(
     itinerarioCtrl.getItinerario
 );
 
+router.get(
+    "/itinerario-paginado",
+    [authJwt.verifyToken],
+    itinerarioCtrl.getItinerarioPaginado
+);
+
 export default router;

@@ -3,8 +3,8 @@ export interface Itinerario {
     id: null;
     tren: number;
     itinerario: string;
-    estaciones: [];
-    horarios: [];
+    estaciones: string[];
+    horarios: string[];
     /* PC: string;
     ALL: string;
     RE: string;

@@ -41,31 +41,27 @@
                         v-on:change="buscar()"
                     />
                 </div>
-                <details>
-                    <summary>Circular:</summary>
-                    <div class="my-3">
+                
+                    <div class="d-flex flex-wrap my-3">
                         <h6>Aplicar circular:</h6>
-                        <label class="form-check-label mx-2">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                value="Dic23"
-                                checked
-                                @change="buscar()"
-                            />
-                            Dic23
-                        </label>
-                        <label class="form-check-label mx-2">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                value="HD4105"
-                                @change="buscar()"
-                            />
-                            HD4105
-                        </label>
+                        <div
+                            v-for="(circular, index) in circulares"
+                            :key="index"
+                        >
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    :value="circular"
+                                    v-model="circularSeleccionada"
+                                    v-on:change="buscar()"
+                                />
+                                {{ circular }}
+                                <!-- Mostrar el valor de la variable circular en el label -->
+                            </label>
+                        </div>
                     </div>
-                </details>
+                
             </div>
 
             <div class=""></div>
@@ -176,6 +172,8 @@ export default defineComponent({
         return {
             tren: "" as string,
             turno: [] as ITurno[],
+            circulares: [] as string[],
+            circularSeleccionada: ["Dic23"] as string[],
             indFiltrado: [] as ITurno[],
             turnos: [] as Array<ITurno[]>,
             itinerario: [] as Itinerario[],
@@ -201,6 +199,7 @@ export default defineComponent({
             /* Trae todos los elementos de la base de datos  */
             const res = await getTurnos();
             this.turno = res.data;
+            this.circulares = this.obtenerTiposCirculares(this.turno);
         },
         async loadItinerario() {
             /* Trae todos los elementos de la base de datos */
@@ -220,6 +219,19 @@ export default defineComponent({
             return this.itinerario.filter((it) => {
                 return it.itinerario == itinerario && it.tren == parseInt(tren);
             });
+        },
+        obtenerTiposCirculares(turnos: ITurno[]) {
+            // Filtramos aquellos turnos que tengan definida la propiedad "circular"
+            const turnosFiltrados = turnos.filter(
+                (turno) => turno.circular !== undefined
+            );
+
+            // Usamos Set para obtener valores únicos de la propiedad "circular"
+            const circularesUnicas = [
+                ...new Set(turnosFiltrados.map((turno) => turno.circular)),
+            ];
+
+            return circularesUnicas;
         },
         itinerarioType(fecha: Date) {
             if (this.inputIt === "") {
@@ -291,7 +303,8 @@ export default defineComponent({
                 for (let i = 0; i < diag.vueltas.length; i++) {
                     if (
                         diag.vueltas[i].tren == parseInt(this.tren) &&
-                        diag.itinerario == itinerario
+                        diag.itinerario == itinerario &&
+                        this.circularSeleccionada.includes(diag.circular)
                     ) {
                         this.indFiltrado.push(diag);
                     }
@@ -336,7 +349,7 @@ export default defineComponent({
             El método busca en el array turnos utilizando la función filtroPersonal, el resultado lo 
             guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en 
             el array indFiltrado y posterior en el mismo array turnos. */
-            let list = [];
+            const list = [];
 
             //   busco el personal titular
             list.push(
@@ -358,12 +371,12 @@ export default defineComponent({
                                 novedad.remplazo !== undefined &&
                                 novedad.remplazo.length > 0
                             ) {
-                                let fecha =
+                                const fecha =
                                     this.inputDate == ""
                                         ? new Date()
                                         : new Date(this.inputDate);
 
-                                let remplazo = novedad.remplazo.filter(
+                                const remplazo = novedad.remplazo.filter(
                                     (remp) => {
                                         return (
                                             new Date(remp.inicioRelevo) <=
@@ -407,7 +420,7 @@ export default defineComponent({
             está indexado como 0 y el Sábado como 6
             Al ingresarle por parámetros la cantidad de días del turno pos franco y 
             el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            let diagrama = [
+            const diagrama = [
                 [0, 1, 2, 3, 4, 5, 6],
                 [6, 0, 1, 2, 3, 4, 5],
                 [5, 6, 0, 1, 2, 3, 4],
