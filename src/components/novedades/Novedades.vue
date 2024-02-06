@@ -175,6 +175,7 @@ import FooterPage from "../FooterPage.vue";
 import { Novedad } from "../../interfaces/INovedades";
 import { getNovedades, deleteNovedad } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -184,17 +185,32 @@ export default defineComponent({
             checkboxHna: false,
             checkboxDescubierto: false,
             username: "" as string,
-            today: new Date()
+            today: new Date(),
         };
     },
     methods: {
         async loadNovedades() {
-            const res = await getNovedades();
-            this.novedades = res.data;
-            this.filtrar();
+            try {
+                const res = await getNovedades();
+                this.novedades = res.data;
+                this.filtrar();
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        handleRequestError(error: AxiosError) {
+            console.error("Error en la solicitud:", error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
         },
         ordenarNovedades() {
-            this.novedadesFiltradas.sort((a, b) => b._id > a._id ? 1 : -1);
+            this.novedadesFiltradas.sort((a, b) => (b._id > a._id ? 1 : -1));
         },
         edit(id: number) {
             this.$router.push(`/editNovedades/${id}`);
@@ -228,9 +244,9 @@ export default defineComponent({
             está indexado como 0 y el Sábado como 6
             Al ingresarle por parámetros la cantidad de días del turno pos franco y
             el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            if(diaLaboral === -1){
-                return "S/F"
-            }else{
+            if (diaLaboral === -1) {
+                return "S/F";
+            } else {
                 const diagrama = [
                     [0, 1, 2, 3, 4, 5, 6],
                     [6, 0, 1, 2, 3, 4, 5],
@@ -243,13 +259,18 @@ export default defineComponent({
                 return diagrama[diaLaboral][hoy]; //:franco
             }
         },
-        async deleteNovedad(id:number,index:number){
-            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar esta novedad?");
-            if(confirmacion){
+        async deleteNovedad(id: number, index: number) {
+            try{
+            const confirmacion = window.confirm(
+                "¿Estás seguro de que deseas eliminar esta novedad?"
+            );
+            if (confirmacion) {
                 await deleteNovedad(id);
-                this.novedadesFiltradas.splice(index,1);
+                this.novedadesFiltradas.splice(index, 1);
             }
-
+            }catch(error){
+                this.handleRequestError(error as AxiosError)
+            }
         },
         filtrar() {
             if (this.checkboxHna && this.checkboxDescubierto) {
@@ -277,18 +298,17 @@ export default defineComponent({
             } else {
                 this.novedadesFiltradas = this.novedades;
             }
-            this.ordenarNovedades()
+            this.ordenarNovedades();
         },
     },
     created() {
-        try{
+        try {
             this.loadNovedades();
             newToken();
             this.username = localStorage.getItem("username") || "";
-        }catch (error) {
+        } catch (error) {
             console.error(error);
         }
-        
     },
     name: "App",
     components: {

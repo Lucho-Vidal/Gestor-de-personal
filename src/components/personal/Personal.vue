@@ -212,8 +212,13 @@
                     </label>
                 </div>
             </details>
-            <h3 v-if="personalesFiltrados.length == 0">No se encontró ningún personal</h3>
-            <table class="table table-striped table-hover" v-if="personalesFiltrados.length > 0">
+            <h3 v-if="personalesFiltrados.length == 0">
+                No se encontró ningún personal
+            </h3>
+            <table
+                class="table table-striped table-hover"
+                v-if="personalesFiltrados.length > 0"
+            >
                 <thead>
                     <tr>
                         <th class="col-1" colspan="1">legajo</th>
@@ -230,14 +235,12 @@
                     </tr>
                 </thead>
                 <tbody
-                        v-for="(personal, index) in personalesFiltrados"
-                        :key="index"
-                        @dblclick="edit(personal._id)"
-                        @click="viewDetail(personal)"
-                        >
-                    <tr
-                        
-                    >
+                    v-for="(personal, index) in personalesFiltrados"
+                    :key="index"
+                    @dblclick="edit(personal._id)"
+                    @click="viewDetail(personal)"
+                >
+                    <tr>
                         <td class="col-1">{{ personal.legajo }}</td>
                         <td class="col-1">{{ personal.apellido }}</td>
                         <td class="col-2">{{ personal.nombres }}</td>
@@ -254,28 +257,59 @@
                             ></i>
                         </td>
                         <td class="col-1">
-                            
-                            <i class="fa-solid fa-trash-can"
-                                @click="deletePersonal(personal._id,index)"
+                            <i
+                                class="fa-solid fa-trash-can"
+                                @click="deletePersonal(personal._id, index)"
                             ></i>
                         </td>
                     </tr>
                     <tr v-if="personal.viewDetail">
                         <td colspan="12">
-                            <div class="row" >
+                            <div class="row">
                                 <h6 class="col-12">Conocimientos:</h6>
                                 <p class="col-1">
-                                    {{ personal.conocimientos.CML === true ? "CML": "" }}
-                                    {{ personal.conocimientos.CKD  === true ? "CKD": "" }}
-                                    {{ personal.conocimientos.RO  === true ? "RO ": "" }}
-                                    {{ personal.conocimientos.MPN  === true ? "MPN ": "" }}
-                                    {{ personal.conocimientos.OL  === true ? "OL ": "" }}
-                                    {{ personal.conocimientos.LCI  === true ? "LCI ": "" }}
-                                    {{ personal.conocimientos.ELEC  === true ? "ELEC ": "" }}
-                                    {{ personal.conocimientos.DUAL === true ? "DUAL": "" }}
+                                    {{
+                                        personal.conocimientos.CML === true
+                                            ? "CML"
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.CKD === true
+                                            ? "CKD"
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.RO === true
+                                            ? "RO "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.MPN === true
+                                            ? "MPN "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.OL === true
+                                            ? "OL "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.LCI === true
+                                            ? "LCI "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.ELEC === true
+                                            ? "ELEC "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.DUAL === true
+                                            ? "DUAL"
+                                            : ""
+                                    }}
                                 </p>
                             </div>
-                            
                         </td>
                     </tr>
                 </tbody>
@@ -289,9 +323,10 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { deletePersonal, getPersonales } from '../../services/personalService';
+import { deletePersonal, getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -317,9 +352,24 @@ export default defineComponent({
     },
     methods: {
         async loadPersonales() {
-            const res = await getPersonales();
-            this.personales = res.data;
-            this.filtrarPersonales();
+            try {
+                const res = await getPersonales();
+                this.personales = res.data;
+                this.filtrarPersonales();
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        handleRequestError(error: AxiosError) {
+            console.error("Error en la solicitud:", error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
         },
         viewDetail(personal: IPersonal) {
             if (personal.viewDetail) {
@@ -329,7 +379,6 @@ export default defineComponent({
             }
         },
         filtrarPersonales() {
-            
             let cDotacion = [];
             let cEspecialidad = [];
             let cTurno = [];
@@ -428,39 +477,52 @@ export default defineComponent({
 
                 if (this.search.length != 0) {
                     auxPersonales = this.personalesFiltrados;
-                    this.personalesFiltrados = auxPersonales.filter(personal => {
-                        return (personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase().trim()).includes(this.search.toLowerCase().trim())
-                    })
+                    this.personalesFiltrados = auxPersonales.filter(
+                        (personal) => {
+                            return (
+                                personal.apellido.toLowerCase() +
+                                " " +
+                                personal.nombres.toLowerCase().trim()
+                            ).includes(this.search.toLowerCase().trim());
+                        }
+                    );
                 }
                 if (this.searchLegajo != 0) {
                     auxPersonales = this.personalesFiltrados;
-                    this.personalesFiltrados = auxPersonales.filter(personal => {
-                        return (personal.legajo === (this.searchLegajo))
-                    })
+                    this.personalesFiltrados = auxPersonales.filter(
+                        (personal) => {
+                            return personal.legajo === this.searchLegajo;
+                        }
+                    );
                 }
             } else {
                 this.personalesFiltrados = this.personales;
             }
         },
-        async deletePersonal(id:string,index:number){
-            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este Personal?");
-            if(confirmacion){
-                await deletePersonal(id);
-                this.personalesFiltrados.splice(index,1);
+        async deletePersonal(id: string, index: number) {
+            try {
+                const confirmacion = window.confirm(
+                    "¿Estás seguro de que deseas eliminar este Personal?"
+                );
+                if (confirmacion) {
+                    await deletePersonal(id);
+                    this.personalesFiltrados.splice(index, 1);
+                }
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
             }
-            
         },
-        
-        edit(id:string) {
-            this.$router.push( `/editPersonal/${id}`)
+
+        edit(id: string) {
+            this.$router.push(`/editPersonal/${id}`);
         },
     },
     created() {
         try {
             this.loadPersonales();
-            newToken();    
+            newToken();
         } catch (error) {
-            console.error(error);   
+            console.error(error);
         }
     },
     name: "App",

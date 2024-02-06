@@ -126,6 +126,7 @@ import FooterPage from "../FooterPage.vue";
 import { ITurno } from '../../interfaces/ITurno';
 import { deleteTurno, getTurnos } from "../../services/turnosService";
 import { newToken } from "../../services/signService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -138,9 +139,13 @@ export default defineComponent({
     },
     methods: {
         async loadTurnos() {
-            const res = await getTurnos();
-            this.turnos = res.data;
-            this.filtrar();
+            try{
+                const res = await getTurnos();
+                this.turnos = res.data;
+                this.filtrar();
+            } catch (error) {
+                this.handleRequestError(error  as AxiosError);
+            }
         },
         edit(id: string) {
             this.$router.push(`/editTurno/${id}`);
@@ -153,12 +158,27 @@ export default defineComponent({
             }
         },
         async deleteTurno(id:string,index:number){
-            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este turno?");
+            try {
+                const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este turno?");
             if(confirmacion){
                 await deleteTurno(id);
                 this.Filtradas.splice(index,1);
             }
+            } catch (error) {
+                this.handleRequestError(error as AxiosError)
+            }
             
+        },
+        handleRequestError(error: AxiosError) {
+            console.error('Error en la solicitud:', error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
         },
         filtrar() {
             this.Filtradas = this.turnos.filter(t => {

@@ -166,6 +166,7 @@ import { getPersonales } from "../../services/personalService";
 import { Novedad } from "../../interfaces/INovedades";
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -197,23 +198,53 @@ export default defineComponent({
     methods: {
         async loadTurnos() {
             /* Trae todos los elementos de la base de datos  */
-            const res = await getTurnos();
-            this.turno = res.data;
-            this.circulares = this.obtenerTiposCirculares(this.turno);
+            try {
+                const res = await getTurnos();
+                this.turno = res.data;
+                this.circulares = this.obtenerTiposCirculares(this.turno);
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
         },
         async loadItinerario() {
-            /* Trae todos los elementos de la base de datos */
-            const res = await getItinerario();
-            this.itinerario = res.data;
+            try {
+                /* Trae todos los elementos de la base de datos */
+                const res = await getItinerario();
+                this.itinerario = res.data;
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
         },
+
         async loadPersonales() {
-            /* Trae todos los elementos de la base de datos */
-            const res = await getPersonales();
-            this.personales = res.data;
+            try {
+                /* Trae todos los elementos de la base de datos */
+                const res = await getPersonales();
+                this.personales = res.data;
+            } catch (error) {
+                this.handleRequestError(error  as AxiosError);
+            }
         },
+
         async loadNovedades() {
-            const res = await getNovedades();
-            this.novedades = res.data;
+            try {
+                const res = await getNovedades();
+                this.novedades = res.data;
+            } catch (error) {
+                this.handleRequestError(error  as AxiosError);
+            }
+        },
+
+        handleRequestError(error: AxiosError) {
+            console.error('Error en la solicitud:', error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
         },
         buscarTrenItinerario(tren: string, itinerario: string) {
             return this.itinerario.filter((it) => {
