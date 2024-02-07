@@ -41,27 +41,23 @@
                         v-on:change="buscar()"
                     />
                 </div>
-                
-                    <div class="d-flex flex-wrap my-3">
-                        <h6>Aplicar circular:</h6>
-                        <div
-                            v-for="(circular, index) in circulares"
-                            :key="index"
-                        >
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    :value="circular"
-                                    v-model="circularSeleccionada"
-                                    v-on:change="buscar()"
-                                />
-                                {{ circular }}
-                                <!-- Mostrar el valor de la variable circular en el label -->
-                            </label>
-                        </div>
+
+                <div class="d-flex flex-wrap my-3">
+                    <h6>Aplicar circular:</h6>
+                    <div v-for="(circular, index) in circulares" :key="index">
+                        <label class="form-check-label mx-2">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :value="circular"
+                                v-model="circularSeleccionada"
+                                v-on:change="buscar()"
+                            />
+                            {{ circular }}
+                            <!-- Mostrar el valor de la variable circular en el label -->
+                        </label>
                     </div>
-                
+                </div>
             </div>
 
             <div class=""></div>
@@ -112,41 +108,44 @@
                 </tbody>
             </table>
             <div v-for="(turno, index) in turnos" :key="index" class="row">
-                <h4 class="Personal col-1">{{ turno[0].turno }}</h4>
-                <h4 class="col-6">{{ turno[0].personal }}</h4>
-                <h5 class="col-2">Toma: {{ turno[0].toma }}</h5>
-                <h5 class="col-2">Deja: {{ turno[0].deja }}</h5>
-                <table class="table table-striped table-hover">
-                    <thead class="">
-                        <tr>
-                            <th colspan="1">Vuelta</th>
-                            <th colspan="1">Ref</th>
-                            <th colspan="1">Tren</th>
-                            <th colspan="1">Origen</th>
-                            <th colspan="1">Sale</th>
-                            <th colspan="1">Destino</th>
-                            <th colspan="1">Llega</th>
-                            <th colspan="1">Observaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(vueltas, index) in turno" :key="index">
-                        <tr
-                            v-for="(vuelta, index) in vueltas.vueltas"
-                            :key="index"
-                        >
-                            <td class="col-3">{{ vuelta.vuelta }}</td>
-                            <td class="col-1">{{ vuelta.refer }}</td>
-                            <td class="col-1">{{ vuelta.tren }}</td>
-                            <td class="col-1">{{ vuelta.origen }}</td>
-                            <td class="col-1">{{ vuelta.sale }}</td>
-                            <td class="col-1">{{ vuelta.destino }}</td>
-                            <td class="col-1">{{ vuelta.llega }}</td>
-                            <td class="col-3">
-                                {{ vuelta.observaciones }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div v-for="(t, tIndex) in turno" :key="tIndex" class="row">
+                    <h4 class="Personal col-1">{{ t.turno }}</h4>
+                    <h4 class="col-4">{{ t.personal }}</h4>
+                    <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
+                    <h5 class="col-2">Toma: {{ t.toma }}</h5>
+                    <h5 class="col-2">Deja: {{ t.deja }}</h5>
+                    <table class="table table-striped table-hover">
+                        <thead class="">
+                            <tr>
+                                <th colspan="1">Vuelta</th>
+                                <th colspan="1">Ref</th>
+                                <th colspan="1">Tren</th>
+                                <th colspan="1">Origen</th>
+                                <th colspan="1">Sale</th>
+                                <th colspan="1">Destino</th>
+                                <th colspan="1">Llega</th>
+                                <th colspan="1">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(vuelta, index) in t.vueltas"
+                                :key="index"
+                            >
+                                <td class="col-3">{{ vuelta.vuelta }}</td>
+                                <td class="col-1">{{ vuelta.refer }}</td>
+                                <td class="col-1">{{ vuelta.tren }}</td>
+                                <td class="col-1">{{ vuelta.origen }}</td>
+                                <td class="col-1">{{ vuelta.sale }}</td>
+                                <td class="col-1">{{ vuelta.destino }}</td>
+                                <td class="col-1">{{ vuelta.llega }}</td>
+                                <td class="col-3">
+                                    {{ vuelta.observaciones }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
         <footer-page />
@@ -174,7 +173,7 @@ export default defineComponent({
             tren: "" as string,
             turno: [] as ITurno[],
             circulares: [] as string[],
-            circularSeleccionada: ["Dic23"] as string[],
+            circularSeleccionada: ["Dic23","HD4155"] as string[],
             indFiltrado: [] as ITurno[],
             turnos: [] as Array<ITurno[]>,
             itinerario: [] as Itinerario[],
@@ -222,7 +221,7 @@ export default defineComponent({
                 const res = await getPersonales();
                 this.personales = res.data;
             } catch (error) {
-                this.handleRequestError(error  as AxiosError);
+                this.handleRequestError(error as AxiosError);
             }
         },
 
@@ -231,12 +230,12 @@ export default defineComponent({
                 const res = await getNovedades();
                 this.novedades = res.data;
             } catch (error) {
-                this.handleRequestError(error  as AxiosError);
+                this.handleRequestError(error as AxiosError);
             }
         },
 
         handleRequestError(error: AxiosError) {
-            console.error('Error en la solicitud:', error);
+            console.error("Error en la solicitud:", error);
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
@@ -320,7 +319,8 @@ export default defineComponent({
                     diag.turno
                         .toLowerCase()
                         .includes(this.tren.toLowerCase()) &&
-                    diag.itinerario == itinerario
+                    diag.itinerario == itinerario &&
+                    this.circularSeleccionada.includes(diag.circular)
                 ) {
                     this.indFiltrado.push(diag);
                 }
@@ -364,16 +364,34 @@ export default defineComponent({
         filtroTurno(itinerario: string) {
             /* Este método es el encargado de buscar los turnos en cada búsqueda.
             Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
+            this.turnos = [];
             this.indFiltrado.forEach((turno: ITurno) => {
                 this.turnos.push(
                     this.turno.filter((ind: ITurno) => {
                         return (
                             ind.turno.includes(turno.turno) &&
-                            ind.itinerario == itinerario
+                            ind.itinerario == itinerario &&
+                            this.circularSeleccionada.includes(ind.circular)
                         );
                     })
                 );
             });
+            if (this.turnos != undefined) {
+                const claveSet = new Set<string>();
+                const aux = this.turnos.map((turnos) => {
+                    const turnoFiltrado: ITurno[] = turnos.filter((turno) => {
+                        const clave = `${turno._id}`;
+                        if (!claveSet.has(clave)) {
+                            claveSet.add(clave);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    return turnoFiltrado;
+                });
+                this.turnos = aux;
+            }
         },
         buscarPersonalACargo(fecha: Date) {
             /* Este método es el encargado de buscar y cambiar el nombre del personal en cada búsqueda. 
@@ -382,13 +400,13 @@ export default defineComponent({
             el array indFiltrado y posterior en el mismo array turnos. */
             const list = [];
 
-            //   busco el personal titular
-            list.push(
-                this.turnos.map((turno: ITurno[]) => {
-                    return this.filtroPersonal(turno[0].turno, fecha);
-                })
-            );
             try {
+                //   busco el personal titular
+                list.push(
+                    this.turnos.map((turno: ITurno[]) => {
+                        return this.filtroPersonal(turno[0].turno, fecha);
+                    })
+                );
                 list[0].forEach((personal) => {
                     this.novedades.forEach((novedad) => {
                         //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
