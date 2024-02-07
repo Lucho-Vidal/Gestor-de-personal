@@ -12,20 +12,47 @@
                 >
             </div>
 
-            <details>
-                <summary>Filtros:</summary>
-                <div class="my-3">
-                    <h6>Filtrar por turno:</h6>
+            <div class="my-3 row">
+                <input
+                    class="col-3 gap col"
+                    type="text"
+                    placeholder="Buscar por turno"
+                    autofocus
+                    v-on:keyup="filtrar"
+                    v-model="search"
+                />
+                <label class="form-check-label mx-2 col-1">
                     <input
-                        class="col-3 gap"
-                        type="text"
-                        placeholder="Buscar por nombre"
-                        autofocus
-                        @change="filtrar"
-                        v-model="search"
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="'H'"
+                        v-model="itSeleccionado"
+                        v-on:change="filtrar()"
                     />
-                </div>
-            </details>
+                    Hábil
+                </label>
+                <label class="form-check-label mx-2 col-1">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="'S'"
+                        v-model="itSeleccionado"
+                        v-on:change="filtrar()"
+                    />
+                    Sábado
+                </label>
+                <label class="form-check-label mx-2 col-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="'D'"
+                        v-model="itSeleccionado"
+                        v-on:change="filtrar()"
+                    />
+                    Domingo
+                </label>
+            </div>
+            
             <h3 v-if="Filtradas.length == 0">
                 No se encontró ningún turno con los requerimientos
                 especificados.
@@ -134,7 +161,8 @@ export default defineComponent({
             search:"",
             turnos: [] as ITurno[],
             Filtradas: [] as ITurno[],
-            username: '' as string
+            username: '' as string,
+            itSeleccionado: ['H','S','D'] as string[]
         };
     },
     methods: {
@@ -182,7 +210,10 @@ export default defineComponent({
         },
         filtrar() {
             this.Filtradas = this.turnos.filter(t => {
-                return (t.turno.toLocaleLowerCase().includes(this.search.toLowerCase()))
+                return (
+                        t.turno.toLocaleLowerCase().includes(this.search.toLowerCase()) &&
+                        this.itSeleccionado.includes(t.itinerario)
+                    )
             })
         },
     },
