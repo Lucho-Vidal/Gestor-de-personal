@@ -62,34 +62,35 @@
 
             <div class=""></div>
             <table class="table table-striped table-hover">
-                <thead>
-                    <tr v-for="(ind, index) in itFiltrado" :key="index">
+                <thead v-if="horarios !== null">
+                    <tr v-if="horarios.estaciones !== undefined">
                         <th
-                            v-for="i in ind.estaciones.length"
+                            v-for="i in horarios.estaciones.length"
                             :key="i"
                             colspan="1"
                         >
-                            {{ ind.estaciones[i - 1] }}
+                            {{ horarios.estaciones[i - 1] }}
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(ind, index) in itFiltrado" :key="index">
-                        <td
-                            v-for="i in ind.horarios.length"
+                <tbody v-if="horarios !== null" >
+                    <tr v-if="horarios.horarios !== undefined">
+                        <th
+                            v-for="i in horarios.horarios.length"
                             :key="i"
-                            class="w-10"
+                            colspan="1"
                         >
-                            {{ ind.horarios[i - 1] }}
-                        </td>
+                            {{ horarios.horarios[i - 1] }}
+                        </th>
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-striped table-hover">
+            <table v-if="turnosAImprimir !== null" class="table table-striped table-hover">
                 <thead>
-                    <tr v-if="indFiltrado.length != 0">
+                    <tr v-if="turnosAImprimir.length != 0">
                         <th colspan="1">Ref</th>
                         <th colspan="1">Turno</th>
+                        <th colspan="1">Circular</th>
                         <th colspan="1">Observación</th>
                         <th colspan="2">Titular</th>
                         <th colspan="1">Toma</th>
@@ -97,9 +98,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(ind, index) in indFiltrado" :key="index">
+                    <tr v-for="(ind, index) in turnosAImprimir" :key="index">
                         <td class="w-10">{{ ind.vueltas[0].refer }}</td>
                         <td class="w-10">{{ ind.turno }}</td>
+                        <td class="w-10">{{ ind.circular }}</td>
                         <td class="w-10">{{ ind.vueltas[0].observaciones }}</td>
                         <td colspan="2" class="w-10">{{ ind.personal }}</td>
                         <td class="w-10">{{ ind.toma }}</td>
@@ -107,8 +109,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div v-for="(turno, index) in turnos" :key="index" class="row">
-                <div v-for="(t, tIndex) in turno" :key="tIndex" class="row">
+            <div v-for="(t, tIndex) in turnosAImprimir" :key="tIndex" class="row">
                     <h4 class="Personal col-1">{{ t.turno }}</h4>
                     <h4 class="col-4">{{ t.personal }}</h4>
                     <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
@@ -146,7 +147,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
         </main>
         <footer-page />
     </div>
@@ -173,11 +173,10 @@ export default defineComponent({
             tren: "" as string,
             turno: [] as ITurno[],
             circulares: [] as string[],
-            circularSeleccionada: ["Dic23","HD4155"] as string[],
-            indFiltrado: [] as ITurno[],
-            turnos: [] as Array<ITurno[]>,
+            circularSeleccionada: ["Dic23", "HD4155"] as string[],
+            turnosAImprimir: [] as ITurno[] | null,
             itinerario: [] as Itinerario[],
-            itFiltrado: [] as Itinerario[],
+            horarios: {} as Itinerario | null,
             personales: [] as IPersonal[],
             today: new Date(),
             novedades: [] as Novedad[],
@@ -214,7 +213,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-
         async loadPersonales() {
             try {
                 /* Trae todos los elementos de la base de datos */
@@ -224,7 +222,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-
         async loadNovedades() {
             try {
                 const res = await getNovedades();
@@ -233,7 +230,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
 
@@ -245,23 +241,46 @@ export default defineComponent({
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
-        buscarTrenItinerario(tren: string, itinerario: string) {
-            return this.itinerario.filter((it) => {
-                return it.itinerario == itinerario && it.tren == parseInt(tren);
-            });
+
+        buscar() {
+            /* Ejecuta en cada búsqueda todos los métodos necesarios. 
+            Se ejecuta por v-on:change en el input  */
+            //limpio variables globales
+            this.horarios = null;
+            this.turnosAImprimir = null;
+
+            const fecha: Date = this.obtenerFecha(this.inputDate, this.today );
+            const itinerario: string = this.itinerarioType(fecha);
+
+            if (this.tren !== "") {
+                //si no se encuentra tren no continuo con la búsqueda
+                this.turnosAImprimir = this.filtroTrenes(
+                    itinerario,
+                    this.turno,
+                    this.circularSeleccionada,
+                    parseInt(this.tren)
+                );
+                if (this.turnosAImprimir.length > 0) {
+                    this.horarios = this.filtroItinerario(itinerario,this.itinerario,parseInt(this.tren));
+                    //this.turnosAImprimir = this.filtroTurno(itinerario);
+                    this.buscarPersonalACargo(fecha,this.turnosAImprimir,this.personales);
+                } else {
+                    this.turnosAImprimir = this.filtrarPorTurno(itinerario,this.turno,this.circularSeleccionada,this.tren);
+                    //this.filtroTurno(itinerario);
+                    this.buscarPersonalACargo(fecha,this.turnosAImprimir,this.personales);
+                }
+            }
         },
-        obtenerTiposCirculares(turnos: ITurno[]) {
-            // Filtramos aquellos turnos que tengan definida la propiedad "circular"
-            const turnosFiltrados = turnos.filter(
-                (turno) => turno.circular !== undefined
-            );
-
-            // Usamos Set para obtener valores únicos de la propiedad "circular"
-            const circularesUnicas = [
-                ...new Set(turnosFiltrados.map((turno) => turno.circular)),
-            ];
-
-            return circularesUnicas;
+        obtenerFecha(fecha:string, today: Date) {
+            if (fecha == "") {
+                // Formatear la fecha en formato ISO (YYYY-MM-DD)
+                const formattedDate = today.toISOString().split("T")[0];
+                // Asignar el valor al input
+                this.inputDate = formattedDate;
+                return today;
+            } else {
+                return new Date(fecha + " 12:00");
+            }
         },
         itinerarioType(fecha: Date) {
             if (this.inputIt === "") {
@@ -279,189 +298,129 @@ export default defineComponent({
                 return this.inputIt;
             }
         },
-        obtenerFecha() {
-            if (this.inputDate == "") {
-                // Formatear la fecha en formato ISO (YYYY-MM-DD)
-                const formattedDate = this.today.toISOString().split("T")[0];
-                // Asignar el valor al input
-                this.inputDate = formattedDate;
-                return this.today;
-            } else {
-                return new Date(this.inputDate + " 12:00");
-            }
-        },
-        buscar() {
-            /* Ejecuta en cada búsqueda todos los métodos necesarios. 
-            Se ejecuta por v-on:change en el input  */
-            const fecha: Date = this.obtenerFecha();
-            const itinerario: string = this.itinerarioType(fecha);
-            //reinicio variables globales
-            if (this.tren !== "") {
-                this.turnos = [];
-                this.itFiltrado = [];
-                //si no se encuentra tren no continuo con la búsqueda
-                this.filtroTrenes(itinerario);
-                if (this.indFiltrado.length > 0) {
-                    this.filtroItinerario(itinerario);
-                    this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(fecha);
-                } else {
-                    this.filtrarPorTurno(itinerario);
-                    this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(fecha);
-                }
-            }
-        },
-        filtrarPorTurno(itinerario: string) {
-            this.indFiltrado = [];
-            this.turno.forEach((diag: ITurno) => {
-                if (
-                    diag.turno
-                        .toLowerCase()
-                        .includes(this.tren.toLowerCase()) &&
-                    diag.itinerario == itinerario &&
-                    this.circularSeleccionada.includes(diag.circular)
-                ) {
-                    this.indFiltrado.push(diag);
-                }
-            });
-        },
-        filtroTrenes(itinerario: string) {
+        filtroTrenes(
+            itinerario: string,
+            listaTurnos: ITurno[],
+            circularSeleccionada: string[],
+            tren: number
+        ) {
             /* Este método buscar y filtra en el array turno el tren que se desea buscar.
             guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
-            this.indFiltrado = [];
-            this.turno.forEach((diag: ITurno) => {
+            const turnosEnTren: ITurno[] = [];
+            listaTurnos.forEach((diag: ITurno) => {
                 for (let i = 0; i < diag.vueltas.length; i++) {
                     if (
-                        diag.vueltas[i].tren == parseInt(this.tren) &&
-                        diag.itinerario == itinerario &&
-                        this.circularSeleccionada.includes(diag.circular)
+                        diag.vueltas[i].tren === tren &&
+                        diag.itinerario === itinerario &&
+                        circularSeleccionada.includes(diag.circular)
                     ) {
-                        this.indFiltrado.push(diag);
+                        turnosEnTren.push(diag);
                     }
                 }
             });
-            // console.log(this.indFiltrado);
+            return turnosEnTren;
         },
-        filtroItinerario(itinerario: string) {
+        filtroItinerario(itinerario: string, listaItinerario: Itinerario[],tren: number) {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
             las guarda en el array itFiltrado  */
-            this.itFiltrado = this.itinerario.filter((horarios: Itinerario) => {
-                return (
-                    horarios.tren == parseInt(this.tren) &&
-                    horarios.itinerario == itinerario
-                );
-            });
+            const itFiltrados: Itinerario[] = listaItinerario.filter(
+                (it: Itinerario) => {
+                    return (
+                        it.tren == tren &&
+                        it.itinerario == itinerario
+                    );
+                }
+            );
+            let horarios: Itinerario = {
+                id: null,
+                tren: 0,
+                itinerario: "",
+                estaciones: [],
+                horarios: [],
+            };
             try {
-                if (this.itFiltrado[0].tren % 2 == 0) {
-                    this.itFiltrado[0].estaciones.reverse();
-                    this.itFiltrado[0].horarios.reverse();
+                if (itFiltrados !== undefined && itFiltrados.length === 1) {
+                    horarios = itFiltrados[0];
+                    if (horarios.tren % 2 == 0) {
+                        horarios.estaciones.reverse();
+                        horarios.horarios.reverse();
+                    }
+                    return horarios;
                 }
             } catch (e) {
                 console.error(e);
             }
+            return horarios;
         },
-        filtroTurno(itinerario: string) {
-            /* Este método es el encargado de buscar los turnos en cada búsqueda.
-            Primero limpia el array turnos y luego asigna todas las vueltas de cada turno*/
-            this.turnos = [];
-            this.indFiltrado.forEach((turno: ITurno) => {
-                this.turnos.push(
-                    this.turno.filter((ind: ITurno) => {
-                        return (
-                            ind.turno.includes(turno.turno) &&
-                            ind.itinerario == itinerario &&
-                            this.circularSeleccionada.includes(ind.circular)
-                        );
-                    })
-                );
-            });
-            if (this.turnos != undefined) {
-                const claveSet = new Set<string>();
-                const aux = this.turnos.map((turnos) => {
-                    const turnoFiltrado: ITurno[] = turnos.filter((turno) => {
-                        const clave = `${turno._id}`;
-                        if (!claveSet.has(clave)) {
-                            claveSet.add(clave);
-                            return true;
-                        }
-                        return false;
-                    });
-
-                    return turnoFiltrado;
-                });
-                this.turnos = aux;
-            }
-        },
-        buscarPersonalACargo(fecha: Date) {
-            /* Este método es el encargado de buscar y cambiar el nombre del personal en cada búsqueda. 
-            El método busca en el array turnos utilizando la función filtroPersonal, el resultado lo 
-            guarda en un nuevo array llamado list para luego buscar y modificar el nombre del personal en 
-            el array indFiltrado y posterior en el mismo array turnos. */
-            const list = [];
-
+        buscarPersonalACargo(fecha: Date, turnosAImprimir: ITurno[], personales: IPersonal[]) {
             try {
-                //   busco el personal titular
-                list.push(
-                    this.turnos.map((turno: ITurno[]) => {
-                        return this.filtroPersonal(turno[0].turno, fecha);
-                    })
-                );
-                list[0].forEach((personal) => {
+                
+                turnosAImprimir.forEach((turno: ITurno) => {
+                    const personal = this.filtroPersonal(turno.turno, fecha, personales);
+                    
                     this.novedades.forEach((novedad) => {
-                        //si tiene novedad cargada y vigente se cambia por el remplazo si tiene sino sin cubrir
+                        if (novedad.legajo === personal.legajo &&
+                            (novedad.HNA || new Date(novedad.fechaAlta) >= this.today)) {
 
-                        if (
-                            novedad.legajo === personal.legajo &&
-                            (novedad.HNA ||
-                                new Date(novedad.fechaAlta) >= this.today)
-                        ) {
-                            if (
-                                novedad.remplazo !== undefined &&
-                                novedad.remplazo.length > 0
-                            ) {
-                                const fecha =
-                                    this.inputDate == ""
-                                        ? new Date()
-                                        : new Date(this.inputDate);
-
-                                const remplazo = novedad.remplazo.filter(
-                                    (remp) => {
-                                        return (
-                                            new Date(remp.inicioRelevo) <=
-                                                fecha &&
-                                            (new Date(remp.finRelevo) >=
-                                                fecha ||
-                                                remp.finRelevo == undefined)
-                                        );
-                                    }
-                                );
-                                if (remplazo.length > 0) {
-                                    personal.legajo = remplazo[0].legajo;
-                                    personal.nombres =
-                                        remplazo[0].apellido +
-                                        " " +
-                                        remplazo[0].nombres;
-                                } else {
-                                    //si el personal asignado no es para la fecha
-                                    personal.nombres = "Sin Cubrir";
-                                }
-                            } else {
-                                //si no hay personal asignado
-                                personal.nombres = "Sin Cubrir";
-                            }
+                            personal.nombres = this.obtenerNombreConReemplazo(novedad, fecha);
                         }
-
-                        //asigno personal al array indFiltrado
-                        this.indFiltrado.forEach((vuelta: ITurno) => {
-                            if (vuelta.turno.trim() === personal.turno) {
-                                vuelta.personal = personal.nombres;
-                            }
-                        });
                     });
+
+                    // Asignar personal al array turnosAImprimir
+                    if (personal.nombres !== undefined){
+                        turno.personal = personal.nombres;
+                    }
                 });
             } catch (e) {
                 console.error(e);
+            }
+        },
+        obtenerNombreConReemplazo(novedad: Novedad, fecha: Date): string {
+            if (novedad.remplazo && novedad.remplazo.length > 0) {
+                const fechaActual = this.inputDate ? new Date(this.inputDate) : new Date();
+                const remplazo = novedad.remplazo.find(remp =>
+                    new Date(remp.inicioRelevo) <= fecha &&
+                    (new Date(remp.finRelevo) >= fechaActual || remp.finRelevo === undefined)
+                );
+
+                if (remplazo) {
+                    return `${remplazo.apellido} ${remplazo.nombres}`;
+                } else {
+                    return "Sin Cubrir";
+                }
+            } else {
+                return "Sin Cubrir";
+            }
+        },
+        filtroPersonal(turno: string, fecha: Date, personales: IPersonal[]) {
+            try {
+                let titular: IPersonal;
+                let filtrados: IPersonal[];
+                turno = turno.trim();
+
+                if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("PROG".toLowerCase())) {
+                    const indexPunto = turno.indexOf(".");
+                    const diaLab = Number(turno[indexPunto + 1]);
+                    const diag = turno.split(".")[0];
+                    const franco = this.dia_laboral(diaLab, fecha.getDay());
+
+                    filtrados = personales.filter((personal) => {
+                        return personal.turno === diag && Number(personal.franco) === franco;
+                    });
+                } else {
+                    filtrados = personales.filter(
+                        (personal) => personal.turno.toLowerCase() === turno.toLowerCase()
+                    );
+                }
+                titular = filtrados[0];
+                return {
+                    turno: turno,
+                    legajo: titular?.legajo || 0,
+                    nombres: titular ? `${titular.apellido} ${titular.nombres}` : "",
+                };
+            } catch (e) {
+                console.error(e);
+                return {};
             }
         },
         dia_laboral(diaLaboral: number, hoy: number) {
@@ -480,43 +439,33 @@ export default defineComponent({
             ];
             return diagrama[diaLaboral][hoy]; //:franco
         },
-        filtroPersonal(turno: string, fecha: Date) {
-            /* Recibe por parámetro un turno ej:405.5 en caso que sea un diagrama de 7 días
-            o 428 en caso de unipersonal. Según el caso separa por el punto el turno de la jornada pos franco
-            y devuelve un objeto con las llaves:turno y nombres  */
-
-            try {
-                let titular = [];
-                turno = turno.trim();
-
+        filtrarPorTurno(itinerario: string,listaTurnos:ITurno[],circularSeleccionada:string[],tren:string ) {
+            let turnos: ITurno[] = []
+            listaTurnos.forEach((diag: ITurno) => {
                 if (
-                    turno.indexOf(".") != -1 &&
-                    !turno.toLowerCase().includes("PROG".toLowerCase())
+                    diag.turno
+                        .toLowerCase()
+                        .includes(tren.toLowerCase()) &&
+                    diag.itinerario == itinerario &&
+                    circularSeleccionada.includes(diag.circular)
                 ) {
-                    const indexPunto = turno.indexOf(".");
-                    const diaLab = Number(turno[indexPunto + 1]);
-                    const diag = turno.split(".")[0];
-                    const franco = this.dia_laboral(diaLab, fecha.getDay());
-                    titular = this.personales.filter((p) => {
-                        return p.turno == diag && Number(p.franco) == franco;
-                    });
-                } else {
-                    titular = this.personales.filter(
-                        (p) => p.turno.toLowerCase() == turno.toLowerCase()
-                    );
+                    turnos.push(diag);
                 }
-                return {
-                    turno: turno,
-                    legajo: titular[0].legajo,
-                    nombres: titular[0].apellido + " " + titular[0].nombres,
-                };
-            } catch (e) {
-                console.error(e);
-                return {};
-            }
+            });
+            return turnos;
         },
-        changeDate() {
-            this.today = new Date(this.inputDate + " 12:00");
+        obtenerTiposCirculares(turnos: ITurno[]) {
+            // Filtramos aquellos turnos que tengan definida la propiedad "circular"
+            const turnosFiltrados = turnos.filter(
+                (turno) => turno.circular !== undefined
+            );
+
+            // Usamos Set para obtener valores únicos de la propiedad "circular"
+            const circularesUnicas = [
+                ...new Set(turnosFiltrados.map((turno) => turno.circular)),
+            ];
+
+            return circularesUnicas;
         },
     },
     mounted() {

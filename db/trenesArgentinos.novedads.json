@@ -1,420 +1,1218 @@
 [{
-  "_id": 1,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
-  "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": null,
-  "HNA": true,
-  "detalle": "algo",
-  "remplazo": [
-    null
-  ],
-  "__v": 0
-},
-{
   "_id": 2,
-  "legajo": 3484,
-  "apellido": "Ortellado",
-  "nombres": "Alberto ,Antonio",
-  "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": null,
-  "HNA": true,
-  "detalle": "detalle 1",
+  "legajo": 4111,
+  "apellido": "Contreras",
+  "nombres": "Javier ,Sebastian",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-07",
+  "fechaAlta": "2024-01-26",
+  "HNA": false,
+  "detalle": "",
   "remplazo": [],
-  "__v": 0
+  "createdAt": {
+    "$date": "2023-12-21T00:51:16.163Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:17:40.305Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Sábado",
+  "turno": "718"
 },
 {
   "_id": 3,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
-  "base": "PC",
-  "tipoNovedad": "Arrollamiento 558",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": null,
-  "HNA": true,
-  "remplazo": [],
-  "__v": 0
+  "legajo": 7895,
+  "apellido": "Gomez",
+  "nombres": "Pablo ,David",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 18013,
+      "apellido": "Rota",
+      "nombres": "Jonathan ,Matias ,Eric",
+      "base": "LLV",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 03",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-02-03"
+    }
+  ],
+  "createdAt": {
+    "$date": "2023-12-21T16:13:00.090Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-09T17:40:35.806Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Domingo",
+  "turno": "702",
+  "detalle": "ok"
 },
 {
   "_id": 4,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
-  "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": null,
-  "HNA": true,
-  "remplazo": [],
-  "__v": 0
+  "legajo": 4992,
+  "apellido": "Robledo",
+  "nombres": "Hector ,Omar",
+  "base": "LLV",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "detalle": "ok",
+  "remplazo": [
+    {
+      "legajo": 20889,
+      "apellido": "Macclymont",
+      "nombres": "Eduardo ,Daniel",
+      "base": "LLV",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 02",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-02-03"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-09T17:41:53.435Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-11T04:26:18.517Z"
+  },
+  "__v": 0,
+  "especialidad": "Guardatren electrico",
+  "franco": "Domingo",
+  "turno": "716"
 },
 {
   "_id": 5,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
-  "base": "PC",
-  "tipoNovedad": "Estudio",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": "",
-  "HNA": true,
-  "detalle": "ddd",
-  "remplazo": [],
+  "legajo": 13072,
+  "apellido": "Flamini",
+  "nombres": "Braian ,Alex",
+  "base": "K5",
+  "especialidad": "Conductor electrico",
+  "turno": "PROGRAMA 04CK5",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "detalle": "tarjeta",
+  "remplazo": [
+    {
+      "legajo": 13070,
+      "apellido": "Felix",
+      "nombres": "Franco ,Dario",
+      "base": "K5",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 03",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2024-01-01",
+      "finRelevo": "2024-01-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-15T23:35:16.580Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-15T23:35:16.580Z"
+  },
   "__v": 0
 },
 {
   "_id": 6,
-  "legajo": 2677,
-  "apellido": "Cabrera",
-  "nombres": "Gabriel ,Oscar",
-  "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": "",
-  "HNA": true,
-  "detalle": "detalle 2",
+  "legajo": 7944,
+  "apellido": "Diaz",
+  "nombres": "Pablo ,Ezequiel",
+  "base": "K5",
+  "especialidad": "Conductor electrico",
+  "turno": "PROGRAMA 06CK5",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-15",
+  "fechaAlta": "2024-02-04",
+  "HNA": false,
+  "detalle": "Tarjeta",
   "remplazo": [
     {
-      "legajo": 5919,
-      "apellido": "Barrios",
-      "nombres": "Fernando ,Nicolas",
-      "base": "PC",
+      "legajo": 14212,
+      "apellido": "Canga",
+      "nombres": "Eduardo ,Hernan",
+      "base": "K5",
       "especialidad": "Conductor electrico",
-      "turno": "408",
+      "turno": "Ciclo 02",
       "franco": "Domingo",
       "HNA": false,
-      "inicioRelevo": "2023-06-29"
+      "inicioRelevo": "2024-01-15",
+      "finRelevo": "2024-01-31"
     }
   ],
+  "createdAt": {
+    "$date": "2024-01-15T23:37:19.768Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-15T23:37:19.768Z"
+  },
   "__v": 0
 },
 {
   "_id": 7,
-  "legajo": 2677,
-  "apellido": "Cabrera",
-  "nombres": "Gabriel ,Oscar",
+  "legajo": 5112,
+  "apellido": "Costas",
+  "nombres": "Luis ,Edgardo",
   "base": "PC",
-  "tipoNovedad": "Licencia Gremial",
-  "fechaBaja": "2023-06-10",
-  "fechaAlta": "",
-  "HNA": true,
+  "especialidad": "Conductor electrico",
+  "turno": "431",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2023-12-27",
+  "fechaAlta": "2024-01-16",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 7941,
-      "apellido": "Damico",
-      "nombres": "Fabricio ,Martin",
+      "legajo": 20176,
+      "apellido": "Branford",
+      "nombres": "Sebastian ,Federico",
       "base": "PC",
-      "especialidad": "Conductor electrico",
-      "turno": "Ciclo 24",
-      "franco": "Viernes",
+      "especialidad": "Ayudante habilitado",
+      "turno": "Ciclo 09",
+      "franco": "Lunes",
       "HNA": false,
-      "inicioRelevo": "2023-06-30",
-      "finRelevo": ""
+      "inicioRelevo": "2023-12-27",
+      "finRelevo": "2024-01-16"
     }
   ],
-  "__v": 0,
-  "especialidad": "Conductor electrico",
-  "franco": "Domingo",
-  "turno": "429"
+  "createdAt": {
+    "$date": "2024-01-15T23:52:25.359Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-15T23:56:14.808Z"
+  },
+  "__v": 0
 },
 {
   "_id": 8,
-  "legajo": 9028,
-  "apellido": "Quevedo",
-  "nombres": "Francisco ,Rene",
+  "legajo": 7961,
+  "apellido": "Latrille",
+  "nombres": "Claudio ,Matias",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-22",
-  "fechaAlta": "",
-  "HNA": true,
-  "remplazo": [],
+  "especialidad": "Conductor electrico",
+  "turno": "407",
+  "franco": "Sábado",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2023-12-31",
+  "fechaAlta": "2024-01-20",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 16768,
+      "apellido": "Ciancio",
+      "nombres": "Gianfranco",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 05",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2024-01-04",
+      "finRelevo": "2024-01-20"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-15T23:58:14.306Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-15T23:58:14.306Z"
+  },
   "__v": 0
 },
 {
   "_id": 9,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
+  "legajo": 14705,
+  "apellido": "Galvan",
+  "nombres": "David ,Emanuel",
   "base": "PC",
-  "tipoNovedad": "Ordenamiento",
-  "fechaBaja": "2023-06-27",
-  "fechaAlta": null,
-  "HNA": true,
+  "especialidad": "Conductor electrico",
+  "turno": "403",
+  "franco": "Sábado",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 7995,
-      "apellido": "Suarez",
-      "nombres": "Edgardo ,Daniel",
+      "legajo": 16426,
+      "apellido": "Vozzi",
+      "nombres": "Luciano ,Ariel",
       "base": "PC",
       "especialidad": "Conductor electrico",
-      "turno": "403",
-      "franco": 0,
+      "turno": "Ciclo 16",
+      "franco": "Jueves",
       "HNA": false,
-      "inicioRelevo": "2023-06-27"
+      "inicioRelevo": "2024-01-07",
+      "finRelevo": "2024-01-21"
     }
   ],
-  "__v": 0,
-  "especialidad": "Conductor electrico",
-  "franco": "Sábado",
-  "turno": "464"
+  "createdAt": {
+    "$date": "2024-01-15T23:59:32.803Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-15T23:59:32.803Z"
+  },
+  "__v": 0
 },
 {
   "_id": 10,
-  "legajo": 492,
-  "apellido": "Mulhall",
-  "nombres": "Mirko ,Eduardo",
+  "legajo": 7984,
+  "apellido": "Pinto",
+  "nombres": "Santiago ,Javier",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-29",
-  "fechaAlta": "",
-  "HNA": true,
+  "especialidad": "Conductor electrico",
+  "turno": "408",
+  "franco": "Sábado",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-13",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 492,
-      "apellido": "Mulhall",
-      "nombres": "Mirko ,Eduardo",
+      "legajo": 16774,
+      "apellido": "Grispo",
+      "nombres": "Federico ,Nicolas",
       "base": "PC",
       "especialidad": "Conductor electrico",
-      "turno": "464",
+      "turno": "Ciclo 01",
       "franco": "Sábado",
       "HNA": false,
-      "inicioRelevo": "2023-06-29"
-    },
-    {
-      "legajo": 492,
-      "apellido": "Mulhall",
-      "nombres": "Mirko ,Eduardo",
-      "base": "PC",
-      "especialidad": "Conductor electrico",
-      "turno": "464",
-      "franco": "Sábado",
-      "HNA": false,
-      "inicioRelevo": "2023-07-01"
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-01-13"
     }
   ],
-  "__v": 0,
-  "especialidad": "Conductor electrico",
-  "franco": "Sábado",
-  "turno": "464"
+  "createdAt": {
+    "$date": "2024-01-16T00:00:56.400Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:00:56.400Z"
+  },
+  "__v": 0
 },
 {
   "_id": 11,
-  "legajo": 3484,
-  "apellido": "Ortellado",
-  "nombres": "Alberto ,Antonio",
+  "legajo": 16769,
+  "apellido": "Costas",
+  "nombres": "Sebastian ,Maximiliano",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-06-30",
-  "fechaAlta": "",
-  "HNA": true,
+  "especialidad": "Conductor electrico",
+  "turno": "Ciclo 18",
+  "franco": "Viernes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 492,
-      "apellido": "Mulhall",
-      "nombres": "Mirko ,Eduardo",
+      "legajo": 16774,
+      "apellido": "Grispo",
+      "nombres": "Federico ,Nicolas",
       "base": "PC",
       "especialidad": "Conductor electrico",
-      "turno": "464",
+      "turno": "Ciclo 01",
       "franco": "Sábado",
       "HNA": false,
-      "inicioRelevo": "2023-06-30"
-    },
-    {
-      "legajo": 3484,
-      "apellido": "Ortellado",
-      "nombres": "Alberto ,Antonio",
-      "base": "PC",
-      "especialidad": "Conductor electrico",
-      "turno": "463",
-      "franco": "Domingo",
-      "HNA": false,
-      "inicioRelevo": "2023-07-01"
+      "inicioRelevo": "2024-01-15",
+      "finRelevo": "2024-01-21"
     }
   ],
+  "createdAt": {
+    "$date": "2024-01-16T00:02:31.081Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:02:31.081Z"
+  },
   "__v": 0
 },
 {
   "_id": 12,
-  "legajo": 14213,
-  "apellido": "Castellano",
-  "nombres": "Marcos ,Ezequiel",
-  "base": "CÑ",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-07-19",
-  "fechaAlta": "",
-  "HNA": true,
+  "legajo": 20184,
+  "apellido": "Cuello Bustos",
+  "nombres": "Samuel",
+  "base": "LP/PC",
+  "especialidad": "Ayudante habilitado",
+  "turno": "401",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-09",
+  "fechaAlta": "2024-01-22",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 14576,
-      "apellido": "Galvan",
-      "nombres": "Jonathan ,Matias",
-      "base": "CÑ",
-      "especialidad": "Conductor diesel",
+      "legajo": 20183,
+      "apellido": "Collado",
+      "nombres": "Gonzalo ,Emanuel",
+      "base": "C�/PC",
+      "especialidad": "Ayudante habilitado",
       "turno": "Ciclo 03",
-      "franco": "Domingo",
+      "franco": "Sábado",
       "HNA": false,
-      "inicioRelevo": "2023-07-19"
+      "inicioRelevo": "2024-01-09",
+      "finRelevo": "2024-01-22"
     }
   ],
   "createdAt": {
-    "$date": "2023-07-19T15:52:04.870Z"
+    "$date": "2024-01-16T00:04:55.348Z"
   },
   "updatedAt": {
-    "$date": "2023-07-19T15:52:31.903Z"
+    "$date": "2024-01-16T00:04:55.348Z"
   },
   "__v": 0
 },
 {
   "_id": 13,
-  "legajo": 15948,
+  "legajo": 15949,
   "apellido": "Pessacg",
-  "nombres": "Alejandro ,Nicolas",
+  "nombres": "Marcos ,Damian",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-08-23",
-  "fechaAlta": "",
-  "HNA": true,
-  "remplazo": [
-    {
-      "legajo": 7945,
-      "apellido": "Dimcheff",
-      "nombres": "German ,Andres",
-      "base": "PC",
-      "especialidad": "Conductor electrico",
-      "turno": "Ciclo 18",
-      "franco": "Miércoles",
-      "HNA": false,
-      "inicioRelevo": "2023-08-23"
-    }
-  ],
+  "especialidad": "Conductor electrico",
+  "turno": "Ciclo 07",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-09",
+  "fechaAlta": "2024-01-22",
+  "HNA": false,
+  "remplazo": [],
   "createdAt": {
-    "$date": "2023-08-23T10:09:12.205Z"
+    "$date": "2024-01-16T00:06:13.606Z"
   },
   "updatedAt": {
-    "$date": "2023-08-23T10:09:12.205Z"
+    "$date": "2024-01-16T00:06:13.606Z"
   },
   "__v": 0
 },
 {
   "_id": 14,
-  "legajo": 20640,
-  "apellido": "Lozano",
-  "nombres": "Nazareno ,Jesus",
-  "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-08-17",
-  "fechaAlta": "",
-  "HNA": true,
+  "legajo": 20170,
+  "apellido": "Azpillaga",
+  "nombres": "Nicolas ,Catriel",
+  "base": "RE/PC",
+  "especialidad": "Ayudante habilitado",
+  "turno": "402",
+  "franco": "Viernes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-13",
+  "fechaAlta": "2024-01-26",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 11468,
-      "apellido": "Vaca",
-      "nombres": "Estela ,Maria",
-      "base": "PC",
-      "especialidad": "Guardatren electrico",
-      "turno": "Ciclo 06",
-      "franco": "Sábado",
+      "legajo": 20206,
+      "apellido": "Martinez",
+      "nombres": "Emiliano ,Ruben",
+      "base": "RE/PC",
+      "especialidad": "Ayudante habilitado",
+      "turno": "Ciclo 11",
+      "franco": "Lunes",
       "HNA": false,
-      "inicioRelevo": "2023-08-17",
-      "finRelevo": "2023-08-21"
+      "inicioRelevo": "2024-01-13",
+      "finRelevo": "2024-01-26"
     }
   ],
   "createdAt": {
-    "$date": "2023-08-23T11:52:42.219Z"
+    "$date": "2024-01-16T00:07:44.430Z"
   },
   "updatedAt": {
-    "$date": "2023-08-23T13:18:13.787Z"
+    "$date": "2024-01-16T00:07:44.430Z"
   },
-  "__v": 0,
-  "especialidad": "Guardatren electrico",
-  "franco": "Lunes",
-  "turno": "605"
+  "__v": 0
 },
 {
   "_id": 15,
-  "legajo": 15930,
-  "apellido": "Espinosa",
-  "nombres": "Franco ,Emanuel",
+  "legajo": 14750,
+  "apellido": "Saulino",
+  "nombres": "Raul ,Ezequiel",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-08-20",
+  "especialidad": "Conductor electrico",
+  "turno": "402",
+  "franco": "Sábado",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-07",
   "fechaAlta": "",
   "HNA": true,
   "remplazo": [
     {
-      "legajo": 7962,
-      "apellido": "Latrille",
-      "nombres": "Damian ,Emmanuel",
+      "legajo": 16403,
+      "apellido": "Dantola",
+      "nombres": "Ariel ,Alejandro",
       "base": "PC",
       "especialidad": "Conductor electrico",
-      "turno": "Ciclo 13",
-      "franco": "Martes",
+      "turno": "Ciclo 17",
+      "franco": "Jueves",
       "HNA": false,
-      "inicioRelevo": "2023-08-21",
-      "finRelevo": "2023-08-23"
+      "inicioRelevo": "2024-01-08"
     }
   ],
   "createdAt": {
-    "$date": "2023-08-24T09:54:16.464Z"
+    "$date": "2024-01-16T00:08:34.809Z"
   },
   "updatedAt": {
-    "$date": "2023-08-24T10:05:32.921Z"
+    "$date": "2024-01-16T00:08:34.809Z"
   },
   "__v": 0
 },
 {
   "_id": 16,
-  "legajo": 11468,
-  "apellido": "Vaca",
-  "nombres": "Estela ,Maria",
+  "legajo": 11408,
+  "apellido": "Belen",
+  "nombres": "Braulio ,Maximiliano",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-08-24",
-  "fechaAlta": "",
-  "HNA": true,
-  "remplazo": [],
+  "especialidad": "Conductor electrico",
+  "turno": "407",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-28",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 16420,
+      "apellido": "Pavon",
+      "nombres": "Christian ,Neyen",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 19",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-08",
+      "finRelevo": "2024-01-28"
+    }
+  ],
   "createdAt": {
-    "$date": "2023-08-24T12:54:47.643Z"
+    "$date": "2024-01-16T00:09:36.063Z"
   },
   "updatedAt": {
-    "$date": "2023-08-24T12:54:47.643Z"
+    "$date": "2024-01-16T00:09:36.063Z"
   },
   "__v": 0
 },
 {
   "_id": 17,
-  "legajo": 3753,
-  "apellido": "Alonso",
-  "nombres": "Eduardo ,Higinio",
+  "legajo": 7979,
+  "apellido": "Pavon",
+  "nombres": "Diego ,Gaston",
   "base": "PC",
-  "tipoNovedad": "Enfermedad",
-  "fechaBaja": "2023-09-27",
-  "fechaAlta": "",
-  "HNA": true,
+  "especialidad": "Conductor electrico",
+  "turno": "449",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-15",
+  "fechaAlta": "2024-01-29",
+  "HNA": false,
   "remplazo": [
     {
-      "legajo": 7945,
-      "apellido": "Dimcheff",
-      "nombres": "German ,Andres",
+      "legajo": 15948,
+      "apellido": "Pessacg",
+      "nombres": "Alejandro ,Nicolas",
       "base": "PC",
       "especialidad": "Conductor electrico",
-      "turno": "Ciclo 18",
-      "franco": "Miércoles",
+      "turno": "Ciclo 06",
+      "franco": "Domingo",
       "HNA": false,
-      "inicioRelevo": "2023-09-27"
+      "inicioRelevo": "2024-01-15",
+      "finRelevo": "2024-01-29"
     }
   ],
   "createdAt": {
-    "$date": "2023-09-27T14:13:24.389Z"
+    "$date": "2024-01-16T00:10:28.135Z"
   },
   "updatedAt": {
-    "$date": "2023-09-27T14:13:24.389Z"
+    "$date": "2024-01-16T00:10:28.135Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 18,
+  "legajo": 3599,
+  "apellido": "Stornello",
+  "nombres": "Cristian ,Gabriel",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "422",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-28",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 20200,
+      "apellido": "Ledesma",
+      "nombres": "Brian ,Abraham",
+      "base": "LP/PC",
+      "especialidad": "Ayudante habilitado",
+      "turno": "Ciclo 08",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2024-01-16",
+      "finRelevo": "2024-01-28"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-16T00:12:29.804Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:12:29.804Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 19,
+  "legajo": 3813,
+  "apellido": "Fauda",
+  "nombres": "Juan ,Carlos",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "650",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 12217,
+      "apellido": "Cano",
+      "nombres": "Liliana ,Soledad",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 22",
+      "franco": "Martes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-13",
+      "finRelevo": "2024-01-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-16T00:15:51.041Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:15:51.041Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 20,
+  "legajo": 5140,
+  "apellido": "Pereyra",
+  "nombres": "Raul ,Fabian",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "639",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 11226,
+      "apellido": "Ramirez",
+      "nombres": "Matias ,David",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 34",
+      "franco": "Jueves",
+      "HNA": false,
+      "inicioRelevo": "2024-01-12",
+      "finRelevo": "2024-01-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-16T00:17:18.467Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:17:18.467Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 21,
+  "legajo": 1165,
+  "apellido": "Martinez",
+  "nombres": "Felipe ,Manuel",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "672",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 19006,
+      "apellido": "Revel",
+      "nombres": "Romina ,Gimena",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 23",
+      "franco": "Martes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-01",
+      "finRelevo": "2024-01-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-16T00:18:14.023Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:18:14.023Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 22,
+  "legajo": 9228,
+  "apellido": "Olguin",
+  "nombres": "Daniela ,Florencia",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "Ciclo 05",
+  "franco": "Viernes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-16T00:19:33.785Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:19:33.785Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 23,
+  "legajo": 4196,
+  "apellido": "Montenegro",
+  "nombres": "Dardo ,Humberto",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "PROGRAMA 02GPC",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-01",
+  "fechaAlta": "2024-01-21",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 5968,
+      "apellido": "Diez",
+      "nombres": "Mario ,Luis",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 08",
+      "franco": "Sábado",
+      "HNA": false,
+      "inicioRelevo": "2024-01-01",
+      "finRelevo": "2024-01-21"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-16T00:20:26.015Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-16T00:20:26.015Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 24,
+  "legajo": 13135,
+  "apellido": "Rodriguez",
+  "nombres": "Hugo ,Fernando",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "602",
+  "franco": "Viernes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-16",
+  "fechaAlta": "2024-01-19",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-17T00:31:52.781Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-17T00:31:52.781Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 25,
+  "legajo": 20218,
+  "apellido": "Perez",
+  "nombres": "Juan ,Pablo",
+  "base": "LP/PC",
+  "especialidad": "Ayudante habilitado",
+  "turno": "401",
+  "franco": "Martes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-10",
+  "fechaAlta": "2024-01-23",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-19T00:20:52.306Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-19T00:20:52.306Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 26,
+  "legajo": 5112,
+  "apellido": "Costas",
+  "nombres": "Luis ,Edgardo",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "431",
+  "franco": "Domingo",
+  "tipoNovedad": "Suspension",
+  "fechaBaja": "2024-01-19",
+  "fechaAlta": "2024-01-19",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 20176,
+      "apellido": "Branford",
+      "nombres": "Sebastian ,Federico",
+      "base": "PC",
+      "especialidad": "Ayudante habilitado",
+      "turno": "Ciclo 09",
+      "franco": "Lunes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-19",
+      "finRelevo": "2024-01-19"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-19T00:23:28.492Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-19T00:23:28.492Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 27,
+  "legajo": 19027,
+  "apellido": "Zayas",
+  "nombres": "Sergio ,Andres",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "603",
+  "franco": "Lunes",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2024-01-23",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T13:56:15.127Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T13:56:15.127Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 28,
+  "legajo": 12682,
+  "apellido": "Videla",
+  "nombres": "Gabriel ,Adrian",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "405",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-23",
+  "fechaAlta": "2024-02-12",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:02:32.956Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:02:32.956Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 29,
+  "legajo": 16767,
+  "apellido": "Benitez",
+  "nombres": "Ivan",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "402",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-21",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:03:30.678Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:03:30.678Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 30,
+  "legajo": 16586,
+  "apellido": "Salinas",
+  "nombres": "Juan ,Matias",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "401",
+  "franco": "Sábado",
+  "tipoNovedad": "Enfermedad",
+  "fechaBaja": "2024-01-23",
+  "fechaAlta": "",
+  "HNA": true,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:03:50.814Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:03:50.814Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 31,
+  "legajo": 11413,
+  "apellido": "Gauna",
+  "nombres": "Mario ,Leonardo",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "406",
+  "franco": "Viernes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-20",
+  "fechaAlta": "2024-02-09",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:05:55.240Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:05:55.240Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 32,
+  "legajo": 3521,
+  "apellido": "Sanjurjo",
+  "nombres": "Gustavo ,Adrian",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "426",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-22",
+  "fechaAlta": "2024-02-11",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 15949,
+      "apellido": "Pessacg",
+      "nombres": "Marcos ,Damian",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 07",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2024-01-22",
+      "finRelevo": "2024-02-11"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-23T14:06:47.422Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:06:47.422Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 33,
+  "legajo": 12650,
+  "apellido": "Casal",
+  "nombres": "Walter ,Matias",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "409",
+  "franco": "Sábado",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-21",
+  "fechaAlta": "2024-02-10",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 16768,
+      "apellido": "Ciancio",
+      "nombres": "Gianfranco",
+      "base": "PC",
+      "especialidad": "Conductor electrico",
+      "turno": "Ciclo 05",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2024-01-21",
+      "finRelevo": "2024-02-10"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-23T14:07:54.613Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:07:54.613Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 34,
+  "legajo": 14634,
+  "apellido": "Meza Pereira",
+  "nombres": "Arnaldo ,Andres",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "409",
+  "franco": "Jueves",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-19",
+  "fechaAlta": "2024-02-08",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:08:34.679Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:08:34.679Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 35,
+  "legajo": 4749,
+  "apellido": "Orquera",
+  "nombres": "Leopoldo ,Catalino",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "609",
+  "franco": "Miércoles",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-18",
+  "fechaAlta": "2024-02-07",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 9228,
+      "apellido": "Olguin",
+      "nombres": "Daniela ,Florencia",
+      "base": "PC",
+      "especialidad": "Guardatren electrico",
+      "turno": "Ciclo 05",
+      "franco": "Viernes",
+      "HNA": false,
+      "inicioRelevo": "2024-01-18",
+      "finRelevo": "2024-02-07"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-23T14:09:45.210Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:09:45.210Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 36,
+  "legajo": 12535,
+  "apellido": "Lopez",
+  "nombres": "Alfredo ,Maximiliano",
+  "base": "PC",
+  "especialidad": "Guardatren electrico",
+  "turno": "606",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-16",
+  "fechaAlta": "2024-02-05",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:11:02.986Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:11:02.986Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 37,
+  "legajo": 16767,
+  "apellido": "Benitez",
+  "nombres": "Ivan",
+  "base": "PC",
+  "especialidad": "Conductor electrico",
+  "turno": "402",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-21",
+  "fechaAlta": "2024-02-03",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:11:51.438Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:11:51.438Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 38,
+  "legajo": 6748,
+  "apellido": "Lopez",
+  "nombres": "Ariel ,Gerardo",
+  "base": "LLV",
+  "especialidad": "Conductor electrico",
+  "turno": "507",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-28",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:15:27.843Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:15:27.843Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 39,
+  "legajo": 9847,
+  "apellido": "Orosco",
+  "nombres": "Agustin ,Ruben",
+  "base": "LLV",
+  "especialidad": "Conductor electrico",
+  "turno": "506",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-22",
+  "fechaAlta": "2024-02-11",
+  "HNA": false,
+  "remplazo": [
+    {
+      "legajo": 19459,
+      "apellido": "Vistalli",
+      "nombres": "Leandro ,Ariel",
+      "base": "TY/LLV",
+      "especialidad": "Ayudante habilitado",
+      "turno": "Ciclo 26",
+      "franco": "Domingo",
+      "HNA": false,
+      "inicioRelevo": "2024-01-22",
+      "finRelevo": "2024-02-11"
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-01-23T14:17:04.321Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:17:04.321Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 40,
+  "legajo": 10238,
+  "apellido": "Acebal",
+  "nombres": "Ariel ,Esteban",
+  "base": "LLV",
+  "especialidad": "Conductor electrico",
+  "turno": "506",
+  "franco": "Lunes",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-23",
+  "fechaAlta": "2024-02-12",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:17:58.064Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:17:58.064Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 41,
+  "legajo": 7895,
+  "apellido": "Gomez",
+  "nombres": "Pablo ,David",
+  "base": "LLV",
+  "especialidad": "Guardatren electrico",
+  "turno": "702",
+  "franco": "Domingo",
+  "tipoNovedad": "Licencia Anual",
+  "fechaBaja": "2024-01-08",
+  "fechaAlta": "2024-01-28",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:20:37.313Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:20:37.313Z"
+  },
+  "__v": 0
+},
+{
+  "_id": 42,
+  "legajo": 3764,
+  "apellido": "Gomez",
+  "nombres": "Andres ,Alberto",
+  "base": "LLV",
+  "especialidad": "Conductor electrico",
+  "turno": "501",
+  "franco": "Domingo",
+  "tipoNovedad": "Rev. Medica",
+  "fechaBaja": "2024-01-22",
+  "fechaAlta": "2024-01-23",
+  "HNA": false,
+  "remplazo": [],
+  "createdAt": {
+    "$date": "2024-01-23T14:21:19.859Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-23T14:21:19.859Z"
   },
   "__v": 0
 }]
