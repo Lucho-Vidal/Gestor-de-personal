@@ -51,7 +51,7 @@
                                 type="checkbox"
                                 :value="circular"
                                 v-model="circularSeleccionada"
-                                v-on:change="buscar()"
+                                v-on:change="cambioCirculares()"
                             />
                             {{ circular }}
                             <!-- Mostrar el valor de la variable circular en el label -->
@@ -173,7 +173,7 @@ export default defineComponent({
             tren: "" as string,
             turno: [] as ITurno[],
             circulares: [] as string[],
-            circularSeleccionada: ["Dic23", "HD4155"] as string[],
+            circularSeleccionada: ["Dic23"] as string[],
             turnosAImprimir: [] as ITurno[] | null,
             itinerario: [] as Itinerario[],
             horarios: {} as Itinerario | null,
@@ -199,6 +199,8 @@ export default defineComponent({
             try {
                 const res = await getTurnos();
                 this.turno = res.data;
+                const circularSeleccionadaString = window.localStorage.getItem("circularSeleccionada");
+                this.circularSeleccionada = circularSeleccionadaString ? circularSeleccionadaString.split(",") : [];
                 this.circulares = this.obtenerTiposCirculares(this.turno);
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
@@ -467,6 +469,12 @@ export default defineComponent({
 
             return circularesUnicas;
         },
+        cambioCirculares(){
+
+            window.localStorage.setItem("circularSeleccionada", this.circularSeleccionada.join(","));
+
+            this.buscar()
+        }
     },
     mounted() {
         try {

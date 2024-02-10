@@ -132,7 +132,10 @@ export default defineComponent({
     },
     methods: {
         logOut() {
-            localStorage.clear();
+            //localStorage.clear();
+            localStorage.removeItem("username")
+            localStorage.removeItem("roles")
+            localStorage.removeItem("token")
             this.rolMayor = "";
             this.$router.push("/login");
         },
