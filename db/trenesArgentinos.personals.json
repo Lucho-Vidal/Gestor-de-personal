@@ -24271,4 +24271,52 @@
   "especialidad": "Guardatren electrico",
   "dotacion": "PC",
   "observaciones": ""
+},
+{
+  "_id": {
+    "$oid": "65c6417d8f2a37a896ee87e6"
+  },
+  "legajo": 3636,
+  "apellido": "Pedreyra",
+  "nombres": "Luis",
+  "turno": "648",
+  "franco": 0,
+  "especialidad": "GuardaTren electrico",
+  "dotacion": "PC",
+  "observaciones": "",
+  "orden": 0,
+  "conocimientos": {
+    "CML": false,
+    "CKD": false,
+    "RO": false,
+    "MPN": false,
+    "OL": false,
+    "LCI": false,
+    "ELEC": false
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65c641d58f2a37a896ee8807"
+  },
+  "legajo": 2677,
+  "apellido": "Cabrera",
+  "nombres": "Gabriel Oscar",
+  "turno": "428",
+  "franco": 0,
+  "especialidad": "Conductor electrico",
+  "dotacion": "PC",
+  "observaciones": "",
+  "orden": 0,
+  "conocimientos": {
+    "CML": false,
+    "CKD": false,
+    "RO": false,
+    "MPN": false,
+    "OL": false,
+    "LCI": false,
+    "ELEC": false
+  },
+  "__v": 0
 }]

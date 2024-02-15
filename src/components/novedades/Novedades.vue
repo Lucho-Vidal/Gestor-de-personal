@@ -15,7 +15,16 @@
             <details>
                 <summary>Filtros:</summary>
                 <div class="my-3">
-                    <h6>Filtrar por HNA:</h6>
+                    <input
+                        class="col-3 gap rounded"
+                        type="text"
+                        placeholder="Buscar por apellido y/o nombre"
+                        v-model="search"
+                        v-on:keyup="filtrar()"
+                    />
+                </div>
+                <div class="my-3">
+                    <h6>Filtrar por HNA / descubiertos:</h6>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
@@ -26,9 +35,6 @@
                         />
                         HNA
                     </label>
-                </div>
-                <div class="my-3">
-                    <h6>Filtrar descubiertos:</h6>
                     <label class="form-check-label mx-2">
                         <input
                             class="form-check-input"
@@ -38,6 +44,151 @@
                             @change="filtrar()"
                         />
                         Sin Cubrir
+                    </label>
+                </div>
+                <div class="my-3">
+                    <h6>Filtro por Especialidad:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Conductor electrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Conductor eléctrico
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Conductor diesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Conductor Diesel
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Ayudante habilitado"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Ayudante Habilitado
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Ayudante conductor"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Ayudante Conductor
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Guardatren electrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Guarda Tren Electrico
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Guardatren diesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Guarda Tren Diesel
+                    </label>
+                </div>
+                <div class="my-3">
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="PC"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        PC
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LLV"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        LLV
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="TY"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        TY
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LP"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        LP
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="K5"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        K5
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="RE"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        RE
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="CÑ"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        CÑ
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="AK"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        AK
                     </label>
                 </div>
             </details>
@@ -72,7 +223,7 @@
                     @dblclick="edit(novedad._id)"
                     @click="viewDetail(novedad)"
                 >
-                    <tr class="Small shadow">
+                    <tr v-if="!novedad.novedadInactiva" class="Small shadow">
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
@@ -117,6 +268,9 @@
                                 class="fa-solid fa-trash-can"
                                 @click="deleteNovedad(novedad._id, index)"
                             ></i>
+                            <!-- <i type="button" class="delete" @click="deleteNovedad(novedad._id, index)" >
+                                    <span aria-hidden="true">&times;</span>
+                            </i>  -->
                         </td>
                     </tr>
                     <tr v-if="novedad.viewDetail">
@@ -172,8 +326,8 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad } from "../../interfaces/INovedades";
-import { getNovedades, deleteNovedad } from "../../services/novedadesService";
+import { Novedad } from '../../interfaces/INovedades';
+import { getNovedades, updateNovedad } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 
@@ -182,10 +336,13 @@ export default defineComponent({
         return {
             novedades: [] as Novedad[],
             novedadesFiltradas: [] as Novedad[],
+            checkboxDotacion: [] as string[],
             checkboxHna: false,
+            checkboxEspecialidad: [] as string[],
             checkboxDescubierto: false,
             username: "" as string,
             today: new Date(),
+            search:"" as string,
         };
     },
     methods: {
@@ -196,6 +353,24 @@ export default defineComponent({
                 this.filtrar();
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
+            }
+        },
+        async deleteNovedad(id:number,index:number){
+            try{
+                const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar esta novedad?");
+                if(confirmacion){
+                    try {
+                        this.novedades[index].novedadInactiva = true;
+                        //await deleteNovedad(id);
+                        // dejamos de hacer un borrado físico y empezamos a hacer un borrado lógico
+                        await updateNovedad(id,this.novedades[index])
+                        this.novedadesFiltradas.splice(index,1);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            } catch (error) {
+                    this.handleRequestError(error as AxiosError);
             }
         },
         handleRequestError(error: AxiosError) {
@@ -210,7 +385,7 @@ export default defineComponent({
             }
         },
         ordenarNovedades() {
-            this.novedadesFiltradas.sort((a, b) => (b._id > a._id ? 1 : -1));
+            this.novedadesFiltradas.sort((a, b) => b._id > a._id ? 1 : -1);
         },
         edit(id: number) {
             this.$router.push(`/editNovedades/${id}`);
@@ -244,9 +419,9 @@ export default defineComponent({
             está indexado como 0 y el Sábado como 6
             Al ingresarle por parámetros la cantidad de días del turno pos franco y
             el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            if (diaLaboral === -1) {
-                return "S/F";
-            } else {
+            if(diaLaboral === -1){
+                return "S/F"
+            }else{
                 const diagrama = [
                     [0, 1, 2, 3, 4, 5, 6],
                     [6, 0, 1, 2, 3, 4, 5],
@@ -259,56 +434,57 @@ export default defineComponent({
                 return diagrama[diaLaboral][hoy]; //:franco
             }
         },
-        async deleteNovedad(id: number, index: number) {
-            try{
-            const confirmacion = window.confirm(
-                "¿Estás seguro de que deseas eliminar esta novedad?"
-            );
-            if (confirmacion) {
-                await deleteNovedad(id);
-                this.novedadesFiltradas.splice(index, 1);
-            }
-            }catch(error){
-                this.handleRequestError(error as AxiosError)
-            }
-        },
         filtrar() {
-            if (this.checkboxHna && this.checkboxDescubierto) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return (
-                            (novedad.HNA && novedad.remplazo.length == 0) ||
-                            novedad.remplazo[novedad.remplazo.length - 1]
-                                .finRelevo
-                        );
-                    }
-                );
-            } else if (this.checkboxDescubierto) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return novedad.remplazo.length == 0;
-                    }
-                );
-            } else if (this.checkboxHna) {
-                this.novedadesFiltradas = this.novedades.filter(
-                    (novedad: Novedad) => {
-                        return novedad.HNA;
-                    }
-                );
-            } else {
-                this.novedadesFiltradas = this.novedades;
+            let cDotacion = ["PC", "LLV", "TY", "LP", "K5", "RE", "CÑ", "AK"];
+            let cEspecialidad = [
+                    "Conductor electrico",
+                    "Conductor diesel",
+                    "Ayudante habilitado",
+                    "Guardatren diesel",
+                    "Ayudante conductor",
+                    "Guardatren electrico",
+                ];
+            let filtrarNovedades = false;
+            let novedadesFiltradas : Novedad[]= this.novedades;
+            
+            if (this.search.length !== 0) {
+                filtrarNovedades = true;
             }
-            this.ordenarNovedades();
+            if (this.checkboxDotacion.length > 0) {
+                cDotacion = this.checkboxDotacion;
+                filtrarNovedades = true;
+            }
+            if (this.checkboxEspecialidad.length > 0 ) {
+                cEspecialidad = this.checkboxEspecialidad;
+                filtrarNovedades = true;
+            }
+            if (this.checkboxHna) {
+                novedadesFiltradas = novedadesFiltradas.filter((novedad:Novedad)=> novedad.HNA);
+            }
+            if (this.checkboxDescubierto) {
+                novedadesFiltradas = novedadesFiltradas.filter((novedad:Novedad)=> novedad.remplazo.length === 0);
+            }
+
+            if(filtrarNovedades){
+                novedadesFiltradas =  novedadesFiltradas.filter((novedad:Novedad)=>{
+                    return cDotacion.includes(novedad.base) &&
+                    cEspecialidad.includes(novedad.especialidad) &&
+                    (novedad.apellido.toLowerCase()+" "+ novedad.nombres.toLowerCase().trim()).includes(this.search.toLowerCase().trim())
+                });
+            }
+            this.novedadesFiltradas = novedadesFiltradas;
+            this.ordenarNovedades()
         },
     },
     created() {
-        try {
+        try{
             this.loadNovedades();
             newToken();
             this.username = localStorage.getItem("username") || "";
-        } catch (error) {
+        }catch (error) {
             console.error(error);
         }
+        
     },
     name: "App",
     components: {

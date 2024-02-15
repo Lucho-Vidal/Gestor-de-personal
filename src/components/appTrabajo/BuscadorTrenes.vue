@@ -360,9 +360,9 @@ export default defineComponent({
                 turnosAImprimir.forEach((turno: ITurno) => {
                     const personal = this.filtroPersonal(turno.turno, fecha, personales);
                     
-                    this.novedades.forEach((novedad) => {
+                    this.novedades.forEach((novedad :Novedad) => {
                         if (novedad.legajo === personal.legajo &&
-                            (novedad.HNA || new Date(novedad.fechaAlta) >= this.today)) {
+                            (novedad.HNA || new Date(novedad.fechaAlta) >= this.today && novedad.novedadInactiva)) {
 
                             personal.nombres = this.obtenerNombreConReemplazo(novedad, fecha);
                         }

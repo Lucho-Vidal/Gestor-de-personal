@@ -9,104 +9,67 @@
                 <hr />
                 {{ alerta }}
             </div>
-            <button
-                type="button"
-                class="btn btn-success"
-                data-bs-toggle="modal"
-                data-bs-target="#modalBuscar"
-            >
-                Buscar Personal
-            </button>
+            <!-- Modal de búsqueda -->
 
-            <div
-                class="modal fade"
-                id="modalBuscar"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-            >
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                Buscar Personal
-                            </h5>
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div class="modal-body">
-                            <input
+            <div>
+                <button class="btn btn-success" @click="abrirModal(false)">Buscar Personal</button>
+
+                <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Buscar personales </h5>
+                                <button type="button" class="close" @click="cerrarModal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input
+                                ref="inputSearch"
                                 type="text"
                                 class="form-control my-3"
                                 placeholder="Ingrese Nombre o Apellido"
                                 list="personales"
+                                
                                 v-model="search"
                                 autofocus
                                 @keyup="searchPersonal(false)"
-                            />
-                            <table class="table table-hover" v-if="search">
-                                <thead>
-                                    <tr>
-                                        <th>Legajo</th>
-                                        <th>Apellido</th>
-                                        <th>Nombre</th>
-                                        <th>Dotacion</th>
-                                        <th>Turno</th>
-                                        <th>Franco</th>
-                                        <th>Especialidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(
-                                            personal, index
-                                        ) in personalEncontrado"
-                                        :key="index"
-                                        @click="selectPersonal(personal)"
-                                    >
-                                        <td class="col-1">
-                                            {{ personal.legajo }}
-                                        </td>
-                                        <td class="col-1">
-                                            {{ personal.apellido }}
-                                        </td>
-                                        <td class="col-2">
-                                            {{ personal.nombres }}
-                                        </td>
-                                        <td class="col-1">
-                                            {{ personal.dotacion }}
-                                        </td>
-                                        <td class="col-1">
-                                            {{ personal.turno }}
-                                        </td>
-                                        <td class="col-1">
-                                            {{ personal.franco }}
-                                        </td>
-                                        <td class="col-1">
-                                            {{ personal.especialidad }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                            >
-                                Close
-                            </button>
+                                />
+
+                                <div class="table-container">
+                                    <table class="table table-hover" v-if="search">
+                                        <thead>
+                                            <tr>
+                                                <th>Legajo</th>
+                                                <th>Apellido</th>
+                                                <th>Nombre</th>
+                                                <th>Dotacion</th>
+                                                <th>Turno</th>
+                                                <th>Franco</th>
+                                                <th>Especialidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(personal, index) in personalEncontrado" :key="index" @click="selectPersonal(personal)">
+                                                <td class="col-1">{{ personal.legajo }}</td>
+                                                <td class="col-1">{{ personal.apellido }}</td>
+                                                <td class="col-2">{{ personal.nombres }}</td>
+                                                <td class="col-1">{{ personal.dotacion }}</td>
+                                                <td class="col-1">{{ personal.turno }}</td>
+                                                <td class="col-1">{{ days[personal.franco] }}</td>
+                                                <td class="col-1">{{ personal.especialidad }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Formulario -->
 
-            <form @submit.prevent="handleUpdateNovedad()" class="row">
+            <form @submit.prevent="updateNovedad()" class="row">
                 <div class="row">
                     <div class="col-2">
                         <label for="legajo"></label>
@@ -203,7 +166,7 @@
                             class="form-control mb-3"
                             v-model="novedad.tipoNovedad"
                         >
-                            <option value="Ordenamiento">Ordenamiento</option>
+                            
                             <option value="Estudio">Estudio</option>
                             <option value="Enfermedad">Enfermedad</option>
                             <option value="ART">ART</option>
@@ -281,101 +244,9 @@
                         ></textarea>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    class="btn btn-success col-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalRemplazo"
-                >
-                    Buscar Remplazo por Apellido    
-                </button>
-
-                <div
-                    class="modal fade"
-                    id="modalRemplazo"
-                    tabindex="-1"
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true"
-                >
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                    Buscar Personal
-                                </h5>
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"
-                                ></button>
-                            </div>
-                            <div class="modal-body">
-                                <input
-                                    type="text"
-                                    class="form-control my-3"
-                                    placeholder="Ingrese algo"
-                                    v-model="search"
-                                    autofocus
-                                    @keyup="searchPersonal(true)"
-                                />
-                                <table class="table table-hover" v-if="search">
-                                    <thead>
-                                        <tr>
-                                            <th>Legajo</th>
-                                            <th>Apellido</th>
-                                            <th>Nombre</th>
-                                            <th>Dotación</th>
-                                            <th>Turno</th>
-                                            <th>Franco</th>
-                                            <th>Especialidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(
-                                                personal, index
-                                            ) in personalEncontrado"
-                                            :key="index"
-                                            @click="selectRemplazo(personal)"
-                                        >
-                                            <td class="col-1">
-                                                {{ personal.legajo }}
-                                            </td>
-                                            <td class="col-1">
-                                                {{ personal.apellido }}
-                                            </td>
-                                            <td class="col-2">
-                                                {{ personal.nombres }}
-                                            </td>
-                                            <td class="col-1">
-                                                {{ personal.dotacion }}
-                                            </td>
-                                            <td class="col-1">
-                                                {{ personal.turno }}
-                                            </td>
-                                            <td class="col-1">
-                                                {{ days[personal.franco] }}
-                                            </td>
-                                            <td class="col-1">
-                                                {{ personal.especialidad }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer">
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Llamada Modal búsqueda -->
+                <a class="btn btn-success col-2" @click="abrirModal(true)">Buscar Remplazo </a>
+                <!-- Tabla remplazo -->
                 <table>
                     <thead>
                         <tr>
@@ -450,7 +321,7 @@
                 </table>
 
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i class="btn btn-secondary col-1 m-2" @click="cerrar()"
+                <i class="btn btn-secondary col-1 m-2" @click="$router.push('/novedades')"
                     >Cerrar</i
                 >
             </form>
@@ -464,8 +335,8 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad, Remplazo } from "../../interfaces/INovedades";
-import { getNovedad, updateNovedad } from "../../services/novedadesService";
+import { Novedad } from "../../interfaces/INovedades";
+import { getNovedad, getNovedades, updateNovedad } from "../../services/novedadesService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
 import { newToken } from "../../services/signService";
@@ -473,6 +344,7 @@ import { newToken } from "../../services/signService";
 export default defineComponent({
     data() {
         return {
+            novedades: [] as Novedad[],
             novedad: {} as Novedad,
             personales: [] as IPersonal[],
             today: new Date(),
@@ -486,8 +358,11 @@ export default defineComponent({
                 "Sábado",
             ],
             search: "" as string,
+            selectRemplazo: false,
             personalEncontrado: [] as IPersonal[],
             alerta: "" as string,
+            mostrarModalSearch: false,
+            idNovedad: 0,
         };
     },
     methods: {
@@ -500,6 +375,10 @@ export default defineComponent({
                 console.error(error);
             }
         },
+        async loadNovedades() {
+            const res = await getNovedades();
+            this.novedades = res.data;
+        },
         /* Este método trae la lista de todos los personales.
         DADO QUE EL TIEMPO DE ESTA CONSULTA ES SUPERIOR AL DE LA NOVEDAD. Tuve que llamar a la función 
         searchPersonalPorLegajo desde selectPersonal*/
@@ -509,105 +388,95 @@ export default defineComponent({
             this.searchPersonalPorLegajo();
         },
         /* Este método actualiza los cambios en el formulario */
-        async handleUpdateNovedad() {
+        async updateNovedad() {
             try {
-                if (typeof this.$route.params.id === "string") {
-                    if (this.novedad.HNA) {
-                        this.novedad.fechaAlta = "";
-                    }
-                    if (
-                        this.novedad.remplazo !== undefined &&
-                        this.novedad.remplazo.length > 0
-                    ) {
-                        if (
-                            new Date(this.novedad.fechaBaja) >
-                            new Date(this.novedad.remplazo[0].inicioRelevo)
-                        ) {
-                            alert(
-                                "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad"
-                            );
-                            return;
-                        }
-                        if (
-                            new Date(this.novedad.fechaAlta) <
-                            new Date(this.novedad.remplazo[0].finRelevo)
-                        ) {
-                            alert(
-                                "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad"
-                            );
-                            return;
-                        }
-                        if (this.novedad.remplazo.length > 1) {
-                            console.log();
-                            for (
-                                let i = 0;
-                                i < this.novedad.remplazo.length - 1;
-                                i++
-                            ) {
-                                if (!this.novedad.remplazo[i].finRelevo) {
-                                    alert(
-                                        "No puede haber mas de un relevo sin fecha de finalización "
-                                    );
-                                    return;
-                                }
-                                if (
-                                    new Date(
-                                        this.novedad.remplazo[i].finRelevo
-                                    ) >=
-                                    new Date(
-                                        this.novedad.remplazo[
-                                            i + 1
-                                        ].inicioRelevo
-                                    )
-                                ) {
-                                    alert(
-                                        "Un turno no puede ser relevado por dos personas el mismo dia"
-                                    );
-                                    return;
-                                }
-                            }
-                        }
-                        if (
-                            !this.novedad.HNA &&
-                            (this.novedad.remplazo[
-                                this.novedad.remplazo.length - 1
-                            ].finRelevo == undefined ||
-                                this.novedad.remplazo[
-                                    this.novedad.remplazo.length - 1
-                                ].finRelevo == "")
-                        ) {
-                            //si la novedad no es HNA y la ultima novedad no tiene fecha de fin, le asigna la fecha de alta a el fin del ultimo remplazo
-                            this.novedad.remplazo[
-                                this.novedad.remplazo.length - 1
-                            ].finRelevo = this.novedad.fechaAlta;
-                        }
-                    }
-                    if (this.alerta) {
-                        if (this.alerta.includes("ATENCIÓN")) {
-                            this.$router.push({ name: "Novedades" });
-                        } else if (this.alerta.includes("finalice el relevo")) {
-                            this.alerta =
-                                " ATENCIÓN!!! NO ES POSIBLE CARGAR ESTA NOVEDAD!      " +
-                                this.alerta;
-                        }
+                // Validaciones
+                if (!this.validateFechaBaja() || !this.validateFechaAlta() || !this.validateRelevoOverlap() || !this.validateFechaAltaYBaja()) {
+                    return;
+                }
 
-                        return;
-                    }
-                    if (this.novedad.remplazo !== undefined) {
-                    this.novedad.remplazo.forEach((remp, index: number) => {
-                        if (remp.apellido === "") {
-                            this.novedad.remplazo.splice(index, 1);
-                        }
-                    });
+                this.validateFechaRemplazo();
+
+                // Filtrar elementos vacíos en el array de remplazo
+                if (this.novedad.remplazo) {
+                    this.novedad.remplazo = this.novedad.remplazo.filter((remp) => remp.apellido !== "");
                 }
-                    await updateNovedad(parseInt(this.$route.params.id), this.novedad);
-                    this.$router.push(`/novedades`);
-                }
+
+                // Crear la novedad
+                await updateNovedad(this.novedad._id, this.novedad);
+                // Redireccionar
+                this.$router.push(`/novedades`);
+                
             } catch (error) {
                 console.error(error);
             }
         },
+        
+        // Validaciones:
+        esFechaMayor(dateMayor:string, dateMenor:string) {
+        if(dateMayor!==''&& dateMenor!==''){
+            const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+            const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+            return formattedDateMayor > formattedDateMenor
+        }else{
+            return true;
+        }
+        },
+        esFechaMayorIgual(dateMayor:string, dateMenor:string) {
+        if(dateMayor!==''&& dateMenor!==''){
+            const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+            const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+            return formattedDateMayor >= formattedDateMenor;
+        }else{
+            return true;
+        }
+        },
+        validateFechaBaja(){
+            if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.remplazo?.[0].inicioRelevo)) {
+                this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                return false;
+            }
+            return true;
+        },
+        validateFechaAltaYBaja(){
+            if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.fechaAlta)) {
+                this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                return false;
+            }
+            return true;
+        },
+        validateFechaAlta(){
+            if (this.esFechaMayor(this.novedad.remplazo?.[this.novedad.remplazo.length - 1]?.finRelevo || "", this.novedad.fechaAlta)) {
+                this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
+                return false;
+            }
+            return true;
+        },
+        validateRelevoOverlap(){
+            if (this.novedad.remplazo?.length > 1) {
+                for (let i = 0; i < this.novedad.remplazo.length - 1; i++) {
+                    if (!this.novedad.remplazo[i].finRelevo) {
+                        this.alerta = "No puede haber más de un relevo sin fecha de finalización";
+                        return false;
+                    }
+
+                    if (this.esFechaMayor(this.novedad.remplazo[i].finRelevo, this.novedad.remplazo[i + 1].inicioRelevo)) {
+                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día";
+                        return false;
+                    }
+                }
+            }
+            return true;
+        },
+        validateFechaRemplazo(){
+            if (!this.novedad.HNA && !(this.novedad.remplazo?.[this.novedad.remplazo.length - 1]?.finRelevo)) {
+                this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo = this.novedad.fechaAlta;
+            }
+        },
+
+        // Funcionamiento del Formulario
         agregarRemplazo() {
+            // Este método agrega un elemento nuevo a la lista remplazo
             if (this.novedad.remplazo !== undefined) {
                 this.novedad.remplazo.push({
                     legajo: 0,
@@ -638,39 +507,39 @@ export default defineComponent({
                 ];
             }
         },
-        cerrar() {
-            this.$router.push({ name: "Novedades" });
-        },
-        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y 
-        llama a el método de búsqueda por legajo */
         selectPersonal(personal: IPersonal) {
-            this.novedad.legajo = personal.legajo;
+            /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y 
+            llama a el método de búsqueda por legajo */
+            if(this.selectRemplazo){
+                this.agregarRemplazo()
+                this.novedad.remplazo[this.novedad.remplazo.length -1].legajo = personal.legajo;
+                this.asignarRelevoPorLegajo(personal.legajo,this.novedad.remplazo.length -1)
+            }else{
+                this.novedad.legajo = personal.legajo;
+            }
+            
+            this.search = '';
+            this.cerrarModal()
             this.searchPersonalPorLegajo();
         },
-        /* Este método al igual que el anterior al desplegar el modal y hacer click asigna el personal
-         pero esta vez a la lista de remplazo */
-        selectRemplazo(personal: IPersonal) {
-            const remplazo = {
-                legajo: personal.legajo,
-                apellido: personal.apellido,
-                nombres: personal.nombres,
-                base: personal.dotacion,
-                inicioRelevo: this.today.toISOString().split("T")[0],
-                especialidad: personal.especialidad,
-                turno: personal.turno,
-                franco: this.days[personal.franco],
-                HNA: false,
-            } as Remplazo;
-
-            if (this.novedad.remplazo === undefined) {
-                this.novedad.remplazo = [remplazo];
-            } else {
-                this.novedad.remplazo.push(remplazo);
-            }
+        abrirModal(selectRemplazo:boolean) {
+            // Con este método abro el modal poniendo el focus en el input de búsqueda y asigno valor booleano 
+            // a la variable selectRemplazo la cual hace de bypass entre buscar personal de la novedad o al remplazo
+            this.mostrarModalSearch = true;
+            this.$nextTick(() => {
+                if (this.$refs.inputSearch) {
+                (this.$refs.inputSearch as HTMLInputElement).focus();
+                }
+            });
+            this.selectRemplazo = selectRemplazo;
         },
-        /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
-        nombre y apellido el personal */
+        cerrarModal() {
+            this.mostrarModalSearch = false;
+            this.search = '';
+        },
         searchPersonal(soloCiclo: boolean) {
+            /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
+            nombre y apellido el personal */
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     if (!soloCiclo) {
@@ -701,8 +570,8 @@ export default defineComponent({
                 }
             );
         },
-        /*  realiza la búsqueda por el legajo introducido en el respectivo input */
         searchPersonalPorLegajo() {
+            /*  realiza la búsqueda por el legajo introducido en el respectivo input */
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == Number(this.novedad.legajo);
@@ -721,6 +590,7 @@ export default defineComponent({
             }
         },
         asignarRelevoPorLegajo(legajo: number, index: number) {
+            // al haber un cambio en el formulario remplazo.legajo se agregan el resto de los datos 
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == legajo;
@@ -752,6 +622,7 @@ export default defineComponent({
             if (typeof this.$route.params.id === "string") {
                 this.loadNovedad(parseInt(this.$route.params.id));
             }
+            this.loadNovedades();
             newToken();
         } catch (error) {
             console.error(error);
@@ -767,6 +638,51 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 87vh;
+    min-height: 82vh;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+    
+    width: 80%;
+    --bs-modal-width: 1200px !important;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-height: 90vh;
+    border-radius: 10px;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.scroll-div {
+    overflow-y: scroll;
+    max-height: 800px; /* Ajusta según tus necesidades */
+}
+.table-container {
+  max-height: 600px; /* Ajusta según tus necesidades */
+  overflow-y: auto;
+  background-color: #fff; /* Estilo de fondo para el contenedor de la tabla */
+  border-radius: 15px; /* Ajusta según tus necesidades */
+}
+.table-container table {
+  width: 100%; /* Hacer que la tabla ocupe el 100% del contenedor */
+}
+.custom-modal .modal-dialog {
+  max-width: 1200px; /* Ajusta el ancho máximo según tus necesidades */
+  margin: 0 auto; /* Centra modal-dialog */
 }
 </style>

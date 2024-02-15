@@ -23,6 +23,7 @@ const novedadSchema = new Schema({
     fechaAlta:String,
     HNA: Boolean,
     detalle: String,
+    novedadInactiva: Boolean,
     remplazo: [] 
 },{
     timestamps: true

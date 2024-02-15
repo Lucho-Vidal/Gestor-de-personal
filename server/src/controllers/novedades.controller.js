@@ -19,7 +19,6 @@ export const getUltimaNovedad = async (req, res) => {
         // Recupera la última novedad de la base de datos ordenada por _id en orden descendente
         //const ultimaNovedad = await Novedades.findOne().sort({ _id: -1 });
         const ultimaNovedad = await Novedades.find().sort({ $natural: -1 }).limit(1);
-        console.log("DEBUG------------"+ultimaNovedad);
         // Verifica si se encontró alguna novedad
         if (ultimaNovedad) {
             // Responde con la última novedad en formato JSON

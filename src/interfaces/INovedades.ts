@@ -13,6 +13,7 @@ export interface Novedad {
     HNA:boolean;
     detalle:string;
     viewDetail:boolean;
+    novedadInactiva: boolean;
     remplazo: Array<Remplazo>;
 }
 export interface Remplazo{

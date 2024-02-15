@@ -61,12 +61,6 @@ export const updateUser = async (req, res) => {
             existingUser.roles = foundRoles.map((role) => role._id);
         }
 
-        // Establecer una contraseña genérica si se actualiza por un administrador
-        // const isAdmin = roles && roles.some(role => role.name === 'admin');
-        // if (isAdmin) {
-        //     existingUser.password = await User.encryptPassword("Inicio1");
-        // }
-
         // Guardar los cambios
         await existingUser.save();
 
