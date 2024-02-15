@@ -6,6 +6,7 @@ export interface Registro {
     usuario: string;
     fecha: string;
     accion: string;
+    viewDetail?: boolean;
     turno?: ITurno;
     personal?: IPersonal;
     novedad?: Novedad;

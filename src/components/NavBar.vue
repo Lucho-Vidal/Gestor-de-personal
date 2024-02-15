@@ -96,6 +96,11 @@
                                 >Usuarios</router-link
                             >
                         </li>
+                        <li class="nav-item" v-if="rolMayor == 'admin'">
+                            <router-link class="nav-link" to="/registros"
+                                >Registros</router-link
+                            >
+                        </li>
                         <li class="nav-item" v-if="login">
                             <router-link
                                 class="btn btn-success mx-1"

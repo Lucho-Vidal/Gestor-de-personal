@@ -182,6 +182,14 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireAdmin(to, from, next));
         }
     },
+    {
+        path: "/registros",
+        name: "registros",
+        component: () => import("@/components/registros.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireAdmin(to, from, next));
+        }
+    },
 ];
 
 const router = createRouter({
