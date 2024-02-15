@@ -340,6 +340,9 @@ import { getNovedad, getNovedades, updateNovedad } from "../../services/novedade
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
 import { newToken } from "../../services/signService";
+import { createRegistro } from "../../services/registrosService";
+import { Registro } from "../../interfaces/IRegistro";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -404,11 +407,32 @@ export default defineComponent({
 
                 // Crear la novedad
                 await updateNovedad(this.novedad._id, this.novedad);
+
+                // guardamos registro
+                const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Edito",
+                            novedad : this.novedad,
+                        }
+                await createRegistro(registro);
+
                 // Redireccionar
                 this.$router.push(`/novedades`);
                 
             } catch (error) {
-                console.error(error);
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        handleRequestError(error: AxiosError) {
+            console.error("Error en la solicitud:", error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
         

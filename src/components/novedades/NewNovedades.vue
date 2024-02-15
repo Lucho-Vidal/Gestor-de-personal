@@ -353,6 +353,8 @@ import { getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { Registro } from "../../interfaces/IRegistro";
+import { createRegistro } from "../../services/registrosService";
 
 export default defineComponent({
     data() {
@@ -415,6 +417,15 @@ export default defineComponent({
 
                 // Crear la novedad
                 await createNovedad(this.newNovedad);
+                
+                // guardamos registro
+                const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Creo",
+                            novedad : this.newNovedad,
+                        }
+                await createRegistro(registro);
 
                 // Redireccionar
                 this.$router.push({ name: "Novedades" });

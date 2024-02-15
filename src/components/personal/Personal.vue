@@ -327,6 +327,8 @@ import { deletePersonal, getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { createRegistro } from "../../services/registrosService";
+import { Registro } from "../../interfaces/IRegistro";
 
 export default defineComponent({
     data() {
@@ -356,6 +358,28 @@ export default defineComponent({
                 const res = await getPersonales();
                 this.personales = res.data;
                 this.filtrarPersonales();
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        async deletePersonal(id: string, index: number) {
+            try {
+                const confirmacion = window.confirm(
+                    "¿Estás seguro de que deseas eliminar este Personal?"
+                );
+                if (confirmacion) {
+                    await deletePersonal(id);
+
+                    // guardamos registro
+                    const registro: Registro = {
+                                usuario : window.localStorage.getItem("username")||'',
+                                fecha : this.today.toString() ,
+                                accion: "Elimino",
+                                personal : this.personales[index],
+                            }
+                    await createRegistro(registro);
+                    this.personalesFiltrados.splice(index, 1);
+                }
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -499,20 +523,6 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        async deletePersonal(id: string, index: number) {
-            try {
-                const confirmacion = window.confirm(
-                    "¿Estás seguro de que deseas eliminar este Personal?"
-                );
-                if (confirmacion) {
-                    await deletePersonal(id);
-                    this.personalesFiltrados.splice(index, 1);
-                }
-            } catch (error) {
-                this.handleRequestError(error as AxiosError);
-            }
-        },
-
         edit(id: string) {
             this.$router.push(`/editPersonal/${id}`);
         },

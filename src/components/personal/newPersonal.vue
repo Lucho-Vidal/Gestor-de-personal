@@ -248,6 +248,9 @@ import FooterPage from "../FooterPage.vue";
 import { getPersonales, createPersonal } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
+import { Registro } from "../../interfaces/IRegistro";
+import { createRegistro } from "../../services/registrosService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -283,6 +286,7 @@ export default defineComponent({
                 "Sábado",
             ],
             alerta: "" as string,
+            today: new Date()
         };
     },
     methods: {
@@ -296,9 +300,30 @@ export default defineComponent({
                 }
                 console.log(this.newPersonal);
                 await createPersonal(this.newPersonal);
+
+                // guardamos registro
+                const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Creo",
+                            personal : this.newPersonal,
+                        }
+                await createRegistro(registro);
+
                 this.$router.push({ name: "Personal" });
             } catch (error) {
-                console.error(error);
+                this.handleRequestError(error as AxiosError)
+            }
+        },
+        handleRequestError(error: AxiosError) {
+            console.error("Error en la solicitud:", error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
         cerrar() {

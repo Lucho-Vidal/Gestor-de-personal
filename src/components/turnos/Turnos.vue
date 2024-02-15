@@ -154,6 +154,8 @@ import { ITurno } from '../../interfaces/ITurno';
 import { deleteTurno, getTurnos } from "../../services/turnosService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { createRegistro } from "../../services/registrosService";
+import { Registro } from "../../interfaces/IRegistro";
 
 export default defineComponent({
     data() {
@@ -162,7 +164,8 @@ export default defineComponent({
             turnos: [] as ITurno[],
             Filtradas: [] as ITurno[],
             username: '' as string,
-            itSeleccionado: ['H','S','D'] as string[]
+            itSeleccionado: ['H','S','D'] as string[],
+            today: new Date()
         };
     },
     methods: {
@@ -175,21 +178,21 @@ export default defineComponent({
                 this.handleRequestError(error  as AxiosError);
             }
         },
-        edit(id: string) {
-            this.$router.push(`/editTurno/${id}`);
-        },
-        viewDetail(turno: ITurno) {
-            if (turno.viewDetail) {
-                turno.viewDetail = false;
-            } else {
-                turno.viewDetail = true;
-            }
-        },
         async deleteTurno(id:string,index:number){
             try {
                 const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este turno?");
             if(confirmacion){
                 await deleteTurno(id);
+
+                // guardamos registro
+                const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Elimino",
+                            turno : this.turnos[index],
+                        }
+                await createRegistro(registro);
+                
                 this.Filtradas.splice(index,1);
             }
             } catch (error) {
@@ -208,6 +211,17 @@ export default defineComponent({
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
+        edit(id: string) {
+            this.$router.push(`/editTurno/${id}`);
+        },
+        viewDetail(turno: ITurno) {
+            if (turno.viewDetail) {
+                turno.viewDetail = false;
+            } else {
+                turno.viewDetail = true;
+            }
+        },
+        
         filtrar() {
             this.Filtradas = this.turnos.filter(t => {
                 return (

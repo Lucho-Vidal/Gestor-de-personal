@@ -330,6 +330,8 @@ import { Novedad } from '../../interfaces/INovedades';
 import { getNovedades, updateNovedad } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { createRegistro } from '../../services/registrosService';
+import { Registro } from '../../interfaces/IRegistro';
 
 export default defineComponent({
     data() {
@@ -363,7 +365,16 @@ export default defineComponent({
                         this.novedades[index].novedadInactiva = true;
                         //await deleteNovedad(id);
                         // dejamos de hacer un borrado físico y empezamos a hacer un borrado lógico
-                        await updateNovedad(id,this.novedades[index])
+                        await updateNovedad(id,this.novedades[index]);
+                        //se guarda registro
+                        const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Elimino",
+                            novedad : this.novedades[index],
+                        }
+                        await createRegistro(registro)
+                        // se quita de la lista impresa
                         this.novedadesFiltradas.splice(index,1);
                     } catch (error) {
                         console.error(error);

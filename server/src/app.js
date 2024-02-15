@@ -11,6 +11,7 @@ import novedades from "./routers/novedades.routes";
 import turno from "./routers/turno.routes";
 import authRoutes from "./routers/auth.routes";
 import usersRoutes from "./routers/user.routes";
+import registrosRoutes from "./routers/registro.routes";
 
 const app = express();
 createRoles();
@@ -37,6 +38,7 @@ app.use("/api", novedades);
 app.use("/api", turno);
 app.use("/api/auth", authRoutes);
 app.use("/api", usersRoutes);
+app.use("/api", registrosRoutes);
 
 app.use(express.static(path.join(__dirname,"..","..","dist")));
 

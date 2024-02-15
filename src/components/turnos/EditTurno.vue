@@ -201,6 +201,9 @@ import FooterPage from "../FooterPage.vue";
 import { ITurno } from "../../interfaces/ITurno";
 import { newToken } from "../../services/signService";
 import {  getTurno, updateTurno } from "../../services/turnosService";
+import { Registro } from "../../interfaces/IRegistro";
+import { createRegistro } from "../../services/registrosService";
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -228,7 +231,7 @@ export default defineComponent({
                     },
                 ],
             } as ITurno,
-
+            today: new Date(),
             alerta: "" as string,
         };
     },
@@ -239,15 +242,35 @@ export default defineComponent({
                 const { data } = await getTurno(id);
                 this.newTurno = data;
             } catch (error) {
-                console.error(error);
+                this.handleRequestError(error as AxiosError)
+
             }
         },
         async upTurno() {
             try {
                 await updateTurno(this.id,this.newTurno);
+                // guardamos registro
+                const registro: Registro = {
+                            usuario : window.localStorage.getItem("username")||'',
+                            fecha : this.today.toString() ,
+                            accion: "Edito",
+                            turno: this.newTurno,
+                        }
+                await createRegistro(registro);
                 this.$router.push({ name: "Turnos" });
             } catch (error) {
-                console.error(error);
+                this.handleRequestError(error as AxiosError)
+            }
+        },
+        handleRequestError(error: AxiosError) {
+            console.error('Error en la solicitud:', error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
         agregarVuelta() {
