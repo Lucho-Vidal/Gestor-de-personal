@@ -85,25 +85,6 @@
                             />
                         </label>
                     </div>
-                    <!-- <div>
-                        <label
-                            for="password"
-                            class="mb-3 text-start"
-                            style="width: 100%"
-                        >
-                            Password
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="password"
-                                class="form-control mb-3 text-center"
-                                v-model="user.password"
-                                autocomplete="off"
-                                disabled
-                                required
-                            />
-                        </label>
-                    </div> -->
                     <div class="col">
                         <label for="rol" class="text-start" style="width: 100%">
                             Rol

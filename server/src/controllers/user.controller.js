@@ -50,11 +50,18 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
+        if(roles.map(rol => rol.name) == 'admin'){
+            roles.push({name:"moderator"})
+            roles.push({name:"user"})
+        }else if (roles.map(rol => rol.name) == 'moderator'){
+            roles.push({name:"user"})
+        }
+
         // Actualizar los campos proporcionados
         existingUser.legajo = legajo || existingUser.legajo;
         existingUser.username = username || existingUser.username;
         existingUser.email = email || existingUser.email;
-
+        console.log("Roles",roles);
         if (roles && roles.length > 0) {
             // Solo actualiza los roles si se proporciona alguno
             const foundRoles = await Role.find({ name: { $in: roles.map(role => role.name) } });

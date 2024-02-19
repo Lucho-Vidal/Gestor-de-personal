@@ -96,7 +96,7 @@
                                 name="rol"
                                 id="rol"
                                 class="form-control mb-3 text-center"
-                                v-model="user.roles[user.roles.length - 1].name"
+                                v-model="user.roles[getUbicacionRolMayorYLimpiar()].name"
                             >
                                 <option value="user">Usuario</option>
                                 <option value="moderator">Supervisor</option>
@@ -193,6 +193,8 @@ export default defineComponent({
             try {
                 const res = await getUser(id);
                 this.user = res.data;
+                console.log(this.user.roles);
+                
             } catch (error) {
                 console.error(error);
             }
@@ -212,6 +214,7 @@ export default defineComponent({
                 }else{
                     message = "La edición se guardo con éxito. seras redirigido en un momento..."
                 }
+                
                 const res = await updateUser(this.id, this.user);
 
                 if (res.status === 200) {
@@ -220,16 +223,12 @@ export default defineComponent({
                         title: "ATENCIÓN!",
                         message:
                             "Hola " +
-                            localStorage.getItem("username") +
+                            localStorage.getItem("username") +' '+
                             message,
                     };
-                    /* this.user.legajo = 0;
-                    this.user.username = "";
-                    this.user.email = "";
-                    this.user.password = "";
-                    this.user.roles = [""]; */
+                
 
-                    setTimeout(() => this.$router.push("/users"), 5000);
+                    setTimeout(() => this.$router.push("/users"), 3000);
                 }
             } catch (error) {
                 this.message = {
@@ -246,16 +245,35 @@ export default defineComponent({
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },
-        getRolMayor(user: User): string {
-            const rol = user.roles[user.roles.length - 1].name;
-            return rol == "admin"
-                ? "Administrador"
-                : rol == "moderator"
-                ? "Supervisor"
-                : rol == "user"
-                ? "Usuario"
-                : "";
-        },
+        getUbicacionRolMayorYLimpiar():number{
+            let res = -1;
+            this.user.roles.forEach((rol,index)=>{
+                if (rol.name == 'admin'){
+                    this.user.roles = this.user.roles.filter(rol => rol.name == "admin")
+                    res = index
+                }
+            }) 
+            if (res >= 0) return res;
+            else {
+                this.user.roles.forEach((rol,index)=>{
+                if (rol.name == 'moderator'){
+                    this.user.roles = this.user.roles.filter(rol => rol.name == "moderator")
+                    res = index
+                }
+            }) 
+            }
+            if (res >= 0) return res;
+            else{
+                this.user.roles.forEach((rol,index)=>{
+                if (rol.name == 'user'){
+                    this.user.roles = this.user.roles.filter(rol => rol.name == "user")
+                    res = index
+                }
+            })
+            }
+            return res;
+        }
+
     },
     created() {
         if (typeof this.$route.params.id === "string") {

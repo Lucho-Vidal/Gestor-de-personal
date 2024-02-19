@@ -39,7 +39,7 @@
                         <td class="col-1">{{ user.legajo }}</td>
                         <td class="col-1">{{ user.username }}</td>
                         <td class="col-1">{{ user.email }}</td>
-                        <td class="col-2">{{ getRolMayor(user) }}</td>
+                        <td class="col-2">{{ getRolMayor(user.roles[getUbicacionRolMayor(user)].name) }}</td>
                         <td class="col-1">
                             <i
                                 class="fa-solid fa-pen-to-square"
@@ -82,8 +82,7 @@ export default defineComponent({
         edit(id: string) {
             this.$router.push(`/editUser/${id}`);
         },
-        getRolMayor(user:User):string {
-            const rol = user.roles[user.roles.length -1].name
+        getRolMayor(rol:string):string {
             return (rol == 'admin'? 'Administrador' : rol == 'moderator'? 'Supervisor': rol == 'user' ? 'Usuario' : '')
         },
         async eliminarUsuario(id:string,index:number){
@@ -93,7 +92,31 @@ export default defineComponent({
                 this.users.splice(index,1);
             }
         },
-        
+        getUbicacionRolMayor(user:User):number{
+            let res = -1;
+            user.roles.forEach((rol,index)=>{
+                if (rol.name == 'admin'){
+                    res = index
+                }
+            }) 
+            if (res >= 0) return res;
+            else {
+                user.roles.forEach((rol,index)=>{
+                if (rol.name == 'moderator'){
+                    res = index
+                }
+            }) 
+            }
+            if (res >= 0) return res;
+            else{
+                user.roles.forEach((rol,index)=>{
+                if (rol.name == 'user'){
+                    res = index
+                }
+            })
+            }
+            return res;
+        }
     },
     created() {
         this.loadUsers();

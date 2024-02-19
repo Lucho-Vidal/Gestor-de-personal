@@ -401,14 +401,18 @@ export default defineComponent({
         async saveNovedad() {
             /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
             try {
-                this.newNovedad._id = this.ultimoId + 1;
+                this.ultimoId++;
+                this.newNovedad._id = this.ultimoId;
                 
                 // Validaciones
-                if (!this.validateFechaBaja() || !this.validateFechaAlta() || !this.validateRelevoOverlap() || !this.validateFechaAltaYBaja()) {
+                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta()) {
+                    if(!this.alerta){
+                        this.alerta = "Ocurrió un problema con la validación. Contacte al administrador con capturas de pantalla del error."
+                    }
                     return;
                 }
 
-                this.validateFechaRemplazo();
+                this.terminaNovedadMismaFechaFinRelevo();
 
                 // Filtrar elementos vacíos en el array de remplazo
                 if (this.newNovedad.remplazo) {
@@ -439,7 +443,8 @@ export default defineComponent({
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
                 this.$router.push("/login");
-            } else {
+            } else if(error.response && error.response.status === 500){
+                this.alerta = "Ocurrió un error al intentar guardar la novedad. Es posible que se deba a que el numero de novedad ya existe. por favor intente de nuevo."
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
@@ -448,63 +453,85 @@ export default defineComponent({
 
         // Validaciones:
         esFechaMayor(dateMayor:string, dateMenor:string) {
-        if(dateMayor!==''&& dateMenor!==''){
+        if(dateMayor!== undefined && dateMenor!== undefined){            
             const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
             const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
             return formattedDateMayor > formattedDateMenor
         }else{
-            return true;
+            return false;
         }
         },
         esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-        if(dateMayor!==''&& dateMenor!==''){
+        if(dateMayor!== undefined && dateMenor!== undefined ){
             const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
             const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
             return formattedDateMayor >= formattedDateMenor;
         }else{
-            return true;
+            return false;
         }
         },
-        validateFechaBaja(){
-            if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.remplazo?.[0].inicioRelevo)) {
-                this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+        esInicioRelevoMayorIgualFechaBaja(){
+            if (this.newNovedad.remplazo !== undefined ){
+                if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.remplazo?.[0].inicioRelevo)) {
+                    this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
                 return false;
             }
-            return true;
         },
-        validateFechaAltaYBaja(){
-            if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.fechaAlta)) {
-                this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+        esFechaBajaMayorFechaAlta(){
+            if(this.newNovedad.fechaAlta !== undefined){
+                if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.fechaAlta)) {
+                    this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
                 return false;
             }
-            return true;
         },
-        validateFechaAlta(){
-            if (this.esFechaMayor(this.newNovedad.remplazo?.[this.newNovedad.remplazo.length - 1]?.finRelevo || "", this.newNovedad.fechaAlta)) {
+        esFinRelevoMayorFinNovedad(){
+            if(this.newNovedad.remplazo == undefined ){
+                return false;
+            }
+            if(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo == ""){
+                return false;
+            }
+
+            if (this.esFechaMayor(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo , this.newNovedad.fechaAlta)) {
                 this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
-                return false;
+                return true;
             }
-            return true;
         },
-        validateRelevoOverlap(){
-            if (this.newNovedad.remplazo?.length > 1) {
+        hayMasDeUnRelevo(){
+            if (this.newNovedad.remplazo !== undefined) {
+                let sinFechaFin = 0;
                 for (let i = 0; i < this.newNovedad.remplazo.length - 1; i++) {
                     if (!this.newNovedad.remplazo[i].finRelevo) {
-                        this.alerta = "No puede haber más de un relevo sin fecha de finalización";
-                        return false;
+                        sinFechaFin++;
                     }
-
+                    
                     if (this.esFechaMayor(this.newNovedad.remplazo[i].finRelevo, this.newNovedad.remplazo[i + 1].inicioRelevo)) {
-                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día";
-                        return false;
+                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día. Y los relevos deben están ordenados consecutivamente.";
+                        return true;
                     }
                 }
+                if (sinFechaFin > 1){
+                    this.alerta = "No puede haber más de un relevo sin fecha de finalización";
+                    return true;
+                }
             }
-            return true;
+            return false;
         },
-        validateFechaRemplazo(){
-            if (!this.newNovedad.HNA && !(this.newNovedad.remplazo?.[this.newNovedad.remplazo.length - 1]?.finRelevo)) {
-                this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo = this.newNovedad.fechaAlta;
+        terminaNovedadMismaFechaFinRelevo(){
+            if(this.newNovedad.remplazo !== undefined){
+                    if (!this.newNovedad.HNA && !(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo)) {
+                    this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo = this.newNovedad.fechaAlta;
+                }
             }
         },
         validaPersonalConNovedadActiva(personal: IPersonal) {
@@ -661,9 +688,9 @@ export default defineComponent({
                 this.newNovedad.turno = this.personalEncontrado[0].turno;
                 this.newNovedad.franco =
                     this.days[this.personalEncontrado[0].franco];
-                this.newNovedad.fechaBaja = this.today
+                /* this.newNovedad.fechaBaja = this.today
                     .toISOString()
-                    .split("T")[0];
+                    .split("T")[0]; */
             }
         },
         asignarRelevoPorLegajo(legajo: number, index: number) {
