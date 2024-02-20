@@ -12,7 +12,7 @@ router.get(
 
 router.post(
     "/registros",
-    [authJwt.verifyToken,authJwt.isAdmin],
+    [authJwt.verifyToken,authJwt.isModerator],
     registroCtrl.createRegistro
 )
 export default router;
