@@ -190,6 +190,14 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireAdmin(to, from, next));
         }
     },
+    {
+        path: "/sinCubrir",
+        name: "sinCubrir",
+        component: () => import("@/components/appTrabajo/lstCubrir.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(to, from, next));
+        }
+    },
 ];
 
 const router = createRouter({
