@@ -103,6 +103,11 @@ export default defineComponent({
         async loadRegistros() {
             const res = await getRegistros();
             this.registros = res.data;
+            this.ordenarRegistros();
+
+        },
+        ordenarRegistros() {
+            this.registros.sort((a, b) => b.fecha > a.fecha ? 1 : -1);
         },
         viewDetail(registro: Registro) {
             if (registro.viewDetail) {
