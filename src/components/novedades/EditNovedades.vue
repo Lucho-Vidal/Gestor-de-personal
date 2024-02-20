@@ -219,6 +219,7 @@
                             id="HNA"
                             checked
                             v-model="novedad.HNA"
+                            @click="borrarAlta(novedad.HNA)"
                         />
                         <label class="form-check-label" for="HNA">HNA</label>
                     </div>
@@ -335,7 +336,7 @@
 import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
-import { Novedad } from "../../interfaces/INovedades";
+import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import { getNovedad, getNovedades, updateNovedad } from "../../services/novedadesService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
@@ -393,12 +394,17 @@ export default defineComponent({
         /* Este método actualiza los cambios en el formulario */
         async updateNovedad() {
             try {
+                console.log(this.novedad);
+                
                 // Validaciones
-                if (!this.validateFechaBaja() || !this.validateFechaAlta() || !this.validateRelevoOverlap() || !this.validateFechaAltaYBaja()) {
+                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta()) {
+                    if(!this.alerta){
+                        this.alerta = "Ocurrió un problema con la validación. Contacte al administrador con capturas de pantalla del error."
+                    }
                     return;
                 }
 
-                this.validateFechaRemplazo();
+                this.terminaNovedadMismaFechaFinRelevo();
 
                 // Filtrar elementos vacíos en el array de remplazo
                 if (this.novedad.remplazo) {
@@ -438,63 +444,123 @@ export default defineComponent({
         
         // Validaciones:
         esFechaMayor(dateMayor:string, dateMenor:string) {
-        if(dateMayor!==''&& dateMenor!==''){
+        if(dateMayor!== undefined && dateMenor!== undefined){            
             const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
             const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
             return formattedDateMayor > formattedDateMenor
         }else{
-            return true;
+            return false;
         }
         },
         esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-        if(dateMayor!==''&& dateMenor!==''){
+        if(dateMayor!== undefined && dateMenor!== undefined ){
             const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
             const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
             return formattedDateMayor >= formattedDateMenor;
         }else{
-            return true;
+            return false;
         }
         },
-        validateFechaBaja(){
-            if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.remplazo?.[0].inicioRelevo)) {
-                this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+        esInicioRelevoMayorIgualFechaBaja(){
+            if (this.novedad.remplazo.length > 0  ){
+                if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.remplazo?.[0].inicioRelevo)) {
+                    this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
                 return false;
             }
-            return true;
         },
-        validateFechaAltaYBaja(){
-            if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.fechaAlta)) {
-                this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+        esFechaBajaMayorFechaAlta(){
+            if(this.novedad.fechaAlta !== undefined){
+                if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.fechaAlta)) {
+                    this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
                 return false;
             }
-            return true;
         },
-        validateFechaAlta(){
-            if (this.esFechaMayor(this.novedad.remplazo?.[this.novedad.remplazo.length - 1]?.finRelevo || "", this.novedad.fechaAlta)) {
+        esFinRelevoMayorFinNovedad(){
+            if(this.novedad.remplazo == undefined ||
+            this.novedad.remplazo.length === 0){
+                return false;
+            }
+            if(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo == ""){
+                return false;
+            }
+
+            if (this.esFechaMayor(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo , this.novedad.fechaAlta)) {
                 this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
-                return false;
+                return true;
             }
-            return true;
         },
-        validateRelevoOverlap(){
-            if (this.novedad.remplazo?.length > 1) {
+        hayMasDeUnRelevo(){
+            if (this.novedad.remplazo !== undefined) {
+                let sinFechaFin = 0;
                 for (let i = 0; i < this.novedad.remplazo.length - 1; i++) {
                     if (!this.novedad.remplazo[i].finRelevo) {
-                        this.alerta = "No puede haber más de un relevo sin fecha de finalización";
-                        return false;
+                        sinFechaFin++;
                     }
-
+                    
                     if (this.esFechaMayor(this.novedad.remplazo[i].finRelevo, this.novedad.remplazo[i + 1].inicioRelevo)) {
-                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día";
-                        return false;
+                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día. Y los relevos deben están ordenados consecutivamente.";
+                        return true;
+                    }
+                }
+                if (sinFechaFin > 1){
+                    this.alerta = "No puede haber más de un relevo sin fecha de finalización";
+                    return true;
+                }
+            }
+            return false;
+        },
+        terminaNovedadMismaFechaFinRelevo(){
+            if(this.novedad.remplazo !== undefined ){
+                if( this.novedad.remplazo.length > 0){
+                    if (!this.novedad.HNA && !(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo)) {
+                        this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo = this.novedad.fechaAlta;
                     }
                 }
             }
-            return true;
         },
-        validateFechaRemplazo(){
-            if (!this.novedad.HNA && !(this.novedad.remplazo?.[this.novedad.remplazo.length - 1]?.finRelevo)) {
-                this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo = this.novedad.fechaAlta;
+        validaPersonalConNovedadActiva(personal: IPersonal) {
+            let encontrado = false;
+            
+            for (const novedad of this.novedades) {
+                if (encontrado) {
+                    break; // Salir del bucle si ya se encontró un caso
+                }
+
+                if (personal.turno.includes("Ciclo")) {
+
+                    const tieneRelevoActivo = novedad.remplazo.some((remp: Remplazo) =>
+                        remp && (!remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo, this.today.toISOString())) && remp.legajo === personal.legajo
+                    );
+
+                    if (tieneRelevoActivo) {
+                        this.idNovedad = novedad._id;
+                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        encontrado = true;
+                    }
+                }
+
+                if (novedad.legajo === personal.legajo) {
+                    const estaDeBaja =
+                        !novedad.novedadInactiva &&
+                        ((novedad.HNA && this.esFechaMayorIgual(this.today.toString(), novedad.fechaBaja)) ||
+                            (this.esFechaMayorIgual(this.today.toString(), novedad.fechaBaja) && this.esFechaMayorIgual(novedad.fechaAlta, this.today.toString())));
+
+                    if (estaDeBaja) {
+                        this.idNovedad = novedad._id;
+                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        encontrado = true;
+                    }
+                }
             }
         },
 
@@ -561,6 +627,11 @@ export default defineComponent({
             this.mostrarModalSearch = false;
             this.search = '';
         },
+        borrarAlta(hna:boolean){
+            if (hna){
+                this.novedad.fechaAlta = '';
+            }
+        },
         searchPersonal(soloCiclo: boolean) {
             /* Este método funciona dentro del modal, al escribir dentro del input filtra por 
             nombre y apellido el personal */
@@ -573,7 +644,7 @@ export default defineComponent({
                             personal.nombres.toLowerCase()
                         ).includes(this.search.toLowerCase());
                     } else {
-                        //el remplazo debe ser personal de ciclo y de la misma base
+                        //el remplazo debe ser personal de ciclo y de la misma base y especialidad
                         return (
                             (
                                 personal.apellido.toLowerCase() +
@@ -621,6 +692,7 @@ export default defineComponent({
                 }
             );
             if (this.personalEncontrado[0]) {
+                this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
                 this.novedad.remplazo[index].apellido =
                     this.personalEncontrado[0].apellido;
                 this.novedad.remplazo[index].nombres =

@@ -162,7 +162,7 @@ import { Itinerario } from "../../interfaces/Itinerario";
 import { getItinerario } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
-import { Novedad } from "../../interfaces/INovedades";
+import { Novedad, Remplazo } from '../../interfaces/INovedades';
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
@@ -354,6 +354,24 @@ export default defineComponent({
             }
             return horarios;
         },
+        esFechaMayor(dateMayor:string, dateMenor:string) {
+            if(dateMayor!== undefined && dateMenor!== undefined){            
+                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+                return formattedDateMayor > formattedDateMenor
+            }else{
+                return false;
+            }
+        },
+        esFechaMayorIgual(dateMayor:string, dateMenor:string) {
+            if(dateMayor!== undefined && dateMenor!== undefined ){
+                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+                return formattedDateMayor >= formattedDateMenor;
+            }else{
+                return false;
+            }
+        },
         buscarPersonalACargo(fecha: Date, turnosAImprimir: ITurno[], personales: IPersonal[]) {
             try {
                 
@@ -361,10 +379,14 @@ export default defineComponent({
                     const personal = this.filtroPersonal(turno.turno, fecha, personales);
                     
                     this.novedades.forEach((novedad :Novedad) => {
-                        if (novedad.legajo === personal.legajo &&
-                            (novedad.HNA || new Date(novedad.fechaAlta) >= this.today && novedad.novedadInactiva)) {
-
-                            personal.nombres = this.obtenerNombreConReemplazo(novedad, fecha);
+                        const { legajo, fechaBaja, fechaAlta, HNA, novedadInactiva } = novedad;
+                        
+                        if (legajo === personal.legajo && !novedadInactiva &&
+                            (HNA && this.esFechaMayorIgual( this.today.toString(),fechaBaja) || 
+                            this.esFechaMayorIgual( this.today.toString(),fechaBaja) && 
+                            this.esFechaMayorIgual(fechaAlta, this.today.toString()))) {
+                                
+                            personal.nombres = this.obtenerNombreConReemplazo(novedad);
                         }
                     });
 
@@ -373,18 +395,16 @@ export default defineComponent({
                         turno.personal = personal.nombres;
                     }
                 });
-            } catch (e) {
-                console.error(e);
+            } catch (error) {
+                console.error("Error en buscarPersonalACargo:", error);
             }
         },
-        obtenerNombreConReemplazo(novedad: Novedad, fecha: Date): string {
+        obtenerNombreConReemplazo(novedad: Novedad): string {
             if (novedad.remplazo && novedad.remplazo.length > 0) {
-                const fechaActual = this.inputDate ? new Date(this.inputDate) : new Date();
-                const remplazo = novedad.remplazo.find(remp =>
-                    new Date(remp.inicioRelevo) <= fecha &&
-                    (new Date(remp.finRelevo) >= fechaActual || remp.finRelevo === undefined)
+                const remplazo = novedad.remplazo.find((remp:Remplazo) =>
+                    this.esFechaMayorIgual(this.inputDate,remp.inicioRelevo)  &&
+                    (remp.finRelevo === undefined || this.esFechaMayorIgual(remp.finRelevo,this.inputDate))
                 );
-
                 if (remplazo) {
                     return `${remplazo.apellido} ${remplazo.nombres}`;
                 } else {

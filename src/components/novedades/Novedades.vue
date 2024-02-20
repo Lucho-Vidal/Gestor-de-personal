@@ -249,11 +249,11 @@
                             }}
                         </td>
                         <td class="col-1">
-                            {{
+                            {{  
                                 !novedad.HNA
                                     ? new Date(
-                                          novedad.fechaAlta + " 12:00"
-                                      ).toLocaleDateString()
+                                            novedad.fechaAlta + " 12:00"
+                                        ).toLocaleDateString()
                                     : ""
                             }}
                         </td>
@@ -291,17 +291,15 @@
                                 <h6 class="col-1">Desde:</h6>
                                 <p class="col-1">
                                     {{
-                                        novedad.remplazo[
-                                            novedad.remplazo.length - 1
-                                        ].inicioRelevo
+                                        formatearFecha(novedad.remplazo[novedad.remplazo.length - 1].inicioRelevo)
                                     }}
                                 </p>
                                 <h6 class="col-1">Hasta:</h6>
                                 <p class="col-1">
                                     {{
-                                        novedad.remplazo[
+                                        formatearFecha(novedad.remplazo[
                                             novedad.remplazo.length - 1
-                                        ].finRelevo
+                                        ].finRelevo)
                                     }}
                                 </p>
                             </div>
@@ -394,6 +392,13 @@ export default defineComponent({
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
+        },
+        formatearFecha(fechaString: string): string {
+            const fecha:Date = new Date(fechaString);
+            const opcionesDeFormato: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const formatoFecha = new Intl.DateTimeFormat('es-AR', opcionesDeFormato);
+
+            return formatoFecha.format(fecha);
         },
         ordenarNovedades() {
             this.novedadesFiltradas.sort((a, b) => b._id > a._id ? 1 : -1);

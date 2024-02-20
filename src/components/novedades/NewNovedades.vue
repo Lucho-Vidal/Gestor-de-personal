@@ -405,9 +405,10 @@ export default defineComponent({
                 this.newNovedad._id = this.ultimoId;
                 
                 // Validaciones
-                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta()) {
-                    if(!this.alerta){
-                        this.alerta = "Ocurrió un problema con la validación. Contacte al administrador con capturas de pantalla del error."
+                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta() || this.alerta) {
+                    if(this.alerta){
+                        this.alerta = "Ocurrió un problema con la validación. Si el error persiste, Contacte al administrador con capturas de pantalla del error."
+                        this.idNovedad = 0;
                     }
                     return;
                 }
@@ -418,6 +419,8 @@ export default defineComponent({
                 if (this.newNovedad.remplazo) {
                     this.newNovedad.remplazo = this.newNovedad.remplazo.filter((remp) => remp.apellido !== "");
                 }
+
+                this.newNovedad.novedadInactiva = false;
 
                 // Crear la novedad
                 await createNovedad(this.newNovedad);
@@ -453,22 +456,22 @@ export default defineComponent({
 
         // Validaciones:
         esFechaMayor(dateMayor:string, dateMenor:string) {
-        if(dateMayor!== undefined && dateMenor!== undefined){            
-            const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
-            const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
-            return formattedDateMayor > formattedDateMenor
-        }else{
-            return false;
-        }
+            if(dateMayor!== undefined && dateMenor!== undefined){            
+                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+                return formattedDateMayor > formattedDateMenor
+            }else{
+                return false;
+            }
         },
         esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-        if(dateMayor!== undefined && dateMenor!== undefined ){
-            const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
-            const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
-            return formattedDateMayor >= formattedDateMenor;
-        }else{
-            return false;
-        }
+            if(dateMayor!== undefined && dateMenor!== undefined ){
+                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+                return formattedDateMayor >= formattedDateMenor;
+            }else{
+                return false;
+            }
         },
         esInicioRelevoMayorIgualFechaBaja(){
             if (this.newNovedad.remplazo !== undefined ){
@@ -535,41 +538,40 @@ export default defineComponent({
             }
         },
         validaPersonalConNovedadActiva(personal: IPersonal) {
-            /* Primero busco todas las novedades que tienen al personal relevando */
-            this.novedades.forEach((novedad: Novedad) => {
-                if (personal.turno.includes("Ciclo")) {
-                    novedad.remplazo.forEach((remp: Remplazo) => {
-                        if (remp) {
-                            console.log(this.esFechaMayor(remp.finRelevo,this.today.toISOString()))
-                            if (remp.legajo == personal.legajo) {
-                                if (
-                                    remp.finRelevo === undefined ||
-                                    remp.finRelevo === "" ||
-                                    this.esFechaMayor(remp.finRelevo,this.today.toISOString())
-                                    
-                                ) {
-                                    this.idNovedad = novedad._id;
-                                    this.alerta =
-                                        "Este personal se encuentra relevando la novedad N°" +
-                                        novedad._id +
-                                        ". Por favor, finalice el relevo para poder continuar";
-                                }
-                            }
-                        }
-                    });
+            let encontrado = false;
+            
+            for (const novedad of this.novedades) {
+                if (encontrado) {
+                    break; // Salir del bucle si ya se encontró un caso
                 }
-                if (novedad.legajo == personal.legajo) {
-                    if (!novedad.novedadInactiva && novedad.HNA || this.esFechaMayorIgual(novedad.fechaBaja,novedad.fechaAlta) ) {
+
+                if (personal.turno.includes("Ciclo")) {
+
+                    const tieneRelevoActivo = novedad.remplazo.some((remp: Remplazo) =>
+                        remp && (!remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo, this.today.toISOString())) && remp.legajo === personal.legajo
+                    );
+
+                    if (tieneRelevoActivo) {
                         this.idNovedad = novedad._id;
-                        this.alerta =
-                            "Este personal se encuentra de baja por la siguiente novedad N°" +
-                            novedad._id +
-                            ". Por favor, finalice el relevo para poder continuar";
+                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        encontrado = true;
                     }
                 }
-            });
-        },
 
+                if (novedad.legajo === personal.legajo) {
+                    const estaDeBaja =
+                        !novedad.novedadInactiva &&
+                        ((novedad.HNA && this.esFechaMayorIgual(this.today.toString(), novedad.fechaBaja)) ||
+                            (this.esFechaMayorIgual(this.today.toString(), novedad.fechaBaja) && this.esFechaMayorIgual(novedad.fechaAlta, this.today.toString())));
+
+                    if (estaDeBaja) {
+                        this.idNovedad = novedad._id;
+                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        encontrado = true;
+                    }
+                }
+            }
+        },
         // Funcionamiento del Formulario
         agregarRemplazo() {
             if (this.newNovedad.remplazo !== undefined) {
@@ -679,7 +681,6 @@ export default defineComponent({
             );
             if (this.personalEncontrado[0]) {
                 this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-
                 this.newNovedad.apellido = this.personalEncontrado[0].apellido;
                 this.newNovedad.nombres = this.personalEncontrado[0].nombres;
                 this.newNovedad.base = this.personalEncontrado[0].dotacion;
@@ -701,6 +702,7 @@ export default defineComponent({
                 }
             );
             if (this.personalEncontrado[0]) {
+                this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
                 this.newNovedad.remplazo[index].apellido =
                     this.personalEncontrado[0].apellido;
                 this.newNovedad.remplazo[index].nombres =
