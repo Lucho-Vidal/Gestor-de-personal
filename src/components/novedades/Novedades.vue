@@ -45,6 +45,26 @@
                         />
                         Sin Cubrir
                     </label>
+                    <label class="form-check-label mx-2" v-if="!checkboxTodas">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Finalizadas"
+                            v-model="checkboxFinalizadas"
+                            @change="filtrar()"
+                        />
+                        Finalizadas
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Todas"
+                            v-model="checkboxTodas"
+                            @change="filtrar()"
+                        />
+                        Todas las Novedades
+                    </label>
                 </div>
                 <div class="my-3">
                     <h6>Filtro por Especialidad:</h6>
@@ -220,10 +240,10 @@
                 <tbody
                     v-for="(novedad, index) in novedadesFiltradas"
                     :key="index"
-                    @dblclick="edit(novedad._id)"
+                    @dblclick="novedad.novedadInactiva ? null : edit(novedad._id)"
                     @click="viewDetail(novedad)"
                 >
-                    <tr v-if="!novedad.novedadInactiva" class="Small shadow">
+                    <tr v-if="checkboxTodas||!novedad.novedadInactiva" class="Small shadow" :class="{ 'fila-oscura': novedad.novedadInactiva }">
                         <td class="col-1">{{ novedad._id }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
@@ -259,12 +279,14 @@
                         </td>
                         <td class="col-1">
                             <i
+                                v-if="!novedad.novedadInactiva"
                                 class="fa-solid fa-pen-to-square"
                                 @click="edit(novedad._id)"
                             ></i>
                         </td>
                         <td class="col-1">
-                            <i
+                            <i  
+                                v-if="!novedad.novedadInactiva"
                                 class="fa-solid fa-trash-can"
                                 @click="deleteNovedad(novedad._id, index)"
                             ></i>
@@ -340,6 +362,8 @@ export default defineComponent({
             checkboxHna: false,
             checkboxEspecialidad: [] as string[],
             checkboxDescubierto: false,
+            checkboxFinalizadas: false,
+            checkboxTodas: false,
             username: "" as string,
             today: new Date(),
             search:"" as string,
@@ -450,6 +474,15 @@ export default defineComponent({
                 return diagrama[diaLaboral][hoy]; //:franco
             }
         },
+        esFechaMayorIgual(dateMayor:string, dateMenor:string) {
+            if(dateMayor!== undefined && dateMenor!== undefined ){
+                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
+                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+                return formattedDateMayor >= formattedDateMenor;
+            }else{
+                return false;
+            }
+        },
         filtrar() {
             let cDotacion = ["PC", "LLV", "TY", "LP", "K5", "RE", "CÑ", "AK"];
             let cEspecialidad = [
@@ -479,6 +512,13 @@ export default defineComponent({
             }
             if (this.checkboxDescubierto) {
                 novedadesFiltradas = novedadesFiltradas.filter((novedad:Novedad)=> novedad.remplazo.length === 0);
+            }
+            if(this.checkboxTodas){
+                novedadesFiltradas 
+            }else if (this.checkboxFinalizadas) {
+                novedadesFiltradas = novedadesFiltradas.filter((novedad:Novedad)=> novedad.fechaAlta && this.esFechaMayorIgual(this.today.toString(),novedad.fechaAlta));
+            }else{
+                novedadesFiltradas = novedadesFiltradas.filter((novedad:Novedad)=> !novedad.fechaAlta || this.esFechaMayorIgual(novedad.fechaAlta,this.today.toString()));
             }
 
             if(filtrarNovedades){
@@ -516,5 +556,10 @@ main {
 
 .hidden-row {
     display: none;
+}
+
+.fila-oscura {
+  background-color: #888; /* Cambia este color según tus preferencias */
+  color: #fff; /* Cambia este color según tus preferencias */
 }
 </style>
