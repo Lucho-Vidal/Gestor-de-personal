@@ -25,7 +25,7 @@
                 >
                     <tr class="Small shadow">
                         <td class="col-1">{{ registro.usuario }}</td>
-                        <td class="col-1">{{ registro.fecha }}</td>
+                        <td class="col-1">{{ formatearFecha(registro.fecha) }}</td>
                         <td class="col-1">{{ registro.accion }}</td>
                     </tr>
                     <tr v-if="registro.viewDetail">
@@ -105,6 +105,13 @@ export default defineComponent({
             this.registros = res.data;
             this.ordenarRegistros();
 
+        },
+        formatearFecha(fechaString: string): string {
+            const fecha:Date = new Date(fechaString);
+            const opcionesDeFormato: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit' };
+            const formatoFecha = new Intl.DateTimeFormat('es-AR', opcionesDeFormato);
+
+            return formatoFecha.format(fecha);
         },
         ordenarRegistros() {
             this.registros.sort((a, b) => b.fecha > a.fecha ? 1 : -1);
