@@ -418,11 +418,15 @@ export default defineComponent({
             }
         },
         formatearFecha(fechaString: string): string {
-            const fecha:Date = new Date(fechaString);
-            const opcionesDeFormato: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            const formatoFecha = new Intl.DateTimeFormat('es-AR', opcionesDeFormato);
-
-            return formatoFecha.format(fecha);
+            if (fechaString){
+                const fecha:Date = new Date(fechaString);
+                const opcionesDeFormato: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                const formatoFecha = new Intl.DateTimeFormat('es-AR', opcionesDeFormato);
+    
+                return formatoFecha.format(fecha);
+            }else{
+                return ""
+            }
         },
         ordenarNovedades() {
             this.novedadesFiltradas.sort((a, b) => b._id > a._id ? 1 : -1);
