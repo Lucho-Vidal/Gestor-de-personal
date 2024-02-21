@@ -401,10 +401,10 @@ export default defineComponent({
         },
         obtenerNombreConReemplazo(novedad: Novedad): string {
             if (novedad.remplazo && novedad.remplazo.length > 0) {
-                const remplazo = novedad.remplazo.find((remp:Remplazo) =>
-                    this.esFechaMayorIgual(this.inputDate,remp.inicioRelevo)  &&
-                    (remp.finRelevo === undefined || this.esFechaMayorIgual(remp.finRelevo,this.inputDate))
-                );
+                const remplazo = novedad.remplazo.find((remp:Remplazo) =>{
+                    return this.esFechaMayorIgual(this.inputDate,remp.inicioRelevo)  &&
+                    (remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo,this.inputDate))
+            });
                 if (remplazo) {
                     return `${remplazo.apellido} ${remplazo.nombres}`;
                 } else {
@@ -416,11 +416,10 @@ export default defineComponent({
         },
         filtroPersonal(turno: string, fecha: Date, personales: IPersonal[]) {
             try {
-                let titular: IPersonal;
                 let filtrados: IPersonal[];
                 turno = turno.trim();
 
-                if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("PROG".toLowerCase())) {
+                if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("prog")) {
                     const indexPunto = turno.indexOf(".");
                     const diaLab = Number(turno[indexPunto + 1]);
                     const diag = turno.split(".")[0];
@@ -434,10 +433,10 @@ export default defineComponent({
                         (personal) => personal.turno.toLowerCase() === turno.toLowerCase()
                     );
                 }
-                titular = filtrados[0];
+                const titular:IPersonal = filtrados[0];
                 return {
                     turno: turno,
-                    legajo: titular?.legajo || 0,
+                    legajo: titular.legajo || 0,
                     nombres: titular ? `${titular.apellido} ${titular.nombres}` : "",
                 };
             } catch (e) {
@@ -462,7 +461,7 @@ export default defineComponent({
             return diagrama[diaLaboral][hoy]; //:franco
         },
         filtrarPorTurno(itinerario: string,listaTurnos:ITurno[],circularSeleccionada:string[],tren:string ) {
-            let turnos: ITurno[] = []
+            const turnos: ITurno[] = []
             listaTurnos.forEach((diag: ITurno) => {
                 if (
                     diag.turno

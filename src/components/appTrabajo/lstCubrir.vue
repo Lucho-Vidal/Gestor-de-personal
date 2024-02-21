@@ -158,7 +158,7 @@ export default defineComponent({
         },  
         obtenerNovedadesSinCubrir( fecha: Date):string[] {
             
-            let turnosSinCubrir:string[] =  [];
+            const turnosSinCubrir:string[] =  [];
             this.novedades.forEach((novedad :Novedad) => {
                 const { fechaBaja, fechaAlta, HNA, novedadInactiva } = novedad;
                 if (!novedadInactiva &&
