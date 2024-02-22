@@ -364,7 +364,7 @@ export default defineComponent({
             }
         },
         esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-            if(dateMayor!== undefined && dateMenor!== undefined ){
+            if(dateMayor && dateMenor ){
                 const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
                 const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
                 return formattedDateMayor >= formattedDateMenor;
@@ -401,9 +401,11 @@ export default defineComponent({
         },
         obtenerNombreConReemplazo(novedad: Novedad): string {
             if (novedad.remplazo && novedad.remplazo.length > 0) {
-                const remplazo = novedad.remplazo.find((remp:Remplazo) =>{
-                    return this.esFechaMayorIgual(this.inputDate,remp.inicioRelevo)  &&
-                    (remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo,this.inputDate))
+                // buscamos el primero que cumple con la fecha input sea mayorIgual inicio de relevo Y si existe finRelevo que sea mayorIgual a inputDate SINO la que no tenga fin de relevo
+                const remplazo = novedad.remplazo.find((remplazo:Remplazo) =>{
+                    return this.esFechaMayorIgual(this.inputDate,remplazo.inicioRelevo)  &&
+                    ((remplazo.finRelevo && this.esFechaMayorIgual(remplazo.finRelevo,this.inputDate ))||
+                    !remplazo.finRelevo)
             });
                 if (remplazo) {
                     return `${remplazo.apellido} ${remplazo.nombres}`;
@@ -518,11 +520,14 @@ export default defineComponent({
 main {
     min-height: 81.6vh;
 }
+body{
+    background: #ddd;
+}
 .Personal {
     background: #000;
     width: 150px;
     border-top: #000;
-    color: #fff;
+    color: #ddd;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-around;
