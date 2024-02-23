@@ -382,9 +382,9 @@ export default defineComponent({
                         const { legajo, fechaBaja, fechaAlta, HNA, novedadInactiva } = novedad;
                         
                         if (legajo === personal.legajo && !novedadInactiva &&
-                            (HNA && this.esFechaMayorIgual( this.today.toString(),fechaBaja) || 
-                            this.esFechaMayorIgual( this.today.toString(),fechaBaja) && 
-                            this.esFechaMayorIgual(fechaAlta, this.today.toString()))) {
+                            (HNA && this.esFechaMayorIgual( this.inputDate,fechaBaja) || 
+                            this.esFechaMayorIgual( this.inputDate,fechaBaja) && 
+                            this.esFechaMayorIgual(fechaAlta, this.inputDate))) {
                                 
                             personal.nombres = this.obtenerNombreConReemplazo(novedad);
                         }
