@@ -114,7 +114,7 @@ export default defineComponent({
             return formatoFecha.format(fecha);
         },
         ordenarRegistros() {
-            this.registros.sort((a, b) => b.fecha > a.fecha ? 1 : -1);
+            this.registros.sort((a, b) => new Date(b.fecha).getTime > new Date(a.fecha).getTime ? 1 : -1);
         },
         viewDetail(registro: Registro) {
             if (registro.viewDetail) {
