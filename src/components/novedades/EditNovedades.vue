@@ -474,7 +474,7 @@ export default defineComponent({
             }
         },
         esFechaBajaMayorFechaAlta(){
-            if(this.novedad.fechaAlta !== undefined){
+            if(this.novedad.fechaAlta){
                 if (this.esFechaMayor(this.novedad.fechaBaja, this.novedad.fechaAlta)) {
                     this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
                     return true;
@@ -486,17 +486,19 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
-            if(this.novedad.remplazo == undefined ||
-            this.novedad.remplazo.length === 0){
+            if(this.novedad.remplazo == undefined ){
                 return false;
             }
             if(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo == ""){
                 return false;
             }
-
-            if (this.esFechaMayor(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo , this.novedad.fechaAlta)) {
-                this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
-                return true;
+            console.log(this.novedad.fechaAlta);
+            
+            if(this.novedad.fechaAlta){
+                if (this.esFechaMayor(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo , this.novedad.fechaAlta)) {
+                    this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
+                    return true;
+                }
             }
         },
         hayMasDeUnRelevo(){
@@ -538,7 +540,7 @@ export default defineComponent({
 
                 if (personal.turno.includes("Ciclo")) {
 
-                    const tieneRelevoActivo = novedad.remplazo.some((remp: Remplazo) =>
+                    const tieneRelevoActivo = !novedad.novedadInactiva && novedad.remplazo.some((remp: Remplazo) =>
                         remp && (!remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo, this.today.toISOString())) && remp.legajo === personal.legajo
                     );
 
