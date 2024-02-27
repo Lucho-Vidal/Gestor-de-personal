@@ -3,6 +3,16 @@
         <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">Inicio de Sesión</h1>
+            <div
+                class="alert  row"
+                :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':'']"
+                role="alert"
+                v-if="message.status == 'danger'|| message.status == 'success'"
+            >
+                <h4 class="alert-heading">{{ message.title }}</h4>
+                <hr />
+                {{ message.message }}
+            </div>
             <form
                 name="form"
                 id="form"
@@ -57,17 +67,7 @@
                     </div>
                 </div>
             </form>
-            <div
-                    class="alert  row"
-                    
-                    :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':'']"
-                    role="alert"
-                    v-if="message.status == 'danger'|| message.status == 'success'"
-                >
-                    <h4 class="alert-heading">{{ message.title }}</h4>
-                    <hr />
-                    {{ message.message }}
-                </div>
+                
         </main>
         <FooterPage />
     </div>
