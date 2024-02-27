@@ -5,10 +5,15 @@
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nueva Novedad
             </h1>
-            <div class="alert alert-danger" role="alert" v-if="alerta">
-                <h4 class="alert-heading">ATENCIÓN!</h4>
+            <div
+                class="alert  row"
+                :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':message.status=='warning'?'alert-warning':'']"
+                role="alert"
+                v-if="message.activo"
+            >
+                <h4 class="alert-heading">{{ message.title }}</h4>
                 <hr />
-                {{ alerta }}
+                {{ message.message }}
                 <a v-if="idNovedad!==0"   class="btn btn-danger col-2" @click="$router.push(`/editNovedades/${idNovedad}`);">Ir a la novedad</a>
             </div>
             <!-- Modal de búsqueda -->
@@ -348,6 +353,7 @@ import {
     createNovedad,
     getNovedades,
     getUltimaNovedad,
+    updateNovedad,
 } from "../../services/novedadesService";
 import { getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
@@ -376,9 +382,16 @@ export default defineComponent({
             search: "" as string,
             selectRemplazo: false,
             personalEncontrado: [] as IPersonal[],
-            alerta: "" as string,
+            //alerta: "" as string,
             mostrarModalSearch: false,
             idNovedad: 0,
+            cicloRelevando: false,
+            message: {
+                activo: false,
+                status: "",
+                title: "",
+                message: "",
+            },
         };
     },
     methods: {
@@ -405,9 +418,16 @@ export default defineComponent({
                 this.newNovedad._id = this.ultimoId;
                 
                 // Validaciones
-                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta() || this.alerta) {
-                    if(this.alerta){
-                        this.alerta = "Ocurrió un problema con la validación. Si el error persiste, Contacte al administrador con capturas de pantalla del error."
+                if(this.cicloRelevando){
+                    this.message.activo = false;
+                    this.actualizarRelevo()
+
+                } 
+                
+                if (this.esInicioRelevoMayorIgualFechaBaja() || this.esFinRelevoMayorFinNovedad() || this.hayMasDeUnRelevo() || this.esFechaBajaMayorFechaAlta() || this.message.activo) {
+                    if(this.message.activo){
+                        this.message.message = "Ocurrió un problema con la validación. Si el error persiste, Contacte al administrador con capturas de pantalla del error."
+                        this.message.status = 'danger'
                         this.idNovedad = 0;
                     }
                     return;
@@ -447,12 +467,42 @@ export default defineComponent({
                 // Manejar la lógica de redirección a la página de inicio de sesión
                 this.$router.push("/login");
             } else if(error.response && error.response.status === 500){
-                this.alerta = "Ocurrió un error al intentar guardar la novedad. Es posible que se deba a que el numero de novedad ya existe. por favor intente de nuevo."
+                this.message.message = "Ocurrió un error al intentar guardar la novedad. Es posible que se deba a que el numero de novedad ya existe. por favor intente de nuevo."
+                this.message.activo = true
+                this.message.status = 'danger'
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
-        
+        async actualizarRelevo(){
+            const novedadesIndex = this.novedadesIndexada(this.novedades)
+                novedadesIndex[this.idNovedad].remplazo.forEach(remp=>{
+                    if(remp.legajo === this.newNovedad.legajo){
+                        const fechaDiaAnterior = new Date(this.newNovedad.fechaBaja); 
+                        fechaDiaAnterior.setDate(fechaDiaAnterior.getDate() - 1)
+                        remp.finRelevo = fechaDiaAnterior.toISOString().split('T')[0];
+                        
+                    }
+                })
+                if(novedadesIndex[this.idNovedad].detalle){
+                    novedadesIndex[this.idNovedad].detalle = novedadesIndex[this.idNovedad].detalle + 
+                    "\nEl Personal "+ this.newNovedad.apellido + " " + this.newNovedad.nombres + " fue dado de baja por la novedad N*"+ (this.ultimoId + 1)
+                }else{
+                    novedadesIndex[this.idNovedad].detalle = "El Personal "+ this.newNovedad.apellido + " " + this.newNovedad.nombres + " fue dado de baja por la novedad N*"+ (this.ultimoId + 1)
+                }
+                if(this.newNovedad.detalle){
+                    this.newNovedad.detalle = this.newNovedad.detalle + "Este personal estaba relevando la Novedad N* "+ this.idNovedad 
+                }else{
+                    this.newNovedad.detalle = "Este personal estaba relevando la Novedad N* "+ this.idNovedad 
+                }
+            await updateNovedad(this.idNovedad,novedadesIndex[this.idNovedad]);
+        },
+        novedadesIndexada(novedades: Novedad[]) {
+            return novedades.reduce((acumulador: Record<number, Novedad>, novedad: Novedad) => {
+            acumulador[novedad._id] = novedad;
+            return acumulador;
+            }, {} as Record<number, Novedad>);
+        },
 
         // Validaciones:
         esFechaMayor(dateMayor:string, dateMenor:string) {
@@ -476,7 +526,9 @@ export default defineComponent({
         esInicioRelevoMayorIgualFechaBaja(){
             if (this.newNovedad.remplazo !== undefined ){
                 if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.remplazo?.[0].inicioRelevo)) {
-                    this.alerta = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                    this.message.message = "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                    this.message.activo = true;
+                    this.message.status = 'danger'
                     return true;
                 }else{
                     return false;
@@ -488,7 +540,9 @@ export default defineComponent({
         esFechaBajaMayorFechaAlta(){
             if(this.newNovedad.fechaAlta !== undefined){
                 if (this.esFechaMayor(this.newNovedad.fechaBaja, this.newNovedad.fechaAlta)) {
-                    this.alerta = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                    this.message.message = "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                    this.message.activo = true;
+                    this.message.status = 'danger'
                     return true;
                 }else{
                     return false;
@@ -498,16 +552,19 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
-            if(this.newNovedad.remplazo == undefined ){
+            if(this.newNovedad.remplazo == undefined){
                 return false;
             }
             if(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo == ""){
                 return false;
             }
-
-            if (this.esFechaMayor(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo , this.newNovedad.fechaAlta)) {
-                this.alerta = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
-                return true;
+            if(this.newNovedad.fechaAlta){
+                if (this.esFechaMayor(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo , this.newNovedad.fechaAlta)) {
+                    this.message.message = "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
+                    this.message.activo = true;
+                    this.message.status = 'danger'
+                    return true;
+                }
             }
         },
         hayMasDeUnRelevo(){
@@ -519,12 +576,16 @@ export default defineComponent({
                     }
                     
                     if (this.esFechaMayor(this.newNovedad.remplazo[i].finRelevo, this.newNovedad.remplazo[i + 1].inicioRelevo)) {
-                        this.alerta = "Un turno no puede ser relevado por dos personas el mismo día. Y los relevos deben están ordenados consecutivamente.";
+                        this.message.message = "Un turno no puede ser relevado por dos personas el mismo día. Y los relevos deben están ordenados consecutivamente.";
+                        this.message.activo = true;
+                        this.message.status = 'danger'
                         return true;
                     }
                 }
                 if (sinFechaFin > 1){
-                    this.alerta = "No puede haber más de un relevo sin fecha de finalización";
+                    this.message.message = "No puede haber más de un relevo sin fecha de finalización";
+                    this.message.activo = true;
+                    this.message.status = 'danger'
                     return true;
                 }
             }
@@ -547,13 +608,17 @@ export default defineComponent({
 
                 if (personal.turno.includes("Ciclo")) {
 
-                    const tieneRelevoActivo = novedad.remplazo.some((remp: Remplazo) =>
+                    const tieneRelevoActivo = !novedad.novedadInactiva && novedad.remplazo.some((remp: Remplazo) =>
                         remp && (!remp.finRelevo || this.esFechaMayorIgual(remp.finRelevo, this.today.toISOString())) && remp.legajo === personal.legajo
                     );
 
                     if (tieneRelevoActivo) {
                         this.idNovedad = novedad._id;
-                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.message = `El personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. 
+                        Si desea proceder se finalizara su relevo automáticamente.`;
+                        this.message.status = 'warning'
+                        this.message.activo = true;
+                        this.cicloRelevando = true;
                         encontrado = true;
                     }
                 }
@@ -566,7 +631,9 @@ export default defineComponent({
 
                     if (estaDeBaja) {
                         this.idNovedad = novedad._id;
-                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.message = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.activo = true;
+                        this.message.status = 'danger'
                         encontrado = true;
                     }
                 }
@@ -673,7 +740,9 @@ export default defineComponent({
         },
         searchPersonalPorLegajo() {
             /*  realiza la búsqueda por el legajo introducido en el respectivo input */
-            this.alerta = "";
+            this.message.message = "";
+            this.message.status = '';
+            this.message.activo = false;
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.newNovedad.legajo;
