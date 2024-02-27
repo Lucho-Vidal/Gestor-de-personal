@@ -198,6 +198,12 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireModerator(to, from, next));
         }
     },
+    {
+        path: "/listadoPersonales",
+        name: "listadoPersonales",
+        component: () => import("@/components/appTrabajo/lstPersonales.vue"),
+        beforeEnter: requireAuth,
+    },
 ];
 
 const router = createRouter({
