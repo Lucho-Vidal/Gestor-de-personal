@@ -384,16 +384,18 @@ export default defineComponent({
                 const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar esta novedad?");
                 if(confirmacion){
                     try {
-                        this.novedades[index].novedadInactiva = true;
+                        const novedadesIndex = this.novedadesIndexada(this.novedades)
+                        novedadesIndex[id].novedadInactiva = true;
                         //await deleteNovedad(id);
                         // dejamos de hacer un borrado físico y empezamos a hacer un borrado lógico
-                        await updateNovedad(id,this.novedades[index]);
+                        await updateNovedad(id,novedadesIndex[id]);
+                        
                         //se guarda registro
                         const registro: Registro = {
                             usuario : window.localStorage.getItem("username")||'',
                             fecha : this.today.toString() ,
                             accion: "Elimino",
-                            novedad : this.novedades[index],
+                            novedad : novedadesIndex[id],
                         }
                         await createRegistro(registro)
                         // se quita de la lista impresa
@@ -416,6 +418,12 @@ export default defineComponent({
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
+        },
+        novedadesIndexada(novedades: Novedad[]) {
+            return novedades.reduce((acumulador: Record<number, Novedad>, novedad: Novedad) => {
+            acumulador[novedad._id] = novedad;
+            return acumulador;
+            }, {} as Record<number, Novedad>);
         },
         formatearFecha(fechaString: string): string {
             if (fechaString){
