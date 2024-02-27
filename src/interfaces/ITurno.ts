@@ -6,6 +6,8 @@ export interface ITurno {
     personal: string;
     toma: string;
     deja: string;
+    dotacion: string;
+    especialidad: string;
     viewDetail:boolean;
     vueltas: Vueltas[];
 }

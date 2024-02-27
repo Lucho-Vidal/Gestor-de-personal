@@ -26,6 +26,12 @@ const turnoSchema = new Schema({
         type: String,
         trim: true,
     },
+    dotacion: {
+        type: String,
+    },
+    especialidad: {
+        type: String,
+    },
     vueltas:[]
 },
     {
