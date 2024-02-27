@@ -263,7 +263,7 @@
                             ></i>
                         </td>
                     </tr>
-                    <tr v-if="personal.viewDetail">
+                    <tr v-if="personal.viewDetail && personal.conocimientos">
                         <td colspan="12">
                             <div class="row">
                                 <h6 class="col-12">Conocimientos:</h6>
