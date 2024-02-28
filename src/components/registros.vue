@@ -47,7 +47,7 @@
                                 
                             </div>
                             <div class="row" v-if="registro.personal">
-                                <h6 class="col-2">Novedad:{{ registro.personal.legajo }}</h6>
+                                <h6 class="col-2">Legajo:{{ registro.personal.legajo }}</h6>
                                 <p class="col-3">
                                     Personal:{{ registro.personal.apellido +" "+ registro.personal.nombres   }}
                                 </p>
@@ -63,7 +63,7 @@
                                 
                             </div>
                             <div class="row" v-if="registro.turno">
-                                <h6 class="col-2">Novedad:{{ registro.turno.turno }}</h6>
+                                <h6 class="col-2">Turno:{{ registro.turno.turno }}</h6>
                                 <p class="col-3">
                                     Jornada:{{ registro.turno.toma +" / "+ registro.turno.deja   }}
                                 </p>
