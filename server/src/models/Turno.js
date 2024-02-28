@@ -32,6 +32,9 @@ const turnoSchema = new Schema({
     especialidad: {
         type: String,
     },
+    ordenes: {
+        type: Boolean,
+    },
     vueltas:[]
 },
     {
