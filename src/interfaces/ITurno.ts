@@ -8,6 +8,7 @@ export interface ITurno {
     deja: string;
     dotacion: string;
     especialidad: string;
+    ordenes: boolean;
     viewDetail:boolean;
     vueltas: Vueltas[];
 }
