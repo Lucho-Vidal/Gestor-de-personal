@@ -54,6 +54,18 @@
                                 >Buscador</router-link
                             >
                         </li>
+                        <li
+                            class="nav-item"
+                            v-if="
+                                rolMayor == 'moderator' ||
+                                rolMayor == 'admin' ||
+                                rolMayor == 'user'
+                            "
+                        >
+                            <router-link class="nav-link" to="/listadoPersonales"
+                                >Listado Personales</router-link
+                            >
+                        </li>
                         <li class="nav-item" v-if="rolMayor == 'admin'">
                             <router-link class="nav-link" to="/Turnos"
                                 >Turnos</router-link

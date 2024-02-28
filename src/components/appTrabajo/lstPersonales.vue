@@ -2,7 +2,7 @@
     <div>
         <NavBar />
 
-        <main class="container">
+        <main class="container-fluid">
             <h2 class="d-flex justify-content-center m-3">
                 Lista de personales
             </h2>
@@ -41,11 +41,11 @@
                     <option value="D">Domingo</option>
                 </select>
                 </label>
-                <input type="date" name="today" id="today" v-model="inputDate">
+                    
+                <input type="date" name="today" id="today" v-model="inputDate" @change="filtrar()" >
+                
             </div>
-
-
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
                         <ul class="list-unstyled">
@@ -63,10 +63,94 @@
                                         <th class="col-1" colspan="1">ref</th>
                                         <th class="col-1" colspan="1">Tren</th>
                                         <th class="col-1" colspan="1">Sale</th>
+                                        <th class="col-1" colspan="1">Circular</th>
                                         <th class="col-6" colspan="1">Personal</th>
                                     </tr>
                                 </thead>
-                                <tbody v-for="(turno,index) in turnosConductor" :key="index" class="Small">
+                    
+                                <tbody v-for="(turno,index) in turnosConductor" :key="index" class="Small" @click="viewDetail(turno)">
+                                    <tr :class="{ 'fila-oscura': (turno.personal == 'Sin Cubrir') }">
+                                        <td class="col-1">
+                                            {{ turno.turno }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.toma }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.deja }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].refer }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].tren }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].sale }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.circular }}
+                                        </td>
+                                        <td class="col-6">
+                                            {{ turno.personal }}
+                                        </td>
+                                    </tr>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Vuelta</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Referencia</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Tren</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Origen</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Sale</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Destino</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Llega</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Observaciones</th>
+                                    <tr 
+                                        style="margin-bottom: 10px;"
+                                        v-for="(vuelta, index) in turno.vueltas"
+                                        :key="index"
+                                    >
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.vuelta }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.refer }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.tren }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.origen }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.sale }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.destino }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.llega }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.observaciones }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <li>Ordenes</li>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-1" colspan="1">Turno</th>
+                                        <th class="col-1" colspan="1">Toma</th>
+                                        <th class="col-1" colspan="1">Deja</th>
+                                        <th class="col-1" colspan="1">ref</th>
+                                        <th class="col-1" colspan="1">Tren</th>
+                                        <th class="col-1" colspan="1">Sale</th>
+                                        <th class="col-1" colspan="1">Circular</th>
+                                        <th class="col-6" colspan="1">Personal</th>
+                                    </tr>
+                                </thead>
+                    
+                                <tbody v-for="(turno,index) in turnosConductorOrd" :key="index" class="Small" @click="viewDetail(turno)">
                                     <tr   >
                                         <td class="col-1">
                                             {{ turno.turno }}
@@ -86,8 +170,49 @@
                                         <td class="col-1">
                                             {{ turno.vueltas[0].sale }}
                                         </td>
+                                        <td class="col-1">
+                                            {{ turno.circular }}
+                                        </td>
                                         <td class="col-6">
                                             {{ turno.personal }}
+                                        </td>
+                                    </tr>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Vuelta</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Referencia</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Tren</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Origen</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Sale</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Destino</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Llega</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Observaciones</th>
+                                    <tr 
+                                        style="margin-bottom: 10px;"
+                                        v-for="(vuelta, index) in turno.vueltas"
+                                        :key="index"
+                                    >
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.vuelta }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.refer }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.tren }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.origen }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.sale }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.destino }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.llega }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.observaciones }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -101,6 +226,169 @@
                                     Guarda tren
                                 </h4>
                             </li>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-1" colspan="1">Turno</th>
+                                        <th class="col-1" colspan="1">Toma</th>
+                                        <th class="col-1" colspan="1">Deja</th>
+                                        <th class="col-1" colspan="1">ref</th>
+                                        <th class="col-1" colspan="1">Tren</th>
+                                        <th class="col-1" colspan="1">Sale</th>
+                                        <th class="col-1" colspan="1">Circular</th>
+                                        <th class="col-6" colspan="1">Personal</th>
+                                    </tr>
+                                </thead>
+                    
+                                <tbody v-for="(turno,index) in turnosGuardas" :key="index" class="Small" @click="viewDetail(turno)">
+                                    <tr   >
+                                        <td class="col-1">
+                                            {{ turno.turno }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.toma }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.deja }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].refer }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].tren }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].sale }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.circular }}
+                                        </td>
+                                        <td class="col-6">
+                                            {{ turno.personal }}
+                                        </td>
+                                    </tr>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Vuelta</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Referencia</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Tren</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Origen</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Sale</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Destino</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Llega</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Observaciones</th>
+                                    <tr 
+                                        style="margin-bottom: 10px;"
+                                        v-for="(vuelta, index) in turno.vueltas"
+                                        :key="index"
+                                    >
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.vuelta }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.refer }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.tren }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.origen }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.sale }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.destino }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.llega }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.observaciones }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <li>Ordenes</li>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-1" colspan="1">Turno</th>
+                                        <th class="col-1" colspan="1">Toma</th>
+                                        <th class="col-1" colspan="1">Deja</th>
+                                        <th class="col-1" colspan="1">ref</th>
+                                        <th class="col-1" colspan="1">Tren</th>
+                                        <th class="col-1" colspan="1">Sale</th>
+                                        <th class="col-1" colspan="1">Circular</th>
+                                        <th class="col-6" colspan="1">Personal</th>
+                                    </tr>
+                                </thead>
+                    
+                                <tbody v-for="(turno,index) in turnosGuardasOrd" :key="index" class="Small" @click="viewDetail(turno)">
+                                    <tr   >
+                                        <td class="col-1">
+                                            {{ turno.turno }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.toma }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.deja }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].refer }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].tren }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.vueltas[0].sale }}
+                                        </td>
+                                        <td class="col-1">
+                                            {{ turno.circular }}
+                                        </td>
+                                        <td class="col-6">
+                                            {{ turno.personal }}
+                                        </td>
+                                    </tr>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Vuelta</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Referencia</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Tren</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Origen</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Sale</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Destino</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Llega</th>
+                                    <th class="col-1" colspan="1" v-if="turno.viewDetail">Observaciones</th>
+                                    <tr 
+                                        style="margin-bottom: 10px;"
+                                        v-for="(vuelta, index) in turno.vueltas"
+                                        :key="index"
+                                    >
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.vuelta }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.refer }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.tren }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.origen }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.sale }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.destino }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.llega }}
+                                        </td>
+                                        <td colspan="1" v-if="turno.viewDetail">
+                                            {{ vuelta.observaciones }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </ul>
                     </div>
                 </div>
@@ -135,8 +423,13 @@ export default defineComponent({
             checkboxDotacion: "" as string,
             turnosConductor:[] as ITurno[],
             turnosGuardas:[] as ITurno[],
+            turnosConductorOrd:[] as ITurno[],
+            turnosGuardasOrd:[] as ITurno[],
             checkboxIt: "" as string,
             inputDate: "" as string,
+            circulares: [] as string[],
+            circularSeleccionada: ["Dic23"] as string[],
+            datosCargados: 0 as number,
 
         };
     },
@@ -146,8 +439,14 @@ export default defineComponent({
             try {
                 const res = await getTurnos();
                 this.turnos = res.data;
-                
-
+                const circularSeleccionadaString = window.localStorage.getItem("circularSeleccionada");
+                this.circularSeleccionada = circularSeleccionadaString ? circularSeleccionadaString.split(",") : [];
+                this.circulares = this.obtenerTiposCirculares(this.turnos);
+                if(this.datosCargados > 1){
+                    this.filtrar()
+                }else{
+                    this.datosCargados ++
+                }
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -157,7 +456,11 @@ export default defineComponent({
                 /* Trae todos los elementos de la base de datos */
                 const res = await getPersonales();
                 this.personales = res.data;
-                this.filtrar()
+                if(this.datosCargados > 1){
+                    this.filtrar()
+                }else{
+                    this.datosCargados ++
+                }
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -166,6 +469,11 @@ export default defineComponent({
             try {
                 const res = await getNovedades();
                 this.novedades = res.data;
+                if(this.datosCargados > 1){
+                    this.filtrar()
+                }else{
+                    this.datosCargados ++
+                }
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -188,7 +496,20 @@ export default defineComponent({
 
             return formatoFecha.format(fecha);
         },
-        
+        quitarDuplicados(lista: ITurno[]): ITurno[] {
+            const mapa: Map<string, ITurno> = new Map();
+
+            for (const elemento of lista) {
+                // Utilizamos el ID como clave en el mapa
+                if (!mapa.has(elemento.turno)) {
+                    mapa.set(elemento.turno, elemento);
+                }else if(mapa.has(elemento.turno)&&elemento.circular === "HD32"){
+                    mapa.set(elemento.turno, elemento);
+                }
+            }
+            // Convertir los valores del mapa de nuevo a una lista
+            return Array.from(mapa.values());
+        },
         viewDetail(turno: ITurno) {
             if (turno.viewDetail) {
                 turno.viewDetail = false;
@@ -213,21 +534,32 @@ export default defineComponent({
             window.localStorage.setItem("dotacionSeleccionada", this.checkboxDotacion);
             window.localStorage.setItem("itSeleccionada", this.checkboxIt);
             
-            const turnosGuardas = this.turnos.filter((turno:ITurno)=>{
-                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Guardatren electrico'           
+            let turnosGuardas = this.turnos.filter((turno:ITurno)=>{
+                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Guardatren electrico' && !turno.ordenes          
             }) 
-            const turnosConductor = this.turnos.filter((turno:ITurno)=>{
-                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Conductor electrico'         
+            let turnosConductor = this.turnos.filter((turno:ITurno)=>{
+                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Conductor electrico'  && !turno.ordenes        
             }) 
+            this.turnosGuardasOrd = this.turnos.filter((turno:ITurno)=>{
+                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Guardatren electrico' && turno.ordenes           
+            }) 
+            this.turnosConductorOrd = this.turnos.filter((turno:ITurno)=>{
+                return turno.dotacion == this.checkboxDotacion && this.checkboxIt == turno.itinerario  && turno.especialidad == 'Conductor electrico'  && turno.ordenes        
+            }) 
+            turnosGuardas = this.quitarDuplicados(turnosGuardas)
+            turnosConductor = this.quitarDuplicados(turnosConductor)
+
             this.turnosGuardas = turnosGuardas.sort((turno1:ITurno,turno2:ITurno)=>{
                 return this.compararHoras(turno1.toma,turno2.toma)
             })
             this.turnosConductor = turnosConductor.sort((turno1:ITurno,turno2:ITurno)=>{
                 return this.compararHoras(turno1.toma,turno2.toma)
-            })         
+            })   
+            
             this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),turnosConductor,this.personales)  
             this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),turnosGuardas,this.personales)  
-
+            this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),this.turnosConductorOrd,this.personales)  
+            this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),this.turnosGuardasOrd,this.personales) 
         },
         obtenerFecha(fecha:string, today: Date) {
             if (fecha == "") {
@@ -270,7 +602,8 @@ export default defineComponent({
             }else{
                 return false;
             }
-        },filtroPersonal(turno: string, fecha: Date, personales: IPersonal[]) {
+        },
+        filtroPersonal(turno: string, fecha: Date, personales: IPersonal[]) {
             try {
                 let filtrados: IPersonal[];
                 turno = turno.trim();
@@ -360,6 +693,25 @@ export default defineComponent({
                 return "Sin Cubrir";
             }
         },
+        obtenerTiposCirculares(turnos: ITurno[]) {
+            // Filtramos aquellos turnos que tengan definida la propiedad "circular"
+            const turnosFiltrados = turnos.filter(
+                (turno) => turno.circular !== undefined
+            );
+
+            // Usamos Set para obtener valores únicos de la propiedad "circular"
+            const circularesUnicas = [
+                ...new Set(turnosFiltrados.map((turno) => turno.circular)),
+            ];
+
+            return circularesUnicas;
+        },
+        cambioCirculares(){
+
+            window.localStorage.setItem("circularSeleccionada", this.circularSeleccionada.join(","));
+
+            this.filtrar()
+        }
     },
     created() {
         try {
@@ -390,5 +742,9 @@ main {
 
 .hidden-row {
     display: none;
+}
+.fila-oscura {
+  background-color: #e14646; /* Cambia este color según tus preferencias */
+  color: #fff; /* Cambia este color según tus preferencias */
 }
 </style>
