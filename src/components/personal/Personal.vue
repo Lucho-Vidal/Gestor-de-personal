@@ -32,6 +32,14 @@
                         v-model="search"
                         v-on:change="filtrarPersonales()"
                     />
+                    <input
+                        class="col-3 gap col"
+                        type="text"
+                        placeholder="Buscar por turno"
+                        autofocus
+                        v-model="searchTurno"
+                        v-on:change="filtrarPersonales()"
+                    />
                     <h6>Filtro por Dotación:</h6>
                     <label class="form-check-label mx-2">
                         <input
@@ -340,6 +348,7 @@ export default defineComponent({
             checkboxTurno: [] as string[],
             today: new Date(),
             search: "" as string,
+            searchTurno: "" as string,
             searchLegajo: 0,
             days: [
                 "Domingo",
@@ -413,6 +422,9 @@ export default defineComponent({
                 filtrar = true;
             }
             if (this.searchLegajo != 0) {
+                filtrar = true;
+            }
+            if (this.searchTurno.length != 0) {
                 filtrar = true;
             }
             if (
@@ -508,6 +520,16 @@ export default defineComponent({
                                 " " +
                                 personal.nombres.toLowerCase().trim()
                             ).includes(this.search.toLowerCase().trim());
+                        }
+                    );
+                }
+                if (this.searchTurno.length != 0) {
+                    auxPersonales = this.personalesFiltrados;
+                    this.personalesFiltrados = auxPersonales.filter(
+                        (personal) => {
+                            return (
+                                personal.turno
+                            ).includes(this.searchTurno.toLowerCase().trim());
                         }
                     );
                 }
