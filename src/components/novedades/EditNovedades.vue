@@ -486,10 +486,10 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
-            if(this.novedad.remplazo.length === 0){
+            if(this.novedad.remplazo == undefined ){
                 return false;
             }
-            if(this.novedad.remplazo == undefined ){
+            if(this.novedad.remplazo.length === 0){
                 return false;
             }
             if(this.novedad.remplazo[this.novedad.remplazo.length - 1].finRelevo == ""){

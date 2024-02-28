@@ -552,10 +552,10 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
-            if(this.newNovedad.remplazo.length === 0){
+            if(this.newNovedad.remplazo == undefined){
                 return false;
             }
-            if(this.newNovedad.remplazo == undefined){
+            if(this.newNovedad.remplazo.length === 0){
                 return false;
             }
             if(this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1].finRelevo == ""){
