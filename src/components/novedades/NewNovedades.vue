@@ -552,6 +552,9 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
+            if(this.newNovedad.remplazo.length === 0){
+                return false;
+            }
             if(this.newNovedad.remplazo == undefined){
                 return false;
             }

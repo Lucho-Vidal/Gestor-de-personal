@@ -486,6 +486,9 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad(){
+            if(this.novedad.remplazo.length === 0){
+                return false;
+            }
             if(this.novedad.remplazo == undefined ){
                 return false;
             }
