@@ -76,6 +76,15 @@
                             v-model="newTurno.deja"
                         />
                     </div>
+                    <div class="col-2">
+                        <label for="ordenes">
+                            Ordenes
+                            <input
+                            type="checkbox"
+                            v-model="newTurno.ordenes"
+                            />
+                        </label>
+                    </div>
                 </div>
                 <table>
                     <thead>
