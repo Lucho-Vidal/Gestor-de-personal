@@ -68,7 +68,7 @@
                                     </tr>
                                 </thead>
                     
-                                <tbody v-for="(turno,index) in turnosConductor" :key="index" class="Small" @click="viewDetail(turno)">
+                                <tbody v-for="(turno,index) in turnosConductor" :key="index" class="Small" @dblclick="viewDetail(turno)">
                                     <tr :class="{ 'fila-oscura': (turno.personal == 'Sin Cubrir') }">
                                         <td class="col-1">
                                             {{ turno.turno }}
