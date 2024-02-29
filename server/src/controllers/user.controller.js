@@ -94,6 +94,7 @@ export const changePassword = async (req, res) => {
 
         // Cambia la contraseña
         user.password = await User.encryptPassword(newPassword);
+        user.updatePass = false;
         await user.save();
 
         res.status(200).json({ message: "Contraseña cambiada exitosamente" });

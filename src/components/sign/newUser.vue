@@ -191,6 +191,7 @@ export default defineComponent({
         async procesar() {
             try {
                 this.user.password = "Inicio1";
+                this.user.updatePass = true
                 const res = await signUp(this.user);
 
                 if (res.status === 200) {

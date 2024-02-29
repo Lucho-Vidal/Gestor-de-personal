@@ -5,9 +5,9 @@
             <h1 class="d-flex justify-content-center m-3">Inicio de Sesión</h1>
             <div
                 class="alert  row"
-                :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':'']"
+                :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':message.status=='warning'?'alert-warning':'']"
                 role="alert"
-                v-if="message.status == 'danger'|| message.status == 'success'"
+                v-if="message.status == 'danger'|| message.status == 'success'||message.status == 'warning'"
             >
                 <h4 class="alert-heading">{{ message.title }}</h4>
                 <hr />
@@ -107,15 +107,28 @@ export default defineComponent({
                     window.localStorage.setItem("username", res.data.username);
                     window.localStorage.setItem("roles", res.data.role);
                     setRoles(res.data.role); 
-                    this.message = {
-                        status: "success",
-                        title: "ATENCIÓN!",
-                        message: "Hola "+localStorage.getItem('username')+", El inicio de sesión fue exitoso. seras redirigido en un momento...",
-                    };
-                    setTimeout(()=> {
-                        
-                        this.$router.push('/')
-                    },1000)
+                    // res.data.updatePass
+                    // this.user.updatePass = true
+                    if(res.data.updatePass){
+                        this.message = {
+                            status: "warning",
+                            title: "ATENCIÓN!",
+                            message: "Hola "+localStorage.getItem('username')+", El inicio de sesión fue exitoso, Pero tu clave se encuentra vencida. Por favor cámbiala...",
+                        };
+                        setTimeout(()=> {
+                            this.$router.push('/changePassword')
+                        },3000)
+                    }else{
+                        this.message = {
+                            status: "success",
+                            title: "ATENCIÓN!",
+                            message: "Hola "+localStorage.getItem('username')+", El inicio de sesión fue exitoso. seras redirigido en un momento...",
+                        };
+                        setTimeout(()=> {
+                            this.$router.push('/')
+                        },1000)
+                    }
+                    
                     
                 }
             } catch (error) {
@@ -124,7 +137,7 @@ export default defineComponent({
                     title: "ATENCIÓN!",
                     message: "Los datos ingresados no son validos.",
                 };
-                this.user.email = "";
+                // this.user.email = "";
                 this.user.password = "";
                 setTimeout(()=> this.message.status = '' ,5000)
             }

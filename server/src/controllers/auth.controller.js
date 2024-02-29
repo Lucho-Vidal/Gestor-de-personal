@@ -54,10 +54,11 @@ export const singIn = async (req, res) => {
     });
     userFound.password = "";
 
-    res.json({
+    res.status(200).json({
         token,
         username: userFound.username,
         role: userFound.roles.map(rol => rol.name),
+        updatePass: userFound.updatePass
     });
 };
 

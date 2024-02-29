@@ -21,6 +21,9 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        updatePass: {
+            type: Boolean,
+        },
         roles: [
             {
                 ref: "Role",
