@@ -151,7 +151,7 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
-        path: "/editNovedades/:id",
+        path: "/editNovedades/:id?",
         name: "editNovedades",
         component: () => import("@/components/novedades/EditNovedades.vue"),
         beforeEnter: (to, from, next) => {
