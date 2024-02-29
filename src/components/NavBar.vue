@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
         <div
-            class="container-fluid container d-flex flex-wrap justify-content-between"
+            class="container-fluid d-flex flex-wrap justify-content-between"
         >
             <router-link class="navbar-brand" to="/"
                 >GNPA - Trenes Argentinos</router-link
@@ -28,7 +28,7 @@
                                 rolMayor == 'user'
                             "
                         >
-                            <h5 class="mt-2">{{ username }} |</h5>
+                            <h5 class="mt-2">{{ username }} | </h5>
                         </li>
                         <li
                             class="nav-item"
@@ -66,11 +66,6 @@
                                 >Listado Personales</router-link
                             >
                         </li>
-                        <li class="nav-item" v-if="rolMayor == 'admin'">
-                            <router-link class="nav-link" to="/Turnos"
-                                >Turnos</router-link
-                            >
-                        </li>
                         <!-- <li
                             class="nav-item"
                             v-if="
@@ -101,6 +96,11 @@
                         >
                             <router-link class="nav-link" to="/novedades"
                                 >Novedades</router-link
+                            >
+                        </li>
+                        <li class="nav-item" v-if="rolMayor == 'admin'">
+                            <router-link class="nav-link" to="/Turnos"
+                                >Turnos</router-link
                             >
                         </li>
                         <li class="nav-item" v-if="rolMayor == 'admin'">
