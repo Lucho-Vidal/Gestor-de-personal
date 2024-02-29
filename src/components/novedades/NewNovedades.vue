@@ -40,7 +40,7 @@
                                 
                                 v-model="search"
                                 autofocus
-                                @keyup="searchPersonal(false)"
+                                @keyup="searchPersonal(selectRemplazo)"
                                 />
 
                                 <div class="table-container">
@@ -506,7 +506,7 @@ export default defineComponent({
 
         // Validaciones:
         esFechaMayor(dateMayor:string, dateMenor:string) {
-            if(dateMayor!== undefined && dateMenor!== undefined){            
+            if(dateMayor && dateMenor){            
                 const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
                 const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
                 return formattedDateMayor > formattedDateMenor
@@ -515,7 +515,7 @@ export default defineComponent({
             }
         },
         esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-            if(dateMayor!== undefined && dateMenor!== undefined ){
+            if(dateMayor && dateMenor ){
                 const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
                 const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
                 return formattedDateMayor >= formattedDateMenor;
