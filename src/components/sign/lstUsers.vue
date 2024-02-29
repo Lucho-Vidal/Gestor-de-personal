@@ -66,6 +66,7 @@ import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { deleteUser, getUsers, newToken } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
+import { AxiosError } from "axios";
 
 export default defineComponent({
     data() {
@@ -86,10 +87,14 @@ export default defineComponent({
             return (rol == 'admin'? 'Administrador' : rol == 'moderator'? 'Supervisor': rol == 'user' ? 'Usuario' : '')
         },
         async eliminarUsuario(id:string,index:number){
-            const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
-            if(confirmacion){
-                await deleteUser(id);
-                this.users.splice(index,1);
+            try{
+                const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+                if(confirmacion){
+                    await deleteUser(id);
+                    this.users.splice(index,1);
+                }
+            } catch (error) {
+                this.handleRequestError(error as AxiosError)
             }
         },
         getUbicacionRolMayor(user:User):number{
@@ -116,7 +121,22 @@ export default defineComponent({
             })
             }
             return res;
-        }
+        },
+    
+        handleRequestError(error: AxiosError) {
+            console.error("Error en la solicitud:", error);
+
+            if (error.response && error.response.status === 401) {
+                // Manejar la lógica de redirección a la página de inicio de sesión
+                localStorage.removeItem("username")
+                localStorage.removeItem("roles")
+                localStorage.removeItem("token")
+                this.$router.push("/login");
+            } else {
+                // Manejar otros errores de solicitud
+                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
+        },
     },
     created() {
         this.loadUsers();
