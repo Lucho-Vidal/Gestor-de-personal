@@ -123,6 +123,7 @@
                     <ul class="text-center list-group col-5">
                         <li class="list-group-item">Buscador de trenes</li>
                         <li class="list-group-item">Sabana de trenes</li>
+                        <li class="list-group-item">Lista de Personales</li>
                     </ul>
                 </div>
             </div>
@@ -135,6 +136,7 @@
                     <ul class="text-center list-group col-5">
                         <li class="list-group-item">Buscador de trenes</li>
                         <li class="list-group-item">Sabana de trenes</li>
+                        <li class="list-group-item">Lista de Personales</li>
                         <li class="list-group-item">Personal</li>
                         <li class="list-group-item">Novedades</li>
                     </ul>
@@ -150,9 +152,12 @@
                     <ul class="text-center list-group col-5">
                         <li class="list-group-item">Buscador de trenes</li>
                         <li class="list-group-item">Sabana de trenes</li>
+                        <li class="list-group-item">Lista de Personales</li>
                         <li class="list-group-item">Edición de turnos</li>
                         <li class="list-group-item">Personal</li>
                         <li class="list-group-item">Novedades</li>
+                        <li class="list-group-item">Edición de turnos</li>
+                        <li class="list-group-item">Registros</li>
                         <li class="list-group-item">
                             Administración de Usuarios
                         </li>
@@ -178,7 +183,10 @@ export default defineComponent({
         return {
             id: "" as string,
             user: {
-                roles:  [{} as Role],
+                roles:  [{
+                    _id:'',
+                    name:'user'
+            } as Role],
             } as User,
             actualizarPass: false,
             message: {
@@ -193,7 +201,6 @@ export default defineComponent({
             try {
                 const res = await getUser(id);
                 this.user = res.data;
-                console.log(this.user.roles);
                 
             } catch (error) {
                 console.error(error);
@@ -210,6 +217,7 @@ export default defineComponent({
                 let message
                 if (this.actualizarPass) {
                     this.user.password = "Inicio1";
+                    this.user.updatePass = true
                     message = "La edición se guardo con éxito. y se restableció la contraseña del usuario a 'Inicio1', seras redirigido en un momento..."
                 }else{
                     message = "La edición se guardo con éxito. seras redirigido en un momento..."
@@ -256,29 +264,33 @@ export default defineComponent({
             if (res >= 0) return res;
             else {
                 this.user.roles.forEach((rol,index)=>{
-                if (rol.name == 'moderator'){
-                    this.user.roles = this.user.roles.filter(rol => rol.name == "moderator")
-                    res = index
-                }
-            }) 
+                    if (rol.name == 'moderator'){
+                        this.user.roles = this.user.roles.filter(rol => rol.name == "moderator")
+                        res = index
+                    }
+                }) 
             }
             if (res >= 0) return res;
             else{
                 this.user.roles.forEach((rol,index)=>{
-                if (rol.name == 'user'){
-                    this.user.roles = this.user.roles.filter(rol => rol.name == "user")
-                    res = index
-                }
-            })
+                    if (rol.name == 'user'){
+                        this.user.roles = this.user.roles.filter(rol => rol.name == "user")
+                        res = index
+                    }
+                })
             }
             return res;
         }
 
     },
     created() {
-        if (typeof this.$route.params.id === "string") {
+        try {
+            if (typeof this.$route.params.id === "string") {
             this.id = this.$route.params.id;
-            this.loadUser(this.id);
+                this.loadUser(this.id);
+            }
+        } catch (error) {
+            console.error(error);
         }
     },
     components: {
