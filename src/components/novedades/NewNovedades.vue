@@ -416,6 +416,7 @@ export default defineComponent({
             try {
                 this.ultimoId++;
                 this.newNovedad._id = this.ultimoId;
+                this.newNovedad.fecha = this.today.toISOString().split('T')[0];
                 
                 // Validaciones
                 if(this.cicloRelevando){
@@ -481,12 +482,22 @@ export default defineComponent({
             const novedadesIndex = this.novedadesIndexada(this.novedades)
                 novedadesIndex[this.idNovedad].remplazo.forEach(remp=>{
                     if(remp.legajo === this.newNovedad.legajo){
+                        // const relevo:Remplazo = remp;
                         const fechaDiaAnterior = new Date(this.newNovedad.fechaBaja); 
                         fechaDiaAnterior.setDate(fechaDiaAnterior.getDate() - 1)
+                        const fechaFinRelevo = remp.finRelevo;
                         remp.finRelevo = fechaDiaAnterior.toISOString().split('T')[0];
-                        
+                        if(this.newNovedad.fechaAlta){
+                            const fechaDiaPosterior = new Date(this.newNovedad.fechaAlta); 
+                            fechaDiaPosterior.setDate(fechaDiaPosterior.getDate() + 1)
+                            const remplazo: Remplazo = { ...remp };
+                            remplazo.inicioRelevo = fechaDiaPosterior.toISOString().split('T')[0];
+                            remplazo.finRelevo = fechaFinRelevo;
+                            novedadesIndex[this.idNovedad].remplazo.push(remplazo)
+                        }
                     }
                 })
+                
                 if(novedadesIndex[this.idNovedad].detalle){
                     novedadesIndex[this.idNovedad].detalle = novedadesIndex[this.idNovedad].detalle + 
                     "\nEl Personal "+ this.newNovedad.apellido + " " + this.newNovedad.nombres + " fue dado de baja por la novedad N*"+ (this.ultimoId + 1)

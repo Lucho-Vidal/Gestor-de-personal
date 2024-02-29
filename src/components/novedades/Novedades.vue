@@ -223,7 +223,8 @@
             >
                 <thead>
                     <tr>
-                        <th class="col-1" colspan="1">Num</th>
+                        <th class="col-1" colspan="1">Consecutivo</th>
+                        <th class="col-1" colspan="1">Fecha</th>
                         <th class="col-1" colspan="1">Legajo</th>
                         <th class="col-1" colspan="1">Apellido</th>
                         <th class="col-1" colspan="1">Nombres</th>
@@ -245,6 +246,14 @@
                 >
                     <tr v-if="checkboxTodas||!novedad.novedadInactiva" class="Small shadow" :class="{ 'fila-oscura': novedad.novedadInactiva }">
                         <td class="col-1">{{ novedad._id }}</td>
+                        <td class="col-1">{{
+                                novedad.fecha?
+                                new Date(
+                                    novedad.fecha + " 12:00"
+                                ).toLocaleDateString() : new Date(
+                                    novedad.fechaBaja + " 12:00"
+                                ).toLocaleDateString()
+                            }}</td>
                         <td class="col-1">{{ novedad.legajo }}</td>
                         <td class="col-1">{{ novedad.apellido }}</td>
                         <td class="col-2">{{ novedad.nombres }}</td>
