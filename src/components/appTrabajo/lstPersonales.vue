@@ -150,8 +150,8 @@
                                     </tr>
                                 </thead>
                     
-                                <tbody v-for="(turno,index) in turnosConductorOrd" :key="index" class="Small" @click="viewDetail(turno)">
-                                    <tr   >
+                                <tbody v-for="(turno,index) in turnosConductorOrd" :key="index" class="Small" @dblclick="viewDetail(turno)">
+                                    <tr :class="{ 'fila-oscura': (turno.personal == 'Sin Cubrir') }">
                                         <td class="col-1">
                                             {{ turno.turno }}
                                         </td>
@@ -240,8 +240,9 @@
                                     </tr>
                                 </thead>
                     
-                                <tbody v-for="(turno,index) in turnosGuardas" :key="index" class="Small" @click="viewDetail(turno)">
-                                    <tr   >
+                                <tbody v-for="(turno,index) in turnosGuardas" :key="index" class="Small" @dblclick="viewDetail(turno)">
+                                    <tr :class="{ 'fila-oscura': (turno.personal == 'Sin Cubrir') }">
+
                                         <td class="col-1">
                                             {{ turno.turno }}
                                         </td>
@@ -322,8 +323,8 @@
                                     </tr>
                                 </thead>
                     
-                                <tbody v-for="(turno,index) in turnosGuardasOrd" :key="index" class="Small" @click="viewDetail(turno)">
-                                    <tr   >
+                                <tbody v-for="(turno,index) in turnosGuardasOrd" :key="index" class="Small" @dblclick="viewDetail(turno)">
+                                    <tr :class="{ 'fila-oscura': (turno.personal == 'Sin Cubrir') }">
                                         <td class="col-1">
                                             {{ turno.turno }}
                                         </td>
@@ -554,7 +555,13 @@ export default defineComponent({
             })
             this.turnosConductor = turnosConductor.sort((turno1:ITurno,turno2:ITurno)=>{
                 return this.compararHoras(turno1.toma,turno2.toma)
-            })   
+            })  
+            this.turnosGuardasOrd = this.turnosGuardasOrd.sort((turno1:ITurno,turno2:ITurno)=>{
+                return this.compararHoras(turno1.toma,turno2.toma)
+            })
+            this.turnosConductorOrd = this.turnosConductorOrd.sort((turno1:ITurno,turno2:ITurno)=>{
+                return this.compararHoras(turno1.toma,turno2.toma)
+            })  
             
             this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),turnosConductor,this.personales)  
             this.buscarPersonalACargo(this.obtenerFecha(this.inputDate,this.today),turnosGuardas,this.personales)  
