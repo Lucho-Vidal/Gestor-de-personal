@@ -337,7 +337,7 @@ import { defineComponent } from "vue";
 import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
-import { getNovedad, getNovedades, updateNovedad } from "../../services/novedadesService";
+import { createNovedad, getNovedad, getNovedades, updateNovedad } from "../../services/novedadesService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
 import { newToken } from "../../services/signService";
@@ -367,6 +367,13 @@ export default defineComponent({
             alerta: "" as string,
             mostrarModalSearch: false,
             idNovedad: 0,
+            cicloRelevando: false,
+            message: {
+                activo: false,
+                status: "",
+                title: "",
+                message: "",
+            },
         };
     },
     methods: {
@@ -412,7 +419,11 @@ export default defineComponent({
                 }
 
                 // Crear la novedad
-                await updateNovedad(this.novedad._id, this.novedad);
+                if (this.$route.params.id && typeof this.$route.params.id === "string") {
+                    await updateNovedad(this.novedad._id, this.novedad);
+                }else{
+                    await createNovedad(this.novedad);
+                }
 
                 // guardamos registro
                 const registro: Registro = {
@@ -437,6 +448,9 @@ export default defineComponent({
                 // Manejar la lógica de redirección a la página de inicio de sesión
                 this.$router.push("/login");
             } else {
+                this.message.message = "Ocurrió un error al intentar guardar la novedad. Es posible que se deba a que el numero de novedad ya existe. por favor intente de nuevo."
+                this.message.activo = true
+                this.message.status = 'danger'
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
@@ -720,10 +734,11 @@ export default defineComponent({
     mounted() {
         try {
             this.loadPersonales();
-            if (typeof this.$route.params.id === "string") {
+            if (this.$route.params.id && typeof this.$route.params.id === "string") {
                 this.loadNovedad(parseInt(this.$route.params.id));
             }
             this.loadNovedades();
+            
             newToken();
         } catch (error) {
             console.error(error);
