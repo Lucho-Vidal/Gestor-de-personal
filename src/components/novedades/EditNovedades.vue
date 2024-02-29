@@ -446,6 +446,9 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
+                localStorage.removeItem("username")
+                localStorage.removeItem("roles")
+                localStorage.removeItem("token")
                 this.$router.push("/login");
             } else {
                 this.message.message = "Ocurrió un error al intentar guardar la novedad. Es posible que se deba a que el numero de novedad ya existe. por favor intente de nuevo."

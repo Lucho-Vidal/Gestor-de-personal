@@ -413,6 +413,9 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
+                localStorage.removeItem("username")
+                localStorage.removeItem("roles")
+                localStorage.removeItem("token")
                 this.$router.push("/login");
             } else {
                 // Manejar otros errores de solicitud
