@@ -1,5 +1,6 @@
 export interface Novedad {
     _id: number;
+    fecha: string;
     legajo: number;
     apellido: string;
     nombres: string;
