@@ -9,6 +9,7 @@ const novedadSchema = new Schema({
         type:Number,
         required: true
     },
+    fecha: String,
     apellido: String,
     nombres: String,
     base: String,

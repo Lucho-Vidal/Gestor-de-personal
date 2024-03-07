@@ -77,30 +77,35 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/changePassword",
         name: "changePassword",
+        meta:{title: 'GNPA - Cambio de contraseña'},
         component: () => import("@/components/sign/changePassword.vue"),
         beforeEnter: requireAuth
     },
     {
         path: "/users",
         name: "users",
+        meta:{title: 'GNPA - Administración de  usuarios'},
         component: () => import("@/components/sign/lstUsers.vue"),
         beforeEnter: requireAdmin,
     },
     {
         path: "/newUser",
         name: "newUser",
+        meta:{title: 'GNPA - Nuevo usuario'},
         component: () => import("@/components/sign/newUser.vue"),
         beforeEnter: requireAdmin,
     },
     {
         path: "/editUser/:id",
         name: "editUser",
+        meta:{title: 'GNPA - Editar usuario'},
         component: () => import("@/components/sign/editUser.vue"),
         beforeEnter: requireAdmin,
     },
     {
         path: "/buscador",
         name: "Buscador",
+        meta:{title: 'GNPA - Buscador'},
         component: () => import("@/components/appTrabajo/BuscadorTrenes.vue"),
         beforeEnter: requireAuth,
     },
@@ -113,6 +118,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/personal",
         name: "Personal",
+        meta:{title: 'GNPA - Personal'},
         component: () => import("@/components/personal/Personal.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -121,6 +127,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/newPersonal",
         name: "newPersonal",
+        meta:{title: 'GNPA - Nuevo personal'},
         component: () => import("@/components/personal/newPersonal.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -129,6 +136,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/editPersonal/:id",
         name: "editPersonal",
+        meta:{title: 'GNPA - Editar personal'},
         component: () => import("@/components/personal/editPersonal.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -137,6 +145,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/novedades",
         name: "Novedades",
+        meta:{title: 'GNPA - Novedades'},
         component: () => import("@/components/novedades/Novedades.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -145,6 +154,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/NewNovedades",
         name: "NewNovedades",
+        meta:{title: 'GNPA - Nueva Novedad'},
         component: () => import("@/components/novedades/NewNovedades.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -153,6 +163,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/editNovedades/:id?",
         name: "editNovedades",
+        meta:{title: 'GNPA - Editar Novedad'},
         component: () => import("@/components/novedades/EditNovedades.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -169,6 +180,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/turnos",
         name: "Turnos",
+        meta:{title: 'GNPA - Turnos'},
         component: () => import("@/components/turnos/Turnos.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireAdmin(to, from, next));
@@ -177,6 +189,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/newTurno",
         name: "newTurno",
+        meta:{title: 'GNPA - Nuevo turno'},
         component: () => import("@/components/turnos/NewTurno.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireAdmin(to, from, next));
@@ -185,6 +198,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/editTurno/:id",
         name: "editTurno",
+        meta:{title: 'GNPA - Editar turno'},
         component: () => import("@/components/turnos/EditTurno.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireAdmin(to, from, next));
@@ -193,6 +207,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/registros",
         name: "registros",
+        meta:{title: 'GNPA - Registros'},
         component: () => import("@/components/registros.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireAdmin(to, from, next));
@@ -201,6 +216,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/sinCubrir",
         name: "sinCubrir",
+        meta:{title: 'GNPA - Sin cubrir'},
         component: () => import("@/components/appTrabajo/lstCubrir.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(to, from, next));
@@ -209,6 +225,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/listadoPersonales",
         name: "listadoPersonales",
+        meta:{title: 'GNPA - Listado de personal'},
         component: () => import("@/components/appTrabajo/lstPersonales.vue"),
         beforeEnter: requireAuth,
     },
