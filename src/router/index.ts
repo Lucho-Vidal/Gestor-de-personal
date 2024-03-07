@@ -159,6 +159,14 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: "/cambioTurno",
+        name: "cambioTurno",
+        component: () => import("@/components/novedades/cambioTurno.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(to, from, next));
+        }
+    },
+    {
         path: "/turnos",
         name: "Turnos",
         component: () => import("@/components/turnos/Turnos.vue"),
