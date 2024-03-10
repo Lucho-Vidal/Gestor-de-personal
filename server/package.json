@@ -1,7 +1,7 @@
 {
-  "name": "products-api-jwt",
+  "name": "gnpa-api-jwt",
   "version": "1.0.0",
-  "description": "A single rest api",
+  "description": "A single rest api for GNPA of Trenes Argentinos",
   "main": "index.js",
   "scripts": {
     "build": "babel src --out-dir build",

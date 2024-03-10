@@ -17,7 +17,7 @@ WORKDIR /home/app
 # COPY . .
 
 # Exponer el puerto en el que se ejecutará la aplicación
-EXPOSE 8080
+EXPOSE 5173
 
 # Comando para iniciar la aplicación
-CMD ["pnpm", "run", "serve"]
+CMD ["pnpm", "run", "dev"]
