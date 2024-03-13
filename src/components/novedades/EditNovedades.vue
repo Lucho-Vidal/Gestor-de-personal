@@ -231,6 +231,20 @@
                             type="Date"
                             name="fechaAlta"
                             v-model="novedad.fechaAlta"
+                            @change="calcularDiasNovedad(true)"
+
+                        />
+                    </div>
+                    <div class="col-3" v-if="!novedad.HNA">
+                        <label for="fechaAlta"></label>
+                        Cantidad de días
+                        <input
+                            required
+                            class="form-control mb-3"
+                            type="number"
+                            name="cantidadDias"
+                            v-model="cantDias"
+                            @change="calcularDiasNovedad(false)"
                         />
                     </div>
                 </div>
@@ -374,6 +388,7 @@ export default defineComponent({
                 title: "",
                 message: "",
             },
+            cantDias: 0,
         };
     },
     methods: {
@@ -617,6 +632,32 @@ export default defineComponent({
                         HNA: true,
                     },
                 ];
+            }
+        },
+        calcularDiasNovedad(esFecha:boolean){
+            if(esFecha){
+                if(this.cantDias < 0){
+                    this.cantDias = 0;
+                }
+                // Supongamos que tienes dos fechas almacenadas en variables llamadas "fecha1" y "fecha2"
+                const fecha1:Date = new Date(this.novedad.fechaBaja);
+                const fecha2:Date = new Date(this.novedad.fechaAlta);
+
+                // Calcula la diferencia en miliSegundos entre las dos fechas
+                const diferenciaEnMiliSegundos = fecha2.getTime() - fecha1.getTime();
+
+                // Convierte la diferencia de miliSegundos a días
+                const diferenciaEnDias = diferenciaEnMiliSegundos / (1000 * 60 * 60 * 24);
+
+                this.cantDias = diferenciaEnDias;
+
+            }else{
+                if(this.cantDias < 0){
+                    this.cantDias = 0;
+                }
+                const newFechaAlta = new Date(this.novedad.fechaBaja) 
+                newFechaAlta.setDate(newFechaAlta.getDate() + this.cantDias);
+                this.novedad.fechaAlta = newFechaAlta.toISOString().split("T")[0] 
             }
         },
         selectPersonal(personal: IPersonal) {
