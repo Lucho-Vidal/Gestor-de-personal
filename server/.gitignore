@@ -9,3 +9,4 @@ dist
 dist
 build
 *.py
+*.yaml
