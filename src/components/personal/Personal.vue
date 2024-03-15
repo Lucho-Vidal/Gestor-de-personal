@@ -260,15 +260,15 @@
                         <td class="col-1">{{ personal.orden }}</td>
                         <td class="col-1">
                             <i
-                                class="fa-solid fa-pen-to-square"
+                            class="material-icons cursor-hand"
                                 @click="edit(personal._id)"
-                            ></i>
+                            >edit_note</i>
                         </td>
                         <td class="col-1">
                             <i
-                                class="fa-solid fa-trash-can"
+                                class="material-icons cursor-hand rojo"
                                 @click="deletePersonal(personal._id, index)"
-                            ></i>
+                            >delete_forever</i>
                         </td>
                     </tr>
                     <tr v-if="personal.viewDetail && personal.conocimientos">
@@ -570,5 +570,17 @@ export default defineComponent({
 <style>
 main {
     min-height: 81.6vh;
+}
+.cursor-hand{
+    cursor: pointer;
+}
+.verde{
+    color:#0f0
+}
+.rojo{
+    color:#f00
+}
+.gris{
+    color:#aaa
 }
 </style>

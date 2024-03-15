@@ -287,21 +287,19 @@
                             }}
                         </td>
                         <td class="col-1">
-                            <i
-                                v-if="!novedad.novedadInactiva"
-                                class="fa-solid fa-pen-to-square"
-                                @click="edit(novedad._id)"
-                            ></i>
+                            <i v-if="!novedad.novedadInactiva"
+                            class="material-icons cursor-hand"
+                            @click="edit(novedad._id)"
+                            >
+                            edit_note
+                            </i>
                         </td>
                         <td class="col-1">
                             <i  
                                 v-if="!novedad.novedadInactiva"
-                                class="fa-solid fa-trash-can"
+                                class="material-icons cursor-hand rojo"
                                 @click="deleteNovedad(novedad._id, index)"
-                            ></i>
-                            <!-- <i type="button" class="delete" @click="deleteNovedad(novedad._id, index)" >
-                                    <span aria-hidden="true">&times;</span>
-                            </i>  -->
+                            >delete_forever</i>
                         </td>
                     </tr>
                     <tr v-if="novedad.viewDetail">
@@ -585,5 +583,17 @@ main {
 .fila-oscura {
   background-color: #888; /* Cambia este color según tus preferencias */
   color: #fff; /* Cambia este color según tus preferencias */
+}
+.cursor-hand{
+    cursor: pointer;
+}
+.verde{
+    color:#0f0
+}
+.rojo{
+    color:#f00
+}
+.gris{
+    color:#aaa
 }
 </style>

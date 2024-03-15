@@ -282,10 +282,9 @@
                             <th>Hasta</th>
                             <th>Borrar</th>
                             <th class="col-1 px-5">
-                                <i
-                                    class="fa-solid fa-circle-plus"
+                                <i class="material-icons cursor-hand verde"
                                     @click="agregarRemplazo()"
-                                ></i>
+                                >person_add</i>
                             </th>
                         </tr>
                     </thead>
@@ -333,14 +332,11 @@
                                     v-model="remplazo.finRelevo"
                                 />
                             </td>
-                            <td>
-                                <i
-                                    class="fa-solid fa-x fa-xl"
-                                    style="color: #ff0000"
-                                    @click="
-                                        newNovedad.remplazo.splice(index, 1)
-                                    "
-                                ></i>
+                            <td>    
+                                <i class="material-icons cursor-hand rojo"
+                                    @click="newNovedad.remplazo.splice(index, 1)"
+                                >clear</i>
+                                
                             </td>
                         </tr>
                     </tbody>
@@ -397,7 +393,7 @@ export default defineComponent({
             personalEncontrado: [] as IPersonal[],
             //alerta: "" as string,
             mostrarModalSearch: false,
-            cantDias: 0,
+            cantDias: 1,
             idNovedad: 0,
             cicloRelevando: false,
             message: {
@@ -703,10 +699,11 @@ export default defineComponent({
             }
         },
         calcularDiasNovedad(esFecha:boolean){
+            if(this.cantDias < 1){
+                this.cantDias = 1;
+                return
+            }
             if(esFecha){
-                if(this.cantDias < 0){
-                    this.cantDias = 0;
-                }
                 // Supongamos que tienes dos fechas almacenadas en variables llamadas "fecha1" y "fecha2"
                 const fecha1:Date = new Date(this.newNovedad.fechaBaja);
                 const fecha2:Date = new Date(this.newNovedad.fechaAlta);
@@ -717,14 +714,12 @@ export default defineComponent({
                 // Convierte la diferencia de miliSegundos a días
                 const diferenciaEnDias = diferenciaEnMiliSegundos / (1000 * 60 * 60 * 24);
 
-                this.cantDias = diferenciaEnDias;
+                this.cantDias = diferenciaEnDias + 1;
 
             }else{
-                if(this.cantDias < 0){
-                    this.cantDias = 0;
-                }
+                
                 const newFechaAlta = new Date(this.newNovedad.fechaBaja) 
-                newFechaAlta.setDate(newFechaAlta.getDate() + this.cantDias);
+                newFechaAlta.setDate(newFechaAlta.getDate() + this.cantDias - 1 );
                 this.newNovedad.fechaAlta = newFechaAlta.toISOString().split("T")[0] 
             }
         },
@@ -912,6 +907,18 @@ main {
 .custom-modal .modal-dialog {
   max-width: 1200px; /* Ajusta el ancho máximo según tus necesidades */
   margin: 0 auto; /* Centra modal-dialog */
+}
+.cursor-hand{
+    cursor: pointer;
+}
+.verde{
+    color:#0f0
+}
+.rojo{
+    color:#f00
+}
+.gris{
+    color:#aaa
 }
 </style>
 

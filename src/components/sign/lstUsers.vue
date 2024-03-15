@@ -42,14 +42,14 @@
                         <td class="col-2">{{ getRolMayor(user.roles[getUbicacionRolMayor(user)].name) }}</td>
                         <td class="col-1">
                             <i
-                                class="fa-solid fa-pen-to-square"
+                                class="material-icons cursor-hand"
                                 @click="edit(user._id)"
-                            ></i>
+                            >edit_note</i>
                         </td>
                         <td class="col-1">
-                            <i class="fa-solid fa-trash-can"
+                            <i class="material-icons cursor-hand rojo"
                                 @click="eliminarUsuario(user._id,index)"
-                            ></i>
+                            >delete_forever</i>
                         </td>
                     </tr>
                 </tbody>
@@ -156,5 +156,17 @@ main {
 
 .hidden-row {
     display: none;
+}
+.cursor-hand{
+    cursor: pointer;
+}
+.verde{
+    color:#0f0
+}
+.rojo{
+    color:#f00
+}
+.gris{
+    color:#aaa
 }
 </style>
