@@ -1,142 +1,34 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div
-            class="container-fluid d-flex flex-wrap justify-content-between"
-        >
-            <router-link class="navbar-brand" to="/"
-                >GNPA - Trenes Argentinos</router-link
-            >
-            <div v-if="login">
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarText"
-                    aria-controls="navbarText"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' ||
-                                rolMayor == 'admin' ||
-                                rolMayor == 'user'
-                            "
-                        >
-                            <h5 class="mt-2">{{ username }} | </h5>
-                        </li>
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' ||
-                                rolMayor == 'admin' ||
-                                rolMayor == 'user'
-                            "
-                        >
-                            <router-link class="nav-link" to="/"
-                                >Home</router-link
-                            >
-                        </li>
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' ||
-                                rolMayor == 'admin' ||
-                                rolMayor == 'user'
-                            "
-                        >
-                            <router-link class="nav-link" to="/buscador"
-                                >Buscador</router-link
-                            >
-                        </li>
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' ||
-                                rolMayor == 'admin' ||
-                                rolMayor == 'user'
-                            "
-                        >
-                            <router-link class="nav-link" to="/listadoPersonales"
-                                >Listado Personales</router-link
-                            >
-                        </li>
-                        <!-- <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' ||
-                                rolMayor == 'admin' ||
-                                rolMayor == 'user'
-                            "
-                        >
-                            <router-link class="nav-link" to="/Sabana"
-                                >Sabana</router-link
-                            >
-                        </li> -->
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' || rolMayor == 'admin'
-                            "
-                        >
-                            <router-link class="nav-link" to="/personal"
-                                >Personal</router-link
-                            >
-                        </li>
-                        <li
-                            class="nav-item"
-                            v-if="
-                                rolMayor == 'moderator' || rolMayor == 'admin'
-                            "
-                        >
-                            <router-link class="nav-link" to="/novedades"
-                                >Novedades</router-link
-                            >
-                        </li>
-                        <li class="nav-item" v-if="rolMayor == 'admin'">
-                            <router-link class="nav-link" to="/Turnos"
-                                >Turnos</router-link
-                            >
-                        </li>
-                        <li class="nav-item" v-if="rolMayor == 'admin'">
-                            <router-link class="nav-link" to="/users"
-                                >Usuarios</router-link
-                            >
-                        </li>
-                        <li class="nav-item" v-if="rolMayor == 'admin'">
-                            <router-link class="nav-link" to="/registros"
-                                >Registros</router-link
-                            >
-                        </li>
-                        <li class="nav-item" v-if="login">
-                            <router-link
-                                class="btn btn-success mx-1"
-                                to="/changePassword"
-                            >Contraseña</router-link>
-                        </li>
-                        <li class="nav-item" v-if="login">
-                            <button
-                                class="btn btn-secondary"
-                                v-on:click="logOut"
-                            >
-                                Cerrar Sesión
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <router-link class="navbar-brand mx-4" to="/" >GNPA - Trenes Argentinos</router-link>
+        <!-- Sidebar Toggle-->
+        <!-- <a @click="toggleSidebar" id="sidebarToggle" class="material-icons">list</a> -->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="toggleAsideBar"><i class="fas fa-bars"></i></button>
+        <!-- Navbar username-->
+        <span class="ms-auto me-0 me-md-3 my-2 my-md-0" style="color: white;">{{ username }}</span>
+
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-expanded="false" @click="toggleDropdown"><i class="fas fa-user fa-fw"></i></a>
+                <!-- menu desplegable -->
+                <ul ref="dropdownMenu" class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdown">
+                    <li><router-link class="dropdown-item" to="/changePassword" >Cambio contraseña</router-link></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><button class="dropdown-item" @click="logOut">Cerrar Sesión</button></li>
+                </ul>
+            </li>
+        </ul>
     </nav>
+    
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent,ref } from "vue";
 import { getRoles } from "../services/signService";
+// import "@/assets/styles.css";
+
 
 export default defineComponent({
     data() {
@@ -145,16 +37,52 @@ export default defineComponent({
             username: "" as string,
             roles: [] as string[],
             rolMayor: "" as string,
+            isDropdownOpen: false
         };
+    },
+    setup(props, { emit }) {
+        const isAsideBarVisible = ref(true);
+        props
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value;
+            const body = document.body;
+            body.classList.toggle('sb-sidenav-toggled');
+            emit('update:isAsideBarVisible', isAsideBarVisible.value);
+        }
+
+        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         logOut() {
             //localStorage.clear();
-            localStorage.removeItem("username")
-            localStorage.removeItem("roles")
-            localStorage.removeItem("token")
+            localStorage.removeItem("username");
+            localStorage.removeItem("roles");
+            localStorage.removeItem("token");
             this.rolMayor = "";
             this.$router.push("/login");
+        },
+        toggleDropdown() {
+            const dropdownMenu = this.$refs.dropdownMenu as HTMLElement;
+            if (dropdownMenu) {
+                // Alternar la clase para mostrar u ocultar el menú desplegable
+                dropdownMenu.classList.toggle('show');
+                // Alternar el estado de isDropdownOpen
+                this.isDropdownOpen = !this.isDropdownOpen;
+            }
+        },
+        closeDropdown(event: MouseEvent) {
+            // Check if the click event is outside the dropdown
+            const dropdownMenu = this.$el.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+                if (!dropdownMenu.contains(event.target)) {
+                    this.isDropdownOpen = false;
+                }
+            }
+        },
+        toggleSidebar() {
+            const body = document.body;
+            body.classList.toggle('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', body.classList.contains('sb-sidenav-toggled').toString());
         },
         getRol() {
             if (
@@ -180,21 +108,25 @@ export default defineComponent({
         this.getRol();
         this.getRolMayor();
     },
+    mounted() {
+        // Attach click event listener to document
+        // document.addEventListener('click', this.closeDropdown);
+    },
     beforeUnmount() {
         this.rolMayor = "";
+        // Remove click event listener when component is unmounted
+        // document.removeEventListener('click', this.closeDropdown);
     },
 });
 </script>
 
 <style>
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    box-sizing: border-box;
+.dropdown-menu-custom{
+    right: 0;
+}
+#layoutSidenav{
+    position: relative;
+    z-index:1;
 }
 </style>
+
