@@ -1,160 +1,191 @@
 <template>
     <div>
-        <NavBar />
-        <main class="container">
-            <h2 class="d-flex justify-content-center m-3">
-                Buscador de trenes
-            </h2>
-            <div class="d-flex row">
-                <div class="row justify-content-end">
-                    <!-- <p class="col">
-                        Fecha: {{ days[today.getDay()] }}
-                        {{ today.toLocaleDateString() }}
-                    </p> -->
-                </div>
-                <div class="row justify-content-between">
-                    <input
-                        class="col-3"
-                        type="text"
-                        placeholder="Buscar por tren o por turno"
-                        autofocus
-                        v-model="tren"
-                        v-on:change="buscar()"
-                    />
-                    <select
-                        name="itinerario"
-                        id="itinerario"
-                        class="col-2"
-                        required
-                        v-model="inputIt"
-                        v-on:change="buscar()"
-                    >
-                        <option value=""></option>
-                        <option value="H">Hábil</option>
-                        <option value="S">Sábado</option>
-                        <option value="D">Domingo</option>
-                    </select>
-                    <input
-                        class="col-3"
-                        type="date"
-                        v-model="inputDate"
-                        v-on:change="buscar()"
-                    />
-                </div>
-
-                <div class="d-flex flex-wrap my-3">
-                    <h6>Aplicar circular:</h6>
-                    <div v-for="(circular, index) in circulares" :key="index">
-                        <label class="form-check-label mx-2">
+        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
+        <asideBar />
+        <div
+            id="layoutSidenav_content"
+            class="body"
+            :class="[
+                isAsideBarVisible
+                    ? 'layoutSidenav_content-width-max'
+                    : 'layoutSidenav_content-width-min',
+            ]"
+        >
+            <main>
+                <div class="container-fluid px-4">
+                    <h2 class="d-flex justify-content-center m-3">
+                        Buscador de trenes
+                    </h2>
+                    <div class="d-flex row">
+                        <div class="row justify-content-end">
+                            <!-- <p class="col">
+                            Fecha: {{ days[today.getDay()] }}
+                            {{ today.toLocaleDateString() }}
+                        </p> -->
+                        </div>
+                        <div class="row justify-content-between">
                             <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :value="circular"
-                                v-model="circularSeleccionada"
-                                v-on:change="cambioCirculares()"
+                                class="col-3"
+                                type="text"
+                                placeholder="Buscar por tren o por turno"
+                                autofocus
+                                v-model="tren"
+                                v-on:change="buscar()"
                             />
-                            {{ circular }}
-                            <!-- Mostrar el valor de la variable circular en el label -->
-                        </label>
-                    </div>
-                </div>
-            </div>
+                            <select
+                                name="itinerario"
+                                id="itinerario"
+                                class="col-2"
+                                required
+                                v-model="inputIt"
+                                v-on:change="buscar()"
+                            >
+                                <option value=""></option>
+                                <option value="H">Hábil</option>
+                                <option value="S">Sábado</option>
+                                <option value="D">Domingo</option>
+                            </select>
+                            <input
+                                class="col-3"
+                                type="date"
+                                v-model="inputDate"
+                                v-on:change="buscar()"
+                            />
+                        </div>
 
-            <div class=""></div>
-            <table class="table table-striped table-hover">
-                <thead v-if="horarios !== null">
-                    <tr v-if="horarios.estaciones !== undefined">
-                        <th
-                            v-for="i in horarios.estaciones.length"
-                            :key="i"
-                            colspan="1"
-                        >
-                            {{ horarios.estaciones[i - 1] }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody v-if="horarios !== null" >
-                    <tr v-if="horarios.horarios !== undefined">
-                        <th
-                            v-for="i in horarios.horarios.length"
-                            :key="i"
-                            colspan="1"
-                        >
-                            {{ horarios.horarios[i - 1] }}
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-            <table v-if="turnosAImprimir !== null" class="table table-striped table-hover">
-                <thead>
-                    <tr v-if="turnosAImprimir.length != 0">
-                        <th colspan="1">Ref</th>
-                        <th colspan="1">Turno</th>
-                        <th colspan="1">Circular</th>
-                        <th colspan="1">Observación</th>
-                        <th colspan="2">Titular</th>
-                        <th colspan="1">Toma</th>
-                        <th colspan="1">Deja</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(ind, index) in turnosAImprimir" :key="index">
-                        <td class="w-10">{{ ind.vueltas[0].refer }}</td>
-                        <td class="w-10">{{ ind.turno }}</td>
-                        <td class="w-10">{{ ind.circular }}</td>
-                        <td class="w-10">{{ ind.vueltas[0].observaciones }}</td>
-                        <td colspan="2" class="w-10">{{ ind.personal }}</td>
-                        <td class="w-10">{{ ind.toma }}</td>
-                        <td class="w-10">{{ ind.deja }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div v-for="(t, tIndex) in turnosAImprimir" :key="tIndex" class="row">
-                    <h4 class="Personal col-1">{{ t.turno }}</h4>
-                    <h4 class="col-4">{{ t.personal }}</h4>
-                    <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
-                    <h5 class="col-2">Toma: {{ t.toma }}</h5>
-                    <h5 class="col-2">Deja: {{ t.deja }}</h5>
+                        <div class="d-flex flex-wrap my-3">
+                            <h6>Aplicar circular:</h6>
+                            <div
+                                v-for="(circular, index) in circulares"
+                                :key="index"
+                            >
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        :value="circular"
+                                        v-model="circularSeleccionada"
+                                        v-on:change="cambioCirculares()"
+                                    />
+                                    {{ circular }}
+                                    <!-- Mostrar el valor de la variable circular en el label -->
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=""></div>
                     <table class="table table-striped table-hover">
-                        <thead class="">
-                            <tr>
-                                <th colspan="1">Vuelta</th>
+                        <thead v-if="horarios !== null">
+                            <tr v-if="horarios.estaciones !== undefined">
+                                <th
+                                    v-for="i in horarios.estaciones.length"
+                                    :key="i"
+                                    colspan="1"
+                                >
+                                    {{ horarios.estaciones[i - 1] }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="horarios !== null">
+                            <tr v-if="horarios.horarios !== undefined">
+                                <th
+                                    v-for="i in horarios.horarios.length"
+                                    :key="i"
+                                    colspan="1"
+                                >
+                                    {{ horarios.horarios[i - 1] }}
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table
+                        v-if="turnosAImprimir !== null"
+                        class="table table-striped table-hover"
+                    >
+                        <thead>
+                            <tr v-if="turnosAImprimir.length != 0">
                                 <th colspan="1">Ref</th>
-                                <th colspan="1">Tren</th>
-                                <th colspan="1">Origen</th>
-                                <th colspan="1">Sale</th>
-                                <th colspan="1">Destino</th>
-                                <th colspan="1">Llega</th>
-                                <th colspan="1">Observaciones</th>
+                                <th colspan="1">Turno</th>
+                                <th colspan="1">Circular</th>
+                                <th colspan="1">Observación</th>
+                                <th colspan="2">Titular</th>
+                                <th colspan="1">Toma</th>
+                                <th colspan="1">Deja</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr
-                                v-for="(vuelta, index) in t.vueltas"
+                                v-for="(ind, index) in turnosAImprimir"
                                 :key="index"
                             >
-                                <td class="col-3">{{ vuelta.vuelta }}</td>
-                                <td class="col-1">{{ vuelta.refer }}</td>
-                                <td class="col-1">{{ vuelta.tren }}</td>
-                                <td class="col-1">{{ vuelta.origen }}</td>
-                                <td class="col-1">{{ vuelta.sale }}</td>
-                                <td class="col-1">{{ vuelta.destino }}</td>
-                                <td class="col-1">{{ vuelta.llega }}</td>
-                                <td class="col-3">
-                                    {{ vuelta.observaciones }}
+                                <td class="w-10">{{ ind.vueltas[0].refer }}</td>
+                                <td class="w-10">{{ ind.turno }}</td>
+                                <td class="w-10">{{ ind.circular }}</td>
+                                <td class="w-10">
+                                    {{ ind.vueltas[0].observaciones }}
                                 </td>
+                                <td colspan="2" class="w-10">
+                                    {{ ind.personal }}
+                                </td>
+                                <td class="w-10">{{ ind.toma }}</td>
+                                <td class="w-10">{{ ind.deja }}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <div
+                        v-for="(t, tIndex) in turnosAImprimir"
+                        :key="tIndex"
+                        class="row"
+                    >
+                        <h4 class="Personal col-1">{{ t.turno }}</h4>
+                        <h4 class="col-4">{{ t.personal }}</h4>
+                        <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
+                        <h5 class="col-2">Toma: {{ t.toma }}</h5>
+                        <h5 class="col-2">Deja: {{ t.deja }}</h5>
+                        <table class="table table-striped table-hover">
+                            <thead class="">
+                                <tr>
+                                    <th colspan="1">Vuelta</th>
+                                    <th colspan="1">Ref</th>
+                                    <th colspan="1">Tren</th>
+                                    <th colspan="1">Origen</th>
+                                    <th colspan="1">Sale</th>
+                                    <th colspan="1">Destino</th>
+                                    <th colspan="1">Llega</th>
+                                    <th colspan="1">Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(vuelta, index) in t.vueltas"
+                                    :key="index"
+                                >
+                                    <td class="col-3">{{ vuelta.vuelta }}</td>
+                                    <td class="col-1">{{ vuelta.refer }}</td>
+                                    <td class="col-1">{{ vuelta.tren }}</td>
+                                    <td class="col-1">{{ vuelta.origen }}</td>
+                                    <td class="col-1">{{ vuelta.sale }}</td>
+                                    <td class="col-1">{{ vuelta.destino }}</td>
+                                    <td class="col-1">{{ vuelta.llega }}</td>
+                                    <td class="col-3">
+                                        {{ vuelta.observaciones }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-        </main>
-        <footer-page />
+            </main>
+            <footer-page />
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, onBeforeMount } from "vue";
 import NavBar from "../NavBar.vue";
+import asideBar from "../asideBar.vue";
 import { getTurnos } from "../../services/turnosService";
 import { ITurno } from "../../interfaces/ITurno";
 import FooterPage from "../FooterPage.vue";
@@ -162,7 +193,7 @@ import { Itinerario } from "../../interfaces/Itinerario";
 import { getItinerario } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getPersonales } from "../../services/personalService";
-import { Novedad, Remplazo } from '../../interfaces/INovedades';
+import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import { getNovedades } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
@@ -193,14 +224,30 @@ export default defineComponent({
             ],
         };
     },
+    setup() {
+        const isAsideBarVisible = ref(true); // Estado inicial visible
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
+        }
+        onBeforeMount(() => {
+            isAsideBarVisible.value =
+                localStorage.getItem("sb|sidebar-toggle") === "true";
+        });
+
+        return { isAsideBarVisible, toggleAsideBar };
+    },
     methods: {
         async loadTurnos() {
             /* Trae todos los elementos de la base de datos  */
             try {
                 const res = await getTurnos();
                 this.turno = res.data;
-                const circularSeleccionadaString = window.localStorage.getItem("circularSeleccionada");
-                this.circularSeleccionada = circularSeleccionadaString ? circularSeleccionadaString.split(",") : [];
+                const circularSeleccionadaString = window.localStorage.getItem(
+                    "circularSeleccionada"
+                );
+                this.circularSeleccionada = circularSeleccionadaString
+                    ? circularSeleccionadaString.split(",")
+                    : [];
                 this.circulares = this.obtenerTiposCirculares(this.turno);
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
@@ -237,11 +284,10 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
-                localStorage.removeItem("username")
-                localStorage.removeItem("roles")
-                localStorage.removeItem("token")    
+                localStorage.removeItem("username");
+                localStorage.removeItem("roles");
+                localStorage.removeItem("token");
                 this.$router.push("/login");
-
             } else {
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
@@ -255,7 +301,7 @@ export default defineComponent({
             this.horarios = null;
             this.turnosAImprimir = null;
 
-            const fecha: Date = this.obtenerFecha(this.inputDate, this.today );
+            const fecha: Date = this.obtenerFecha(this.inputDate, this.today);
             const itinerario: string = this.itinerarioType(fecha);
 
             if (this.tren !== "") {
@@ -267,17 +313,34 @@ export default defineComponent({
                     parseInt(this.tren)
                 );
                 if (this.turnosAImprimir.length > 0) {
-                    this.horarios = this.filtroItinerario(itinerario,this.itinerario,parseInt(this.tren));
+                    this.horarios = this.filtroItinerario(
+                        itinerario,
+                        this.itinerario,
+                        parseInt(this.tren)
+                    );
                     //this.turnosAImprimir = this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(fecha,this.turnosAImprimir,this.personales);
+                    this.buscarPersonalACargo(
+                        fecha,
+                        this.turnosAImprimir,
+                        this.personales
+                    );
                 } else {
-                    this.turnosAImprimir = this.filtrarPorTurno(itinerario,this.turno,this.circularSeleccionada,this.tren);
+                    this.turnosAImprimir = this.filtrarPorTurno(
+                        itinerario,
+                        this.turno,
+                        this.circularSeleccionada,
+                        this.tren
+                    );
                     //this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(fecha,this.turnosAImprimir,this.personales);
+                    this.buscarPersonalACargo(
+                        fecha,
+                        this.turnosAImprimir,
+                        this.personales
+                    );
                 }
             }
         },
-        obtenerFecha(fecha:string, today: Date) {
+        obtenerFecha(fecha: string, today: Date) {
             if (fecha == "") {
                 // Formatear la fecha en formato ISO (YYYY-MM-DD)
                 const formattedDate = today.toISOString().split("T")[0];
@@ -326,15 +389,16 @@ export default defineComponent({
             });
             return turnosEnTren;
         },
-        filtroItinerario(itinerario: string, listaItinerario: Itinerario[],tren: number) {
+        filtroItinerario(
+            itinerario: string,
+            listaItinerario: Itinerario[],
+            tren: number
+        ) {
             /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
             las guarda en el array itFiltrado  */
             const itFiltrados: Itinerario[] = listaItinerario.filter(
                 (it: Itinerario) => {
-                    return (
-                        it.tren == tren &&
-                        it.itinerario == itinerario
-                    );
+                    return it.tren == tren && it.itinerario == itinerario;
                 }
             );
             let horarios: Itinerario = {
@@ -358,44 +422,78 @@ export default defineComponent({
             }
             return horarios;
         },
-        esFechaMayor(dateMayor:string, dateMenor:string) {
-            if(dateMayor!== undefined && dateMenor!== undefined){            
-                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
-                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
-                return formattedDateMayor > formattedDateMenor
-            }else{
+        esFechaMayor(dateMayor: string, dateMenor: string) {
+            if (dateMayor !== undefined && dateMenor !== undefined) {
+                const formattedDateMayor = new Date(dateMayor)
+                    .toISOString()
+                    .split("T")[0];
+                const formattedDateMenor = new Date(dateMenor)
+                    .toISOString()
+                    .split("T")[0];
+                return formattedDateMayor > formattedDateMenor;
+            } else {
                 return false;
             }
         },
-        esFechaMayorIgual(dateMayor:string, dateMenor:string) {
-            if(dateMayor && dateMenor ){
-                const formattedDateMayor = new Date(dateMayor).toISOString().split('T')[0];
-                const formattedDateMenor = new Date(dateMenor).toISOString().split('T')[0];
+        esFechaMayorIgual(dateMayor: string, dateMenor: string) {
+            if (dateMayor && dateMenor) {
+                const formattedDateMayor = new Date(dateMayor)
+                    .toISOString()
+                    .split("T")[0];
+                const formattedDateMenor = new Date(dateMenor)
+                    .toISOString()
+                    .split("T")[0];
                 return formattedDateMayor >= formattedDateMenor;
-            }else{
+            } else {
                 return false;
             }
         },
-        buscarPersonalACargo(fecha: Date, turnosAImprimir: ITurno[], personales: IPersonal[]) {
+        buscarPersonalACargo(
+            fecha: Date,
+            turnosAImprimir: ITurno[],
+            personales: IPersonal[]
+        ) {
             try {
-                
                 turnosAImprimir.forEach((turno: ITurno) => {
-                    const personal = this.filtroPersonal(turno.turno, fecha, personales);
-                    
-                    this.novedades.forEach((novedad :Novedad) => {
-                        const { legajo, fechaBaja, fechaAlta, HNA, novedadInactiva } = novedad;
-                        
-                        if (legajo === personal.legajo && !novedadInactiva &&
-                            (HNA && this.esFechaMayorIgual( this.inputDate,fechaBaja) || 
-                            this.esFechaMayorIgual( this.inputDate,fechaBaja) && 
-                            this.esFechaMayorIgual(fechaAlta, this.inputDate))) {
-                                
-                            personal.nombres = this.obtenerNombreConReemplazo(novedad);
+                    const personal = this.filtroPersonal(
+                        turno.turno,
+                        fecha,
+                        personales
+                    );
+
+                    this.novedades.forEach((novedad: Novedad) => {
+                        const {
+                            legajo,
+                            fechaBaja,
+                            fechaAlta,
+                            HNA,
+                            novedadInactiva,
+                        } = novedad;
+
+                        if (
+                            legajo === personal.legajo &&
+                            !novedadInactiva &&
+                            ((HNA &&
+                                this.esFechaMayorIgual(
+                                    this.inputDate,
+                                    fechaBaja
+                                )) ||
+                                (this.esFechaMayorIgual(
+                                    this.inputDate,
+                                    fechaBaja
+                                ) &&
+                                    this.esFechaMayorIgual(
+                                        fechaAlta,
+                                        this.inputDate
+                                    )))
+                        ) {
+                            personal.nombres =
+                                this.obtenerNombreConReemplazo(novedad);
                         }
                     });
 
                     // Asignar personal al array turnosAImprimir
-                    if (personal.nombres !== undefined){
+                    if (personal.nombres !== undefined) {
                         turno.personal = personal.nombres;
                     }
                 });
@@ -406,11 +504,20 @@ export default defineComponent({
         obtenerNombreConReemplazo(novedad: Novedad): string {
             if (novedad.remplazo && novedad.remplazo.length > 0) {
                 // buscamos el primero que cumple con la fecha input sea mayorIgual inicio de relevo Y si existe finRelevo que sea mayorIgual a inputDate SINO la que no tenga fin de relevo
-                const remplazo = novedad.remplazo.find((remplazo:Remplazo) =>{
-                    return this.esFechaMayorIgual(this.inputDate,remplazo.inicioRelevo)  &&
-                    ((remplazo.finRelevo && this.esFechaMayorIgual(remplazo.finRelevo,this.inputDate ))||
-                    !remplazo.finRelevo)
-            });
+                const remplazo = novedad.remplazo.find((remplazo: Remplazo) => {
+                    return (
+                        this.esFechaMayorIgual(
+                            this.inputDate,
+                            remplazo.inicioRelevo
+                        ) &&
+                        ((remplazo.finRelevo &&
+                            this.esFechaMayorIgual(
+                                remplazo.finRelevo,
+                                this.inputDate
+                            )) ||
+                            !remplazo.finRelevo)
+                    );
+                });
                 if (remplazo) {
                     return `${remplazo.apellido} ${remplazo.nombres}`;
                 } else {
@@ -425,25 +532,34 @@ export default defineComponent({
                 let filtrados: IPersonal[];
                 turno = turno.trim();
 
-                if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("prog")) {
+                if (
+                    turno.indexOf(".") !== -1 &&
+                    !turno.toLowerCase().includes("prog")
+                ) {
                     const indexPunto = turno.indexOf(".");
                     const diaLab = Number(turno[indexPunto + 1]);
                     const diag = turno.split(".")[0];
                     const franco = this.dia_laboral(diaLab, fecha.getDay());
 
                     filtrados = personales.filter((personal) => {
-                        return personal.turno === diag && Number(personal.franco) === franco;
+                        return (
+                            personal.turno === diag &&
+                            Number(personal.franco) === franco
+                        );
                     });
                 } else {
                     filtrados = personales.filter(
-                        (personal) => personal.turno.toLowerCase() === turno.toLowerCase()
+                        (personal) =>
+                            personal.turno.toLowerCase() === turno.toLowerCase()
                     );
                 }
-                const titular:IPersonal = filtrados[0];
+                const titular: IPersonal = filtrados[0];
                 return {
                     turno: turno,
                     legajo: titular.legajo || 0,
-                    nombres: titular ? `${titular.apellido} ${titular.nombres}` : "",
+                    nombres: titular
+                        ? `${titular.apellido} ${titular.nombres}`
+                        : "",
                 };
             } catch (e) {
                 console.error(e);
@@ -466,13 +582,16 @@ export default defineComponent({
             ];
             return diagrama[diaLaboral][hoy]; //:franco
         },
-        filtrarPorTurno(itinerario: string,listaTurnos:ITurno[],circularSeleccionada:string[],tren:string ) {
-            const turnos: ITurno[] = []
+        filtrarPorTurno(
+            itinerario: string,
+            listaTurnos: ITurno[],
+            circularSeleccionada: string[],
+            tren: string
+        ) {
+            const turnos: ITurno[] = [];
             listaTurnos.forEach((diag: ITurno) => {
                 if (
-                    diag.turno
-                        .toLowerCase()
-                        .includes(tren.toLowerCase()) &&
+                    diag.turno.toLowerCase().includes(tren.toLowerCase()) &&
                     diag.itinerario == itinerario &&
                     circularSeleccionada.includes(diag.circular)
                 ) {
@@ -494,12 +613,17 @@ export default defineComponent({
 
             return circularesUnicas;
         },
-        cambioCirculares(){
+        cambioCirculares() {
+            window.localStorage.setItem(
+                "circularSeleccionada",
+                this.circularSeleccionada.join(",")
+            );
 
-            window.localStorage.setItem("circularSeleccionada", this.circularSeleccionada.join(","));
-
-            this.buscar()
-        }
+            this.buscar();
+        },
+        handleAsideBarVisibility(isVisible: boolean) {
+            this.isAsideBarVisible = isVisible;
+        },
     },
     mounted() {
         try {
@@ -516,6 +640,7 @@ export default defineComponent({
     computed: {},
     components: {
         NavBar,
+        asideBar,
         FooterPage,
     },
 });
@@ -524,7 +649,7 @@ export default defineComponent({
 main {
     min-height: 81.6vh;
 }
-body{
+body {
     background: #ddd;
 }
 .Personal {
@@ -536,5 +661,33 @@ body{
     flex-wrap: nowrap;
     justify-content: space-around;
     border-radius: 0.5rem;
+}
+.body {
+    position: relative;
+    padding: 5rem 0;
+    min-height: 100vh;
+}
+#layoutSidenav_content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    /* margin-top: 1rem; */
+    /* margin-left: 250px; */
+}
+.layoutSidenav_content-width-min {
+    margin-left: 0;
+    width: 100vw;
+}
+.layoutSidenav_content-width-max {
+    margin-left: 225px;
+    width: calc(100vw - 225px);
+    /* width: calc(100vw - 242px); */
+}
+@media (max-width: 991px) {
+    .layoutSidenav_content-width-max {
+        margin-left: 0px;
+        width: 100%;
+    }
 }
 </style>
