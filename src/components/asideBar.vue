@@ -45,11 +45,11 @@
                                 v-if="
                                     rolMayor == 'admin'
                                     ">Administración del sistema
-                            <router-link class="nav-link" to="/buscador">
+                            <router-link class="nav-link" to="/turnos">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Administración de turnos
                             </router-link>
-                            <router-link class="nav-link" to="/listadoPersonales">
+                            <router-link class="nav-link" to="/users">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Administración de usuarios
                             </router-link>
