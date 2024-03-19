@@ -1,8 +1,13 @@
 <template>
-    <main>
-        <NavBar />
-        <div class="container">
-            <h2 class="d-flex justify-content-center m-3">
+    <div id="sb-nav-fixed">
+            <NavBar @update:isAsideBarVisible="handleAsideBarVisibility"/>
+            <asideBar/>
+            <div id="layoutSidenav_content"
+                class="body" 
+                :class="[isAsideBarVisible ? 'layoutSidenav_content-width-max':'layoutSidenav_content-width-min']">
+                <main>
+                    <div  class="container-fluid px-4">
+                        <h2 class="d-flex justify-content-center m-3">
                 Listado Personal de Abordo
             </h2>
             <p class="d-flex justify-content-end m-2">
@@ -122,7 +127,6 @@
                         AK
                     </label>
                 </div>
-
                 <div class="my-3">
                     <h6>Filtro por Especialidad:</h6>
                     <label class="form-check-label mx-2">
@@ -322,14 +326,17 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <FooterPage />
-    </main>
+                    </div>
+                </main>
+                <FooterPage/>
+            </div>
+            </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref , onBeforeMount } from "vue";
 import NavBar from "../NavBar.vue";
+import asideBar from "../asideBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { deletePersonal, getPersonales } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
@@ -360,6 +367,17 @@ export default defineComponent({
                 "Sábado",
             ],
         };
+    },
+    setup() {
+        const isAsideBarVisible = ref(true); // Estado inicial visible
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
+        }
+        onBeforeMount(() => {
+            isAsideBarVisible.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
+        });
+
+        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         async loadPersonales() {
@@ -392,6 +410,9 @@ export default defineComponent({
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
+        },
+        handleAsideBarVisibility(isVisible: boolean) {
+            this.isAsideBarVisible = isVisible;
         },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
@@ -563,6 +584,7 @@ export default defineComponent({
     name: "App",
     components: {
         NavBar,
+        asideBar,
         FooterPage,
     },
 });

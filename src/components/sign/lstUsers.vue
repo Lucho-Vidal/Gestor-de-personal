@@ -1,9 +1,13 @@
 <template>
-    <div>
-        <NavBar />
-
-        <main class="container">
-            <h2 class="d-flex justify-content-center m-3">
+    <div id="sb-nav-fixed">
+            <NavBar @update:isAsideBarVisible="handleAsideBarVisibility"/>
+            <asideBar/>
+            <div id="layoutSidenav_content"
+                class="body" 
+                :class="[isAsideBarVisible ? 'layoutSidenav_content-width-max':'layoutSidenav_content-width-min']">
+                <main>
+                    <div  class="container-fluid px-4">
+                        <h2 class="d-flex justify-content-center m-3">
                 Lista de usuarios habilitados
             </h2>
             <div class="d-flex">
@@ -54,15 +58,18 @@
                     </tr>
                 </tbody>
             </table>
-        </main>
-
-        <footer-page />
-    </div>
+                    </div>
+                </main>
+                <FooterPage/>
+            </div>
+        </div>
+    
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref , onBeforeMount } from "vue";
 import NavBar from "../NavBar.vue";
+import asideBar from "../asideBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { deleteUser, getUsers, newToken } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
@@ -74,6 +81,17 @@ export default defineComponent({
             users:[] as User[],
             rolMayor: "" as string,
         };
+    },
+    setup() {
+        const isAsideBarVisible = ref(true); // Estado inicial visible
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
+        }
+        onBeforeMount(() => {
+            isAsideBarVisible.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
+        });
+
+        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         async loadUsers() {
@@ -122,7 +140,9 @@ export default defineComponent({
             }
             return res;
         },
-    
+        handleAsideBarVisibility(isVisible: boolean) {
+            this.isAsideBarVisible = isVisible;
+        },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
 
@@ -145,6 +165,7 @@ export default defineComponent({
     name: "App",
     components: {
         NavBar,
+        asideBar,
         FooterPage,
     },
 });

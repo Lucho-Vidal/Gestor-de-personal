@@ -1,9 +1,13 @@
 <template>
-    <div>
-        <NavBar />
-
-        <main class="container">
-            <h2 class="d-flex justify-content-center m-3">
+    <div id="sb-nav-fixed">
+            <NavBar @update:isAsideBarVisible="handleAsideBarVisibility"/>
+            <asideBar/>
+            <div id="layoutSidenav_content"
+                class="body" 
+                :class="[isAsideBarVisible ? 'layoutSidenav_content-width-max':'layoutSidenav_content-width-min']">
+                <main>
+                    <div  class="container-fluid px-4">
+                        <h2 class="d-flex justify-content-center m-3">
                 Lista de registros
             </h2>
 
@@ -79,15 +83,18 @@
                     </tr>
                 </tbody>
             </table>
-        </main>
-
-        <footer-page />
-    </div>
+                    </div>
+                </main>
+                <FooterPage/>
+            </div>
+        </div>
+    
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref , onBeforeMount } from "vue";
 import NavBar from "./NavBar.vue";
+import asideBar from "./asideBar.vue";
 import FooterPage from "./FooterPage.vue";
 import { newToken } from '../services/signService';
 import { Registro } from "../interfaces/IRegistro";
@@ -98,6 +105,17 @@ export default defineComponent({
         return {
             registros:[] as Registro[],
         };
+    },
+    setup() {
+        const isAsideBarVisible = ref(true); // Estado inicial visible
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
+        }
+        onBeforeMount(() => {
+            isAsideBarVisible.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
+        });
+
+        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         async loadRegistros() {
@@ -122,7 +140,10 @@ export default defineComponent({
             } else {
                 registro.viewDetail = true;
             }
-        },        
+        },  
+        handleAsideBarVisibility(isVisible: boolean) {
+            this.isAsideBarVisible = isVisible;
+        },      
     },
     created() {
         this.loadRegistros();
@@ -131,6 +152,7 @@ export default defineComponent({
     name: "App",
     components: {
         NavBar,
+        asideBar,
         FooterPage,
     },
 });
