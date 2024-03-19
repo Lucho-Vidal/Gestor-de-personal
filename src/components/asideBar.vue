@@ -11,15 +11,15 @@
                                     rolMayor == 'user'"
                                     >Aplicaciones
                             <router-link class="nav-link" to="/buscador">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                                 Buscador de trenes
                             </router-link>
                             <router-link class="nav-link" to="/listadoPersonales">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-list-ul"></i></div>
                                 Listado de personal
                             </router-link>
                             <router-link class="nav-link" to="/" disabled>
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-rectangle-list"></i></div>
                                 Sabana de trenes
                             </router-link>
                         </div>
@@ -29,16 +29,12 @@
                                     rolMayor == 'admin'
                                     ">Administración de Personal
                             <router-link class="nav-link" to="/personal">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-database"></i></div>
                                 Base de personales
                             </router-link>
                             <router-link class="nav-link" to="/novedades">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-table"></i></div>
                                 Novedades de personal
-                            </router-link>
-                            <router-link class="nav-link" to="/" disabled>
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Sabana de trenes
                             </router-link>
                         </div>
                         <div class="sb-sidenav-menu-heading" 
@@ -46,15 +42,15 @@
                                     rolMayor == 'admin'
                                     ">Administración del sistema
                             <router-link class="nav-link" to="/turnos">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-address-card"></i></div>
                                 Administración de turnos
                             </router-link>
                             <router-link class="nav-link" to="/users">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                                 Administración de usuarios
                             </router-link>
-                            <router-link class="nav-link" to="/" disabled>
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <router-link class="nav-link" to="/registros" disabled>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-file-shield"></i></div>
                                 Registro de actividades
                             </router-link>
                         </div>
@@ -149,7 +145,7 @@ export default defineComponent({
     top:0;
     left: 0;
     z-index: 2;
-    width: 20vw;
+    width: 15vw;
 }
 </style>
 
