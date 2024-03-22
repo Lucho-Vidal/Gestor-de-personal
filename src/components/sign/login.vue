@@ -19,7 +19,8 @@
                 v-on:submit.prevent="procesar()"
                 class="d-flex justify-content-center mb-5"
             >
-                <div class="input-group-text col-5 row p-5">
+            <div class="input-group-text col-5 row p-5">
+                    <h1 class="mb-5">Inicio de Sesión</h1>
                     <div>
                         <label for="email" class="mb-3  text-align: center" style="width: 100%">
                             <input
