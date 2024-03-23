@@ -75,6 +75,7 @@ export const signUp = async (user: User): Promise<AxiosResponse> => {
         email: user.email,
         password: user.password,
         roles: user.roles,
+        updatePass: user.updatePass
     });
     return res;
 };

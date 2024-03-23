@@ -41,7 +41,7 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { legajo, username, email, roles } = req.body;
+        const { legajo, username, email, roles, password, updatePass } = req.body;
         const id = req.params.id;
 
         // Verificar si el usuario existe
@@ -61,6 +61,9 @@ export const updateUser = async (req, res) => {
         existingUser.legajo = legajo || existingUser.legajo;
         existingUser.username = username || existingUser.username;
         existingUser.email = email || existingUser.email;
+        existingUser.password = await User.encryptPassword(password) || existingUser.password;
+        existingUser.updatePass = updatePass || existingUser.updatePass;
+
         console.log("Roles",roles);
         if (roles && roles.length > 0) {
             // Solo actualiza los roles si se proporciona alguno
