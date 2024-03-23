@@ -221,6 +221,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/components/appTrabajo/lstPersonales.vue"),
         beforeEnter: requireAuth,
     },
+    {
+        path: "/pdf/:rutaPdf",
+        name: "pdf",
+        meta:{title: 'GNPA - PDF'},
+        component: () => import("@/components/pdf.vue"),
+        // props: true,
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(to, from, next));
+        }
+    },
 ];
 
 const router = createRouter({

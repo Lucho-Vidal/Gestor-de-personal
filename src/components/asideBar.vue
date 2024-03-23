@@ -36,6 +36,41 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-table"></i></div>
                                 Novedades de personal
                             </router-link>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Documentos
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Convenios Colectivos
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/CCT-La-Fraternidad-2023.pdf')" >Fraternidad</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/cct-1574-2018-e.pdf')" >Union Ferroviaria</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/con-cct-1575-2018-e_-_union_ferroviaria_-_regionales.pdf')" >Union Ferroviaria LD</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/convenio_apdfa.pdf')" >APDFA</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/con-cct-1519-16_-_asfa.pdf')" >ASFA</button>
+
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Leyes Ferroviarias
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/rito.pdf')" >RITO</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/ley_2873.pdf')" >LEY GENERAL DE FERROCARRILES NACIONALES</button>
+                                            <button class="nav-link" @click="abrirPdf('/src/assets/suplemento_rgf.pdf')" >LEY GENERAL DE FERROCARRILES NACIONALES Suplemento</button>
+
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
                         </div>
                         <div class="sb-sidenav-menu-heading" 
                                 v-if="
@@ -72,6 +107,7 @@ import { getRoles } from "../services/signService";
 
 
 export default defineComponent({
+    name:'aside',
     data() {
         return {
             login: false as boolean,
@@ -117,6 +153,9 @@ export default defineComponent({
                 this.roles.find((rol: string) => rol == "user") ||
                 "";
         },
+        abrirPdf(pdf:string){
+            this.$router.push({ name: 'pdf', params: { rutaPdf: pdf } })
+        }
     },
     created() {
         this.login = localStorage.getItem("token") ? true : false;
@@ -145,7 +184,7 @@ export default defineComponent({
     top:0;
     left: 0;
     z-index: 2;
-    width: 15vw;
+    width: 25vw;
 }
 </style>
 
