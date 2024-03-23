@@ -662,32 +662,4 @@ body {
     justify-content: space-around;
     border-radius: 0.5rem;
 }
-.body {
-    position: relative;
-    padding: 5rem 0;
-    min-height: 100vh;
-}
-#layoutSidenav_content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    /* margin-top: 1rem; */
-    /* margin-left: 250px; */
-}
-.layoutSidenav_content-width-min {
-    margin-left: 0;
-    width: 100vw;
-}
-.layoutSidenav_content-width-max {
-    margin-left: 225px;
-    width: calc(100vw - 225px);
-    /* width: calc(100vw - 242px); */
-}
-@media (max-width: 991px) {
-    .layoutSidenav_content-width-max {
-        margin-left: 0px;
-        width: 100%;
-    }
-}
 </style>

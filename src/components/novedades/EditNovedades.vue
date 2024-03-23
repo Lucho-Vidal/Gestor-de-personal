@@ -794,9 +794,7 @@ export default defineComponent({
 });
 </script>
 <style>
-main {
-    min-height: 82vh;
-}
+
 .modal {
     display: none;
     position: fixed;
