@@ -74,12 +74,15 @@ import FooterPage from "../FooterPage.vue";
 import { deleteUser, getUsers, newToken } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
 import { AxiosError } from "axios";
+import { createRegistro } from "../../services/registrosService";
+import { Registro } from "../../interfaces/IRegistro";
 
 export default defineComponent({
     data() {
         return {
             users:[] as User[],
             rolMayor: "" as string,
+            today: new Date(),
         };
     },
     setup() {
@@ -108,6 +111,16 @@ export default defineComponent({
             try{
                 const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
                 if(confirmacion){
+                    
+                    // guardamos registro
+                    const registro: Registro = {
+                                usuario : window.localStorage.getItem("username")||'',
+                                fecha : this.today.toString() ,
+                                accion: `Elimino al usuario ${this.users[index].username}`,
+                                user: this.users[index]
+                            }
+                    await createRegistro(registro);
+                    
                     await deleteUser(id);
                     this.users.splice(index,1);
                 }

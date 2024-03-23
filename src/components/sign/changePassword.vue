@@ -132,6 +132,14 @@ export default defineComponent({
                     };
                     return;
                 }
+                if (this.currentPassword === this.newPassword) {
+                    this.message = {
+                        status: "danger",
+                        title: "ATENCIÓN!",
+                        message: "La nueva contraseña no puede ser la misma que la anterior.",
+                    };
+                    return;
+                }
 
                 const res = await changePassword(this.currentPassword,this.newPassword);
 

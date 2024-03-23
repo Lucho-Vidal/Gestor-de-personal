@@ -80,6 +80,8 @@ import NavBar from "../NavBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { setRoles, signIn } from '../../services/signService';
 import { User } from '../../interfaces/IUser';
+import { Registro } from "../../interfaces/IRegistro";
+import { createRegistro } from "../../services/registrosService";
 
 export default defineComponent({
     name: "editPersonal",
@@ -93,6 +95,7 @@ export default defineComponent({
                 title: "",
                 message: "",
             },
+            today: new Date(),
         };
     },
     methods: {
@@ -108,8 +111,15 @@ export default defineComponent({
                     window.localStorage.setItem("username", res.data.username);
                     window.localStorage.setItem("roles", res.data.role);
                     setRoles(res.data.role); 
-                    // res.data.updatePass
-                    // this.user.updatePass = true
+
+                    // guardamos registro
+                    const registro: Registro = {
+                                usuario : res.data.username,
+                                fecha : this.today.toString() ,
+                                accion: "Inicio Sesion",
+                            }
+                    await createRegistro(registro);
+
                     if(res.data.updatePass){
                         this.message = {
                             status: "warning",

@@ -107,7 +107,7 @@ import { getRoles } from "../services/signService";
 
 
 export default defineComponent({
-    name:'aside',
+    name:'asideBar',
     data() {
         return {
             login: false as boolean,
