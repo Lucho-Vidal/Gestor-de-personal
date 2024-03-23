@@ -16,7 +16,6 @@ export interface Novedad {
     viewDetail:boolean;
     novedadInactiva: boolean;
     remplazo: Array<Remplazo>;
-    cambioTurno: cambioTurno;
 }
 export interface Remplazo{
     legajo:number;
@@ -29,14 +28,4 @@ export interface Remplazo{
     inicioRelevo:string;
     finRelevo:string;
     HNA:boolean;
-}
-export interface cambioTurno{
-    legajo:number;
-    apellido: string;
-    nombres: string;
-    base: string;
-    especialidad: string;
-    turno: string;
-    franco: string;
-    fechaCambio:string;
 }

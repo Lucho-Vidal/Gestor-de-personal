@@ -12,6 +12,7 @@ import turno from "./routers/turno.routes";
 import authRoutes from "./routers/auth.routes";
 import usersRoutes from "./routers/user.routes";
 import registrosRoutes from "./routers/registro.routes";
+import cambioTurno from "./routers/cambioTurno.routes";
 
 const app = express();
 createRoles();
@@ -36,6 +37,7 @@ app.use(cors(corsOptions));
 app.use("/api", personales);
 app.use("/api", itinerario);
 app.use("/api", novedades);
+app.use("/api", cambioTurno);
 app.use("/api", turno);
 app.use("/api/auth", authRoutes);
 app.use("/api", usersRoutes);

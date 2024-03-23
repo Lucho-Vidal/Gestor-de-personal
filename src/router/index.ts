@@ -215,6 +215,24 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: "/cambioTurno",
+        name: "cambioTurno",
+        meta:{title: 'GNPA - Cambio de Turno'},
+        component: () => import("@/components/novedades/cambioTurno.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(to, from, next));
+        }
+    },
+    {
+        path: "/newCambioTurno",
+        name: "newCambioTurno",
+        meta:{title: 'GNPA - Nuevo Cambio de Turno'},
+        component: () => import("@/components/novedades/newCambioTurno.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(to, from, next));
+        }
+    },
+    {
         path: "/listadoPersonales",
         name: "listadoPersonales",
         meta:{title: 'GNPA - Listado de personal'},
