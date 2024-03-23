@@ -168,7 +168,8 @@ export default defineComponent({
 </script>
 
 <style>
+
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
 }
 </style>

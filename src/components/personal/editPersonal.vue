@@ -326,4 +326,8 @@ main {
     box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
     z-index: 101;
 }
+
+main {
+    margin-top: 5rem;
+}
 </style>
