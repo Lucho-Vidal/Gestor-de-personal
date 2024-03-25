@@ -5,6 +5,7 @@ const cambioTurnoSchema = new Schema({
         type:Number,
         required: true
     },
+    fechaCambio: String,
     personal: []
 },{
     timestamps: true

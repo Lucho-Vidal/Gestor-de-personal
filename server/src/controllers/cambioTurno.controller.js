@@ -59,9 +59,10 @@ export const createCambioTurno = async (req, res) => {
             fechaCambio,
             personal
         } = req.body;
+        console.log(req.body);
 
         // Crea una nueva instancia de la novedad con los datos proporcionados
-        const newCambio = new Novedades({
+        const newCambio = new CambioTurno({
             _id,
             fechaCambio,
             personal
