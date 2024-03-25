@@ -5,7 +5,7 @@ import * as cambioCtrl from "../controllers/cambioTurno.controller";
 const router = Router();
 
 router.get(
-    "/cambioTurno",
+    "/cambioTurnos",
     [authJwt.verifyToken,authJwt.isModerator],
     cambioCtrl.getCambioTurnos
 );
