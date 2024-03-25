@@ -64,7 +64,6 @@ export const updateUser = async (req, res) => {
         existingUser.password = await User.encryptPassword(password) || existingUser.password;
         existingUser.updatePass = updatePass || existingUser.updatePass;
 
-        console.log("Roles",roles);
         if (roles && roles.length > 0) {
             // Solo actualiza los roles si se proporciona alguno
             const foundRoles = await Role.find({ name: { $in: roles.map(role => role.name) } });
