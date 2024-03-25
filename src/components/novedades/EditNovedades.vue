@@ -33,7 +33,7 @@
                                 
                                 v-model="search"
                                 autofocus
-                                @keyup="searchPersonal(false)"
+                                @keyup="searchPersonal(selectRemplazo)"
                                 />
 
                                 <div class="table-container">
