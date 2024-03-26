@@ -227,105 +227,125 @@
             <h3 v-if="personalesFiltrados.length == 0">
                 No se encontró ningún personal
             </h3>
-            <table
-                class="table table-striped table-hover"
-                v-if="personalesFiltrados.length > 0"
-            >
-                <thead>
-                    <tr>
-                        <th class="col-1" colspan="1">legajo</th>
-                        <th class="col-1" colspan="1">Apellido</th>
-                        <th class="col-1" colspan="1">Nombres</th>
-                        <th class="col-1" colspan="1">Turno</th>
-                        <th class="col-1" colspan="1">Franco</th>
-                        <th class="col-1" colspan="1">Especialidad</th>
-                        <th class="col-1" colspan="1">Dotacion</th>
-                        <th class="col-1" colspan="1">Observaciones</th>
-                        <th class="col-1" colspan="1">Orden</th>
-                        <th class="col-1">Editar</th>
-                        <th class="col-1">Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody
-                    v-for="(personal, index) in personalesFiltrados"
-                    :key="index"
-                    @dblclick="edit(personal._id)"
-                    @click="viewDetail(personal)"
-                >
-                    <tr>
-                        <td class="col-1">{{ personal.legajo }}</td>
-                        <td class="col-1">{{ personal.apellido }}</td>
-                        <td class="col-2">{{ personal.nombres }}</td>
-                        <td class="col-1">{{ personal.turno }}</td>
-                        <td class="col-1">{{ days[personal.franco] }}</td>
-                        <td class="col-1">{{ personal.especialidad }}</td>
-                        <td class="col-1">{{ personal.dotacion }}</td>
-                        <td class="col-2">{{ personal.observaciones }}</td>
-                        <td class="col-1">{{ personal.orden }}</td>
-                        <td class="col-1">
-                            <i
-                            class="material-icons cursor-hand"
-                                @click="edit(personal._id)"
-                            >edit_note</i>
-                        </td>
-                        <td class="col-1">
-                            <i
-                                class="material-icons cursor-hand rojo"
-                                @click="deletePersonal(personal._id, index)"
-                            >delete_forever</i>
-                        </td>
-                    </tr>
-                    <tr v-if="personal.viewDetail && personal.conocimientos">
-                        <td colspan="12">
-                            <div class="row">
-                                <h6 class="col-12">Conocimientos:</h6>
-                                <p class="col-1">
-                                    {{
-                                        personal.conocimientos.CML === true
-                                            ? "CML"
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.CKD === true
-                                            ? "CKD"
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.RO === true
-                                            ? "RO "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.MPN === true
-                                            ? "MPN "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.OL === true
-                                            ? "OL "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.LCI === true
-                                            ? "LCI "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.ELEC === true
-                                            ? "ELEC "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.DUAL === true
-                                            ? "DUAL"
-                                            : ""
-                                    }}
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <DataTable 
+                        :data="personalesFiltrados" 
+                        :columns="columns"
+                            class="table table-striped table-hover table-bordered display"
+                            :options="{
+                                responsive:true,
+                                autoWidth:false,
+                                dom:'Bfrtip',
+                                language:{
+                                    search:'Buscar',
+                                    zeroRecords: 'No hay registro para mostrar',
+                                    info: 'Mostrando del _START_ a _END_ de _TOTAL_ registros',
+                                    infoFiltered: '(Filtrados de _MAX_ registros.)',
+                                    paginate:{ first:'Primero', previous:'Anterior',next:'Siguiente',last:'Ultimo'}
+                                }
+                                }"
+                        >
+                            <thead>
+                                <tr>
+                                    <th >legajo</th>
+                                    <th >Apellido</th>
+                                    <th >Nombres</th>
+                                    <th >Turno</th>
+                                    <th >Franco</th>
+                                    <th >Especialidad</th>
+                                    <th >Dotacion</th>
+                                    <th >Observaciones</th>
+                                    <th >Orden</th>
+                                    <!-- <th >Editar</th>
+                                    <th >Eliminar</th> -->
+                                </tr>
+                            </thead>
+                            <!-- <tbody
+                                v-for="(personal, index) in personalesFiltrados"
+                                :key="index"
+                                @dblclick="edit(personal._id)"
+                                @click="viewDetail(personal)"
+                            >
+                                <tr>
+                                    <td class="col-1">{{ personal.legajo }}</td>
+                                    <td class="col-1">{{ personal.apellido }}</td>
+                                    <td class="col-2">{{ personal.nombres }}</td>
+                                    <td class="col-1">{{ personal.turno }}</td>
+                                    <td class="col-1">{{ days[personal.franco] }}</td>
+                                    <td class="col-1">{{ personal.especialidad }}</td>
+                                    <td class="col-1">{{ personal.dotacion }}</td>
+                                    <td class="col-2">{{ personal.observaciones }}</td>
+                                    <td class="col-1">{{ personal.orden }}</td>
+                                    <td class="col-1">
+                                        <i
+                                        class="material-icons cursor-hand"
+                                            @click="edit(personal._id)"
+                                        >edit_note</i>
+                                    </td>
+                                    <td class="col-1">
+                                        <i
+                                            class="material-icons cursor-hand rojo"
+                                            @click="deletePersonal(personal._id, index)"
+                                        >delete_forever</i>
+                                    </td>
+                                </tr>
+                                <tr v-if="personal.viewDetail && personal.conocimientos">
+                                    <td colspan="12">
+                                        <div class="row">
+                                            <h6 class="col-12">Conocimientos:</h6>
+                                            <p class="col-1">
+                                                {{
+                                                    personal.conocimientos.CML === true
+                                                        ? "CML"
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.CKD === true
+                                                        ? "CKD"
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.RO === true
+                                                        ? "RO "
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.MPN === true
+                                                        ? "MPN "
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.OL === true
+                                                        ? "OL "
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.LCI === true
+                                                        ? "LCI "
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.ELEC === true
+                                                        ? "ELEC "
+                                                        : ""
+                                                }}
+                                                {{
+                                                    personal.conocimientos.DUAL === true
+                                                        ? "DUAL"
+                                                        : ""
+                                                }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody> -->
+                        </DataTable>
+
+                    </div>
+                </div>
+            </div>
                     </div>
                 </main>
                 <FooterPage/>
@@ -344,6 +364,21 @@ import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
+// Datatables
+import DataTable from 'datatables.net-vue3';
+import DataTableLib from 'datatables.net-bs5';
+import Buttons from 'datatables.net-buttons-bs5';
+// import ButtonsHtml5 from 'datatables.net-buttons/js/Buttons.html5'
+// import print from 'datatables.net-buttons/js/buttons.print'
+import pdfmake from 'pdfMake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import 'datatables.net-responsive-bs5';
+import JsZip from 'jszip';
+window.JSZip = JsZip;
+DataTable.use(DataTableLib);
+// DataTable.use(pdfmake);
+// DataTable.use(ButtonsHtml5);
+
 
 export default defineComponent({
     data() {
@@ -366,6 +401,116 @@ export default defineComponent({
                 "Viernes",
                 "Sábado",
             ],
+            columns:[
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.legajo !== 'undefined' ) {
+                            return row.legajo;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.apellido !== 'undefined' ) {
+                            return row.apellido;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.nombres !== 'undefined' ) {
+                            return row.nombres;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.turno !== 'undefined' ) {
+                            return row.turno;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '-';
+                        }
+                    }
+                }},
+                {data: function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.franco !== 'undefined' && !isNaN(row.franco)) {
+                            const days = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado",];
+                            const dayIndex = Math.floor(row.franco);
+                            return days[dayIndex];
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '-';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.especialidad !== 'undefined' ) {
+                            return row.especialidad;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.dotacion !== 'undefined' ) {
+                            return row.dotacion;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.observaciones !== 'undefined' ) {
+                            return row.observaciones;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '';
+                        }
+                    }
+                }},
+                {data:function ( row:any, type: string ) {
+                    if ( type === 'display' ) {
+                        if (typeof row.orden !== 'undefined' ) {
+                            return row.orden;
+                        } else {
+                            // Manejar el caso en el que franco es undefined
+                            return '-';
+                        }
+                    }
+                }},
+                
+
+
+            ],
+            botones:[{
+                    title:'Reporte de Personales',
+                    extend: 'excelHtml5',
+                }]
+            // <th >legajo</th>
+            // <th >Apellido</th>
+            // <th >Nombres</th>
+            // <th >Turno</th>
+            // <th >Franco</th>
+            // <th >Especialidad</th>
+            // <th >Dotacion</th>
+            // <th >Observaciones</th>
+            // // <th >Orden</th>
         };
     },
     setup() {
@@ -585,13 +730,15 @@ export default defineComponent({
     components: {
         NavBar,
         asideBar,
+        DataTable,
         FooterPage,
     },
 });
 </script>
 <style>
+
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
 }
 .cursor-hand{
     cursor: pointer;
@@ -605,4 +752,5 @@ main {
 .gris{
     color:#aaa
 }
+@import 'datatables.net-bs5';
 </style>
