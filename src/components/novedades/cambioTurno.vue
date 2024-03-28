@@ -14,7 +14,7 @@
             <main>
                 <div class="container-fluid px-4">
                     <h2 class="d-flex justify-content-center m-3">
-                        Novedades del Personal de Abordo
+                        Cambios de turno del Personal de Abordo
                     </h2>
                     <div class="d-flex">
                         <a
@@ -36,50 +36,18 @@
                             />
                         </div>
                         <div class="my-3">
-                            <h6>Filtrar por HNA / descubiertos:</h6>
+                            <h6>Solo los cambios de la fecha:</h6>
                             <label class="form-check-label mx-2">
                                 <input
                                     class="form-check-input"
                                     type="checkbox"
                                     value="HNA"
-                                    v-model="checkboxHna"
+                                    v-model="checkboxHoy"
                                     @change="filtrar()"
                                 />
-                                HNA
+                                Solo hoy
                             </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="descubierto"
-                                    v-model="checkboxDescubierto"
-                                    @change="filtrar()"
-                                />
-                                Sin Cubrir
-                            </label>
-                            <label
-                                class="form-check-label mx-2"
-                                v-if="!checkboxTodas"
-                            >
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Finalizadas"
-                                    v-model="checkboxFinalizadas"
-                                    @change="filtrar()"
-                                />
-                                Finalizadas
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Todas"
-                                    v-model="checkboxTodas"
-                                    @change="filtrar()"
-                                />
-                                Todas las Novedades
-                            </label>
+                            
                         </div>
                         <div class="my-3">
                             <h6>Filtro por Especialidad:</h6>
@@ -332,11 +300,9 @@ export default defineComponent({
             cambiosTurnos: [] as CambioTurno[],
             cambiosTurnosFiltrados: [] as CambioTurno[],
             checkboxDotacion: [] as string[],
-            checkboxHna: false,
             checkboxEspecialidad: [] as string[],
             checkboxDescubierto: false,
-            checkboxFinalizadas: false,
-            checkboxTodas: false,
+            checkboxHoy: true,
             username: "" as string,
             today: new Date(),
             search: "" as string,
@@ -402,6 +368,19 @@ export default defineComponent({
             } else {
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+            }
+        },
+        esFechaIgual(dateMayor: string, dateMenor: string) {
+            if (dateMayor && dateMenor) {
+                const formattedDateMayor = new Date(dateMayor)
+                    .toISOString()
+                    .split("T")[0];
+                const formattedDateMenor = new Date(dateMenor)
+                    .toISOString()
+                    .split("T")[0];
+                return formattedDateMayor === formattedDateMenor;
+            } else {
+                return false;
             }
         },
         cambiosTurnosIndexado(novedades: Novedad[]) {
@@ -504,7 +483,7 @@ export default defineComponent({
                 "Ayudante conductor",
                 "Guardatren electrico",
             ];
-            let filtrar = false;
+            let filtrar = this.checkboxHoy;
             let cambiosTurnosFiltrados: CambioTurno[] = this.cambiosTurnos;
 
             if (this.search.length !== 0) {
@@ -536,6 +515,11 @@ export default defineComponent({
                         );
                     }
                 );
+            }
+            if(this.checkboxHoy){
+                cambiosTurnosFiltrados = cambiosTurnosFiltrados.filter(cambio=>{
+                    return this.esFechaIgual(cambio.fechaCambio,this.today.toString())
+                })
             }
             this.cambiosTurnosFiltrados = this.ordenarDescendente(cambiosTurnosFiltrados);
 

@@ -21,12 +21,12 @@
                 <h4 class="alert-heading">{{ message.title }}</h4>
                 <hr />
                 {{ message.message }}
-                <a
+                <!-- <a
                     v-if="idNovedad !== 0"
                     class="btn btn-danger col-2"
                     @click="$router.push(`/editNovedades/${idNovedad}`)"
                     >Ir a la novedad</a
-                >
+                > -->
             </div>
             <!-- Modal de búsqueda -->
 
@@ -140,7 +140,7 @@
                     </div>
                 </div>
                 <div>
-                    <button class="btn btn-success" @click="abrirModal(false)">
+                    <button class="btn btn-success" @click.prevent="abrirModal(false)">
                         Buscar Personal
                     </button>
                 </div>
@@ -240,7 +240,7 @@
                     >Buscar Remplazo</a
                 > -->
                 <div>
-                    <button class="btn btn-success" @click="abrirModal(true)">
+                    <button class="btn btn-success" @click.prevent="abrirModal(true)">
                         Buscar Remplazo
                     </button>
                 </div>
@@ -430,6 +430,7 @@ export default defineComponent({
             Id de los documentos guardados con el fin de asignarle a la nueva novedad el id proximo */
             const res = await getUltimoCambioTurno();
             this.ultimoId =  res.data.length > 0 ? res.data[0]._id : 0;
+            
         },
         async loadCambioTurnos() {
             const res = await getCambioTurnos();
@@ -444,8 +445,8 @@ export default defineComponent({
             /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
             this.ultimoId++;
             this.cambioTurno._id = this.ultimoId;
-
-            if (this.mismoPersonal(this.cambioTurno) || this.faltaPersonal(this.cambioTurno)) {
+            
+            if (this.mismoPersonal(this.cambioTurno) || this.faltaPersonal(this.cambioTurno) || this.tieneCambioCargado(this.cambioTurno)) {
                 // if(this.message.activo){
                 //     this.message.message = "Ocurrió un problema con la validación. Si el error persiste, Contacte al administrador con capturas de pantalla del error."
                 //     this.message.status = 'danger'
@@ -517,24 +518,75 @@ export default defineComponent({
                 return false;
             }
         },
+        esFechaIgual(dateMayor: string, dateMenor: string) {
+            if (dateMayor && dateMenor) {
+                const formattedDateMayor = new Date(dateMayor)
+                    .toISOString()
+                    .split("T")[0];
+                const formattedDateMenor = new Date(dateMenor)
+                    .toISOString()
+                    .split("T")[0];
+                return formattedDateMayor === formattedDateMenor;
+            } else {
+                return false;
+            }
+        },
+        tieneCambioCargado(cambio: CambioTurno){
+            let res = false;
+            let num = -1;
+            const [repetido] = this.cambiosTurnos.filter(cambioTurno => {
+                return this.esFechaIgual(cambioTurno.fechaCambio,cambio.fechaCambio) &&
+                (cambioTurno.personal[0].legajo === cambio.personal[0].legajo ||
+                cambioTurno.personal[0].legajo === cambio.personal[1].legajo ||
+                cambioTurno.personal[1].legajo === cambio.personal[0].legajo ||
+                cambioTurno.personal[1].legajo === cambio.personal[1].legajo)
+            })
+            if(repetido !== undefined){
+                if( repetido.personal[0].legajo === cambio.personal[0].legajo ||
+                repetido.personal[0].legajo === cambio.personal[1].legajo){
+                    num = 0;
+                } else if(repetido.personal[0].legajo === cambio.personal[0].legajo ||
+                repetido.personal[0].legajo === cambio.personal[1].legajo){
+                    num = 1;
+                }
+
+            }
+            if(repetido){
+                res = true;
+                this.message.activo = true;
+                this.message.title = "Personal con cambio de turno asignado";
+                this.message.message =
+                    `El personal ${repetido.personal[num].apellido +' '+ repetido.personal[num].nombres} 
+                    ya tiene cargado un cambio de turno para la fecha asignada. Con el consecutivo N* ${repetido._id}. Finalícelo para continuar `;
+                this.message.status = "danger";
+            }
+            return res;
+        },
         mismoPersonal(cambio: CambioTurno): boolean {
-            this.message.activo = true;
-            this.message.title = "Personal repetido";
-            this.message.message =
-                "No se puede cargar un cambio de turno con el mismo personal";
-            this.message.status = "danger";
-            return cambio.personal[0].legajo === cambio.personal[1].legajo;
+            let res = false;
+            if(cambio.personal[0].legajo === cambio.personal[1].legajo){
+                res = true;
+                this.message.activo = true;
+                this.message.title = "Personal repetido";
+                this.message.message =
+                    "No se puede cargar un cambio de turno con el mismo personal";
+                this.message.status = "danger";
+            }
+            return res;
         },
         faltaPersonal(cambio:CambioTurno):boolean{
-            this.message.activo = true;
-            this.message.title = "Falta Personal";
-            this.message.message =
-                "Tiene que estar ambos personales para realizar un cambio de turno";
-            this.message.status = "danger";
-            console.log(cambio.personal[0].apellido,cambio.personal[1].apellido);
-            console.log(cambio.personal[0].apellido == '' || cambio.personal[1].apellido == '');
-            
-            return cambio.personal[0].apellido == '' || cambio.personal[1].apellido == '';
+            let res = false
+            if(cambio.personal[0].apellido == '' || cambio.personal[1].apellido == ''){
+                res = true;
+                this.message.activo = true;
+                this.message.title = "Falta Personal";
+                this.message.message =
+                    "Tiene que estar ambos personales para realizar un cambio de turno";
+                this.message.status = "danger";
+                console.log(cambio.personal[0].apellido,cambio.personal[1].apellido);
+                console.log(cambio.personal[0].apellido == '' || cambio.personal[1].apellido == '');
+            }
+            return res;
         },
         // esInicioRelevoMayorIgualFechaBaja(){
         //     if (this.novedad.remplazo !== undefined ){
@@ -776,9 +828,11 @@ export default defineComponent({
                     this.personalEncontrado[0].turno;
                 this.cambioTurno.personal[0].franco =
                     this.days[this.personalEncontrado[0].franco];
-                this.cambioTurno.fechaCambio = this.today
+                if(!this.cambioTurno.fechaCambio){
+                    this.cambioTurno.fechaCambio = this.today
                     .toISOString()
                     .split("T")[0];
+                }
             }
         },
         asignarRelevoPorLegajo(legajo: number) {
