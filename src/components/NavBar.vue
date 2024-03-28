@@ -44,10 +44,12 @@ export default defineComponent({
         const isAsideBarVisible = ref(true);
         props
         function toggleAsideBar() {
+            // isAsideBarVisible.value = localStorage.getItem('isAsideBarVisible') === 'true'
             isAsideBarVisible.value = !isAsideBarVisible.value;
             const body = document.body;
             body.classList.toggle('sb-sidenav-toggled');
             emit('update:isAsideBarVisible', isAsideBarVisible.value);
+            // localStorage.setItem('isAsideBarVisible',(isAsideBarVisible.value ? 'true':'false'))
         }
 
         return {isAsideBarVisible,toggleAsideBar};

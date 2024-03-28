@@ -1,7 +1,7 @@
 <template>
     <div>
         <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar />
+        <asideBar v-if="isAsideBarVisible"/>
         <div
             id="layoutSidenav_content"
             class="body"
@@ -19,8 +19,8 @@
                     <div class="d-flex">
                         <a
                             class="btn btn-primary d-flex end"
-                            href="/newNovedades"
-                            >Nueva Novedad</a
+                            href="/newCambioTurno"
+                            >Nuevo cambio de Turno</a
                         >
                     </div>
 
@@ -227,160 +227,83 @@
                             </label>
                         </div>
                     </details>
-                    <h3 v-if="novedadesFiltradas.length == 0">
+                    <h3 v-if="cambiosTurnosFiltrados.length == 0">
                         No se encontró ninguna novedad con los requerimientos
                         especificados.
                     </h3>
 
                     <table
-                        v-if="novedadesFiltradas.length > 0"
+                        v-if="cambiosTurnosFiltrados.length > 0"
                         class="table table-striped table-hover"
                     >
                         <thead>
                             <tr>
-                                <th class="col-1" colspan="1">Consecutivo</th>
-                                <th class="col-1" colspan="1">Fecha</th>
+                                <th class="col-1" colspan="1">Consecutivo - Fecha</th>
+
                                 <th class="col-1" colspan="1">Legajo</th>
                                 <th class="col-1" colspan="1">Apellido</th>
                                 <th class="col-1" colspan="1">Nombres</th>
                                 <th class="col-1" colspan="1">Base</th>
                                 <th class="col-1" colspan="1">Turno</th>
                                 <th class="col-1" colspan="1">Franco</th>
-                                <th class="col-1" colspan="1">Novedad</th>
-                                <th class="col-1" colspan="1">Fecha de Baja</th>
-                                <th class="col-1" colspan="1">Fecha de Alta</th>
-                                <th class="col-1">Ver</th>
+                                
                                 <th class="col-1">Borrar</th>
                             </tr>
                         </thead>
                         <tbody
-                            v-for="(novedad, index) in novedadesFiltradas"
+                            v-for="(cambio, index) in cambiosTurnosFiltrados"
                             :key="index"
-                            @dblclick="
-                                novedad.novedadInactiva
-                                    ? null
-                                    : edit(novedad._id)
-                            "
-                            @click="viewDetail(novedad)"
                         >
                             <tr
-                                v-if="checkboxTodas || !novedad.novedadInactiva"
                                 class="Small shadow"
-                                :class="{
-                                    'fila-oscura': novedad.novedadInactiva,
-                                }"
                             >
-                                <td class="col-1">{{ novedad._id }}</td>
+                                <td class="col-1"  rowspan="2">{{ cambio._id +" - "+ new Date(cambio.fechaCambio + " 12:00").toLocaleDateString()   }}</td>
+                                
+                                <td class="col-1">{{ cambio.personal[0].legajo }}</td>
+                                <td class="col-1">{{ cambio.personal[0].apellido }}</td>
+                                <td class="col-1">{{ cambio.personal[0].nombres }}</td>
+                                <td class="col-1">{{ cambio.personal[0].base }}</td>
                                 <td class="col-1">
                                     {{
-                                        novedad.fecha
-                                            ? new Date(
-                                                  novedad.fecha + " 12:00"
-                                              ).toLocaleDateString()
-                                            : new Date(
-                                                  novedad.fechaBaja + " 12:00"
-                                              ).toLocaleDateString()
-                                    }}
-                                </td>
-                                <td class="col-1">{{ novedad.legajo }}</td>
-                                <td class="col-1">{{ novedad.apellido }}</td>
-                                <td class="col-2">{{ novedad.nombres }}</td>
-                                <td class="col-1">{{ novedad.base }}</td>
-                                <td class="col-1">
-                                    {{
-                                        novedad.turno +
+                                        cambio.personal[0].turno +
                                         " / " +
                                         dia_laboral(
-                                            obtenerNumeroDia(novedad.franco),
+                                            obtenerNumeroDia(cambio.personal[0].franco),
                                             today.getDay()
                                         )
                                     }}
                                 </td>
-                                <td class="col-1">{{ novedad.franco }}</td>
-                                <td class="col-1">{{ novedad.tipoNovedad }}</td>
-                                <td class="col-1">
-                                    {{
-                                        new Date(
-                                            novedad.fechaBaja + " 12:00"
-                                        ).toLocaleDateString()
-                                    }}
-                                </td>
-                                <td class="col-1">
-                                    {{
-                                        !novedad.HNA
-                                            ? new Date(
-                                                  novedad.fechaAlta + " 12:00"
-                                              ).toLocaleDateString()
-                                            : ""
-                                    }}
-                                </td>
-                                <td class="col-1">
+                                <td class="col-1">{{ cambio.personal[0].franco }}</td>
+                                <td class="col-1" rowspan="2">
                                     <i
-                                        v-if="!novedad.novedadInactiva"
-                                        class="material-icons cursor-hand"
-                                        @click="edit(novedad._id)"
-                                    >
-                                        edit_note
-                                    </i>
-                                </td>
-                                <td class="col-1">
-                                    <i
-                                        v-if="!novedad.novedadInactiva"
                                         class="material-icons cursor-hand rojo"
+                                        
                                         @click="
-                                            deleteNovedad(novedad._id, index)
+                                            deleteCambio(cambio._id, index)
                                         "
                                         >delete_forever</i
                                     >
                                 </td>
                             </tr>
-                            <tr v-if="novedad.viewDetail">
-                                <td colspan="12">
-                                    <div class="row" v-if="novedad.remplazo[0]">
-                                        <h6 class="col-1">Releva:</h6>
-                                        <p class="col-3">
-                                            {{
-                                                novedad.remplazo[
-                                                    novedad.remplazo.length - 1
-                                                ].apellido +
-                                                " " +
-                                                novedad.remplazo[
-                                                    novedad.remplazo.length - 1
-                                                ].nombres
-                                            }}
-                                        </p>
-                                        <h6 class="col-1">Desde:</h6>
-                                        <p class="col-1">
-                                            {{
-                                                formatearFecha(
-                                                    novedad.remplazo[
-                                                        novedad.remplazo
-                                                            .length - 1
-                                                    ].inicioRelevo
-                                                )
-                                            }}
-                                        </p>
-                                        <h6 class="col-1">Hasta:</h6>
-                                        <p class="col-1">
-                                            {{
-                                                formatearFecha(
-                                                    novedad.remplazo[
-                                                        novedad.remplazo
-                                                            .length - 1
-                                                    ].finRelevo
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                    <div v-else>
-                                        <h6>Sin Relevo</h6>
-                                    </div>
-                                    <div v-if="novedad.detalle">
-                                        <h6>Detalle:</h6>
-                                        <p>{{ novedad.detalle }}</p>
-                                    </div>
+                            <tr>
+                                <td class="col-1">{{ cambio.personal[1].legajo }}</td>
+                                <td class="col-1">{{ cambio.personal[1].apellido }}</td>
+                                <td class="col-1">{{ cambio.personal[1].nombres }}</td>
+                                <td class="col-1">{{ cambio.personal[1].base }}</td>
+                                <td class="col-1">
+                                    {{
+                                        cambio.personal[1].turno +
+                                        " / " +
+                                        dia_laboral(
+                                            obtenerNumeroDia(cambio.personal[1].franco),
+                                            today.getDay()
+                                        )
+                                    }}
                                 </td>
+                                <td class="col-1">{{ cambio.personal[1].franco }}</td>
+                                
                             </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -391,22 +314,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount } from "vue";
+import { defineComponent, ref } from "vue";
 import NavBar from "../NavBar.vue";
 import asideBar from "../asideBar.vue";
 import FooterPage from "../FooterPage.vue";
 import { Novedad } from "../../interfaces/INovedades";
-import { getNovedades, updateNovedad } from "../../services/novedadesService";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
+import { deleteCambioTurno, getCambioTurnos } from "../../services/cambioTurnoService";
+import { CambioTurno } from '../../interfaces/ICambioTurno';
 
 export default defineComponent({
     data() {
         return {
-            novedades: [] as Novedad[],
-            novedadesFiltradas: [] as Novedad[],
+            cambiosTurnos: [] as CambioTurno[],
+            cambiosTurnosFiltrados: [] as CambioTurno[],
             checkboxDotacion: [] as string[],
             checkboxHna: false,
             checkboxEspecialidad: [] as string[],
@@ -419,53 +343,42 @@ export default defineComponent({
         };
     },
     setup() {
-        const isAsideBarVisible = ref(true); // Estado inicial visible
+        const isAsideBarVisible = ref(false); // Estado inicial visible
         function toggleAsideBar() {
             isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
         }
-        onBeforeMount(() => {
-            isAsideBarVisible.value =
-                localStorage.getItem("sb|sidebar-toggle") === "true";
-        });
 
         return { isAsideBarVisible, toggleAsideBar };
     },
     methods: {
-        async loadNovedades() {
+        async loadCambiosTurnos() {
             try {
-                const res = await getNovedades();
-                this.novedades = res.data;
+                const res = await getCambioTurnos();
+                this.cambiosTurnos = res.data;
                 this.filtrar();
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
         },
-        async deleteNovedad(id: number, index: number) {
+        async deleteCambio(id: number, index: number) {
             try {
                 const confirmacion = window.confirm(
                     "¿Estás seguro de que deseas eliminar esta novedad?"
                 );
                 if (confirmacion) {
                     try {
-                        const novedadesIndex = this.novedadesIndexada(
-                            this.novedades
-                        );
-                        novedadesIndex[id].novedadInactiva = true;
-                        //await deleteNovedad(id);
-                        // dejamos de hacer un borrado físico y empezamos a hacer un borrado lógico
-                        await updateNovedad(id, novedadesIndex[id]);
+                        await deleteCambioTurno(id);
 
                         //se guarda registro
                         const registro: Registro = {
                             usuario:
                                 window.localStorage.getItem("username") || "",
                             fecha: this.today.toString(),
-                            accion: "Elimino",
-                            novedad: novedadesIndex[id],
+                            accion: "Elimino cambio turno",
                         };
                         await createRegistro(registro);
                         // se quita de la lista impresa
-                        this.novedadesFiltradas.splice(index, 1);
+                        this.cambiosTurnosFiltrados.splice(index, 1);
                     } catch (error) {
                         console.error(error);
                     }
@@ -474,7 +387,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-        //TODO debo encontra la forma de escuchar cuando se hace click en el boton de cerra el asidebar y cambiar el width
         handleAsideBarVisibility(isVisible: boolean) {
             this.isAsideBarVisible = isVisible;
         },
@@ -492,7 +404,7 @@ export default defineComponent({
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
-        novedadesIndexada(novedades: Novedad[]) {
+        cambiosTurnosIndexado(novedades: Novedad[]) {
             return novedades.reduce(
                 (acumulador: Record<number, Novedad>, novedad: Novedad) => {
                     acumulador[novedad._id] = novedad;
@@ -519,8 +431,8 @@ export default defineComponent({
                 return "";
             }
         },
-        ordenarNovedades() {
-            this.novedadesFiltradas.sort((a, b) => (b._id > a._id ? 1 : -1));
+        ordenarDescendente(list:any[]) {
+            return list.sort((a: any, b: any) => (b._id > a._id ? 1 : -1));
         },
         edit(id: number) {
             this.$router.push(`/editNovedades/${id}`);
@@ -592,81 +504,49 @@ export default defineComponent({
                 "Ayudante conductor",
                 "Guardatren electrico",
             ];
-            let filtrarNovedades = false;
-            let novedadesFiltradas: Novedad[] = this.novedades;
+            let filtrar = false;
+            let cambiosTurnosFiltrados: CambioTurno[] = this.cambiosTurnos;
 
             if (this.search.length !== 0) {
-                filtrarNovedades = true;
+                filtrar = true;
             }
             if (this.checkboxDotacion.length > 0) {
                 cDotacion = this.checkboxDotacion;
-                filtrarNovedades = true;
+                filtrar = true;
             }
             if (this.checkboxEspecialidad.length > 0) {
                 cEspecialidad = this.checkboxEspecialidad;
-                filtrarNovedades = true;
-            }
-            if (this.checkboxHna) {
-                novedadesFiltradas = novedadesFiltradas.filter(
-                    (novedad: Novedad) => novedad.HNA
-                );
-            }
-            if (this.checkboxDescubierto) {
-                novedadesFiltradas = novedadesFiltradas.filter(
-                    (novedad: Novedad) => novedad.remplazo.length === 0
-                );
-            }
-            if (this.checkboxTodas) {
-                novedadesFiltradas;
-            } else if (this.checkboxFinalizadas) {
-                novedadesFiltradas = novedadesFiltradas.filter(
-                    (novedad: Novedad) =>
-                        novedad.fechaAlta &&
-                        this.esFechaMayorIgual(
-                            this.today.toString(),
-                            novedad.fechaAlta
-                        )
-                );
-            } else {
-                novedadesFiltradas = novedadesFiltradas.filter(
-                    (novedad: Novedad) =>
-                        !novedad.fechaAlta ||
-                        this.esFechaMayorIgual(
-                            novedad.fechaAlta,
-                            this.today.toString()
-                        )
-                );
+                filtrar = true;
             }
 
-            if (filtrarNovedades) {
-                novedadesFiltradas = novedadesFiltradas.filter(
-                    (novedad: Novedad) => {
+            if (filtrar) {
+                cambiosTurnosFiltrados = cambiosTurnosFiltrados.filter(
+                    (cambio: CambioTurno) => {
                         return (
-                            cDotacion.includes(novedad.base) &&
-                            cEspecialidad.includes(novedad.especialidad) &&
+                            cDotacion.includes(cambio.personal[0].base) &&
+                            cEspecialidad.includes(cambio.personal[0].especialidad) &&
                             (
-                                novedad.apellido.toLowerCase() +
+                                cambio.personal[0].apellido.toLowerCase() +
                                 " " +
-                                novedad.nombres.toLowerCase().trim()
+                                cambio.personal[0].nombres.toLowerCase() +
+                                cambio.personal[1].apellido.toLowerCase() +
+                                " " +
+                                cambio.personal[1].nombres.toLowerCase().trim()
                             ).includes(this.search.toLowerCase().trim())
                         );
                     }
                 );
             }
-            this.novedadesFiltradas = novedadesFiltradas;
-            this.ordenarNovedades();
+            this.cambiosTurnosFiltrados = this.ordenarDescendente(cambiosTurnosFiltrados);
+
         },
         
     },
     created() {
         try {
-            this.loadNovedades();
+            this.loadCambiosTurnos();
             newToken();
             this.username = localStorage.getItem("username") || "";
-            if (this.username == "Piluso Dario") {
-                alert("Te quiero Pilu 😘");
-                alert("ponete las pilas! ");
-            }
         } catch (error) {
             console.error(error);
         }
@@ -681,7 +561,7 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
 }
 
 .hidden-row {
@@ -703,5 +583,11 @@ main {
 }
 .gris {
     color: #aaa;
+}
+.grisClaro{
+    background: #dfdfdf;
+}
+.grisOscuro{
+    color: #7b7b7b;
 }
 </style>

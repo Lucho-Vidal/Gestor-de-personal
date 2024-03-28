@@ -1,7 +1,7 @@
 <template>
     <div id="sb-nav-fixed">
         <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar />
+        <asideBar v-if="isAsideBarVisible" />
         <div
             id="layoutSidenav_content"
             class="body"
@@ -828,7 +828,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref , onBeforeMount } from "vue";
+import { defineComponent, ref  } from "vue";
 import NavBar from "../NavBar.vue";
 import asideBar from "../asideBar.vue";
 import FooterPage from "../FooterPage.vue";
@@ -861,13 +861,10 @@ export default defineComponent({
         };
     },
     setup() {
-        const isAsideBarVisible = ref(true); // Estado inicial visible
+        const isAsideBarVisible = ref(false); // Estado inicial visible
         function toggleAsideBar() {
             isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
         }
-        onBeforeMount(() => {
-            isAsideBarVisible.value = localStorage.getItem('sb|sidebar-toggle') === 'true';
-        });
 
         return {isAsideBarVisible,toggleAsideBar};
     },

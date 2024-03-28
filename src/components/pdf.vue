@@ -1,7 +1,7 @@
 <template>
     <div id="sb-nav-fixed">
         <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar />
+        <asideBar v-if="isAsideBarVisible"/>
         <div
             id="layoutSidenav_content"
             class="body"
@@ -24,7 +24,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount ,watch  } from "vue";
+import { defineComponent, ref ,watch  } from "vue";
 import {  useRoute  } from "vue-router";
 import NavBar from "./NavBar.vue";
 import asideBar from "./asideBar.vue";
@@ -45,7 +45,7 @@ export default defineComponent({
         return {};
     },
     setup() {
-        const isAsideBarVisible = ref(true); // Estado inicial visible
+        const isAsideBarVisible = ref(false); // Estado inicial visible
         const rutaPdf = ref("");
         const pdfContainer = ref<HTMLElement | null>(null); // Referencia al contenedor del PDF
         const route = useRoute(); // Acceso a la ruta actual
@@ -75,10 +75,6 @@ export default defineComponent({
         function toggleAsideBar() {
             isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
         }
-        onBeforeMount(() => {
-            isAsideBarVisible.value =
-                localStorage.getItem("sb|sidebar-toggle") === "true";
-        });
         // Obtener el valor de la ruta desde el parámetro
         // const instance = getCurrentInstance();
         // const route = instance?.proxy && instance.proxy.$route as RouteLocationNormalizedLoaded | undefined;

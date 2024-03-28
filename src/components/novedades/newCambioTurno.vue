@@ -343,7 +343,7 @@
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
                 <i
                     class="btn btn-secondary col-1 m-2"
-                    @click="$router.push('/novedades')"
+                    @click="$router.push('/cambioTurno')"
                     >Cerrar</i
                 >
             </form>
