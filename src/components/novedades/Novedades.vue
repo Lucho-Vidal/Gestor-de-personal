@@ -470,7 +470,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-        //TODO debo encontra la forma de escuchar cuando se hace click en el boton de cerra el asidebar y cambiar el width
         handleAsideBarVisibility(isVisible: boolean) {
             this.isAsideBarVisible = isVisible;
         },
