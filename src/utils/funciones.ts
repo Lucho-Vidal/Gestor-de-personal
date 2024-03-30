@@ -85,8 +85,6 @@ export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprim
             // Asignar personal al array turnosAImprimir
             if (personal.nombres !== undefined) {
                 const cambiado = buscarCambioTurno(cambiosTurnos,inputDate,personal.legajo)
-                console.log(cambiado?.apellido);
-
                 if(cambiado){
                     turno.personal = `${cambiado.apellido} ${cambiado.nombres}`
                 }else{
