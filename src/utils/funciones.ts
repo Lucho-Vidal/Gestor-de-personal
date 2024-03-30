@@ -49,6 +49,19 @@ export function esFechaIgual(dateMayor: string, dateMenor: string) {
         return false;
     }
 }
+export function compararHoras(hora1: string, hora2: string): number {
+    // Extraer las horas y minutos de cada cadena
+    const [hora1Hours, hora1Minutes] = hora1.split(":").map(Number);
+    const [hora2Hours, hora2Minutes] = hora2.split(":").map(Number);
+
+    // Comparar horas
+    if (hora1Hours !== hora2Hours) {
+        return hora1Hours - hora2Hours;
+    }
+
+    // Si las horas son iguales, comparar minutos
+    return hora1Minutes - hora2Minutes;
+}
 export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprimir: ITurno[],personales: IPersonal[],novedades: Novedad[],cambiosTurnos:CambioTurno[]) {
     try {
         turnosAImprimir.forEach((turno: ITurno) => {
@@ -84,7 +97,7 @@ export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprim
 
             // Asignar personal al array turnosAImprimir
             if (personal.nombres !== undefined) {
-                const cambiado = buscarCambioTurno(cambiosTurnos,inputDate,personal.legajo)
+                                const cambiado = buscarCambioTurno(cambiosTurnos,inputDate,personal.legajo)
                 if(cambiado){
                     turno.personal = `${cambiado.apellido} ${cambiado.nombres}`
                 }else{
@@ -339,4 +352,37 @@ export async function  loadNovedades() {
     } catch (error) {
         handleRequestError(error as AxiosError);
     }
+}
+export function formatearFecha(fechaString: string): string {
+    const fecha: Date = new Date(fechaString);
+    const opcionesDeFormato: Intl.DateTimeFormatOptions = {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    };
+    const formatoFecha = new Intl.DateTimeFormat(
+        "es-AR",
+        opcionesDeFormato
+    );
+
+    return formatoFecha.format(fecha);
+}
+export function quitarDuplicados(lista: ITurno[]): ITurno[] {
+    const mapa: Map<string, ITurno> = new Map();
+
+    for (const elemento of lista) {
+        // Utilizamos el ID como clave en el mapa
+        if (!mapa.has(elemento.turno)) {
+            mapa.set(elemento.turno, elemento);
+        } else if (
+            mapa.has(elemento.turno) &&
+            elemento.circular === "HD32"
+        ) {
+            mapa.set(elemento.turno, elemento);
+        }
+    }
+    // Convertir los valores del mapa de nuevo a una lista
+    return Array.from(mapa.values());
 }
