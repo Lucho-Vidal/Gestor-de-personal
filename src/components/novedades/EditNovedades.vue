@@ -169,6 +169,7 @@
                             
                             <option value="Estudio">Estudio</option>
                             <option value="Enfermedad">Enfermedad</option>
+                            <option value="Duelo">Duelo</option>
                             <option value="ART">ART</option>
                             <option value="Arrollamiento 558">
                                 Arrollamiento 558
