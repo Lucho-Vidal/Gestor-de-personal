@@ -3,7 +3,7 @@ import {
     createRouter,
     createWebHistory,
     RouteLocationNormalized,
-    NavigationGuardNext
+    NavigationGuardNext,
 } from "vue-router";
 
 // Middleware para verificar si el usuario está autenticado
@@ -13,9 +13,9 @@ function requireAuth(
     next: NavigationGuardNext
 ) {
     if (localStorage.getItem("token")) {
-        if (to.path == '/'&& from.path == '/login'){
+        if (to.path == "/" && from.path == "/login") {
             location.reload();
-        }  
+        }
         next();
     } else {
         next("/login");
@@ -23,12 +23,8 @@ function requireAuth(
 }
 
 // Middleware para verificar si el usuario tiene el rol "moderator"
-function requireModerator(
-    to: RouteLocationNormalized,
-    from: RouteLocationNormalized,
-    next: NavigationGuardNext
-) {
-    const roles = localStorage.getItem('roles')?.split(',')||[];
+function requireModerator(next: NavigationGuardNext) {
+    const roles = localStorage.getItem("roles")?.split(",") || [];
     if (roles.includes("moderator")) {
         next();
     } else {
@@ -36,12 +32,8 @@ function requireModerator(
         next("/");
     }
 }
-function requireAdmin(
-    to: RouteLocationNormalized,
-    from: RouteLocationNormalized,
-    next: NavigationGuardNext
-) {
-    const roles = localStorage.getItem('roles')?.split(',')||[]
+function requireAdmin(next: NavigationGuardNext) {
+    const roles = localStorage.getItem("roles")?.split(",") || [];
     if (roles.includes("admin")) {
         next();
     } else {
@@ -52,9 +44,9 @@ function requireAdmin(
 
 const routes: RouteRecordRaw[] = [
     {
-        path: '/:catchAll(.*)',
-        name: 'NotFound',
-        redirect: '/'
+        path: "/:catchAll(.*)",
+        name: "NotFound",
+        redirect: "/",
     },
     {
         path: "/",
@@ -66,7 +58,7 @@ const routes: RouteRecordRaw[] = [
         path: "/login",
         name: "login",
         component: () => import("@/components/sign/login.vue"),
-        beforeEnter: (to, from, next) => {
+        beforeEnter: (_, __, next) => {
             if (localStorage.getItem("token")) {
                 next("/");
             } else {
@@ -77,35 +69,41 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/changePassword",
         name: "changePassword",
-        meta:{title: 'GNPA - Cambio de contraseña'},
+        meta: { title: "GNPA - Cambio de contraseña" },
         component: () => import("@/components/sign/changePassword.vue"),
-        beforeEnter: requireAuth
+        beforeEnter: requireAuth,
     },
     {
         path: "/users",
         name: "users",
-        meta:{title: 'GNPA - Administración de  usuarios'},
+        meta: { title: "GNPA - Administración de  usuarios" },
         component: () => import("@/components/sign/lstUsers.vue"),
-        beforeEnter: requireAdmin,
+        beforeEnter: (_, __, next) => {
+            requireAdmin(next);
+        },
     },
     {
         path: "/newUser",
         name: "newUser",
-        meta:{title: 'GNPA - Nuevo usuario'},
+        meta: { title: "GNPA - Nuevo usuario" },
         component: () => import("@/components/sign/newUser.vue"),
-        beforeEnter: requireAdmin,
+        beforeEnter: (_, __, next) => {
+            requireAdmin(next);
+        },
     },
     {
         path: "/editUser/:id",
         name: "editUser",
-        meta:{title: 'GNPA - Editar usuario'},
+        meta: { title: "GNPA - Editar usuario" },
         component: () => import("@/components/sign/editUser.vue"),
-        beforeEnter: requireAdmin,
+        beforeEnter: (_, __, next) => {
+            requireAdmin(next);
+        },
     },
     {
         path: "/buscador",
         name: "Buscador",
-        meta:{title: 'GNPA - Buscador'},
+        meta: { title: "GNPA - Buscador" },
         component: () => import("@/components/appTrabajo/BuscadorTrenes.vue"),
         beforeEnter: requireAuth,
     },
@@ -118,136 +116,136 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/personal",
         name: "Personal",
-        meta:{title: 'GNPA - Personal'},
+        meta: { title: "GNPA - Personal" },
         component: () => import("@/components/personal/Personal.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/newPersonal",
         name: "newPersonal",
-        meta:{title: 'GNPA - Nuevo personal'},
+        meta: { title: "GNPA - Nuevo personal" },
         component: () => import("@/components/personal/newPersonal.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/editPersonal/:id",
         name: "editPersonal",
-        meta:{title: 'GNPA - Editar personal'},
+        meta: { title: "GNPA - Editar personal" },
         component: () => import("@/components/personal/editPersonal.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/novedades",
         name: "Novedades",
-        meta:{title: 'GNPA - Novedades'},
+        meta: { title: "GNPA - Novedades" },
         component: () => import("@/components/novedades/Novedades.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/NewNovedades",
         name: "NewNovedades",
-        meta:{title: 'GNPA - Nueva Novedad'},
+        meta: { title: "GNPA - Nueva Novedad" },
         component: () => import("@/components/novedades/NewNovedades.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/editNovedades/:id?",
         name: "editNovedades",
-        meta:{title: 'GNPA - Editar Novedad'},
+        meta: { title: "GNPA - Editar Novedad" },
         component: () => import("@/components/novedades/EditNovedades.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/turnos",
         name: "Turnos",
-        meta:{title: 'GNPA - Turnos'},
+        meta: { title: "GNPA - Turnos" },
         component: () => import("@/components/turnos/Turnos.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireAdmin(to, from, next));
-        }
+            requireAuth(to, from, () => requireAdmin(next));
+        },
     },
     {
         path: "/newTurno",
         name: "newTurno",
-        meta:{title: 'GNPA - Nuevo turno'},
+        meta: { title: "GNPA - Nuevo turno" },
         component: () => import("@/components/turnos/NewTurno.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireAdmin(to, from, next));
-        }
+            requireAuth(to, from, () => requireAdmin(next));
+        },
     },
     {
         path: "/editTurno/:id",
         name: "editTurno",
-        meta:{title: 'GNPA - Editar turno'},
+        meta: { title: "GNPA - Editar turno" },
         component: () => import("@/components/turnos/EditTurno.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireAdmin(to, from, next));
-        }
+            requireAuth(to, from, () => requireAdmin(next));
+        },
     },
     {
         path: "/registros",
         name: "registros",
-        meta:{title: 'GNPA - Registros'},
+        meta: { title: "GNPA - Registros" },
         component: () => import("@/components/registros.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireAdmin(to, from, next));
-        }
+            requireAuth(to, from, () => requireAdmin(next));
+        },
     },
     {
         path: "/sinCubrir",
         name: "sinCubrir",
-        meta:{title: 'GNPA - Sin cubrir'},
+        meta: { title: "GNPA - Sin cubrir" },
         component: () => import("@/components/appTrabajo/lstCubrir.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/cambioTurno",
         name: "cambioTurno",
-        meta:{title: 'GNPA - Cambio de Turno'},
+        meta: { title: "GNPA - Cambio de Turno" },
         component: () => import("@/components/novedades/cambioTurno.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/newCambioTurno",
         name: "newCambioTurno",
-        meta:{title: 'GNPA - Nuevo Cambio de Turno'},
+        meta: { title: "GNPA - Nuevo Cambio de Turno" },
         component: () => import("@/components/novedades/newCambioTurno.vue"),
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
     {
         path: "/listadoPersonales",
         name: "listadoPersonales",
-        meta:{title: 'GNPA - Listado de personal'},
+        meta: { title: "GNPA - Listado de personal" },
         component: () => import("@/components/appTrabajo/lstPersonales.vue"),
         beforeEnter: requireAuth,
     },
     {
         path: "/pdf/:rutaPdf",
         name: "pdf",
-        meta:{title: 'GNPA - PDF'},
+        meta: { title: "GNPA - PDF" },
         component: () => import("@/components/pdf.vue"),
         // props: true,
         beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(to, from, next));
-        }
+            requireAuth(to, from, () => requireModerator(next));
+        },
     },
 ];
 
