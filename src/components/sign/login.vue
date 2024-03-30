@@ -2,7 +2,6 @@
     <div>
         <NavBar />
         <main class="container">
-            <h1 class="d-flex justify-content-center m-3">Inicio de Sesión</h1>
             <div
                 class="alert  row"
                 :class="[message.status=='danger'?'alert-danger':message.status=='success'?'alert-success':message.status=='warning'?'alert-warning':'']"
@@ -163,6 +162,6 @@ export default defineComponent({
 
 <style>
     main {
-        min-height: 81.6vh;
+        margin-top: 5rem;
     }
 </style>
