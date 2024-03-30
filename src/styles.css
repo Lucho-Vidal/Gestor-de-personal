@@ -15,7 +15,8 @@
 }
  .body{
   position: relative;
-  padding: 4rem 0;
+  padding: 0;
+  padding-top: 4rem;
   min-height: 100vh;
 }
 #layoutSidenav_content{
@@ -26,6 +27,7 @@
   /* margin-top: 1rem; */
   /* margin-left: 250px; */
 }
+
 .layoutSidenav_content-width-min {
   margin-left: 0;
   width: 100vw;
@@ -41,6 +43,11 @@
   margin-left: 0px;
   width: 100%;
 }
+}
+@media (max-height: 801px) {
+  main:first-child{
+    min-height: 80vh;
+  }
 }
 :root {
   --bs-blue: #0d6efd;
