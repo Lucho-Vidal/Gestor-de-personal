@@ -126,7 +126,7 @@
                                     {{ ind.vueltas[0].observaciones }}
                                 </td>
                                 <td colspan="2" class="w-10">
-                                    {{ ind.personal }}
+                                    {{ ind.especialidad+ ': ' +  ind.personal }}
                                 </td>
                                 <td class="w-10">{{ ind.toma }}</td>
                                 <td class="w-10">{{ ind.deja }}</td>
@@ -186,17 +186,16 @@
 import { defineComponent, ref } from "vue";
 import NavBar from "../NavBar.vue";
 import asideBar from "../asideBar.vue";
-import { getTurnos } from "../../services/turnosService";
-import { ITurno } from "../../interfaces/ITurno";
 import FooterPage from "../FooterPage.vue";
-import { Itinerario } from "../../interfaces/Itinerario";
-import { getItinerario } from "../../services/itinerarioService";
-import { IPersonal } from "../../interfaces/IPersonal";
-import { getPersonales } from "../../services/personalService";
-import { Novedad, Remplazo } from "../../interfaces/INovedades";
-import { getNovedades } from "../../services/novedadesService";
-import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { ITurno } from "../../interfaces/ITurno";
+import { getTurnos } from "../../services/turnosService";
+import { Itinerario } from "../../interfaces/Itinerario";
+import { IPersonal } from "../../interfaces/IPersonal";
+import { Novedad } from "../../interfaces/INovedades";
+import { newToken } from "../../services/signService";
+import { CambioTurno } from '../../interfaces/ICambioTurno';
+import { buscarPersonalACargo, filtrarPorTurno, filtroTrenes, filtroItinerario, obtenerTiposCirculares, handleRequestError, loadItinerario, loadCambiosTurnos, loadPersonales, loadNovedades } from '../../utils/funciones';
 
 export default defineComponent({
     data() {
@@ -222,6 +221,7 @@ export default defineComponent({
                 "Viernes",
                 "Sábado",
             ],
+            cambiosTurnos: [] as  CambioTurno[],
         };
     },
     setup() {
@@ -244,49 +244,9 @@ export default defineComponent({
                 this.circularSeleccionada = circularSeleccionadaString
                     ? circularSeleccionadaString.split(",")
                     : [];
-                this.circulares = this.obtenerTiposCirculares(this.turno);
+                this.circulares = obtenerTiposCirculares(this.turno);
             } catch (error) {
-                this.handleRequestError(error as AxiosError);
-            }
-        },
-        async loadItinerario() {
-            try {
-                /* Trae todos los elementos de la base de datos */
-                const res = await getItinerario();
-                this.itinerario = res.data;
-            } catch (error) {
-                this.handleRequestError(error as AxiosError);
-            }
-        },
-        async loadPersonales() {
-            try {
-                /* Trae todos los elementos de la base de datos */
-                const res = await getPersonales();
-                this.personales = res.data;
-            } catch (error) {
-                this.handleRequestError(error as AxiosError);
-            }
-        },
-        async loadNovedades() {
-            try {
-                const res = await getNovedades();
-                this.novedades = res.data;
-            } catch (error) {
-                this.handleRequestError(error as AxiosError);
-            }
-        },
-        handleRequestError(error: AxiosError) {
-            console.error("Error en la solicitud:", error);
-
-            if (error.response && error.response.status === 401) {
-                // Manejar la lógica de redirección a la página de inicio de sesión
-                localStorage.removeItem("username");
-                localStorage.removeItem("roles");
-                localStorage.removeItem("token");
-                this.$router.push("/login");
-            } else {
-                // Manejar otros errores de solicitud
-                // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+                handleRequestError(error as AxiosError);
             }
         },
 
@@ -302,36 +262,42 @@ export default defineComponent({
 
             if (this.tren !== "") {
                 //si no se encuentra tren no continuo con la búsqueda
-                this.turnosAImprimir = this.filtroTrenes(
+                this.turnosAImprimir = filtroTrenes(
                     itinerario,
                     this.turno,
                     this.circularSeleccionada,
                     parseInt(this.tren)
                 );
                 if (this.turnosAImprimir.length > 0) {
-                    this.horarios = this.filtroItinerario(
+                    this.horarios = filtroItinerario(
                         itinerario,
                         this.itinerario,
                         parseInt(this.tren)
                     );
                     //this.turnosAImprimir = this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(
+                    buscarPersonalACargo(
                         fecha,
+                        this.inputDate,
                         this.turnosAImprimir,
-                        this.personales
+                        this.personales,
+                        this.novedades,
+                        this.cambiosTurnos
                     );
                 } else {
-                    this.turnosAImprimir = this.filtrarPorTurno(
+                    this.turnosAImprimir = filtrarPorTurno(
                         itinerario,
                         this.turno,
                         this.circularSeleccionada,
                         this.tren
                     );
                     //this.filtroTurno(itinerario);
-                    this.buscarPersonalACargo(
+                    buscarPersonalACargo(
                         fecha,
+                        this.inputDate,
                         this.turnosAImprimir,
-                        this.personales
+                        this.personales,
+                        this.novedades,
+                        this.cambiosTurnos
                     );
                 }
             }
@@ -363,252 +329,6 @@ export default defineComponent({
                 return this.inputIt;
             }
         },
-        filtroTrenes(
-            itinerario: string,
-            listaTurnos: ITurno[],
-            circularSeleccionada: string[],
-            tren: number
-        ) {
-            /* Este método buscar y filtra en el array turno el tren que se desea buscar.
-            guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
-            const turnosEnTren: ITurno[] = [];
-            listaTurnos.forEach((diag: ITurno) => {
-                for (let i = 0; i < diag.vueltas.length; i++) {
-                    if (
-                        diag.vueltas[i].tren === tren &&
-                        diag.itinerario === itinerario &&
-                        circularSeleccionada.includes(diag.circular)
-                    ) {
-                        turnosEnTren.push(diag);
-                    }
-                }
-            });
-            return turnosEnTren;
-        },
-        filtroItinerario(
-            itinerario: string,
-            listaItinerario: Itinerario[],
-            tren: number
-        ) {
-            /* Este método buscar en el array itinerario los horarios de pasadas por cada estación
-            las guarda en el array itFiltrado  */
-            const itFiltrados: Itinerario[] = listaItinerario.filter(
-                (it: Itinerario) => {
-                    return it.tren == tren && it.itinerario == itinerario;
-                }
-            );
-            let horarios: Itinerario = {
-                id: null,
-                tren: 0,
-                itinerario: "",
-                estaciones: [],
-                horarios: [],
-            };
-            try {
-                if (itFiltrados !== undefined && itFiltrados.length === 1) {
-                    horarios = itFiltrados[0];
-                    if (horarios.tren % 2 == 0) {
-                        horarios.estaciones.reverse();
-                        horarios.horarios.reverse();
-                    }
-                    return horarios;
-                }
-            } catch (e) {
-                console.error(e);
-            }
-            return horarios;
-        },
-        esFechaMayor(dateMayor: string, dateMenor: string) {
-            if (dateMayor !== undefined && dateMenor !== undefined) {
-                const formattedDateMayor = new Date(dateMayor)
-                    .toISOString()
-                    .split("T")[0];
-                const formattedDateMenor = new Date(dateMenor)
-                    .toISOString()
-                    .split("T")[0];
-                return formattedDateMayor > formattedDateMenor;
-            } else {
-                return false;
-            }
-        },
-        esFechaMayorIgual(dateMayor: string, dateMenor: string) {
-            if (dateMayor && dateMenor) {
-                const formattedDateMayor = new Date(dateMayor)
-                    .toISOString()
-                    .split("T")[0];
-                const formattedDateMenor = new Date(dateMenor)
-                    .toISOString()
-                    .split("T")[0];
-                return formattedDateMayor >= formattedDateMenor;
-            } else {
-                return false;
-            }
-        },
-        buscarPersonalACargo(
-            fecha: Date,
-            turnosAImprimir: ITurno[],
-            personales: IPersonal[]
-        ) {
-            try {
-                turnosAImprimir.forEach((turno: ITurno) => {
-                    const personal = this.filtroPersonal(
-                        turno.turno,
-                        fecha,
-                        personales
-                    );
-
-                    this.novedades.forEach((novedad: Novedad) => {
-                        const {
-                            legajo,
-                            fechaBaja,
-                            fechaAlta,
-                            HNA,
-                            novedadInactiva,
-                        } = novedad;
-
-                        if (
-                            legajo === personal.legajo &&
-                            !novedadInactiva &&
-                            ((HNA &&
-                                this.esFechaMayorIgual(
-                                    this.inputDate,
-                                    fechaBaja
-                                )) ||
-                                (this.esFechaMayorIgual(
-                                    this.inputDate,
-                                    fechaBaja
-                                ) &&
-                                    this.esFechaMayorIgual(
-                                        fechaAlta,
-                                        this.inputDate
-                                    )))
-                        ) {
-                            personal.nombres =
-                                this.obtenerNombreConReemplazo(novedad);
-                        }
-                    });
-
-                    // Asignar personal al array turnosAImprimir
-                    if (personal.nombres !== undefined) {
-                        turno.personal = personal.nombres;
-                    }
-                });
-            } catch (error) {
-                console.error("Error en buscarPersonalACargo:", error);
-            }
-        },
-        obtenerNombreConReemplazo(novedad: Novedad): string {
-            if (novedad.remplazo && novedad.remplazo.length > 0) {
-                // buscamos el primero que cumple con la fecha input sea mayorIgual inicio de relevo Y si existe finRelevo que sea mayorIgual a inputDate SINO la que no tenga fin de relevo
-                const remplazo = novedad.remplazo.find((remplazo: Remplazo) => {
-                    return (
-                        this.esFechaMayorIgual(
-                            this.inputDate,
-                            remplazo.inicioRelevo
-                        ) &&
-                        ((remplazo.finRelevo &&
-                            this.esFechaMayorIgual(
-                                remplazo.finRelevo,
-                                this.inputDate
-                            )) ||
-                            !remplazo.finRelevo)
-                    );
-                });
-                if (remplazo) {
-                    return `${remplazo.apellido} ${remplazo.nombres}`;
-                } else {
-                    return "Sin Cubrir";
-                }
-            } else {
-                return "Sin Cubrir";
-            }
-        },
-        filtroPersonal(turno: string, fecha: Date, personales: IPersonal[]) {
-            try {
-                let filtrados: IPersonal[];
-                turno = turno.trim();
-
-                if (
-                    turno.indexOf(".") !== -1 &&
-                    !turno.toLowerCase().includes("prog")
-                ) {
-                    const indexPunto = turno.indexOf(".");
-                    const diaLab = Number(turno[indexPunto + 1]);
-                    const diag = turno.split(".")[0];
-                    const franco = this.dia_laboral(diaLab, fecha.getDay());
-
-                    filtrados = personales.filter((personal) => {
-                        return (
-                            personal.turno === diag &&
-                            Number(personal.franco) === franco
-                        );
-                    });
-                } else {
-                    filtrados = personales.filter(
-                        (personal) =>
-                            personal.turno.toLowerCase() === turno.toLowerCase()
-                    );
-                }
-                const titular: IPersonal = filtrados[0];
-                return {
-                    turno: turno,
-                    legajo: titular.legajo || 0,
-                    nombres: titular
-                        ? `${titular.apellido} ${titular.nombres}`
-                        : "",
-                };
-            } catch (e) {
-                console.error(e);
-                return {};
-            }
-        },
-        dia_laboral(diaLaboral: number, hoy: number) {
-            /*   # devuelve el día de la semana como un número entero donde el Domingo 
-            está indexado como 0 y el Sábado como 6
-            Al ingresarle por parámetros la cantidad de días del turno pos franco y 
-            el dia de la semana actual devuelve el dia del franco del turno mismo. */
-            const diagrama = [
-                [0, 1, 2, 3, 4, 5, 6],
-                [6, 0, 1, 2, 3, 4, 5],
-                [5, 6, 0, 1, 2, 3, 4],
-                [4, 5, 6, 0, 1, 2, 3],
-                [3, 4, 5, 6, 0, 1, 2],
-                [2, 3, 4, 5, 6, 0, 1],
-                [1, 2, 3, 4, 5, 6, 0],
-            ];
-            return diagrama[diaLaboral][hoy]; //:franco
-        },
-        filtrarPorTurno(
-            itinerario: string,
-            listaTurnos: ITurno[],
-            circularSeleccionada: string[],
-            tren: string
-        ) {
-            const turnos: ITurno[] = [];
-            listaTurnos.forEach((diag: ITurno) => {
-                if (
-                    diag.turno.toLowerCase().includes(tren.toLowerCase()) &&
-                    diag.itinerario == itinerario &&
-                    circularSeleccionada.includes(diag.circular)
-                ) {
-                    turnos.push(diag);
-                }
-            });
-            return turnos;
-        },
-        obtenerTiposCirculares(turnos: ITurno[]) {
-            // Filtramos aquellos turnos que tengan definida la propiedad "circular"
-            const turnosFiltrados = turnos.filter(
-                (turno) => turno.circular !== undefined
-            );
-
-            // Usamos Set para obtener valores únicos de la propiedad "circular"
-            const circularesUnicas = [
-                ...new Set(turnosFiltrados.map((turno) => turno.circular)),
-            ];
-
-            return circularesUnicas;
-        },
         cambioCirculares() {
             window.localStorage.setItem(
                 "circularSeleccionada",
@@ -621,12 +341,13 @@ export default defineComponent({
             this.isAsideBarVisible = isVisible;
         },
     },
-    mounted() {
+    async mounted() {
         try {
             this.loadTurnos();
-            this.loadItinerario();
-            this.loadPersonales();
-            this.loadNovedades();
+            this.itinerario = await loadItinerario() || [];
+            this.cambiosTurnos = await loadCambiosTurnos() || [];
+            this.personales = await loadPersonales() || [];
+            this.novedades = await loadNovedades() || [];
             this.today.setHours(12, 0, 0, 0);
             newToken();
         } catch (error) {
@@ -643,7 +364,7 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
 }
 body {
     background: #ddd;

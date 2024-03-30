@@ -470,7 +470,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-        //TODO debo encontra la forma de escuchar cuando se hace click en el boton de cerra el asidebar y cambiar el width
         handleAsideBarVisibility(isVisible: boolean) {
             this.isAsideBarVisible = isVisible;
         },
@@ -659,10 +658,6 @@ export default defineComponent({
             this.loadNovedades();
             newToken();
             this.username = localStorage.getItem("username") || "";
-            if (this.username == "Piluso Dario") {
-                alert("Te quiero Pilu 😘");
-                alert("ponete las pilas! ");
-            }
         } catch (error) {
             console.error(error);
         }
