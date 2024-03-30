@@ -13,8 +13,14 @@
 <style>
 footer{
     padding: 20px 0;
-    position: absolute;
     bottom: 0;
     width: 100%;
 }
+@media (min-height: 800px) {
+  footer {
+    padding: 20px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}}
 </style>
