@@ -19,7 +19,8 @@ export const createRegistro = async (req,res) =>{
             accion,
             turno,
             personal,
-            novedad
+            novedad,
+            ordenamiento
         }=req.body;
 
         const newRegistro = new Registro({
@@ -28,7 +29,8 @@ export const createRegistro = async (req,res) =>{
             accion,
             turno,
             personal,
-            novedad
+            novedad,
+            ordenamiento
         });
 
         const savedRegistro = await newRegistro.save();

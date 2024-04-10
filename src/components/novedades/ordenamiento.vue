@@ -1,0 +1,519 @@
+<template>
+    <div>
+        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
+        <asideBar v-if="isAsideBarVisible"/>
+        <div
+            id="layoutSidenav_content"
+            class="body"
+            :class="[
+                isAsideBarVisible
+                    ? 'layoutSidenav_content-width-max'
+                    : 'layoutSidenav_content-width-min',
+            ]"
+        >
+            <main>
+                <div class="container-fluid px-4">
+                    <h2 class="d-flex justify-content-center m-3">
+                        Registro de ordenamiento al Personal de Abordo
+                    </h2>
+                    <div class="d-flex">
+                        <a
+                            class="btn btn-primary d-flex end"
+                            href="/newOrdenamiento"
+                            >Nuevo ordenamiento</a
+                        >
+                    </div>
+
+                    <details>
+                        <summary>Filtros:</summary>
+                        <div class="my-3">
+                            <input
+                                class="col-3 gap rounded"
+                                type="text"
+                                placeholder="Buscar por apellido y/o nombre"
+                                v-model="search"
+                                v-on:keyup="filtrar()"
+                            />
+                        </div>
+                        <div class="my-3">
+                            <h6>Solo las ordenes del dia:</h6>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="HNA"
+                                    v-model="checkboxHoy"
+                                    @change="filtrar()"
+                                />
+                                Solo hoy
+                            </label>
+                            
+                        </div>
+                        <div class="my-3">
+                            <h6>Filtro por Especialidad:</h6>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Conductor electrico"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Conductor eléctrico
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Conductor diesel"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Conductor Diesel
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Ayudante habilitado"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Ayudante Habilitado
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Ayudante conductor"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Ayudante Conductor
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Guardatren electrico"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Guarda Tren Electrico
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Guardatren diesel"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Guarda Tren Diesel
+                            </label>
+                        </div>
+                        <div class="my-3">
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="PC"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                PC
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="LLV"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                LLV
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="TY"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                TY
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="LP"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                LP
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="K5"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                K5
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="RE"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                RE
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="CÑ"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                CÑ
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="AK"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                AK
+                            </label>
+                        </div>
+                    </details>
+                    <h3 v-if="ordenamientosFiltrados.length == 0">
+                        No se encontró ninguna novedad con los requerimientos
+                        especificados.
+                    </h3>
+
+                    <table
+                        v-if="ordenamientosFiltrados.length > 0"
+                        class="table table-striped table-hover"
+                    >
+                        <thead>
+                            <tr>
+                                <th class="col-1" colspan="1">Consecutivo - Fecha</th>
+
+                                <th class="col-1" colspan="1">Legajo</th>
+                                <th class="col-1" colspan="1">Apellido</th>
+                                <th class="col-1" colspan="1">Nombres</th>
+                                <th class="col-1" colspan="1">Base</th>
+                                <th class="col-1" colspan="1">Turno</th>
+                                <th class="col-1" colspan="1">Franco</th>
+                                
+                                <th class="col-1">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            v-for="(orden, index) in ordenamientosFiltrados"
+                            :key="index"
+                        >
+                            <tr
+                                class="Small shadow"
+                            >
+                                <td class="col-1"  rowspan="2">{{ new Date(orden.fecha + " 12:00").toLocaleDateString()   }}</td>
+                                
+                                <td class="col-1">{{ orden.personal.legajo }}</td>
+                                <td class="col-1">{{ orden.personal.apellido }}</td>
+                                <td class="col-1">{{ orden.personal.nombres }}</td>
+                                <td class="col-1">{{ orden.personal.dotacion }}</td>
+                                <td class="col-1">
+                                    {{
+                                        orden.personal.turno +
+                                        " / " +
+                                        dia_laboral(orden.personal.franco,today.getDay())
+                                    }}
+                                </td>
+                                <td class="col-1">{{ obtenerDiaSemana( orden.personal.franco )}}</td>
+                                <td class="col-1" rowspan="2">
+                                    <i
+                                        class="material-icons cursor-hand rojo"
+                                        
+                                        @click="deleteOrdenamiento(orden._id,index)"
+                                        >delete_forever</i
+                                    >
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <footer-page />
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+import NavBar from "../NavBar.vue";
+import asideBar from "../asideBar.vue";
+import FooterPage from "../FooterPage.vue";
+import { Novedad } from "../../interfaces/INovedades";
+import { newToken } from "../../services/signService";
+import { AxiosError } from "axios";
+import { esFechaIgual, guardarRegistro, handleRequestError } from '../../utils/funciones';
+import { Ordenamiento } from "../../interfaces/IOrdenamientos";
+import { getOrdenamientos,deleteOrdenamiento } from '../../services/ordenamientoService';
+
+export default defineComponent({
+    data() {
+        return {
+            ordenamientos: [] as Ordenamiento[],
+            ordenamientosFiltrados: [] as Ordenamiento[],
+            checkboxDotacion: [] as string[],
+            checkboxEspecialidad: [] as string[],
+            checkboxDescubierto: false,
+            checkboxHoy: true,
+            username: "" as string,
+            today: new Date(),
+            search: "" as string,
+            
+        };
+    },
+    setup() {
+        const isAsideBarVisible = ref(false); // Estado inicial visible
+        function toggleAsideBar() {
+            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
+        }
+
+        return { isAsideBarVisible, toggleAsideBar };
+    },
+    methods: {
+        async loadOrdenamientos() {
+            try {
+                const res = await getOrdenamientos();
+                this.ordenamientos = res.data;
+                console.log(this.ordenamientos);
+                
+                this.filtrar();
+            } catch (error) {
+                handleRequestError(error as AxiosError);
+            }
+        },
+        async deleteOrdenamiento(id: string, index: number) {
+            try {
+                const confirmacion = window.confirm(
+                    "¿Estás seguro de que deseas eliminar esta novedad?"
+                );
+                if (confirmacion) {
+                    try {
+                        await deleteOrdenamiento(id);
+
+                        //se guarda registro
+                        guardarRegistro(this.today,"Elimino Ordenamiento")
+                        
+                        // se quita de la lista impresa
+                        this.ordenamientosFiltrados.splice(index, 1);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            } catch (error) {
+                handleRequestError(error as AxiosError);
+            }
+        },
+        handleAsideBarVisibility(isVisible: boolean) {
+            this.isAsideBarVisible = isVisible;
+        },
+        obtenerDiaSemana(num:number):string{
+            const days= [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado",
+            ]
+            return days[num]
+        },
+        obtenerNumeroDia(dia: string) {
+            const diasDeLaSemana = [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado",
+            ];
+
+            // Obtén el índice del día en el array
+            const indice = diasDeLaSemana.findIndex((nombre) => nombre === dia);
+
+            // Si se encuentra, devuelve el índice (0-6); de lo contrario, devuelve -1
+            return indice;
+        },
+        cambiosTurnosIndexado(novedades: Novedad[]) {
+            return novedades.reduce(
+                (acumulador: Record<number, Novedad>, novedad: Novedad) => {
+                    acumulador[novedad._id] = novedad;
+                    return acumulador;
+                },
+                {} as Record<number, Novedad>
+            );
+        },
+        formatearFecha(fechaString: string): string {
+            if (fechaString) {
+                const fecha: Date = new Date(fechaString);
+                const opcionesDeFormato: Intl.DateTimeFormatOptions = {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                };
+                const formatoFecha = new Intl.DateTimeFormat(
+                    "es-AR",
+                    opcionesDeFormato
+                );
+
+                return formatoFecha.format(fecha);
+            } else {
+                return "";
+            }
+        },
+        ordenarDescendente(list:any[]) {
+            return list.sort((a: any, b: any) => (b._id > a._id ? 1 : -1));
+        },
+        edit(id: number) {
+            this.$router.push(`/editNovedades/${id}`);
+        },
+        viewDetail(novedad: Novedad) {
+            if (novedad.viewDetail) {
+                novedad.viewDetail = false;
+            } else {
+                novedad.viewDetail = true;
+            }
+        },
+        dia_laboral(diaLaboral: number, hoy: number) {
+            /*   # devuelve el día de la semana como un número entero donde el Domingo
+            está indexado como 0 y el Sábado como 6
+            Al ingresarle por parámetros la cantidad de días del turno pos franco y
+            el dia de la semana actual devuelve el dia del franco del turno mismo. */
+            if (diaLaboral === -1) {
+                return "S/F";
+            } else {
+                const diagrama = [
+                    [0, 1, 2, 3, 4, 5, 6],
+                    [6, 0, 1, 2, 3, 4, 5],
+                    [5, 6, 0, 1, 2, 3, 4],
+                    [4, 5, 6, 0, 1, 2, 3],
+                    [3, 4, 5, 6, 0, 1, 2],
+                    [2, 3, 4, 5, 6, 0, 1],
+                    [1, 2, 3, 4, 5, 6, 0],
+                ];
+                return diagrama[diaLaboral][hoy]; //:franco
+            }
+        },
+        filtrar() {
+            let cDotacion = ["PC", "LLV", "TY", "LP", "K5", "RE", "CÑ", "AK"];
+            let cEspecialidad = [
+                "Conductor electrico",
+                "Conductor diesel",
+                "Ayudante habilitado",
+                "Guardatren diesel",
+                "Ayudante conductor",
+                "Guardatren electrico",
+            ];
+            let filtrar = this.checkboxHoy;
+            let ordenamientosFiltrados: Ordenamiento[] = this.ordenamientos;
+
+            if (this.search.length !== 0) {
+                filtrar = true;
+            }
+            if (this.checkboxDotacion.length > 0) {
+                cDotacion = this.checkboxDotacion;
+                filtrar = true;
+            }
+            if (this.checkboxEspecialidad.length > 0) {
+                cEspecialidad = this.checkboxEspecialidad;
+                filtrar = true;
+            }
+            if (filtrar) {
+                ordenamientosFiltrados = ordenamientosFiltrados.filter(
+                    (ordenamiento: Ordenamiento) => {
+                        return (
+                            cDotacion.includes(ordenamiento.personal.dotacion) &&
+                            cEspecialidad.includes(ordenamiento.personal.especialidad) &&
+                            (
+                                ordenamiento.personal.apellido.toLowerCase() +
+                                " " +
+                                ordenamiento.personal.nombres.toLowerCase() 
+                            ).includes(this.search.toLowerCase().trim())
+                        );
+                    }
+                );
+            }
+            if(this.checkboxHoy){
+                ordenamientosFiltrados = ordenamientosFiltrados.filter((orden:Ordenamiento) =>{
+                    return esFechaIgual(orden.fecha,this.today.toString())
+                })
+            }
+            this.ordenamientosFiltrados = this.ordenarDescendente(ordenamientosFiltrados);
+
+        },
+        
+    },
+    created() {
+        try {
+            this.loadOrdenamientos();
+            newToken();
+            this.username = localStorage.getItem("username") || "";
+        } catch (error) {
+            console.error(error);
+        }
+    },
+    name: "App",
+    components: {
+        NavBar,
+        asideBar,
+        FooterPage,
+    },
+});
+</script>
+<style>
+main {
+    margin-top: 5rem;
+}
+
+.hidden-row {
+    display: none;
+}
+
+.fila-oscura {
+    background-color: #888; /* Cambia este color según tus preferencias */
+    color: #fff; /* Cambia este color según tus preferencias */
+}
+.cursor-hand {
+    cursor: pointer;
+}
+.verde {
+    color: #0f0;
+}
+.rojo {
+    color: #f00;
+}
+.gris {
+    color: #aaa;
+}
+.grisClaro{
+    background: #dfdfdf;
+}
+.grisOscuro{
+    color: #7b7b7b;
+}
+</style>

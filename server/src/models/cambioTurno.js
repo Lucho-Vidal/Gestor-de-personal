@@ -6,6 +6,7 @@ const cambioTurnoSchema = new Schema({
         required: true
     },
     fechaCambio: String,
+    fecha: String,
     personal: []
 },{
     timestamps: true

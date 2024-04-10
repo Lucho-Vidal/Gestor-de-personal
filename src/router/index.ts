@@ -231,6 +231,24 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
+        path: "/ordenamiento",
+        name: "ordenamiento",
+        meta: { title: "GNPA - Ordenamiento" },
+        component: () => import("@/components/novedades/ordenamiento.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(next));
+        },
+    },
+    {
+        path: "/newOrdenamiento",
+        name: "newOrdenamiento",
+        meta: { title: "GNPA - Nuevo Ordenamiento" },
+        component: () => import("@/components/novedades/newOrdenamiento.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(next));
+        },
+    },
+    {
         path: "/listadoPersonales",
         name: "listadoPersonales",
         meta: { title: "GNPA - Listado de personal" },

@@ -13,6 +13,21 @@
  .aspect-ratio-hd {
   aspect-ratio: 16/9;
 }
+.cursor-hand{
+  cursor: pointer;
+}
+.verde{
+  color:#0f0
+}
+.rojo{
+  color:#f00
+}
+textarea{
+  resize: none;
+  /* form-sizing: content; */
+  min-height: 40px;
+  max-height: 200px;
+}
  .body{
   position: relative;
   padding: 0;

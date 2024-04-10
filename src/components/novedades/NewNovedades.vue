@@ -298,6 +298,7 @@
                                 <input
                                     type="number"
                                     name="legajo"
+                                    class="form-control mb-3"
                                     v-model="remplazo.legajo"
                                     @change="
                                         asignarRelevoPorLegajo(
@@ -908,18 +909,6 @@ main {
 .custom-modal .modal-dialog {
   max-width: 1200px; /* Ajusta el ancho máximo según tus necesidades */
   margin: 0 auto; /* Centra modal-dialog */
-}
-.cursor-hand{
-    cursor: pointer;
-}
-.verde{
-    color:#0f0
-}
-.rojo{
-    color:#f00
-}
-.gris{
-    color:#aaa
 }
 main {
     margin-top: 5rem;

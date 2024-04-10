@@ -13,7 +13,7 @@ export interface ITurno {
     vueltas: Vueltas[];
 }
 
-interface Vueltas {
+export interface Vueltas {
     vuelta: number;
     tren: number;
     refer: string;

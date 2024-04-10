@@ -13,6 +13,7 @@ import authRoutes from "./routers/auth.routes";
 import usersRoutes from "./routers/user.routes";
 import registrosRoutes from "./routers/registro.routes";
 import cambioTurnoRoutes from "./routers/cambioTurno.routes";
+import ordenamientoRoutes from "./routers/ordenamientos.routes";
 
 
 const app = express();
@@ -45,6 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", registrosRoutes);
 app.use("/api", cambioTurnoRoutes);
+app.use("/api", ordenamientoRoutes);
 
 
 app.use(express.static(path.join(__dirname,"..","..","dist")));

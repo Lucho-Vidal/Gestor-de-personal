@@ -16,7 +16,8 @@ const registroSchema = new Schema({
     turno: {},
     personal: {},
     novedad: {},
-    user:{}
+    user:{},
+    ordenamiento:{}
 });
 
 export default model("Registro", registroSchema);

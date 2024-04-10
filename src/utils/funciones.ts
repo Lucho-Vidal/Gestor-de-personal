@@ -1,12 +1,16 @@
 import { CambioTurno } from "@/interfaces/ICambioTurno";
 import { Novedad, Remplazo } from "@/interfaces/INovedades";
+import { Ordenamiento } from "@/interfaces/IOrdenamientos";
 import { IPersonal } from "@/interfaces/IPersonal";
+import { Registro } from "@/interfaces/IRegistro";
 import { ITurno } from "@/interfaces/ITurno";
+import { User } from "@/interfaces/IUser";
 import { Itinerario } from "@/interfaces/Itinerario";
 import { getCambioTurnos } from "@/services/cambioTurnoService";
 import { getItinerario } from "@/services/itinerarioService";
 import { getNovedades } from "@/services/novedadesService";
 import { getPersonales } from "@/services/personalService";
+import { createRegistro } from "@/services/registrosService";
 import { getTurnos } from "@/services/turnosService";
 import { AxiosError } from "axios";
 // Validaciones:
@@ -143,11 +147,11 @@ export function obtenerNombreConReemplazo(novedad: Novedad, inputDate: string , 
         return "Sin Cubrir";
     }
 }
-export function filtrarPorTurno(itinerario: string,listaTurnos: ITurno[],circularSeleccionada: string[],tren: string) {
+export function filtrarPorTurno(itinerario: string,listaTurnos: ITurno[],circularSeleccionada: string[],turno: string):ITurno[] {
     const turnos: ITurno[] = [];
     listaTurnos.forEach((diag: ITurno) => {
         if (
-            diag.turno.toLowerCase().includes(tren.toLowerCase()) &&
+            diag.turno.toLowerCase().includes(turno.toLowerCase()) &&
             diag.itinerario == itinerario &&
             circularSeleccionada.includes(diag.circular)
         ) {
@@ -385,4 +389,57 @@ export function quitarDuplicados(lista: ITurno[]): ITurno[] {
     }
     // Convertir los valores del mapa de nuevo a una lista
     return Array.from(mapa.values());
+}
+export async function guardarRegistro(today:Date,accion:string,turno?: ITurno,personal?: IPersonal,novedad?: Novedad, user?: User,ordenamiento?:Ordenamiento){
+    // guardamos registro
+    const registro: Registro = {
+        usuario: window.localStorage.getItem("username") || "",
+        fecha: today.toString(),
+        accion: accion,
+        turno:turno,
+        personal: personal,
+        novedad:novedad,
+        user:user,
+        ordenamiento:ordenamiento
+    };
+    await createRegistro(registro);
+}
+export function obtenerNumeroDia(dia: string) {
+    const diasDeLaSemana = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+    ];
+
+    // Obtén el índice del día en el array
+    const indice = diasDeLaSemana.findIndex((nombre) => nombre === dia);
+
+    // Si se encuentra, devuelve el índice (0-6); de lo contrario, devuelve -1
+    return indice;
+}
+export function obtenerDiaSemana(num:number):string{
+    const days= [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+    ]
+    return days[num]
+}
+export function itinerarioType(fecha: Date) {
+    if (fecha.getDay() === 0) {
+        return "D";
+    } else if (fecha.getDay() === 6) {
+        return "S";
+    } else {
+        return "H";
+    }
+    
 }

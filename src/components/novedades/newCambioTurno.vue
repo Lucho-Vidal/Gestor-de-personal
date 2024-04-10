@@ -444,7 +444,8 @@ export default defineComponent({
         async saveNovedad() {
             /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
             this.ultimoId++;
-            this.cambioTurno._id = this.ultimoId;
+            this.cambioTurno._id = this.ultimoId; 
+            this.cambioTurno.fecha = this.today.toString();
             
             if (this.mismoPersonal(this.cambioTurno) || this.faltaPersonal(this.cambioTurno) || this.tieneCambioCargado(this.cambioTurno)) {
                 // if(this.message.activo){

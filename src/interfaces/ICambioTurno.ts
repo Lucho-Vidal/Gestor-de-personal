@@ -1,6 +1,7 @@
 export interface CambioTurno{
     _id: number;
     fechaCambio:string;
+    fecha:string;
     personal: Array<Personal>
 }
 
