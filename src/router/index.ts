@@ -186,6 +186,15 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
+        path: "/addTurnos",
+        name: "addTurnos",
+        meta: { title: "GNPA - Nuevos turnos" },
+        component: () => import("@/components/turnos/addturnos.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireAdmin(next));
+        },
+    },
+    {
         path: "/editTurno/:id",
         name: "editTurno",
         meta: { title: "GNPA - Editar turno" },
