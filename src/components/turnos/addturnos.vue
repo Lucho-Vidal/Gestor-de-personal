@@ -20,7 +20,7 @@
                 <label for="nuevosTurnos" class="custom-file-upload">
                   Seleccionar archivo
                 </label>
-                <input type="file" name="nuevosTurnos" id="nuevosTurnos" @change="handleFileChange" accept=".xlsx">
+                <input type="file" name="nuevosTurnos" id="nuevosTurnos" @change="handleFileChange" accept=".xlsx,.xls">
               </div>
               <div class="d-flex flex-wrap my-3" v-if="sheetNames.length != 0">
                 <h6>Selecciona las hojas a cargar:</h6>
