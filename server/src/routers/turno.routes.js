@@ -18,6 +18,10 @@ router.post(
     [authJwt.verifyToken, authJwt.isAdmin],
     turnoCtrl.createTurno
 );
+router.post(
+    '/turnos/multiple', 
+    [authJwt.verifyToken, authJwt.isAdmin],
+    turnoCtrl.createMultipleTurnos);
 router.put(
     "/turno/:id",
     [authJwt.verifyToken, authJwt.isAdmin],

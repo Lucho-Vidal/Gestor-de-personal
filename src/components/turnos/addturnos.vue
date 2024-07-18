@@ -31,24 +31,36 @@
                         </div>
                     </div>
                     <div class="row" v-if="sheetNamesSeleccionado.length != 0">
-                        <!-- <div class="col-1">
-                            <label for="base">Base </label>
-                            <select
-                                name="base"
-                                id="base"
-                                class="form-control mb-3"
-                            >
-                                <option value="PC">PC</option>
-                                <option value="LLV">LLV</option>
-                                <option value="TY">TY</option>
-                                <option value="LP">LP</option>
-                                <option value="K5">K5</option>
-                                <option value="CÑ">CÑ</option>
-                                <option value="AK">AK</option>
-                            </select>
-                        </div> -->
-
                         <div class="col-3">
+                            <label for="itinerario">
+                            Itinerario
+                            <select
+                                name="itinerario"
+                                id="itinerario"
+                                class="form-control mb-3"
+                                required
+                                v-model="itinerario"
+                            >
+                                <option value="H">Hábil</option>
+                                <option value="S">Sábado</option>
+                                <option value="D">Domingo</option>
+                            </select>
+                        </label>
+                        </div>
+                        <div class="col-3" v-if="itinerario">
+                            <label for="circular">
+                            Circular
+                            <input
+                            class="form-control mb-3"
+                            placeholder="Dic23, HD4105"
+                            type="text"
+                            name="circular"
+                            v-model="circular"
+                        />
+                        </label>
+                        </div>
+
+                        <div class="col-3" v-if="circular">
                             <label for="especialidad">Especialidad </label>
                             <select
                                 name="especialidad"
@@ -63,12 +75,6 @@
                                 <option value="Conductor diesel">
                                     Conductor Diesel
                                 </option>
-                                <option value="Ayudante habilitado">
-                                    Ayudante Habilitado
-                                </option>
-                                <option value="Ayudante conductor">
-                                    Ayudante Conductor
-                                </option>
                                 <option value="GuardaTren electrico">
                                     GuardaTren Eléctrico
                                 </option>
@@ -79,8 +85,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center" v-if="especialidad">
-                        <button @click="ConvertirJson()">
-                            Convertir
+                        <button class="btn btn-primary" @click="ConvertirJson()">
+                            Cargar turnos
                         </button>
                     </div>
 
@@ -91,10 +97,11 @@
                         Cargar turnos
                     </h2>
                     <div class="d-flex">
-                        <router-link class="btn btn-primary d-flex end" to="/newTurno">Cargar</router-link>
+                        <button class="btn btn-primary d-flex end mx-3" @click="enviarTurnos()">Guardar turnos</button>
+                        <router-link class="btn btn-danger d-flex end" to="/turnos">Cancelar</router-link>
                     </div>
-
-                    <div class="my-3 row">
+                    
+                    <!-- <div class="my-3 row">
                         <input class="col-3 gap col" type="text" placeholder="Buscar por turno" autofocus
                             v-on:keyup="filtrar" v-model="search" />
                         <label class="form-check-label mx-2 col-1">
@@ -112,7 +119,7 @@
                                 v-on:change="filtrar()" />
                             Domingo
                         </label>
-                    </div>
+                    </div> -->
 
                     <h3 v-if="Filtradas.length == 0">
                         No se encontró ningún turno con los requerimientos
@@ -128,11 +135,12 @@
                                 <th class="col-1" colspan="1"></th>
                                 <th class="col-1" colspan="1">Toma</th>
                                 <th class="col-1" colspan="1">Deja</th>
+                                <th class="col-1" colspan="1">Orden</th>
                                 <th class="col-1">Borrar</th>
                             </tr>
                         </thead>
                         <tbody v-for="(turno, index) in Filtradas" :key="index" 
-                            @click="viewDetail(turno)">
+                            @dblclick="viewDetail(turno)">
                             <tr class="Small shadow">
                                 <td class="col-1">{{ turno.turno }}</td>
                                 <td class="col-1">{{ turno.itinerario }}</td>
@@ -140,7 +148,7 @@
                                 <td class="col-1">{{ turno.personal }}</td>
                                 <td class="col-1">{{ turno.toma }}</td>
                                 <td class="col-1">{{ turno.deja }}</td>
-
+                                <td class="col-1"> <input type="checkbox" name="orden" id="orden" v-model="turno.ordenes"></td>
                                 <td class="col-1">
                                     <i class="material-icons cursor-hand rojo"
                                         @click="deleteTurno(index)">delete_forever</i>
@@ -214,6 +222,9 @@ import { ITurno, Vueltas } from '../../interfaces/ITurno';
 import * as XLSX from 'xlsx';
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
+import { createMultipleTurnos } from "../../services/turnosService";
+import { Registro } from "../../interfaces/IRegistro";
+import { createRegistro } from "../../services/registrosService";
 
 export default defineComponent({
     data() {
@@ -229,6 +240,8 @@ export default defineComponent({
             sheetNames: [] as string[],
             sheetNamesSeleccionado: [] as string[],
             especialidad: "", 
+            itinerario:"",
+            circular:"",
         };
     },
     setup() {
@@ -244,101 +257,150 @@ export default defineComponent({
             const target = event.target as HTMLInputElement;
             if (target.files && target.files[0]) {
                 const file = target.files[0];
-
                 const arrayBuffer = await file.arrayBuffer();
                 this.workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                console.log(this.workbook);
-
                 // Obtener nombres de las hojas
                 this.sheetNames = this.workbook.SheetNames;
             }
         },
+        async enviarTurnos() {
+            try {
+                await createMultipleTurnos(this.Filtradas);
+                
+                // guardamos registro
+                const registro: Registro = {
+                    usuario: window.localStorage.getItem("username") || "",
+                    fecha: this.today.toString(),
+                    accion: "Agrego lista de turnos turnos"+ this.circular,
+                };
+                await createRegistro(registro);
+                alert("Se cargaron los turnos satisfactoriamente.")
+
+                this.$router.push("/turnos");
+            } catch (error) {
+                console.error('Error al crear turnos:', error);
+            }
+        },
+        determinarDotacion(sheetName: string):string{
+            let dotacion = ''
+            if (sheetName.toUpperCase().includes('PC')||sheetName.toUpperCase().includes('PLAZA')){
+                    dotacion = 'PC'
+                }else if (sheetName.toUpperCase().includes('LLV')||sheetName.toUpperCase().includes('LLA')){
+                    dotacion = 'LLV'
+                }else if (sheetName.toUpperCase().includes('TY')||sheetName.toUpperCase().includes('TEMP')){
+                    dotacion = 'TY'
+                }else if (sheetName.toUpperCase().includes('LP')||sheetName.toUpperCase().includes('PLATA')){
+                    dotacion = 'LP'
+                }else if (sheetName.toUpperCase().includes('OA')||sheetName.toUpperCase().includes('TOLOSA')){
+                    dotacion = 'OA'
+                }else if (sheetName.toUpperCase().includes('KM5')||sheetName.toUpperCase().includes('K5')){
+                    dotacion = 'K5'
+                }else if (sheetName.toUpperCase().includes('RE')||sheetName.toUpperCase().includes('ESC')){
+                    dotacion = 'RE'
+                }else if (sheetName.toUpperCase().includes('CÑ')||sheetName.toUpperCase().includes('CAÑ')){
+                    dotacion = 'RE'
+                }else if (sheetName.toUpperCase().includes('AK')||sheetName.toUpperCase().includes('KORN')){
+                    dotacion = 'RE'
+                }else {
+                    dotacion = prompt("No se pudo reconocer la dotación para "+ sheetName,"Por favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK" )||''
+                }
+                return dotacion
+        },
         ConvertirJson() {
             this.sheetNamesSeleccionado.forEach(sheetName => {
-                let dotacion = '';
-                if (sheetName.toUpperCase().includes('PC')){
-                    dotacion = 'PC'
-                }else if (sheetName.toUpperCase().includes('LLV')){
-                    dotacion = 'LLV'
-                }else if (sheetName.toUpperCase().includes('TY')){
-                    dotacion = 'TY'
-                }else if (sheetName.toUpperCase().includes('RE')){
-                    dotacion = 'RE'
-                }else if (sheetName.toUpperCase().includes('LP')){
-                    dotacion = 'LP'
-                }else if (sheetName.toUpperCase().includes('LLV')){
-                }else if (sheetName.toUpperCase().includes('LLV')){
-                    
+                let dotacion = this.determinarDotacion(sheetName);
+                
+                if (dotacion == ''){
+                    alert("Ocurrió un error con la dotación y se detuvo el proceso.")
+                    return
                 }
+                
                 const sheet = this.workbook!.Sheets[sheetName]
+                if (!sheet) {
+                    console.error(`La hoja ${sheetName} no se pudo leer correctamente.`);
+                    alert("ocurrió un error al tratar de leer una hoja, recargue la pagina e intente nuevamente" )
+                    return;
+                }
                 const rangeRef = sheet['!ref'];
                 if (rangeRef) {
                     const range = XLSX.utils.decode_range(rangeRef);
                     const rows = range.e.r 
 
-                    console.log(rows);//824
-                    const itinerario =  '';// desde input
-                    const circular =  '';// desde input
-
                     let row = 1
-                    while ( row <= rows ) {
+                    while ( row <= rows + 1 ) {
                         const cell = sheet[`C${row}`];
                         if (cell && cell.v !== undefined) {
                             if (cell.w == "T./Scio."){// nuevo turno
-
+                                
                                 // Leer los datos del turno
-                                const turno = sheet[`B${row}`]?.w || '';
+                                let turno = sheet[`B${row}`]?.w || '';
                                 const toma = sheet[`C${row + 1 }`]?.w || '';
                                 const deja = sheet[`E${row + 1 }`]?.w || '';
                                 
+                                let ordenes = false;
                                 
-                                
+                                if(turno.toUpperCase().includes("ORD")){
+                                    turno = turno.replace(" ORD","")
+                                    ordenes = true;
+                                }
+                                if (turno.toUpperCase().includes("PROG")){
+                                    const numero = parseInt(turno.match(/\d+/)?.[0] || '', 10);
+                                    const especialidad = this.especialidad.includes("Conductor")?"C":this.especialidad.includes("GuardaTren")?"G":""
+                                    turno = "PROG."+ numero + especialidad + dotacion
+                                }
+                                //quitar  s y d itinerario sábado y domingo
+                                if ((this.itinerario == 'S' || this.itinerario == 'D')){
+                                    if(turno.toUpperCase().includes(" S")){
+                                        turno = turno.replace(" S","")
+                                    }else if(turno.toUpperCase().includes(" D")){
+                                        turno = turno.replace(" D","")
+                                    }
+                                }
                                 
                                 // Crear el objeto ITurno
                                 const newTurno: ITurno = {
-                                    _id: `id_${row}`,
+                                    _id:'',
                                     turno,
-                                    itinerario,
-                                    circular,
+                                    itinerario: this.itinerario,
+                                    circular: this.circular,
                                     personal:'',
                                     toma,
                                     deja,
                                     dotacion,
                                     especialidad: this.especialidad,
-                                    ordenes: false,
+                                    ordenes,
                                     viewDetail: false,
                                     vueltas: []
                                 };
                                 // Avanzar a la fila donde comienzan las vueltas (2 filas abajo)
-                                row += 2;
-                                
+                                row += 3;
+                                let numVuelta = 1
                                 // Leer las vueltas hasta encontrar una fila vacía
-                                while (row <= range.e.r && sheet[`A${row}`]?.w) {
+                                while (row <= rows && sheet[`C${row + 1}`]?.w != "T./Scio.") {
                                     const vuelta: Vueltas = {
-                                    vuelta: row, // Aquí puedes poner un número de vuelta específico si está en otra columna
-                                    tren: Number(sheet[`B${row}`]?.w) || 0,
-                                    refer: sheet[`C${row}`]?.w || '',
-                                    origen: sheet[`D${row}`]?.w || '',
-                                    sale: sheet[`E${row}`]?.w || '',
-                                    destino: sheet[`F${row}`]?.w || '',
-                                    llega: sheet[`G${row}`]?.w || '',
-                                    observaciones: sheet[`H${row}`]?.w || ''
+                                        vuelta: numVuelta, 
+                                        refer: sheet[`A${row}`]?.w || '',
+                                        tren: Number(sheet[`B${row}`]?.w) || 0,
+                                        origen: sheet[`C${row}`]?.w || '',
+                                        sale: sheet[`D${row}`]?.w || '',
+                                        destino: sheet[`E${row}`]?.w || '',
+                                        llega: sheet[`F${row}`]?.w || '',
+                                        observaciones: sheet[`G${row}`]?.w || '',
                                     };
+                                    
+                                    if(sheet[`A${row}`]?.w.toUpperCase().includes("O  R  D")){
+                                        newTurno.ordenes = true
+                                    }
                                     newTurno.vueltas.push(vuelta);
                                     row++;
+                                    numVuelta++;
                                 }
+                                this.Filtradas.push(newTurno)
                             }
                         }
                         row++
                     }
-
                 }
-
-                // console.log(sheet);
-
-                console.log(this.workbook?.Sheets[sheetName]['A1']['w']);
-                // console.log(this.workbook?.Sheets[sheet]);
-
             })
         },
         // async loadTurnos() {

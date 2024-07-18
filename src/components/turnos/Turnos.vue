@@ -18,9 +18,14 @@
                     </h2>
                     <div class="d-flex">
                         <router-link
-                            class="btn btn-primary d-flex end"
+                            class="btn btn-primary d-flex end mx-3"
                             to="/newTurno"
                             >Nuevo Turno</router-link
+                        >
+                        <router-link
+                            class="btn btn-success d-flex end"
+                            to="/addturnos"
+                            >Cargar desde Excel</router-link
                         >
                     </div>
 

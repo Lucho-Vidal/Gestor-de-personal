@@ -70,6 +70,34 @@ export const createTurno = async (req,res) => {
     }
 }
 
+export const createMultipleTurnos = async (req, res) => {
+    try {
+        const turnos = req.body;
+
+        // Validar que el cuerpo de la solicitud contenga un array
+        if (!Array.isArray(turnos) || turnos.length === 0) {
+            return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de turnos' });
+        }
+
+        // Validar que todos los turnos tengan los campos requeridos
+        for (const turno of turnos) {
+            const { turno: turnoName, itinerario } = turno;
+            if (!turnoName || !itinerario) {
+                return res.status(400).json({ message: 'Todos los turnos deben tener los campos "turno" e "itinerario"' });
+            }
+        }
+
+        // Crear y guardar los turnos en la base de datos
+        const savedTurnos = await Turno.insertMany(turnos);
+
+        res.status(201).json(savedTurnos);  // 201 significa "Creado" en HTTP
+    } catch (error) {
+        // Manejar errores durante la creación
+        console.error('Error al crear los turnos:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
 export const updateTurno = async (req,res) => {
     try {
         const updatedTurno = await Turno.findByIdAndUpdate(

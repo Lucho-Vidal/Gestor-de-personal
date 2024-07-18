@@ -13,6 +13,11 @@ export const createTurno = async (turno: ITurno): Promise<AxiosResponse> => {
     return res;
 };
 
+export const createMultipleTurnos = async (turnos: ITurno[]): Promise<AxiosResponse> => {
+    const res = await axios.post("/turnos/multiple", turnos);
+    return res;
+};
+
 export const updateTurno = async (
     id: string,
     newTurno: ITurno
