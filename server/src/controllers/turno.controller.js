@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Turno from "../models/Turno";
 
 export const getTurnos = async (req, res) => {
@@ -72,31 +73,30 @@ export const createTurno = async (req,res) => {
 
 export const createMultipleTurnos = async (req, res) => {
     try {
-        const turnos = req.body;
-
-        // Validar que el cuerpo de la solicitud contenga un array
-        if (!Array.isArray(turnos) || turnos.length === 0) {
-            return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de turnos' });
+      const request = req.body;
+  
+      if (!Array.isArray(request) || request.length === 0) {
+        return res.status(400).json({ message: 'Datos inválidos: Se esperaba un arreglo de turnos.' });
+      }
+  
+      const turnos = request.map(turno => {
+        if (!turno || typeof turno !== 'object') {
+          throw new Error('Turno inválido: Se esperaba un objeto.');
         }
-
-        // Validar que todos los turnos tengan los campos requeridos
-        for (const turno of turnos) {
-            const { turno: turnoName, itinerario } = turno;
-            if (!turnoName || !itinerario) {
-                return res.status(400).json({ message: 'Todos los turnos deben tener los campos "turno" e "itinerario"' });
-            }
-        }
-
-        // Crear y guardar los turnos en la base de datos
-        const savedTurnos = await Turno.insertMany(turnos);
-
-        res.status(201).json(savedTurnos);  // 201 significa "Creado" en HTTP
+        return {
+          ...turno,
+          _id: new mongoose.Types.ObjectId()
+        };
+      });
+  
+      const result = await Turno.insertMany(turnos);
+      res.status(201).json(result);
     } catch (error) {
-        // Manejar errores durante la creación
-        console.error('Error al crear los turnos:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
+      console.error('Error al crear los turnos:', error);
+      res.status(500).json({ message: 'Error al crear los turnos', error });
     }
-};
+  };
+  
 
 export const updateTurno = async (req,res) => {
     try {
