@@ -265,7 +265,17 @@ export default defineComponent({
         },
         async enviarTurnos() {
             try {
-                await createMultipleTurnos(this.Filtradas);
+                const batchSize = 300;
+                const batches = [];
+
+                for (let i = 0; i < this.Filtradas.length; i += batchSize) {
+                    const batch = this.Filtradas.slice(i, i + batchSize);
+                    batches.push(batch);
+                }
+                for (const batch of batches) {
+                    console.log("Enviando lote de tamaño: ", batch.length);                        
+                    await createMultipleTurnos(batch);
+                }
                 
                 // guardamos registro
                 const registro: Registro = {
