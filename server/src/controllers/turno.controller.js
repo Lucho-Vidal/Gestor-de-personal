@@ -18,7 +18,7 @@ export const getTurnos = async (req, res) => {
     }
 };
 
-export const getTurno = async (req,res) =>{
+export const getTurno = async (req, res) => {
     try {
         const turno = await Turno.findById(req.params.id);
 
@@ -35,7 +35,7 @@ export const getTurno = async (req,res) =>{
     }
 }
 
-export const createTurno = async (req,res) => {
+export const createTurno = async (req, res) => {
     try {
         const {
             turno,
@@ -73,32 +73,32 @@ export const createTurno = async (req,res) => {
 
 export const createMultipleTurnos = async (req, res) => {
     try {
-      const request = req.body;
-  
-      if (!Array.isArray(request) || request.length === 0) {
-        return res.status(400).json({ message: 'Datos inválidos: Se esperaba un arreglo de turnos.' });
-      }
-  
-      const turnos = request.map(turno => {
-        if (!turno || typeof turno !== 'object') {
-          throw new Error('Turno inválido: Se esperaba un objeto.');
-        }
-        return {
-          ...turno,
-          _id: new mongoose.Types.ObjectId()
-        };
-      });
-  
-      const result = await Turno.insertMany(turnos);
-      res.status(201).json(result);
-    } catch (error) {
-      console.error('Error al crear los turnos:', error);
-      res.status(500).json({ message: 'Error al crear los turnos', error });
-    }
-  };
-  
+        const request = req.body;
 
-export const updateTurno = async (req,res) => {
+        if (!Array.isArray(request) || request.length === 0) {
+            return res.status(400).json({ message: 'Datos inválidos: Se esperaba un arreglo de turnos.' });
+        }
+
+        const turnos = request.map(turno => {
+            if (!turno || typeof turno !== 'object') {
+                throw new Error('Turno inválido: Se esperaba un objeto.');
+            }
+            return {
+                ...turno,
+                _id: new mongoose.Types.ObjectId()
+            };
+        });
+
+        const result = await Turno.insertMany(turnos);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Error al crear los turnos:', error);
+        res.status(500).json({ message: 'Error al crear los turnos', error });
+    }
+};
+
+
+export const updateTurno = async (req, res) => {
     try {
         const updatedTurno = await Turno.findByIdAndUpdate(
             req.params.id,
@@ -122,7 +122,7 @@ export const updateTurno = async (req,res) => {
     }
 }
 
-export const deleteTurno = async (req,res) =>{
+export const deleteTurno = async (req, res) => {
     try {
         const deletedTurno = await Turno.findByIdAndDelete(req.params.id);
 

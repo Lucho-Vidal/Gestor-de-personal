@@ -11,6 +11,10 @@ router.post(
     [authJwt.verifyToken, authJwt.isModerator],
     personalCtrl.createPersonal
 );
+router.post(
+    '/Personal-multiple', 
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.createMultiplePersonal);
 router.put(
     "/Personal/:id",
     [authJwt.verifyToken, authJwt.isModerator],
@@ -20,6 +24,12 @@ router.delete(
     "/Personal/:id",
     [authJwt.verifyToken, authJwt.isModerator],
     personalCtrl.deletePersonalById
+);
+
+router.delete(
+    "/Personal-multiple",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.deleteMultiplePersonal
 );
 
 export default router;

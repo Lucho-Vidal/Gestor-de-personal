@@ -13,6 +13,8 @@ import { getPersonales } from "@/services/personalService";
 import { createRegistro } from "@/services/registrosService";
 import { getTurnos } from "@/services/turnosService";
 import { AxiosError } from "axios";
+import * as XLSX from 'xlsx';
+
 // Validaciones:
 export function esFechaMayor(dateMayor: string, dateMenor: string) {
     if (dateMayor && dateMenor) {
@@ -311,6 +313,16 @@ export function handleRequestError(error: AxiosError) {
     } else {
         // Manejar otros errores de solicitud
         // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
+    }
+}
+export async function handleFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+        const file = target.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        return XLSX.read(arrayBuffer, { type: 'array' });
+        // Obtener nombres de las hojas
+        // this.sheetNames = this.workbook.SheetNames;
     }
 }
 export async function  loadTurnos() {

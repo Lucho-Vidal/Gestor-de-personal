@@ -16,6 +16,12 @@ export const createPersonal = async (
     return res;
 };
 
+export const createMultiplePersonal = async (personales: IPersonal[]): Promise<AxiosResponse> => {
+    console.log(`Tamaño del payload: ${JSON.stringify(personales).length} bytes`);
+    const res = await axios.post("/Personal-multiple", personales);
+    return res;
+};
+
 export const updatePersonal = async (
     id: string,
     newPersonal: IPersonal
@@ -24,3 +30,6 @@ export const updatePersonal = async (
 
 export const deletePersonal = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/Personal/${id}`);
+
+export const deleteMultiplePersonal = async (): Promise<AxiosResponse> => 
+    await axios.delete("/Personal-multiple");

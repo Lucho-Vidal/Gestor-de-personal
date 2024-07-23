@@ -1,4 +1,5 @@
 import Personal from "../models/Personal";
+import mongoose from 'mongoose';
 
 export const getPersonales = async (req, res) => {
     try {
@@ -78,6 +79,52 @@ export const createPersonal = async (req, res) => {
     }
 };
 
+export const createMultiplePersonal = async (req, res) => {
+    try {
+        // Extraer la lista de personales del cuerpo de la solicitud
+        const personales = req.body;
+
+        if (!Array.isArray(personales) || personales.length === 0) {
+            return res.status(400).json({ message: 'La solicitud debe contener un array de registros de personal.' });
+        }
+
+        // Validar que todos los campos requeridos estén presentes en cada objeto de personal
+        for (const personal of personales) {
+            const {
+                legajo,
+                apellido,
+                nombres,
+            } = personal;
+
+            if (!legajo || !apellido || !nombres) {
+                return res.status(400).json({ message: 'Todos los campos son obligatorios en cada registro de personal.' });
+            }
+        }
+        
+        // Crear nuevos objetos Personal con los datos proporcionados
+        // const newPersonalList = personales.map(personal => {
+        //     new Personal(personal);
+        // });
+        const newPersonalList = personales.map(personal => {
+            return {
+                ...personal,
+                _id: new mongoose.Types.ObjectId()
+            };
+        });
+
+        // Guardar los nuevos objetos Personal en la base de datos
+        const savedPersonalList = await Personal.insertMany(newPersonalList);
+
+        // Responder con código de estado 201 y los nuevos recursos creados
+        res.status(201).json(savedPersonalList);
+    } catch (error) {
+        // Manejar cualquier error que pueda ocurrir durante la creación
+        console.error("Error al crear nuevos registros de Personal:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+
 export const updatePersonalById = async (req, res) => {
     try {
         // Actualizar el registro específico por ID
@@ -120,6 +167,23 @@ export const deletePersonalById = async (req, res) => {
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la eliminación
         console.error("Error al eliminar el registro de Personal por ID:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+export const deleteMultiplePersonal = async (req, res) => {
+    try {
+        // Eliminar todos los registros actuales de la base de datos
+        const result = await Personal.deleteMany({});
+        
+        // Verificar cuántos registros fueron eliminados
+        console.log(`Registros eliminados: ${result.deletedCount}`);
+        
+        // Responder con código de estado 204 (Sin contenido)
+        res.status(204).end();
+    } catch (error) {
+        // Manejar cualquier error que pueda ocurrir durante la eliminación
+        console.error("Error al eliminar registros de Personal:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };

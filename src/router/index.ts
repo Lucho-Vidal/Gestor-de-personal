@@ -123,6 +123,15 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
+        path: "/addpersonales",
+        name: "addPersonales",
+        meta: { title: "GNPA - Personal" },
+        component: () => import("@/components/personal/addPersonales.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(next));
+        },
+    },
+    {
         path: "/newPersonal",
         name: "newPersonal",
         meta: { title: "GNPA - Nuevo personal" },

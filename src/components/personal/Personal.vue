@@ -15,9 +15,8 @@
                 {{ today.toLocaleDateString() }}
             </p>
             <div class="d-flex">
-                <a class="btn btn-primary d-flex end" href="/newPersonal"
-                    >Nuevo Personal</a
-                >
+                <router-link class="btn btn-primary d-flex end mx-3" to="/newPersonal">Nuevo Personal</router-link>
+                <router-link class="btn btn-success d-flex end" to="/addPersonales">Cargar desde Excel</router-link>
             </div>
             <details>
                 <summary>Filtros:</summary>

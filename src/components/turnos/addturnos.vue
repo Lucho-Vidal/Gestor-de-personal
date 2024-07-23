@@ -509,15 +509,4 @@ main {
     color: #aaa;
 }
 
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-}
-
-/* Ocultar el input file real */
-input[type="file"] {
-    display: none;
-}
 </style>
