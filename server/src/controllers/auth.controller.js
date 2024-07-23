@@ -31,7 +31,7 @@ export const singUp = async (req, res) => {
         newUser.roles = [role._id];
     }
     const savedUser = await newUser.save();
-    console.log(savedUser);
+
 
     const token = jwt.sign({ id: savedUser._id }, config.SECRET, {
         expiresIn: 600 //86400, //en segundos es un dia o 24hs
@@ -44,7 +44,6 @@ export const singIn = async (req, res) => {
     const userFound = await User.findOne({ email: req.body.email }).populate(
         "roles"
     );
-    console.log(userFound);
     if (!userFound) return res.status(400).json({ message: "User not found" });
     const matchPassword = await User.comparePassword(
         req.body.password,
