@@ -75,7 +75,7 @@
                                 <option value="Conductor diesel">
                                     Conductor Diesel
                                 </option>
-                                <option value="GuardaTren electrico">
+                                <option value="Guardatren electrico">
                                     GuardaTren Eléctrico
                                 </option>
                                 <option value="GuardaTren diesel">

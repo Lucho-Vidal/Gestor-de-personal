@@ -385,7 +385,7 @@ export function formatearFecha(fechaString: string): string {
 
     return formatoFecha.format(fecha);
 }
-export function quitarDuplicados(lista: ITurno[]): ITurno[] {
+export function quitarDuplicados(lista: ITurno[],circularSeleccionada: String[]): ITurno[] {
     const mapa: Map<string, ITurno> = new Map();
 
     for (const elemento of lista) {
@@ -394,7 +394,7 @@ export function quitarDuplicados(lista: ITurno[]): ITurno[] {
             mapa.set(elemento.turno, elemento);
         } else if (
             mapa.has(elemento.turno) &&
-            elemento.circular === "HD32"
+            circularSeleccionada.includes(elemento.circular)
         ) {
             mapa.set(elemento.turno, elemento);
         }

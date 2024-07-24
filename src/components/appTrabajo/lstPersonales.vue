@@ -16,6 +16,25 @@
                     <h2 class="d-flex justify-content-center m-3">
                         Lista de personales
                     </h2>
+                    <div class="d-flex flex-wrap my-3">
+                            <h6>Aplicar circular:</h6>
+                            <div
+                                v-for="(circular, index) in circulares"
+                                :key="index"
+                            >
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        :value="circular"
+                                        v-model="circularSeleccionada"
+                                        v-on:change="cambioCirculares()"
+                                    />
+                                    {{ circular }}
+                                    <!-- Mostrar el valor de la variable circular en el label -->
+                                </label>
+                            </div>
+                        </div>
                     <div class="d-flex mb-3">
                         <label for="dotacion" class="col-2 mx-3">
                             Dotacion
@@ -858,7 +877,7 @@ export default defineComponent({
             checkboxIt: "" as string,
             inputDate: "" as string,
             circulares: [] as string[],
-            circularSeleccionada: ["Dic23"] as string[],
+            circularSeleccionada: ["Jul24"] as string[],
             datosCargados: 0 as number,
             cambiosTurnos: [] as  CambioTurno[],
         };
@@ -928,6 +947,7 @@ export default defineComponent({
             }
         },
         filtrar() {
+            
             window.localStorage.setItem(
                 "dotacionSeleccionada",
                 this.checkboxDotacion
@@ -936,6 +956,7 @@ export default defineComponent({
 
             let turnosGuardas = this.turnos.filter((turno: ITurno) => {
                 return (
+                    this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
                     turno.especialidad == "Guardatren electrico" &&
@@ -944,30 +965,35 @@ export default defineComponent({
             });
             let turnosConductor = this.turnos.filter((turno: ITurno) => {
                 return (
+                    this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
                     turno.especialidad == "Conductor electrico" &&
                     !turno.ordenes
                 );
             });
-            this.turnosGuardasOrd = this.turnos.filter((turno: ITurno) => {
+            let turnosGuardasOrd = this.turnos.filter((turno: ITurno) => {
                 return (
+                    this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
                     turno.especialidad == "Guardatren electrico" &&
                     turno.ordenes
                 );
             });
-            this.turnosConductorOrd = this.turnos.filter((turno: ITurno) => {
+            let turnosConductorOrd = this.turnos.filter((turno: ITurno) => {
                 return (
+                    this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
                     turno.especialidad == "Conductor electrico" &&
                     turno.ordenes
                 );
             });
-            turnosGuardas = quitarDuplicados(turnosGuardas);
-            turnosConductor = quitarDuplicados(turnosConductor);
+            turnosGuardas = quitarDuplicados(turnosGuardas,this.circularSeleccionada);
+            turnosConductor = quitarDuplicados(turnosConductor,this.circularSeleccionada);
+            turnosGuardasOrd = quitarDuplicados(turnosGuardasOrd,this.circularSeleccionada);
+            turnosConductorOrd = quitarDuplicados(turnosConductorOrd,this.circularSeleccionada);
 
             this.turnosGuardas = turnosGuardas.sort(
                 (turno1: ITurno, turno2: ITurno) => {
@@ -979,12 +1005,12 @@ export default defineComponent({
                     return compararHoras(turno1.toma, turno2.toma);
                 }
             );
-            this.turnosGuardasOrd = this.turnosGuardasOrd.sort(
+            this.turnosGuardasOrd = turnosGuardasOrd.sort(
                 (turno1: ITurno, turno2: ITurno) => {
                     return compararHoras(turno1.toma, turno2.toma);
                 }
             );
-            this.turnosConductorOrd = this.turnosConductorOrd.sort(
+            this.turnosConductorOrd = turnosConductorOrd.sort(
                 (turno1: ITurno, turno2: ITurno) => {
                     return compararHoras(turno1.toma, turno2.toma);
                 }
@@ -1039,7 +1065,7 @@ export default defineComponent({
                 "circularSeleccionada",
                 this.circularSeleccionada.join(",")
             );
-
+            
             this.filtrar();
         },
         handleAsideBarVisibility(isVisible: boolean) {
@@ -1084,7 +1110,7 @@ main {
     display: none;
 }
 .fila-oscura {
-    background-color: #e14646 !important; /* Cambia este color según tus preferencias */
-    color: #fff; /* Cambia este color según tus preferencias */
+    background-color: #e14646 !important; 
+    color: #fff;
 }
 </style>
