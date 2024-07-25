@@ -1,21 +1,21 @@
 <template>
-    <div id="layoutSidenav">
+    <div v-if="login" id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav
                 class="sb-sidenav accordion sb-sidenav-dark"
                 id="sidenavAccordion"
             >
-                <div class="sb-sidenav-menu">
+                <div class="sb-sidenav-menu mx-4">
                     <div class="nav">
                         <div
-                            class="sb-sidenav-menu-heading"
+                            class="sb-sidenav-menu-heading "
                             v-if="
                                 rolMayor == 'moderator' ||
                                 rolMayor == 'admin' ||
                                 rolMayor == 'user'
                             "
                         >
-                            Aplicaciones
+                            <h6 class="">Aplicaciones</h6>
                             <router-link
                                 class="nav-link"
                                 to="/buscador"
@@ -47,7 +47,7 @@
                                 rolMayor == 'moderator' || rolMayor == 'admin'
                             "
                         >
-                            Administración de Personal
+                        <h6 class="">Administración de Personal</h6>
                             <router-link class="nav-link" to="/personal">
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-database"></i>
@@ -225,7 +225,7 @@
                             class="sb-sidenav-menu-heading"
                             v-if="rolMayor == 'admin'"
                         >
-                            Administración del sistema
+                        <h6 class="">Administración del sistema</h6>
                             <router-link class="nav-link" to="/turnos">
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-address-card"></i>

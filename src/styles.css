@@ -11052,7 +11052,13 @@ body{
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 55px;
   flex-wrap: nowrap;
+  transition: width 0.3s ease; /* Transición suave del ancho */
+}
+.sb-sidenav:hover {
+  transform: scale(1.01);
+  width: 300px;
 }
 .sb-sidenav .sb-sidenav-menu {
   flex-grow: 1;

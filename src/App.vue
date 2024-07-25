@@ -2,18 +2,19 @@
     <div id="sb-nav-fixed" >
         <NavBar  :isAsideBarVisible="isAsideBarVisible" @update:isAsideBarVisible="isAsideBarVisible = $event"/>
         <asideBar :isAsideBarVisible="isAsideBarVisible" />
-    <router-view id="layoutSidenav_content"
+        <router-view class="router-view"/>
+    <!-- <router-view id="layoutSidenav_content"
             class="body"
             :class="[
                 isAsideBarVisible
                     ? 'layoutSidenav_content-width-max'
                     : 'layoutSidenav_content-width-min',
-            ]"/>
-            <FooterPage :class="[
+            ]"/> -->
+            <!-- <FooterPage :class="[
                 isAsideBarVisible
                     ? 'layoutSidenav_content-width-max'
                     : 'layoutSidenav_content-width-min',
-            ]"/>
+            ]"/> -->
     </div>
 </template>
 
@@ -48,4 +49,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+    .router-view{
+        margin-left: 55px;
+    }
+</style>

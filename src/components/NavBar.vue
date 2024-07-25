@@ -4,12 +4,12 @@
         <router-link class="navbar-brand mx-4" to="/" >GNPA - Trenes Argentinos</router-link>
         <!-- Sidebar Toggle-->
         <!-- <a @click="toggleSidebar" id="sidebarToggle" class="material-icons">list</a> -->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="toggleAsideBar"><i class="fas fa-bars"></i></button>
+        <!-- <button v-if="login" class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="toggleAsideBar"><i class="fas fa-bars"></i></button> -->
         <!-- Navbar username-->
-        <span class="ms-auto me-0 me-md-3 my-2 my-md-0" style="color: white;">{{ username }}</span>
+        <span  v-if="login" class="ms-auto me-0 me-md-3 my-2 my-md-0" style="color: white;">{{ username }}</span>
 
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <ul  v-if="login" class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-expanded="false" @click="toggleDropdown"><i class="fas fa-user fa-fw"></i></a>
                 <!-- menu desplegable -->
@@ -61,6 +61,7 @@ export default defineComponent({
             localStorage.removeItem("roles");
             localStorage.removeItem("token");
             this.rolMayor = "";
+            this.login = false;
             this.$router.push("/login");
         },
         toggleDropdown() {
