@@ -1,6 +1,4 @@
 <template>
-    <div>
-        <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nuevo Turno
@@ -198,15 +196,10 @@
                 >
             </form>
         </main>
-
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
-import FooterPage from "../FooterPage.vue";
 import { ITurno } from "../../interfaces/ITurno";
 import { newToken } from "../../services/signService";
 import {  getTurno, updateTurno } from "../../services/turnosService";
@@ -316,8 +309,6 @@ export default defineComponent({
         newToken();
     },
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

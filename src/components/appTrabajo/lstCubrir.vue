@@ -1,7 +1,4 @@
 <template>
-    <div>
-        <NavBar />
-
         <main class="container">
             <h2 class="d-flex justify-content-center m-3">
                 Lista de registros
@@ -77,9 +74,6 @@
                 </tbody>
             </table>
         </main>
-
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">

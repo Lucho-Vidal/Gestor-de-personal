@@ -1,16 +1,4 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible"/>
-        <div
-            id="layoutSidenav_content"
-            class="body"
-            :class="[
-                isAsideBarVisible
-                    ? 'layoutSidenav_content-width-max'
-                    : 'layoutSidenav_content-width-min',
-            ]"
-        >
             <main>
                 <div class="container-fluid px-4">
                     <h2 class="d-flex justify-content-center m-3">
@@ -84,7 +72,9 @@
                                 <th class="col-1" colspan="1">Turno</th>
                                 <th class="col-1" colspan="1">Itinerario</th>
                                 <th class="col-1" colspan="1">Circular</th>
-                                <th class="col-1" colspan="1"></th>
+                                <th class="col-1" colspan="1">Dotación</th>
+                                <th class="col-1" colspan="1">Especialidad</th>
+                                <th class="col-1" colspan="1">Ordenes</th>
                                 <th class="col-1" colspan="1">Toma</th>
                                 <th class="col-1" colspan="1">Deja</th>
                                 <th class="col-1">Ver</th>
@@ -94,14 +84,15 @@
                         <tbody
                             v-for="(turno, index) in Filtradas"
                             :key="index"
-                            @dblclick="edit(turno._id)"
                             @click="viewDetail(turno)"
                         >
                             <tr class="Small shadow">
                                 <td class="col-1">{{ turno.turno }}</td>
                                 <td class="col-1">{{ turno.itinerario }}</td>
                                 <td class="col-1">{{ turno.circular }}</td>
-                                <td class="col-1">{{ turno.personal }}</td>
+                                <td class="col-1">{{ turno.dotacion }}</td>
+                                <td class="col-1">{{ turno.especialidad }}</td>
+                                <td class="col-1">{{ turno.ordenes?"Orden" :""}}</td>
                                 <td class="col-1">{{ turno.toma }}</td>
                                 <td class="col-1">{{ turno.deja }}</td>
                                 <td class="col-1">
@@ -209,16 +200,10 @@
                     </table>
                 </div>
             </main>
-            <FooterPage />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref  } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent  } from "vue";
 import { ITurno } from "../../interfaces/ITurno";
 import { deleteTurno, getTurnos } from "../../services/turnosService";
 import { newToken } from "../../services/signService";
@@ -236,14 +221,6 @@ export default defineComponent({
             itSeleccionado: ["H", "S", "D"] as string[],
             today: new Date(),
         };
-    },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         async loadTurnos() {
@@ -278,9 +255,6 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
-        },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
 
@@ -304,14 +278,20 @@ export default defineComponent({
         },
 
         filtrar() {
-            this.Filtradas = this.turnos.filter((t) => {
-                return (
-                    t.turno
-                        .toLocaleLowerCase()
-                        .includes(this.search.toLowerCase()) &&
-                    this.itSeleccionado.includes(t.itinerario)
-                );
-            });
+            try{
+                this.Filtradas = this.turnos.filter((t) => {
+                    return (
+                        t.turno
+                            .toLowerCase()
+                            .includes(this.search.toLowerCase()) &&
+                        this.itSeleccionado.includes(t.itinerario)
+                    );
+                });
+            }catch(error)
+            {
+                console.error(error);
+                
+            }
         },
     },
     created() {
@@ -321,9 +301,6 @@ export default defineComponent({
     },
     name: "App",
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>

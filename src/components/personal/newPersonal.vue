@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <NavBar />
-        <main class="container">
+    <main class="container">
             <h1 class="d-flex justify-content-center m-3">
                 Cargar Nuevo Personal
             </h1>
@@ -235,16 +233,10 @@
                 >
             </form>
         </main>
-
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
-import FooterPage from "../FooterPage.vue";
-
 import { getPersonales, createPersonal } from "../../services/personalService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
@@ -352,8 +344,6 @@ export default defineComponent({
         newToken();
     },
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

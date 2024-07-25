@@ -1,6 +1,4 @@
 <template>
-    <div>
-        <NavBar />
         <main class="mx-3">
             <h2 class="d-flex justify-content-center m-3">Sabana de Trenes</h2>
             <!-- <h3 v-if="novedadesFiltradas.length == 0">
@@ -78,16 +76,12 @@
                 
             </div>
         </main>
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
 import { getTurnos } from "../../services/turnosService";
-import { ITurno } from "../../interfaces/ITurno";
-import FooterPage from "../FooterPage.vue";
+import { ITurno } from "../../interfaces/ITurno"
 import { Itinerario } from "../../interfaces/Itinerario";
 import { getItinerario } from "../../services/itinerarioService";
 import { IPersonal } from "../../interfaces/IPersonal";
@@ -365,8 +359,6 @@ export default defineComponent({
     },
     computed: {},
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

@@ -1,16 +1,4 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible" />
-        <div
-            id="layoutSidenav_content"
-            class="body"
-            :class="[
-                isAsideBarVisible
-                    ? 'layoutSidenav_content-width-max'
-                    : 'layoutSidenav_content-width-min',
-            ]"
-        >
             <main>
                 <div class="container-fluid px-4">
                     <h2 class="d-flex justify-content-center m-3">
@@ -841,16 +829,10 @@
                     </div>
                 </div>
             </main>
-            <FooterPage />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref  } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent } from "vue";
 import { newToken } from "../../services/signService";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { getTurnos } from "../../services/turnosService";
@@ -881,14 +863,6 @@ export default defineComponent({
             datosCargados: 0 as number,
             cambiosTurnos: [] as  CambioTurno[],
         };
-    },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return {isAsideBarVisible,toggleAsideBar};
     },
     methods: {
         async loadTurnos() {
@@ -959,7 +933,7 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    turno.especialidad == "Guardatren electrico" &&
+                    (turno.especialidad.toLowerCase() == "guardatren electrico"||turno.especialidad.toLowerCase() == "guardatren diesel") &&
                     !turno.ordenes
                 );
             });
@@ -968,7 +942,7 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    turno.especialidad == "Conductor electrico" &&
+                    (turno.especialidad.toLowerCase() == "conductor electrico"||turno.especialidad.toLowerCase() == "conductor diesel") &&
                     !turno.ordenes
                 );
             });
@@ -977,7 +951,7 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    turno.especialidad == "Guardatren electrico" &&
+                    (turno.especialidad.toLowerCase() == "guardatren electrico"||turno.especialidad.toLowerCase() == "guardatren diesel") &&
                     turno.ordenes
                 );
             });
@@ -985,8 +959,8 @@ export default defineComponent({
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
-                    this.checkboxIt == turno.itinerario &&
-                    turno.especialidad == "Conductor electrico" &&
+                    this.checkboxIt == turno.itinerario &&                    
+                    (turno.especialidad.toLowerCase() == "conductor electrico"||turno.especialidad.toLowerCase() == "conductor diesel") &&
                     turno.ordenes
                 );
             });
@@ -1068,9 +1042,6 @@ export default defineComponent({
             
             this.filtrar();
         },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
-        },
     },
     async created() {
         try {
@@ -1095,9 +1066,6 @@ export default defineComponent({
     },
     name: "App",
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>

@@ -1,10 +1,5 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible" />
-        <div id="layoutSidenav_content" class="body"
-            :class="[isAsideBarVisible ? 'layoutSidenav_content-width-max' : 'layoutSidenav_content-width-min']">
-            <main class="container-fluid px-4">
+    <main class="container-fluid px-4">
                 
                 <div v-if="personalesFiltrados.length == 0">
                     <div class="d-flex justify-content-center m-3" >
@@ -111,23 +106,17 @@
                     </table>
                 </div>
             </main>
-            <FooterPage />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent } from "vue";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
 import * as XLSX from 'xlsx';
-import { createMultiplePersonal, deleteMultiplePersonal } from "../../services/personalService";
+import { createMultiplePersonal } from "../../services/personalService";
 
 const daysOfWeek: { [key: string]: number } = {
     'DOMINGO': 0,
@@ -167,14 +156,6 @@ export default defineComponent({
             
         };
     },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return { isAsideBarVisible, toggleAsideBar };
-    },
     methods: {
         async handleFileChange(event: Event) {
             const target = event.target as HTMLInputElement;
@@ -196,7 +177,7 @@ export default defineComponent({
                     "¿Estás seguro de que deseas de nuevo todos los personales? esta acción eliminara los personales actuales y cargara los personales nuevos"
                 );
                 if (confirmacion) {
-                    await deleteMultiplePersonal();
+                    // await deleteMultiplePersonal();
 
                     const batchSize = 300;
                     const batches = [];
@@ -309,7 +290,7 @@ export default defineComponent({
 
                             if (personal.turno.toUpperCase().includes("PROG")){
                                 const numero = parseInt(personal.turno.match(/\d+/)?.[0] || '', 10);
-                                const especialidad = personal.especialidad.includes("Conductor")?"C":personal.especialidad.includes("GuardaTren")?"G":""
+                                const especialidad = personal.especialidad.toLowerCase().includes("conductor")?"C":personal.especialidad.toLowerCase().includes("guardatren")?"G":""
                                 personal.turno = "PROG."+ numero + especialidad + personal.dotacion
                             }
                             
@@ -342,9 +323,6 @@ export default defineComponent({
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
-        },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
         },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
@@ -514,9 +492,6 @@ export default defineComponent({
     },
     name: "App",
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>

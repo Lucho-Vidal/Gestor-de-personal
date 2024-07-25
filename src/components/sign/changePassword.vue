@@ -1,6 +1,5 @@
 <template>
     <div>
-        <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">
                 Cambiar Contraseña
@@ -88,14 +87,11 @@
                 {{ message.message }}
             </div>
         </main>
-        <FooterPage />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
-import FooterPage from "../FooterPage.vue";
 import { changePassword } from "../../services/signService";
 import { User } from "../../interfaces/IUser";
 
@@ -169,8 +165,6 @@ export default defineComponent({
         },
     },
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

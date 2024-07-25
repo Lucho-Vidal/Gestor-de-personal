@@ -1,34 +1,16 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible"/>
-        <div
-            id="layoutSidenav_content"
-            class="body"
-            :class="[
-                isAsideBarVisible
-                    ? 'layoutSidenav_content-width-max'
-                    : 'layoutSidenav_content-width-min',
-            ]"
-        >
-            <main ref="pdfContainer">
-                <embed
-                    :src="rutaPdf"
-                    type="application/pdf"
-                    width="100%"
-                    height="100%"
-                />
-            </main>
-            <FooterPage />
-        </div>
-    </div>
+    <main ref="pdfContainer">
+        <embed
+            :src="rutaPdf"
+            type="application/pdf"
+            width="100%"
+            height="100%"
+        />
+    </main>
 </template>
 <script lang="ts">
-import { defineComponent, ref ,watch  } from "vue";
-import {  useRoute  } from "vue-router";
-import NavBar from "./NavBar.vue";
-import asideBar from "./asideBar.vue";
-import FooterPage from "./FooterPage.vue";
+import { defineComponent,ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
     name: "pdf",
@@ -37,9 +19,6 @@ export default defineComponent({
     },
     computed: {},
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
     data() {
         return {};
@@ -52,21 +31,25 @@ export default defineComponent({
 
         // Watcher para detectar cambios en rutaPdf
         watch(route, (newValue) => {
-            
             // Eliminar el PDF anterior
             const container = pdfContainer.value;
-            
+
             if (container) {
                 while (container.firstChild) {
-                container.removeChild(container.firstChild);
+                    container.removeChild(container.firstChild);
                 }
             }
             // Crear y agregar un nuevo elemento <embed> con la nueva ruta PDF
-            const embedElement = document.createElement('embed');
-            embedElement.setAttribute('type', 'application/pdf');
-            embedElement.setAttribute('width', '100%');
-            embedElement.setAttribute('height', '100%');
-            embedElement.setAttribute('src', Array.isArray(newValue.params.rutaPdf) ?  newValue.params.rutaPdf[0]:newValue.params.rutaPdf);
+            const embedElement = document.createElement("embed");
+            embedElement.setAttribute("type", "application/pdf");
+            embedElement.setAttribute("width", "100%");
+            embedElement.setAttribute("height", "100%");
+            embedElement.setAttribute(
+                "src",
+                Array.isArray(newValue.params.rutaPdf)
+                    ? newValue.params.rutaPdf[0]
+                    : newValue.params.rutaPdf
+            );
             if (container) {
                 container.appendChild(embedElement);
             }
@@ -84,16 +67,14 @@ export default defineComponent({
                 ? route.params.rutaPdf[0]
                 : route.params.rutaPdf || "";
         }
-        return { isAsideBarVisible, toggleAsideBar, rutaPdf,pdfContainer };
+        return { isAsideBarVisible, toggleAsideBar, rutaPdf, pdfContainer };
     },
     methods: {
         handleAsideBarVisibility(isVisible: boolean) {
             this.isAsideBarVisible = isVisible;
         },
     },
-    mounted() {
-        
-    },
+    mounted() {},
 });
 </script>
 <style>
@@ -104,5 +85,8 @@ export default defineComponent({
 }
 main {
     height: 89vh;
+    
+  margin-top: 0rem;
+
 }
 </style>

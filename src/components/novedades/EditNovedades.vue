@@ -1,6 +1,4 @@
 <template>
-    <div>
-        <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">Editar Novedad</h1>
 
@@ -342,15 +340,10 @@
                 >
             </form>
         </main>
-
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
-import FooterPage from "../FooterPage.vue";
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import { createNovedad, getNovedad, getNovedades, updateNovedad } from "../../services/novedadesService";
 import { IPersonal } from "../../interfaces/IPersonal";
@@ -789,8 +782,6 @@ export default defineComponent({
         
     },
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

@@ -1,9 +1,28 @@
 <template>
-    <router-view/>
+    <div id="sb-nav-fixed" >
+        <NavBar  :isAsideBarVisible="isAsideBarVisible" @update:isAsideBarVisible="isAsideBarVisible = $event"/>
+        <asideBar :isAsideBarVisible="isAsideBarVisible" />
+    <router-view id="layoutSidenav_content"
+            class="body"
+            :class="[
+                isAsideBarVisible
+                    ? 'layoutSidenav_content-width-max'
+                    : 'layoutSidenav_content-width-min',
+            ]"/>
+            <FooterPage :class="[
+                isAsideBarVisible
+                    ? 'layoutSidenav_content-width-max'
+                    : 'layoutSidenav_content-width-min',
+            ]"/>
+    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent,ref } from "vue";
+import NavBar from "./components/NavBar.vue";
+import asideBar from "./components/asideBar.vue";
+import FooterPage from "./components/FooterPage.vue";
+import  "./styles.css"
 
 export default defineComponent({
     name: "App",
@@ -12,8 +31,19 @@ export default defineComponent({
             document.title = to.meta.title || 'GNPA '; // Usar un título predeterminado si no hay meta.title
         }
     },
+    setup() {
+        const isAsideBarVisible = ref(false);
+        return { isAsideBarVisible };
+    },
+    methods:{
+        handleAsideBarVisibility(isVisible: boolean) {
+        this.isAsideBarVisible = isVisible;
+    },
+    },
     components: {
-        
+        NavBar,
+        asideBar,
+        FooterPage,
     },
 });
 </script>

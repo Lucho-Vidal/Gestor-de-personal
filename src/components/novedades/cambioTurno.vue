@@ -1,16 +1,5 @@
 <template>
-    <div>
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible"/>
-        <div
-            id="layoutSidenav_content"
-            class="body"
-            :class="[
-                isAsideBarVisible
-                    ? 'layoutSidenav_content-width-max'
-                    : 'layoutSidenav_content-width-min',
-            ]"
-        >
+
             <main>
                 <div class="container-fluid px-4">
                     <h2 class="d-flex justify-content-center m-3">
@@ -276,16 +265,10 @@
                     </table>
                 </div>
             </main>
-            <footer-page />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent} from "vue";
 import { Novedad } from "../../interfaces/INovedades";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
@@ -307,14 +290,6 @@ export default defineComponent({
             today: new Date(),
             search: "" as string,
         };
-    },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return { isAsideBarVisible, toggleAsideBar };
     },
     methods: {
         async loadCambiosTurnos() {
@@ -352,9 +327,6 @@ export default defineComponent({
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
-        },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
         },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
@@ -537,9 +509,6 @@ export default defineComponent({
     },
     name: "App",
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>

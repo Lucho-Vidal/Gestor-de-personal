@@ -1,12 +1,4 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible" />
-        <div id="layoutSidenav_content" class="body" :class="[
-            isAsideBarVisible
-                ? 'layoutSidenav_content-width-max'
-                : 'layoutSidenav_content-width-min',
-        ]">
             <main>
                 <div class="container-fluid px-4" v-if="Filtradas.length == 0">
                     <div class="d-flex justify-content-center m-3">
@@ -78,7 +70,7 @@
                                 <option value="Guardatren electrico">
                                     GuardaTren Eléctrico
                                 </option>
-                                <option value="GuardaTren diesel">
+                                <option value="Guardatren diesel">
                                     GuardaTren Diesel
                                 </option>
                             </select>
@@ -208,16 +200,10 @@
                     </table>
                 </div>
             </main>
-            <FooterPage />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent } from "vue";
 import { ITurno, Vueltas } from '../../interfaces/ITurno';
 import * as XLSX from 'xlsx';
 import { newToken } from "../../services/signService";
@@ -243,14 +229,6 @@ export default defineComponent({
             itinerario:"",
             circular:"",
         };
-    },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return { isAsideBarVisible, toggleAsideBar };
     },
     methods: {
         async handleFileChange(event: Event) {
@@ -308,9 +286,9 @@ export default defineComponent({
                 }else if (sheetName.toUpperCase().includes('RE')||sheetName.toUpperCase().includes('ESC')){
                     dotacion = 'RE'
                 }else if (sheetName.toUpperCase().includes('CÑ')||sheetName.toUpperCase().includes('CAÑ')){
-                    dotacion = 'RE'
+                    dotacion = 'CÑ'
                 }else if (sheetName.toUpperCase().includes('AK')||sheetName.toUpperCase().includes('KORN')){
-                    dotacion = 'RE'
+                    dotacion = 'AK'
                 }else {
                     dotacion = prompt("No se pudo reconocer la dotación para "+ sheetName,"Por favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK" )||''
                 }
@@ -353,6 +331,13 @@ export default defineComponent({
                                     turno = turno.replace(" ORD","")
                                     ordenes = true;
                                 }
+                                if(turno.toUpperCase().includes("OR")){
+                                    turno = turno.replace(" OR","")
+                                    ordenes = true;
+                                }
+                                if(turno.toUpperCase().includes("DH")){
+                                    turno = turno.replace(" DH","")
+                                }
                                 if (turno.toUpperCase().includes("PROG")){
                                     const numero = parseInt(turno.match(/\d+/)?.[0] || '', 10);
                                     const especialidad = this.especialidad.includes("Conductor")?"C":this.especialidad.includes("GuardaTren")?"G":""
@@ -362,8 +347,12 @@ export default defineComponent({
                                 if ((this.itinerario == 'S' || this.itinerario == 'D')){
                                     if(turno.toUpperCase().includes(" S")){
                                         turno = turno.replace(" S","")
+                                    }else if(turno.toUpperCase().includes("S")){
+                                        turno = turno.replace("S","")
                                     }else if(turno.toUpperCase().includes(" D")){
                                         turno = turno.replace(" D","")
+                                    }else if(turno.toUpperCase().includes("D")){
+                                        turno = turno.replace("D","")
                                     }
                                 }
                                 
@@ -413,15 +402,6 @@ export default defineComponent({
                 }
             })
         },
-        // async loadTurnos() {
-        //     try {
-        //         const res = await getTurnos();
-        //         this.turnos = res.data;
-        //         this.filtrar();
-        //     } catch (error) {
-        //         this.handleRequestError(error as AxiosError);
-        //     }
-        // },
         async deleteTurno(index: number) {
             try {
                 const confirmacion = window.confirm(
@@ -430,23 +410,11 @@ export default defineComponent({
                 if (confirmacion) {
                     // await deleteTurno(id);
 
-                    // guardamos registro
-                    // const registro: Registro = {
-                    //     usuario: window.localStorage.getItem("username") || "",
-                    //     fecha: this.today.toString(),
-                    //     accion: "Elimino",
-                    //     turno: this.turnos[index],
-                    // };
-                    // await createRegistro(registro);
-
                     this.Filtradas.splice(index, 1);
                 }
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
-        },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
         },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
@@ -459,9 +427,6 @@ export default defineComponent({
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
-        // edit(id: string) {
-        //     this.$router.push(`/editTurno/${id}`);
-        // },
         viewDetail(turno: ITurno) {
             if (turno.viewDetail) {
                 turno.viewDetail = false;
@@ -488,9 +453,6 @@ export default defineComponent({
     },
     name: "App",
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>

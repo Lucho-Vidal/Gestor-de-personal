@@ -1,16 +1,4 @@
 <template>
-    <div id="sb-nav-fixed">
-        <NavBar @update:isAsideBarVisible="handleAsideBarVisibility" />
-        <asideBar v-if="isAsideBarVisible"/>
-        <div
-            id="layoutSidenav_content"
-            class="body"
-            :class="[
-                isAsideBarVisible
-                    ? 'layoutSidenav_content-width-max'
-                    : 'layoutSidenav_content-width-min',
-            ]"
-        >
             <main>
                 <div class="container px-4">
                     <h1 class="d-flex justify-content-center m-3">
@@ -190,16 +178,10 @@
                     </div>
                 </div>
             </main>
-            <FooterPage />
-        </div>
-    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import NavBar from "../NavBar.vue";
-import asideBar from "../asideBar.vue";
-import FooterPage from "../FooterPage.vue";
+import { defineComponent } from "vue";
 import { signUp } from "../../services/signService";
 import { User, Role } from "../../interfaces/IUser";
 import { Registro } from "../../interfaces/IRegistro";
@@ -220,14 +202,6 @@ export default defineComponent({
             },
             today: new Date(),
         };
-    },
-    setup() {
-        const isAsideBarVisible = ref(false); // Estado inicial visible
-        function toggleAsideBar() {
-            isAsideBarVisible.value = !isAsideBarVisible.value; // Cambia el estado de isAsideBarVisible
-        }
-
-        return { isAsideBarVisible, toggleAsideBar };
     },
     methods: {
         hasRole(roleName: string): boolean {
@@ -278,14 +252,8 @@ export default defineComponent({
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },
-        handleAsideBarVisibility(isVisible: boolean) {
-            this.isAsideBarVisible = isVisible;
-        },
     },
     components: {
-        NavBar,
-        asideBar,
-        FooterPage,
     },
 });
 </script>
