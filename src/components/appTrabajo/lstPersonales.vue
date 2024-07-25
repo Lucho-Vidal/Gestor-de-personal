@@ -75,6 +75,7 @@
                                         <h4>Conductores</h4>
                                     </li>
                                     <table
+                                        v-if="turnosConductor.length > 0"
                                         class="table table-striped table-hover"
                                     >
                                         <thead>
@@ -258,6 +259,7 @@
                                     </table>
                                     <li>Ordenes</li>
                                     <table
+                                        v-if="turnosConductorOrd.length > 0"
                                         class="table table-striped table-hover"
                                     >
                                         <thead>
@@ -451,6 +453,7 @@
                                         <h4>Guarda tren</h4>
                                     </li>
                                     <table
+                                        v-if="turnosGuardas.length > 0"
                                         class="table table-striped table-hover"
                                     >
                                         <thead>
@@ -638,6 +641,7 @@
                                     </table>
                                     <li>Ordenes</li>
                                     <table
+                                        v-if="turnosGuardasOrd.length > 0"
                                         class="table table-striped table-hover"
                                     >
                                         <thead>
