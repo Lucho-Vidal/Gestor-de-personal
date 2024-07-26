@@ -1,6 +1,4 @@
 <template>
-    <div>
-        <NavBar />
         <main class="container">
             <h1 class="d-flex justify-content-center m-3">{{ 
                 ordenamiento.tipo === 'ordenamiento' ?
@@ -269,7 +267,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            v-for="(tren, index) in ordenamiento.trenes"
+                            v-for="(tren, index) in ordenamiento.turno.vueltas"
                             :key="index"
                         >
                             <td>
@@ -314,7 +312,7 @@
                             </td>
                             <td>    
                                 <i class="material-icons cursor-hand rojo"
-                                    @click="ordenamiento.trenes.splice(index, 1)"
+                                    @click="ordenamiento.turno.vueltas.splice(index, 1)"
                                 >clear</i>
                                 
                             </td>
@@ -333,7 +331,7 @@
             <div v-if="esDiagramado && !turnosEncontrado.ordenes" class="container mt-5">
                 <h5>El personal es diagramado, deberá cargar una cancelacion de diagrama para ordenarlo. Cargue los trenes que no va a correr</h5>
             
-                <table  class="table table-striped table-hover">
+                <!-- <table  class="table table-striped table-hover">
                     <thead v-if="turnosEncontrado" class="">
                         <tr>
                             <th colspan="1">Vuelta</th>
@@ -363,18 +361,13 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </main>
-
-        <footer-page />
-    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavBar from "../NavBar.vue";
-import FooterPage from "../FooterPage.vue";
 import { IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
@@ -382,7 +375,7 @@ import { dia_laboral, guardarRegistro, itinerarioType, loadPersonales, loadTurno
 import { Ordenamiento } from "../../interfaces/IOrdenamientos";
 import { Itinerario } from "../../interfaces/Itinerario";
 import { createOrdenamiento } from '../../services/ordenamientoService';
-import { ITurno } from "../../interfaces/ITurno";
+import { ITurno } from '../../interfaces/ITurno';
 
 export default defineComponent({
     data() {
@@ -419,7 +412,7 @@ export default defineComponent({
                     },
                     viewDetail: false
                 },
-                trenes: [],
+                turno: {},
                 detalle: ''
             } as Ordenamiento,
             itinerario: [] as Itinerario[],
@@ -591,11 +584,11 @@ export default defineComponent({
                 this.esDiagramado = true
                 this.ordenamiento.tipo = 'cancelacionDiagrama'
             }
-            this.ordenamiento.trenes = encontrados.vueltas
+            this.ordenamiento.turno.vueltas = encontrados.vueltas
             return encontrados
         },
         agregarTren() {
-            this.ordenamiento.trenes = [...this.ordenamiento.trenes,
+            this.ordenamiento.turno.vueltas = [...this.ordenamiento.turno.vueltas,
                 {
                     vuelta: 0,
                     tren: 0,
@@ -620,8 +613,6 @@ export default defineComponent({
         }
     },
     components: {
-        NavBar,
-        FooterPage,
     },
 });
 </script>

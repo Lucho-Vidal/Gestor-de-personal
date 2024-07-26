@@ -1,16 +1,24 @@
 <template>
     <main>
-                    <div  class="container-fluid px-4">
-                        <h2 class="d-flex justify-content-center m-3">
+        <div class="container-fluid px-4">
+            <h2 class="d-flex justify-content-center m-3">
                 Listado Personal de Abordo
             </h2>
-            <p class="d-flex justify-content-end m-2">
+            <!-- <p class="d-flex justify-content-end m-2">
                 Fecha: {{ days[today.getDay()] }}
                 {{ today.toLocaleDateString() }}
-            </p>
+            </p> -->
             <div class="d-flex">
-                <router-link class="btn btn-primary d-flex end mx-3" to="/newPersonal">Nuevo Personal</router-link>
-                <router-link class="btn btn-success d-flex end" to="/addPersonales">Cargar desde Excel</router-link>
+                <router-link
+                    class="btn btn-primary d-flex end mx-3"
+                    to="/newPersonal"
+                    >Nuevo Personal</router-link
+                >
+                <router-link
+                    class="btn btn-success d-flex end"
+                    to="/addPersonales"
+                    >Cargar desde Excel</router-link
+                >
             </div>
             <details>
                 <summary>Filtros:</summary>
@@ -257,15 +265,17 @@
                         <td class="col-1">{{ personal.orden }}</td>
                         <td class="col-1">
                             <i
-                            class="material-icons cursor-hand"
+                                class="material-icons cursor-hand"
                                 @click="edit(personal._id)"
-                            >edit_note</i>
+                                >edit_note</i
+                            >
                         </td>
                         <td class="col-1">
                             <i
                                 class="material-icons cursor-hand rojo"
                                 @click="deletePersonal(personal._id, index)"
-                            >delete_forever</i>
+                                >delete_forever</i
+                            >
                         </td>
                     </tr>
                     <tr v-if="personal.viewDetail && personal.conocimientos">
@@ -319,8 +329,8 @@
                     </tr>
                 </tbody>
             </table>
-                    </div>
-                </main>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
@@ -375,11 +385,11 @@ export default defineComponent({
 
                     // guardamos registro
                     const registro: Registro = {
-                                usuario : window.localStorage.getItem("username")||'',
-                                fecha : this.today.toString() ,
-                                accion: "Elimino",
-                                personal : this.personales[index],
-                            }
+                        usuario: window.localStorage.getItem("username") || "",
+                        fecha: this.today.toString(),
+                        accion: "Elimino",
+                        personal: this.personales[index],
+                    };
                     await createRegistro(registro);
                     this.personalesFiltrados.splice(index, 1);
                 }
@@ -392,9 +402,9 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
-                localStorage.removeItem("username")
-                localStorage.removeItem("roles")
-                localStorage.removeItem("token")
+                localStorage.removeItem("username");
+                localStorage.removeItem("roles");
+                localStorage.removeItem("token");
                 this.$router.push("/login");
             } else {
                 // Manejar otros errores de solicitud
@@ -524,9 +534,9 @@ export default defineComponent({
                     auxPersonales = this.personalesFiltrados;
                     this.personalesFiltrados = auxPersonales.filter(
                         (personal) => {
-                            return (
-                                personal.turno
-                            ).includes(this.searchTurno.toLowerCase().trim());
+                            return personal.turno.includes(
+                                this.searchTurno.toLowerCase().trim()
+                            );
                         }
                     );
                 }
@@ -555,24 +565,23 @@ export default defineComponent({
         }
     },
     name: "App",
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
 main {
     min-height: 81.6vh;
 }
-.cursor-hand{
+.cursor-hand {
     cursor: pointer;
 }
-.verde{
-    color:#0f0
+.verde {
+    color: #0f0;
 }
-.rojo{
-    color:#f00
+.rojo {
+    color: #f00;
 }
-.gris{
-    color:#aaa
+.gris {
+    color: #aaa;
 }
 </style>

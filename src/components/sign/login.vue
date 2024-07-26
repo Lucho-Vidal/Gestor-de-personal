@@ -169,5 +169,11 @@ export default defineComponent({
 <style>
 main {
     margin-top: 5rem;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
+
 </style>

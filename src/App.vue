@@ -51,6 +51,7 @@ export default defineComponent({
 
 <style>
     .router-view{
-        margin-left: 55px;
+        margin-left: 5rem;
+        width: 95vw;
     }
 </style>

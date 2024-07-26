@@ -1,838 +1,721 @@
 <template>
-            <main>
-                <div class="container-fluid px-4">
-                    <h2 class="d-flex justify-content-center m-3">
-                        Lista de personales
-                    </h2>
-                    <div class="d-flex flex-wrap my-3">
-                            <h6>Aplicar circular:</h6>
-                            <div
-                                v-for="(circular, index) in circulares"
+    <main class="container-fluid px-4">
+        <h2 class="d-flex justify-content-center m-3">
+            Lista de personales
+        </h2>
+        <div class="d-flex flex-wrap my-3">
+            <h6>Aplicar circular:</h6>
+            <div v-for="(circular, index) in circulares" :key="index">
+                <label class="form-check-label mx-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="circular"
+                        v-model="circularSeleccionada"
+                        v-on:change="cambioCirculares()"
+                    />
+                    {{ circular }}
+                    <!-- Mostrar el valor de la variable circular en el label -->
+                </label>
+            </div>
+        </div>
+        <div class="d-flex mb-3">
+            <label for="dotacion" class="col-2 mx-3">
+                Dotacion
+                <select
+                    name="dotacion"
+                    id="dotacion"
+                    class="col-6 mx-3"
+                    v-model="checkboxDotacion"
+                    @change="filtrar()"
+                >
+                    <option value="PC">PC</option>
+                    <option value="LLV">LLV</option>
+                    <option value="TY">TY</option>
+                    <option value="LP">LP</option>
+                    <option value="K5">K5</option>
+                    <option value="RE">RE</option>
+                    <option value="CÑ">CÑ</option>
+                    <option value="AK">AK</option>
+                </select>
+            </label>
+
+            <label for="it" class="col-2 mx-3">
+                Itinerario
+                <select
+                    name="it"
+                    id="it"
+                    class="col-6 mx-3"
+                    v-model="checkboxIt"
+                    @change="filtrar()"
+                >
+                    <option value="H">Hábil</option>
+                    <option value="S">Sábado</option>
+                    <option value="D">Domingo</option>
+                </select>
+            </label>
+
+            <input
+                type="date"
+                name="today"
+                id="today"
+                v-model="inputDate"
+                @change="filtrar()"
+            />
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h4>Conductores</h4>
+                        </li>
+                        <table
+                            v-if="turnosConductor.length > 0"
+                            class="table table-striped table-hover"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="col-1" colspan="1">
+                                        Turno
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Toma
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Deja
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        ref
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Tren
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Sale
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Circular
+                                    </th>
+                                    <th class="col-6" colspan="1">
+                                        Personal
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody
+                                v-for="(turno, index) in turnosConductor"
                                 :key="index"
+                                class="Small"
+                                @dblclick="viewDetail(turno)"
                             >
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        :value="circular"
-                                        v-model="circularSeleccionada"
-                                        v-on:change="cambioCirculares()"
-                                    />
-                                    {{ circular }}
-                                    <!-- Mostrar el valor de la variable circular en el label -->
-                                </label>
-                            </div>
-                        </div>
-                    <div class="d-flex mb-3">
-                        <label for="dotacion" class="col-2 mx-3">
-                            Dotacion
-                            <select
-                                name="dotacion"
-                                id="dotacion"
-                                class="col-6 mx-3"
-                                v-model="checkboxDotacion"
-                                @change="filtrar()"
+                                <tr
+                                    :class="{
+                                        'fila-oscura':
+                                            turno.personal == 'Sin Cubrir',
+                                    }"
+                                >
+                                    <td class="col-1">
+                                        {{ turno.turno }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.toma }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.deja }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].refer }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].tren }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].sale }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.circular }}
+                                    </td>
+                                    <td class="col-6">
+                                        {{ turno.personal }}
+                                    </td>
+                                </tr>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Vuelta
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Referencia
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Tren
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Origen
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Sale
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Destino
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Llega
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Observaciones
+                                </th>
+                                <tr
+                                    style="margin-bottom: 10px;"
+                                    v-for="(vuelta, index) in turno.vueltas"
+                                    :key="index"
+                                >
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.vuelta }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.refer }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.tren }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.origen }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.sale }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.destino }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.llega }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.observaciones }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <li>Ordenes</li>
+                        <table
+                            v-if="turnosConductorOrd.length > 0"
+                            class="table table-striped table-hover"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="col-1" colspan="1">
+                                        Turno
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Toma
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Deja
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        ref
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Tren
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Sale
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Circular
+                                    </th>
+                                    <th class="col-6" colspan="1">
+                                        Personal
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody
+                                v-for="(turno, index) in turnosConductorOrd"
+                                :key="index"
+                                class="Small"
+                                @dblclick="viewDetail(turno)"
                             >
-                                <option value="PC">PC</option>
-                                <option value="LLV">LLV</option>
-                                <option value="TY">TY</option>
-                                <option value="LP">LP</option>
-                                <option value="K5">K5</option>
-                                <option value="RE">RE</option>
-                                <option value="CÑ">CÑ</option>
-                                <option value="AK">AK</option>
-                            </select>
-                        </label>
-
-                        <label for="it" class="col-2 mx-3">
-                            Itinerario
-                            <select
-                                name="it"
-                                id="it"
-                                class="col-6 mx-3"
-                                v-model="checkboxIt"
-                                @change="filtrar()"
-                            >
-                                <option value="H">Hábil</option>
-                                <option value="S">Sábado</option>
-                                <option value="D">Domingo</option>
-                            </select>
-                        </label>
-
-                        <input
-                            type="date"
-                            name="today"
-                            id="today"
-                            v-model="inputDate"
-                            @change="filtrar()"
-                        />
-                    </div>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <h4>Conductores</h4>
-                                    </li>
-                                    <table
-                                        v-if="turnosConductor.length > 0"
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" colspan="1">
-                                                    Turno
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Toma
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Deja
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    ref
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Tren
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Sale
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Circular
-                                                </th>
-                                                <th class="col-6" colspan="1">
-                                                    Personal
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody
-                                            v-for="(
-                                                turno, index
-                                            ) in turnosConductor"
-                                            :key="index"
-                                            class="Small"
-                                            @dblclick="viewDetail(turno)"
-                                        >
-                                            <tr
-                                                :class="{'fila-oscura':turno.personal =='Sin Cubrir'}"
-                                            >
-                                                <td class="col-1">
-                                                    {{ turno.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.toma }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.deja }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].refer }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].tren }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].sale }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.circular }}
-                                                </td>
-                                                <td class="col-6">
-                                                    {{ turno.personal }}
-                                                </td>
-                                            </tr>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Vuelta
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Referencia
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Tren
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Origen
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Sale
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Destino
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Llega
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Observaciones
-                                            </th>
-                                            <tr
-                                                style="margin-bottom: 10px"
-                                                v-for="(
-                                                    vuelta, index
-                                                ) in turno.vueltas"
-                                                :key="index"
-                                            >
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.vuelta }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.refer }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.tren }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.origen }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.sale }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.destino }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.llega }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.observaciones }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <li>Ordenes</li>
-                                    <table
-                                        v-if="turnosConductorOrd.length > 0"
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" colspan="1">
-                                                    Turno
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Toma
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Deja
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    ref
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Tren
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Sale
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Circular
-                                                </th>
-                                                <th class="col-6" colspan="1">
-                                                    Personal
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody
-                                            v-for="(
-                                                turno, index
-                                            ) in turnosConductorOrd"
-                                            :key="index"
-                                            class="Small"
-                                            @dblclick="viewDetail(turno)"
-                                        >
-                                            <tr
-                                                :class="{
-                                                    'fila-oscura':
-                                                        turno.personal ==
-                                                        'Sin Cubrir',
-                                                }"
-                                            >
-                                                <td class="col-1">
-                                                    {{ turno.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.toma }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.deja }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].refer }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].tren }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].sale }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.circular }}
-                                                </td>
-                                                <td class="col-6">
-                                                    {{ turno.personal }}
-                                                </td>
-                                            </tr>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Vuelta
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Referencia
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Tren
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Origen
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Sale
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Destino
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Llega
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Observaciones
-                                            </th>
-                                            <tr
-                                                style="margin-bottom: 10px"
-                                                v-for="(
-                                                    vuelta, index
-                                                ) in turno.vueltas"
-                                                :key="index"
-                                            >
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.vuelta }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.refer }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.tren }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.origen }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.sale }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.destino }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.llega }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.observaciones }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <h4>Guarda tren</h4>
-                                    </li>
-                                    <table
-                                        v-if="turnosGuardas.length > 0"
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" colspan="1">
-                                                    Turno
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Toma
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Deja
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    ref
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Tren
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Sale
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Circular
-                                                </th>
-                                                <th class="col-6" colspan="1">
-                                                    Personal
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody
-                                            v-for="(
-                                                turno, index
-                                            ) in turnosGuardas"
-                                            :key="index"
-                                            class="Small"
-                                            @dblclick="viewDetail(turno)"
-                                        >
-                                            <tr
-                                                :class="{
-                                                    'fila-oscura':
-                                                        turno.personal ==
-                                                        'Sin Cubrir',
-                                                }"
-                                            >
-                                                <td class="col-1">
-                                                    {{ turno.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.toma }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.deja }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].refer }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].tren }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].sale }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.circular }}
-                                                </td>
-                                                <td class="col-6">
-                                                    {{ turno.personal }}
-                                                </td>
-                                            </tr>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Vuelta
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Referencia
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Tren
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Origen
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Sale
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Destino
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Llega
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Observaciones
-                                            </th>
-                                            <tr
-                                                style="margin-bottom: 10px"
-                                                v-for="(
-                                                    vuelta, index
-                                                ) in turno.vueltas"
-                                                :key="index"
-                                            >
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.vuelta }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.refer }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.tren }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.origen }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.sale }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.destino }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.llega }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.observaciones }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <li>Ordenes</li>
-                                    <table
-                                        v-if="turnosGuardasOrd.length > 0"
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" colspan="1">
-                                                    Turno
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Toma
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Deja
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    ref
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Tren
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Sale
-                                                </th>
-                                                <th class="col-1" colspan="1">
-                                                    Circular
-                                                </th>
-                                                <th class="col-6" colspan="1">
-                                                    Personal
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody
-                                            v-for="(
-                                                turno, index
-                                            ) in turnosGuardasOrd"
-                                            :key="index"
-                                            class="Small"
-                                            @dblclick="viewDetail(turno)"
-                                        >
-                                            <tr
-                                                :class="{
-                                                    'fila-oscura':
-                                                        turno.personal ==
-                                                        'Sin Cubrir',
-                                                }"
-                                            >
-                                                <td class="col-1">
-                                                    {{ turno.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.toma }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.deja }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].refer }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].tren }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.vueltas[0].sale }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ turno.circular }}
-                                                </td>
-                                                <td class="col-6">
-                                                    {{ turno.personal }}
-                                                </td>
-                                            </tr>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Vuelta
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Referencia
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Tren
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Origen
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Sale
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Destino
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Llega
-                                            </th>
-                                            <th
-                                                class="col-1"
-                                                colspan="1"
-                                                v-if="turno.viewDetail"
-                                            >
-                                                Observaciones
-                                            </th>
-                                            <tr
-                                                style="margin-bottom: 10px"
-                                                v-for="(
-                                                    vuelta, index
-                                                ) in turno.vueltas"
-                                                :key="index"
-                                            >
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.vuelta }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.refer }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.tren }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.origen }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.sale }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.destino }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.llega }}
-                                                </td>
-                                                <td
-                                                    colspan="1"
-                                                    v-if="turno.viewDetail"
-                                                >
-                                                    {{ vuelta.observaciones }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                                <tr
+                                    :class="{
+                                        'fila-oscura':
+                                            turno.personal == 'Sin Cubrir',
+                                    }"
+                                >
+                                    <td class="col-1">
+                                        {{ turno.turno }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.toma }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.deja }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].refer }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].tren }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].sale }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.circular }}
+                                    </td>
+                                    <td class="col-6">
+                                        {{ turno.personal }}
+                                    </td>
+                                </tr>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Vuelta
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Referencia
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Tren
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Origen
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Sale
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Destino
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Llega
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Observaciones
+                                </th>
+                                <tr
+                                    style="margin-bottom: 10px;"
+                                    v-for="(vuelta, index) in turno.vueltas"
+                                    :key="index"
+                                >
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.vuelta }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.refer }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.tren }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.origen }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.sale }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.destino }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.llega }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.observaciones }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ul>
                 </div>
-            </main>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h4>Guarda tren</h4>
+                        </li>
+                        <table
+                            v-if="turnosGuardas.length > 0"
+                            class="table table-striped table-hover"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="col-1" colspan="1">
+                                        Turno
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Toma
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Deja
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        ref
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Tren
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Sale
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Circular
+                                    </th>
+                                    <th class="col-6" colspan="1">
+                                        Personal
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody
+                                v-for="(turno, index) in turnosGuardas"
+                                :key="index"
+                                class="Small"
+                                @dblclick="viewDetail(turno)"
+                            >
+                                <tr
+                                    :class="{
+                                        'fila-oscura':
+                                            turno.personal == 'Sin Cubrir',
+                                    }"
+                                >
+                                    <td class="col-1">
+                                        {{ turno.turno }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.toma }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.deja }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].refer }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].tren }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].sale }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.circular }}
+                                    </td>
+                                    <td class="col-6">
+                                        {{ turno.personal }}
+                                    </td>
+                                </tr>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Vuelta
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Referencia
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Tren
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Origen
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Sale
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Destino
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Llega
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Observaciones
+                                </th>
+                                <tr
+                                    style="margin-bottom: 10px;"
+                                    v-for="(vuelta, index) in turno.vueltas"
+                                    :key="index"
+                                >
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.vuelta }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.refer }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.tren }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.origen }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.sale }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.destino }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.llega }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.observaciones }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <li>Ordenes</li>
+                        <table
+                            v-if="turnosGuardasOrd.length > 0"
+                            class="table table-striped table-hover"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="col-1" colspan="1">
+                                        Turno
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Toma
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Deja
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        ref
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Tren
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Sale
+                                    </th>
+                                    <th class="col-1" colspan="1">
+                                        Circular
+                                    </th>
+                                    <th class="col-6" colspan="1">
+                                        Personal
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody
+                                v-for="(turno, index) in turnosGuardasOrd"
+                                :key="index"
+                                class="Small"
+                                @dblclick="viewDetail(turno)"
+                            >
+                                <tr
+                                    :class="{
+                                        'fila-oscura':
+                                            turno.personal == 'Sin Cubrir',
+                                    }"
+                                >
+                                    <td class="col-1">
+                                        {{ turno.turno }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.toma }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.deja }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].refer }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].tren }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.vueltas[0].sale }}
+                                    </td>
+                                    <td class="col-1">
+                                        {{ turno.circular }}
+                                    </td>
+                                    <td class="col-6">
+                                        {{ turno.personal }}
+                                    </td>
+                                </tr>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Vuelta
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Referencia
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Tren
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Origen
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Sale
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Destino
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Llega
+                                </th>
+                                <th
+                                    class="col-1"
+                                    colspan="1"
+                                    v-if="turno.viewDetail"
+                                >
+                                    Observaciones
+                                </th>
+                                <tr
+                                    style="margin-bottom: 10px;"
+                                    v-for="(vuelta, index) in turno.vueltas"
+                                    :key="index"
+                                >
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.vuelta }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.refer }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.tren }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.origen }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.sale }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.destino }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.llega }}
+                                    </td>
+                                    <td colspan="1" v-if="turno.viewDetail">
+                                        {{ vuelta.observaciones }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
@@ -845,7 +728,14 @@ import { AxiosError } from "axios";
 import { getNovedades } from "../../services/novedadesService";
 import { getPersonales } from "../../services/personalService";
 import { Novedad } from "../../interfaces/INovedades";
-import { compararHoras, handleRequestError, quitarDuplicados, buscarPersonalACargo, obtenerTiposCirculares, loadCambiosTurnos } from '../../utils/funciones';
+import {
+    compararHoras,
+    handleRequestError,
+    quitarDuplicados,
+    buscarPersonalACargo,
+    obtenerTiposCirculares,
+    loadCambiosTurnos,
+} from "../../utils/funciones";
 import { CambioTurno } from "../../interfaces/ICambioTurno";
 
 export default defineComponent({
@@ -865,7 +755,7 @@ export default defineComponent({
             circulares: [] as string[],
             circularSeleccionada: ["Jul24"] as string[],
             datosCargados: 0 as number,
-            cambiosTurnos: [] as  CambioTurno[],
+            cambiosTurnos: [] as CambioTurno[],
         };
     },
     methods: {
@@ -925,7 +815,6 @@ export default defineComponent({
             }
         },
         filtrar() {
-            
             window.localStorage.setItem(
                 "dotacionSeleccionada",
                 this.checkboxDotacion
@@ -937,7 +826,10 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() == "guardatren electrico"||turno.especialidad.toLowerCase() == "guardatren diesel") &&
+                    (turno.especialidad.toLowerCase() ==
+                        "guardatren electrico" ||
+                        turno.especialidad.toLowerCase() ==
+                            "guardatren diesel") &&
                     !turno.ordenes
                 );
             });
@@ -946,7 +838,10 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() == "conductor electrico"||turno.especialidad.toLowerCase() == "conductor diesel") &&
+                    (turno.especialidad.toLowerCase() ==
+                        "conductor electrico" ||
+                        turno.especialidad.toLowerCase() ==
+                            "conductor diesel") &&
                     !turno.ordenes
                 );
             });
@@ -955,7 +850,10 @@ export default defineComponent({
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
                     this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() == "guardatren electrico"||turno.especialidad.toLowerCase() == "guardatren diesel") &&
+                    (turno.especialidad.toLowerCase() ==
+                        "guardatren electrico" ||
+                        turno.especialidad.toLowerCase() ==
+                            "guardatren diesel") &&
                     turno.ordenes
                 );
             });
@@ -963,15 +861,30 @@ export default defineComponent({
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
                     turno.dotacion == this.checkboxDotacion &&
-                    this.checkboxIt == turno.itinerario &&                    
-                    (turno.especialidad.toLowerCase() == "conductor electrico"||turno.especialidad.toLowerCase() == "conductor diesel") &&
+                    this.checkboxIt == turno.itinerario &&
+                    (turno.especialidad.toLowerCase() ==
+                        "conductor electrico" ||
+                        turno.especialidad.toLowerCase() ==
+                            "conductor diesel") &&
                     turno.ordenes
                 );
             });
-            turnosGuardas = quitarDuplicados(turnosGuardas,this.circularSeleccionada);
-            turnosConductor = quitarDuplicados(turnosConductor,this.circularSeleccionada);
-            turnosGuardasOrd = quitarDuplicados(turnosGuardasOrd,this.circularSeleccionada);
-            turnosConductorOrd = quitarDuplicados(turnosConductorOrd,this.circularSeleccionada);
+            turnosGuardas = quitarDuplicados(
+                turnosGuardas,
+                this.circularSeleccionada
+            );
+            turnosConductor = quitarDuplicados(
+                turnosConductor,
+                this.circularSeleccionada
+            );
+            turnosGuardasOrd = quitarDuplicados(
+                turnosGuardasOrd,
+                this.circularSeleccionada
+            );
+            turnosConductorOrd = quitarDuplicados(
+                turnosConductorOrd,
+                this.circularSeleccionada
+            );
 
             this.turnosGuardas = turnosGuardas.sort(
                 (turno1: ITurno, turno2: ITurno) => {
@@ -1000,7 +913,7 @@ export default defineComponent({
                 turnosConductor,
                 this.personales,
                 this.novedades,
-                this.cambiosTurnos,
+                this.cambiosTurnos
             );
             buscarPersonalACargo(
                 this.obtenerFecha(this.inputDate, this.today),
@@ -1008,7 +921,7 @@ export default defineComponent({
                 turnosGuardas,
                 this.personales,
                 this.novedades,
-                this.cambiosTurnos,
+                this.cambiosTurnos
             );
             buscarPersonalACargo(
                 this.obtenerFecha(this.inputDate, this.today),
@@ -1016,7 +929,7 @@ export default defineComponent({
                 this.turnosConductorOrd,
                 this.personales,
                 this.novedades,
-                this.cambiosTurnos,
+                this.cambiosTurnos
             );
             buscarPersonalACargo(
                 this.obtenerFecha(this.inputDate, this.today),
@@ -1024,7 +937,7 @@ export default defineComponent({
                 this.turnosGuardasOrd,
                 this.personales,
                 this.novedades,
-                this.cambiosTurnos,
+                this.cambiosTurnos
             );
         },
         obtenerFecha(fecha: string, today: Date) {
@@ -1043,7 +956,7 @@ export default defineComponent({
                 "circularSeleccionada",
                 this.circularSeleccionada.join(",")
             );
-            
+
             this.filtrar();
         },
     },
@@ -1052,7 +965,7 @@ export default defineComponent({
             this.loadTurnos();
             this.loadPersonales();
             this.loadNovedades();
-            this.cambiosTurnos = await loadCambiosTurnos() || [];
+            this.cambiosTurnos = (await loadCambiosTurnos()) || [];
             this.today.setHours(12, 0, 0, 0);
             newToken();
             const dotacionSelectString = window.localStorage.getItem(
@@ -1061,16 +974,16 @@ export default defineComponent({
             this.checkboxDotacion = dotacionSelectString
                 ? dotacionSelectString
                 : "";
-            const itSelectString =
-                window.localStorage.getItem("itSeleccionada");
+            const itSelectString = window.localStorage.getItem(
+                "itSeleccionada"
+            );
             this.checkboxIt = itSelectString ? itSelectString : "";
         } catch (error) {
             console.error(error);
         }
     },
     name: "App",
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
@@ -1082,7 +995,7 @@ main {
     display: none;
 }
 .fila-oscura {
-    background-color: #e14646 !important; 
+    background-color: #e14646 !important;
     color: #fff;
 }
 </style>

@@ -327,4 +327,7 @@ export default defineComponent({
     z-index: 2;
     width: 25vw;
 }
+.sb-sidenav-menu::-webkit-scrollbar{
+    display: none;
+}
 </style>
