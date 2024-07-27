@@ -35,4 +35,8 @@ export default defineComponent({
     created() {},
 });
 </script>
-<style></style>
+<style>
+main {
+  margin-top: 4rem;
+}
+</style>

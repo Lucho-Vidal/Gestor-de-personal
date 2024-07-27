@@ -1,25 +1,9 @@
 <template>
-    <main class="container-fluid px-4">
+    <main>
         <h2 class="d-flex justify-content-center m-3">
             Lista de personales
         </h2>
-        <div class="d-flex flex-wrap my-3">
-            <h6>Aplicar circular:</h6>
-            <div v-for="(circular, index) in circulares" :key="index">
-                <label class="form-check-label mx-2">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        :value="circular"
-                        v-model="circularSeleccionada"
-                        v-on:change="cambioCirculares()"
-                    />
-                    {{ circular }}
-                    <!-- Mostrar el valor de la variable circular en el label -->
-                </label>
-            </div>
-        </div>
-        <div class="d-flex mb-3">
+        <div class="d-flex justify-content-center mb-3">
             <label for="dotacion" class="col-2 mx-3">
                 Dotacion
                 <select
@@ -62,6 +46,22 @@
                 v-model="inputDate"
                 @change="filtrar()"
             />
+        </div>
+        <div class="d-flex justify-content-center flex-wrap my-3">
+            <h6>Aplicar circular:</h6>
+            <div v-for="(circular, index) in circulares" :key="index">
+                <label class="form-check-label mx-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        :value="circular"
+                        v-model="circularSeleccionada"
+                        v-on:change="cambioCirculares()"
+                    />
+                    {{ circular }}
+                    <!-- Mostrar el valor de la variable circular en el label -->
+                </label>
+            </div>
         </div>
         <div class="container-fluid">
             <div class="row">
@@ -987,9 +987,6 @@ export default defineComponent({
 });
 </script>
 <style>
-main {
-    min-height: 81.6vh;
-}
 
 .hidden-row {
     display: none;

@@ -1,378 +1,387 @@
 <template>
-            <main>
-                <div class="container-fluid px-4">
-                    <h2 class="d-flex justify-content-center m-3">
-                        Novedades del Personal de Abordo
-                    </h2>
-                    <div class="d-flex">
-                        <a
-                            class="btn btn-primary d-flex end"
-                            href="/newNovedades"
-                            >Nueva Novedad</a
-                        >
+    <main>
+        <div class="container-fluid px-4">
+            <h2 class="d-flex justify-content-center m-3">
+                Novedades del Personal de Abordo
+            </h2>
+            <div class="d-flex justify-content-end">
+                <router-link
+                    class="btn btn-primary mx-3"
+                    to="/newNovedades"
+                >
+                    Nueva Novedad
+                </router-link>
+                <button class="btn btn-warning" @click.prevent="abrirModal()">
+                    Filtrar novedades
+                </button>
+            </div>
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filtrar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                <div class="my-3">
+                    <input
+                        class="col-3 gap rounded"
+                        type="text"
+                        placeholder="Buscar por apellido y/o nombre"
+                        v-model="search"
+                        v-on:keyup="filtrar()"
+                    />
+                </div>
+                <div class="my-3">
+                    <h6>Filtrar por HNA / descubiertos:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="HNA"
+                            v-model="checkboxHna"
+                            @change="filtrar()"
+                        />
+                        HNA
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="descubierto"
+                            v-model="checkboxDescubierto"
+                            @change="filtrar()"
+                        />
+                        Sin Cubrir
+                    </label>
+                    <label class="form-check-label mx-2" v-if="!checkboxTodas">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Finalizadas"
+                            v-model="checkboxFinalizadas"
+                            @change="filtrar()"
+                        />
+                        Finalizadas
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Todas"
+                            v-model="checkboxTodas"
+                            @change="filtrar()"
+                        />
+                        Todas las Novedades
+                    </label>
+                </div>
+                <div class="my-3">
+                    <h6>Filtro por Especialidad:</h6>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Conductor electrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Conductor eléctrico
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Conductor diesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Conductor Diesel
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Ayudante habilitado"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Ayudante Habilitado
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Ayudante conductor"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Ayudante Conductor
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Guardatren electrico"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Guarda Tren Electrico
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="Guardatren diesel"
+                            v-model="checkboxEspecialidad"
+                            @change="filtrar()"
+                        />
+                        Guarda Tren Diesel
+                    </label>
+                </div>
+                <div class="my-3">
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="PC"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        PC
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LLV"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        LLV
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="TY"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        TY
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="LP"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        LP
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="K5"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        K5
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="RE"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        RE
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="CÑ"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        CÑ
+                    </label>
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            value="AK"
+                            v-model="checkboxDotacion"
+                            @change="filtrar()"
+                        />
+                        AK
+                    </label>
+                </div>
+            </div>
                     </div>
+                </div>
+            </div>
+            <h3 v-if="novedadesFiltradas.length == 0">
+                No se encontró ninguna novedad con los requerimientos
+                especificados.
+            </h3>
 
-                    <details>
-                        <summary>Filtros:</summary>
-                        <div class="my-3">
-                            <input
-                                class="col-3 gap rounded"
-                                type="text"
-                                placeholder="Buscar por apellido y/o nombre"
-                                v-model="search"
-                                v-on:keyup="filtrar()"
-                            />
-                        </div>
-                        <div class="my-3">
-                            <h6>Filtrar por HNA / descubiertos:</h6>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="HNA"
-                                    v-model="checkboxHna"
-                                    @change="filtrar()"
-                                />
-                                HNA
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="descubierto"
-                                    v-model="checkboxDescubierto"
-                                    @change="filtrar()"
-                                />
-                                Sin Cubrir
-                            </label>
-                            <label
-                                class="form-check-label mx-2"
-                                v-if="!checkboxTodas"
-                            >
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Finalizadas"
-                                    v-model="checkboxFinalizadas"
-                                    @change="filtrar()"
-                                />
-                                Finalizadas
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Todas"
-                                    v-model="checkboxTodas"
-                                    @change="filtrar()"
-                                />
-                                Todas las Novedades
-                            </label>
-                        </div>
-                        <div class="my-3">
-                            <h6>Filtro por Especialidad:</h6>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Conductor electrico"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Conductor eléctrico
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Conductor diesel"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Conductor Diesel
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Ayudante habilitado"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Ayudante Habilitado
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Ayudante conductor"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Ayudante Conductor
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Guardatren electrico"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Guarda Tren Electrico
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="Guardatren diesel"
-                                    v-model="checkboxEspecialidad"
-                                    @change="filtrar()"
-                                />
-                                Guarda Tren Diesel
-                            </label>
-                        </div>
-                        <div class="my-3">
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="PC"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                PC
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="LLV"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                LLV
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="TY"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                TY
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="LP"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                LP
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="K5"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                K5
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="RE"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                RE
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="CÑ"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                CÑ
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="AK"
-                                    v-model="checkboxDotacion"
-                                    @change="filtrar()"
-                                />
-                                AK
-                            </label>
-                        </div>
-                    </details>
-                    <h3 v-if="novedadesFiltradas.length == 0">
-                        No se encontró ninguna novedad con los requerimientos
-                        especificados.
-                    </h3>
-
-                    <table
-                        v-if="novedadesFiltradas.length > 0"
-                        class="table table-striped table-hover"
+            <table
+                v-if="novedadesFiltradas.length > 0"
+                class="table table-striped table-hover"
+            >
+                <thead>
+                    <tr>
+                        <th class="col-1" colspan="1">Consecutivo</th>
+                        <th class="col-1" colspan="1">Fecha</th>
+                        <th class="col-1" colspan="1">Legajo</th>
+                        <th class="col-1" colspan="1">Apellido</th>
+                        <th class="col-1" colspan="1">Nombres</th>
+                        <th class="col-1" colspan="1">Base</th>
+                        <th class="col-1" colspan="1">Turno</th>
+                        <th class="col-1" colspan="1">Franco</th>
+                        <th class="col-1" colspan="1">Novedad</th>
+                        <th class="col-1" colspan="1">Fecha de Baja</th>
+                        <th class="col-1" colspan="1">Fecha de Alta</th>
+                        <th class="col-1">Ver</th>
+                        <th class="col-1">Borrar</th>
+                    </tr>
+                </thead>
+                <tbody
+                    v-for="(novedad, index) in novedadesFiltradas"
+                    :key="index"
+                    @dblclick="
+                        novedad.novedadInactiva ? null : edit(novedad._id)
+                    "
+                    @click="viewDetail(novedad)"
+                >
+                    <tr
+                        v-if="checkboxTodas || !novedad.novedadInactiva"
+                        class="Small shadow"
+                        :class="{
+                            'fila-oscura': novedad.novedadInactiva,
+                        }"
                     >
-                        <thead>
-                            <tr>
-                                <th class="col-1" colspan="1">Consecutivo</th>
-                                <th class="col-1" colspan="1">Fecha</th>
-                                <th class="col-1" colspan="1">Legajo</th>
-                                <th class="col-1" colspan="1">Apellido</th>
-                                <th class="col-1" colspan="1">Nombres</th>
-                                <th class="col-1" colspan="1">Base</th>
-                                <th class="col-1" colspan="1">Turno</th>
-                                <th class="col-1" colspan="1">Franco</th>
-                                <th class="col-1" colspan="1">Novedad</th>
-                                <th class="col-1" colspan="1">Fecha de Baja</th>
-                                <th class="col-1" colspan="1">Fecha de Alta</th>
-                                <th class="col-1">Ver</th>
-                                <th class="col-1">Borrar</th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            v-for="(novedad, index) in novedadesFiltradas"
-                            :key="index"
-                            @dblclick="
-                                novedad.novedadInactiva
-                                    ? null
-                                    : edit(novedad._id)
-                            "
-                            @click="viewDetail(novedad)"
-                        >
-                            <tr
-                                v-if="checkboxTodas || !novedad.novedadInactiva"
-                                class="Small shadow"
-                                :class="{
-                                    'fila-oscura': novedad.novedadInactiva,
-                                }"
+                        <td class="col-1">{{ novedad._id }}</td>
+                        <td class="col-1">
+                            {{
+                                novedad.fecha
+                                    ? new Date(
+                                          novedad.fecha + " 12:00"
+                                      ).toLocaleDateString()
+                                    : new Date(
+                                          novedad.fechaBaja + " 12:00"
+                                      ).toLocaleDateString()
+                            }}
+                        </td>
+                        <td class="col-1">{{ novedad.legajo }}</td>
+                        <td class="col-1">{{ novedad.apellido }}</td>
+                        <td class="col-2">{{ novedad.nombres }}</td>
+                        <td class="col-1">{{ novedad.base }}</td>
+                        <td class="col-1">
+                            {{
+                                novedad.turno +
+                                " / " +
+                                dia_laboral(
+                                    obtenerNumeroDia(novedad.franco),
+                                    today.getDay()
+                                )
+                            }}
+                        </td>
+                        <td class="col-1">{{ novedad.franco }}</td>
+                        <td class="col-1">{{ novedad.tipoNovedad }}</td>
+                        <td class="col-1">
+                            {{
+                                new Date(
+                                    novedad.fechaBaja + " 12:00"
+                                ).toLocaleDateString()
+                            }}
+                        </td>
+                        <td class="col-1">
+                            {{
+                                !novedad.HNA
+                                    ? new Date(
+                                          novedad.fechaAlta + " 12:00"
+                                      ).toLocaleDateString()
+                                    : ""
+                            }}
+                        </td>
+                        <td class="col-1">
+                            <i
+                                v-if="!novedad.novedadInactiva"
+                                class="material-icons cursor-hand"
+                                @click="edit(novedad._id)"
                             >
-                                <td class="col-1">{{ novedad._id }}</td>
-                                <td class="col-1">
+                                edit_note
+                            </i>
+                        </td>
+                        <td class="col-1">
+                            <i
+                                v-if="!novedad.novedadInactiva"
+                                class="material-icons cursor-hand rojo"
+                                @click="deleteNovedad(novedad._id, index)"
+                                >delete_forever</i
+                            >
+                        </td>
+                    </tr>
+                    <tr v-if="novedad.viewDetail">
+                        <td colspan="12">
+                            <div class="row" v-if="novedad.remplazo[0]">
+                                <h6 class="col-1">Releva:</h6>
+                                <p class="col-3">
                                     {{
-                                        novedad.fecha
-                                            ? new Date(
-                                                  novedad.fecha + " 12:00"
-                                              ).toLocaleDateString()
-                                            : new Date(
-                                                  novedad.fechaBaja + " 12:00"
-                                              ).toLocaleDateString()
+                                        novedad.remplazo[
+                                            novedad.remplazo.length - 1
+                                        ].apellido +
+                                        " " +
+                                        novedad.remplazo[
+                                            novedad.remplazo.length - 1
+                                        ].nombres
                                     }}
-                                </td>
-                                <td class="col-1">{{ novedad.legajo }}</td>
-                                <td class="col-1">{{ novedad.apellido }}</td>
-                                <td class="col-2">{{ novedad.nombres }}</td>
-                                <td class="col-1">{{ novedad.base }}</td>
-                                <td class="col-1">
+                                </p>
+                                <h6 class="col-1">Desde:</h6>
+                                <p class="col-1">
                                     {{
-                                        novedad.turno +
-                                        " / " +
-                                        dia_laboral(
-                                            obtenerNumeroDia(novedad.franco),
-                                            today.getDay()
+                                        formatearFecha(
+                                            novedad.remplazo[
+                                                novedad.remplazo.length - 1
+                                            ].inicioRelevo
                                         )
                                     }}
-                                </td>
-                                <td class="col-1">{{ novedad.franco }}</td>
-                                <td class="col-1">{{ novedad.tipoNovedad }}</td>
-                                <td class="col-1">
+                                </p>
+                                <h6 class="col-1">Hasta:</h6>
+                                <p class="col-1">
                                     {{
-                                        new Date(
-                                            novedad.fechaBaja + " 12:00"
-                                        ).toLocaleDateString()
+                                        formatearFecha(
+                                            novedad.remplazo[
+                                                novedad.remplazo.length - 1
+                                            ].finRelevo
+                                        )
                                     }}
-                                </td>
-                                <td class="col-1">
-                                    {{
-                                        !novedad.HNA
-                                            ? new Date(
-                                                  novedad.fechaAlta + " 12:00"
-                                              ).toLocaleDateString()
-                                            : ""
-                                    }}
-                                </td>
-                                <td class="col-1">
-                                    <i
-                                        v-if="!novedad.novedadInactiva"
-                                        class="material-icons cursor-hand"
-                                        @click="edit(novedad._id)"
-                                    >
-                                        edit_note
-                                    </i>
-                                </td>
-                                <td class="col-1">
-                                    <i
-                                        v-if="!novedad.novedadInactiva"
-                                        class="material-icons cursor-hand rojo"
-                                        @click="
-                                            deleteNovedad(novedad._id, index)
-                                        "
-                                        >delete_forever</i
-                                    >
-                                </td>
-                            </tr>
-                            <tr v-if="novedad.viewDetail">
-                                <td colspan="12">
-                                    <div class="row" v-if="novedad.remplazo[0]">
-                                        <h6 class="col-1">Releva:</h6>
-                                        <p class="col-3">
-                                            {{
-                                                novedad.remplazo[
-                                                    novedad.remplazo.length - 1
-                                                ].apellido +
-                                                " " +
-                                                novedad.remplazo[
-                                                    novedad.remplazo.length - 1
-                                                ].nombres
-                                            }}
-                                        </p>
-                                        <h6 class="col-1">Desde:</h6>
-                                        <p class="col-1">
-                                            {{
-                                                formatearFecha(
-                                                    novedad.remplazo[
-                                                        novedad.remplazo
-                                                            .length - 1
-                                                    ].inicioRelevo
-                                                )
-                                            }}
-                                        </p>
-                                        <h6 class="col-1">Hasta:</h6>
-                                        <p class="col-1">
-                                            {{
-                                                formatearFecha(
-                                                    novedad.remplazo[
-                                                        novedad.remplazo
-                                                            .length - 1
-                                                    ].finRelevo
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                    <div v-else>
-                                        <h6>Sin Relevo</h6>
-                                    </div>
-                                    <div v-if="novedad.detalle">
-                                        <h6>Detalle:</h6>
-                                        <p>{{ novedad.detalle }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+                                </p>
+                            </div>
+                            <div v-else>
+                                <h6>Sin Relevo</h6>
+                            </div>
+                            <div v-if="novedad.detalle">
+                                <h6>Detalle:</h6>
+                                <p>{{ novedad.detalle }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
@@ -395,6 +404,7 @@ export default defineComponent({
             checkboxDescubierto: false,
             checkboxFinalizadas: false,
             checkboxTodas: false,
+            mostrarModalSearch: false,
             username: "" as string,
             today: new Date(),
             search: "" as string,
@@ -457,6 +467,12 @@ export default defineComponent({
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
+        },
+        abrirModal() {
+            this.mostrarModalSearch = true;
+        },
+        cerrarModal() {
+            this.mostrarModalSearch = false;
         },
         novedadesIndexada(novedades: Novedad[]) {
             return novedades.reduce(
@@ -622,7 +638,6 @@ export default defineComponent({
             this.novedadesFiltradas = novedadesFiltradas;
             this.ordenarNovedades();
         },
-        
     },
     created() {
         try {
@@ -634,8 +649,7 @@ export default defineComponent({
         }
     },
     name: "App",
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>

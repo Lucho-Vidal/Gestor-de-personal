@@ -1,12 +1,13 @@
 import { IPersonal } from "./IPersonal";
-import { Vueltas } from "./ITurno";
+import { ITurno } from "./ITurno";
 
 export interface Ordenamiento{
     _id: string;
     fecha:string;
     tipo: string;
     personal: IPersonal;
-    trenes: Array<Vueltas>,
+    // trenes: Array<Vueltas>,
+    turno: ITurno;
     detalle: string;
     
 }

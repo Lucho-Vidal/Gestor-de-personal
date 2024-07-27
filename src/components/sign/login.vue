@@ -1,5 +1,5 @@
 <template>
-    <main class="container">
+    <main>
         <div
             class="alert row"
             :class="[
@@ -26,7 +26,7 @@
             name="form"
             id="form"
             v-on:submit.prevent="procesar()"
-            class="d-flex justify-content-center mb-5"
+            class="d-flex justify-content-center"
         >
             <div class="input-group-text col-12 col-md-6 row p-3">
                 <h1 class="mb-4 text-center">Inicio de Sesión</h1>
@@ -167,13 +167,12 @@ export default defineComponent({
 </script>
 
 <style>
-main {
-    margin-top: 5rem;
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
+    main {
+        margin-top: 5rem;
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 </style>

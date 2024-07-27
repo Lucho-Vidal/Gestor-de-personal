@@ -72,6 +72,8 @@ export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprim
     try {
         turnosAImprimir.forEach((turno: ITurno) => {
             const personal = filtroPersonal(turno.turno,fecha,personales);
+            // console.log(personal);
+            
             novedades.forEach((novedad: Novedad) => {
                 const {
                     legajo,
@@ -212,7 +214,7 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
     try {
         let titular: IPersonal;
         turno = turno.trim();
-
+        let titus: IPersonal[];
         if (
             turno.indexOf(".") !== -1 &&
             !turno.toLowerCase().includes("prog")
@@ -223,18 +225,36 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
             const franco = dia_laboral(diaLab, fecha.getDay());
 
             [titular] = personales.filter((personal) => {
+                // console.log("DEBUG personal.especialidad",personal.especialidad);
+                if(personal.especialidad.toLowerCase().includes("cond")) {
+                    // console.log("DEBUG personal",personal);
+                }
                 return (
                     personal.turno === diag &&
                     Number(personal.franco) === franco
                 );
             });
+            titus = personales.filter((personal) => {
+                return (
+                    personal.turno === diag &&
+                    Number(personal.franco) === franco
+                );
+            });
+            
         } else {
             [titular] = personales.filter(
                 (personal) =>
                     personal.turno.toLowerCase() === turno.toLowerCase()
             );
+            titus = personales.filter(
+                (personal) =>
+                    personal.turno.toLowerCase() === turno.toLowerCase()
+            );
         }
-
+        // console.log("DEBUG titular",titular);
+        // console.log("DEBUG personales",personales);
+        // console.log("DEBUG titus",titus);
+        
         return {
             turno: turno,
             legajo: titular.legajo || 0,

@@ -8,223 +8,241 @@
                 Fecha: {{ days[today.getDay()] }}
                 {{ today.toLocaleDateString() }}
             </p> -->
-            <div class="d-flex">
+            <div class="d-flex justify-content-end">
                 <router-link
-                    class="btn btn-primary d-flex end mx-3"
+                    class="btn btn-primary d-flex end"
                     to="/newPersonal"
                     >Nuevo Personal</router-link
                 >
                 <router-link
-                    class="btn btn-success d-flex end"
+                    class="btn btn-success d-flex end mx-3"
                     to="/addPersonales"
                     >Cargar desde Excel</router-link
                 >
+                <button class="btn btn-warning" @click.prevent="abrirModal()">
+                    Filtrar Personal
+                </button>
             </div>
-            <details>
-                <summary>Filtros:</summary>
-                <div class="my-2">
-                    <input
-                        class="col-2 gap mx-3 rounded-3"
-                        type="number"
-                        placeholder="Buscar Legajo"
-                        autofocus
-                        v-model="searchLegajo"
-                        v-on:change="filtrarPersonales()"
-                    />
-                    <input
-                        class="col-3 gap rounded"
-                        type="text"
-                        placeholder="Buscar por apellido y/o nombre"
-                        v-model="search"
-                        v-on:change="filtrarPersonales()"
-                    />
-                    <input
-                        class="col-3 gap col"
-                        type="text"
-                        placeholder="Buscar por turno"
-                        autofocus
-                        v-model="searchTurno"
-                        v-on:change="filtrarPersonales()"
-                    />
-                    <h6>Filtro por Dotación:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="PC"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        PC
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LLV"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        LLV
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="TY"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        TY
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LP"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        LP
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="K5"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        K5
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="RE"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        RE
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="CÑ"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        CÑ
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="AK"
-                            v-model="checkboxDotacion"
-                            @change="filtrarPersonales()"
-                        />
-                        AK
-                    </label>
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filtrar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-2">
+                                <input
+                                    class="col-2 gap rounded-3"
+                                    type="number"
+                                    placeholder="Buscar Legajo"
+                                    autofocus
+                                    v-model="searchLegajo"
+                                    v-on:change="filtrarPersonales()"
+                                />
+                                <input
+                                    class="col-3 gap mx-3 rounded"
+                                    type="text"
+                                    placeholder="Buscar por apellido y/o nombre"
+                                    v-model="search"
+                                    v-on:change="filtrarPersonales()"
+                                />
+                                <input
+                                    class="col-3 gap col rounded"
+                                    type="text"
+                                    placeholder="Buscar por turno"
+                                    autofocus
+                                    v-model="searchTurno"
+                                    v-on:change="filtrarPersonales()"
+                                />
+                                <h6>Filtro por Dotación:</h6>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="PC"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    PC
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="LLV"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    LLV
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="TY"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    TY
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="LP"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    LP
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="K5"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    K5
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="RE"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    RE
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="CÑ"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    CÑ
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="AK"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    AK
+                                </label>
+                            </div>
+                            <div class="my-3">
+                                <h6>Filtro por Especialidad:</h6>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Conductor Electrico"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Conductor eléctrico
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Conductor diesel"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Conductor Diesel
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Ayudante habilitado"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Ayudante Habilitado
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Ayudante conductor"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Ayudante Conductor
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Guardatren Electrico"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Guarda Tren Electrico
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Guardatren diesel"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Guarda Tren Diesel
+                                </label>
+                            </div>
+                            <div class="my-3">
+                                <h6>Filtro por Turno:</h6>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="turno"
+                                        v-model="checkboxTurno"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Turnos
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="PROG"
+                                        v-model="checkboxTurno"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Programas
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="ciclo"
+                                        v-model="checkboxTurno"
+                                        @change="filtrarPersonales()"
+                                    />
+                                    Ciclos
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="my-3">
-                    <h6>Filtro por Especialidad:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Conductor eléctrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Conductor Diesel
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante habilitado"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Ayudante Habilitado
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante conductor"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Ayudante Conductor
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Guarda Tren Electrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrarPersonales()"
-                        />
-                        Guarda Tren Diesel
-                    </label>
-                </div>
-                <div class="my-3">
-                    <h6>Filtro por Turno:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="turno"
-                            v-model="checkboxTurno"
-                            @change="filtrarPersonales()"
-                        />
-                        Turnos
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="PROG"
-                            v-model="checkboxTurno"
-                            @change="filtrarPersonales()"
-                        />
-                        Programas
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="ciclo"
-                            v-model="checkboxTurno"
-                            @change="filtrarPersonales()"
-                        />
-                        Ciclos
-                    </label>
-                </div>
-            </details>
+            </div>
             <h3 v-if="personalesFiltrados.length == 0">
                 No se encontró ningún personal
             </h3>
@@ -350,6 +368,7 @@ export default defineComponent({
             checkboxDotacion: [] as string[],
             checkboxEspecialidad: [] as string[],
             checkboxTurno: [] as string[],
+            mostrarModalSearch: false,
             today: new Date(),
             search: "" as string,
             searchTurno: "" as string,
@@ -410,6 +429,12 @@ export default defineComponent({
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
+        },
+        abrirModal() {
+            this.mostrarModalSearch = true;
+        },
+        cerrarModal() {
+            this.mostrarModalSearch = false;
         },
         viewDetail(personal: IPersonal) {
             if (personal.viewDetail) {
@@ -477,7 +502,10 @@ export default defineComponent({
 
                 cEspecialidad.forEach((especialidad: string) => {
                     for (let i = 0; i < auxPersonales.length; i++) {
-                        if (auxPersonales[i].especialidad == especialidad) {
+                        if (
+                            auxPersonales[i].especialidad.toLowerCase() ==
+                            especialidad.toLowerCase()
+                        ) {
                             this.personalesFiltrados.push(auxPersonales[i]);
                         }
                     }

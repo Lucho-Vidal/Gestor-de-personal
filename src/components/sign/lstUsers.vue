@@ -4,8 +4,8 @@
             <h2 class="d-flex justify-content-center m-3">
                 Lista de usuarios habilitados
             </h2>
-            <div class="d-flex">
-                <a class="btn btn-primary d-flex end" href="/newUser"
+            <div class="d-flex  justify-content-end">
+                <a class="btn btn-primary" href="/newUser"
                     >Nuevo Usuario</a
                 >
             </div>

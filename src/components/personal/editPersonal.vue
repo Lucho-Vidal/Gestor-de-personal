@@ -1,6 +1,6 @@
 <template>
-        <main class="container">
-            <h1 class="d-flex justify-content-center m-3">
+        <main>
+            <h1>
                 Editar Personal
             </h1>
             <div class="alert alert-danger" role="alert" v-if="alerta">
@@ -9,10 +9,9 @@
                 {{ alerta }}
             </div>
             <!-- <modalBuscarPersonal:personales="personales" /> -->
-
-
-            <form @submit.prevent="editPersonal()" class="row">
-                <div class="row">
+            <form 
+                @submit.prevent="editPersonal()" >
+                <div class="justify-content-between row">
                     <div class="col-2">
                         <label for="legajo"></label>
                         Legajo
@@ -51,7 +50,7 @@
                         />
                     </div>
                 </div>
-                <div class="row">
+                <div class="justify-content-between row">
                     
                     <div class="col-1">
                         <label for="base">Base </label>
@@ -131,7 +130,10 @@
                     </div>
                 </div>
 
-                <div class="row" v-if="personal.especialidad.includes('Conductor') || personal.especialidad.includes('Ayudante')" >
+                <div class="justify-content-between row" 
+                    v-if="
+                        personal.especialidad.includes('Conductor') || 
+                        personal.especialidad.includes('Ayudante')" >
                     <h5>Conocimientos</h5>
                     <div class="col-1">
                         <label for="turno"></label>
@@ -187,10 +189,10 @@
                         ></textarea>
                     </div>
                 </div>
-                                
-
-                <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</i>
+                <div>
+                    <button class="btn btn-primary col-1 m-2">Guardar</button>
+                    <button class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</button>
+                </div>
             </form>
             
         </main>
@@ -294,30 +296,21 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 87vh;
-}
-
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.8);
-}
-.Modal {
-    position: fixed;
-
-    transform: translate((-50%, -50%));
-    background: #fff;
-    padding: 70px;
-    border-radius: 15px;
-    box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
-    z-index: 101;
-}
-
-main {
     margin-top: 5rem;
+    /* margin-left: 300px; */
+}
+h1{
+    display: flex;
+    justify-content: center;
+}
+form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 300px;
+    width: 75%;
+}
+row{
+    margin-left: 200px;
 }
 </style>

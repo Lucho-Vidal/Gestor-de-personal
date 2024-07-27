@@ -1,21 +1,31 @@
 <template>
-
-            <main>
-                <div class="container-fluid px-4">
-                    <h2 class="d-flex justify-content-center m-3">
-                        Cambios de turno del Personal de Abordo
-                    </h2>
-                    <div class="d-flex">
-                        <a
-                            class="btn btn-primary d-flex end"
-                            href="/newCambioTurno"
-                            >Nuevo cambio de Turno</a
-                        >
-                    </div>
-
-                    <details>
-                        <summary>Filtros:</summary>
-                        <div class="my-3">
+    <main>
+        <div class="container-fluid px-4">
+            <h2 class="d-flex justify-content-center m-3">
+                Cambios de turno del Personal de Abordo
+            </h2>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" @click="$router.push('/newCambioTurno')">
+                    Nuevo cambio de Turno
+                </button>
+                <button class="btn btn-warning mx-3" @click="abrirModal()">
+                    Filtrar turnos
+                </button>
+            </div>
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filtrar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
                             <input
                                 class="col-3 gap rounded"
                                 type="text"
@@ -36,7 +46,6 @@
                                 />
                                 Solo hoy
                             </label>
-                            
                         </div>
                         <div class="my-3">
                             <h6>Filtro por Especialidad:</h6>
@@ -183,99 +192,105 @@
                                 AK
                             </label>
                         </div>
-                    </details>
-                    <h3 v-if="cambiosTurnosFiltrados.length == 0">
-                        No se encontró ninguna novedad con los requerimientos
-                        especificados.
-                    </h3>
-
-                    <table
-                        v-if="cambiosTurnosFiltrados.length > 0"
-                        class="table table-striped table-hover"
-                    >
-                        <thead>
-                            <tr>
-                                <th class="col-1" colspan="1">Consecutivo - Fecha</th>
-
-                                <th class="col-1" colspan="1">Legajo</th>
-                                <th class="col-1" colspan="1">Apellido</th>
-                                <th class="col-1" colspan="1">Nombres</th>
-                                <th class="col-1" colspan="1">Base</th>
-                                <th class="col-1" colspan="1">Turno</th>
-                                <th class="col-1" colspan="1">Franco</th>
-                                
-                                <th class="col-1">Borrar</th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            v-for="(cambio, index) in cambiosTurnosFiltrados"
-                            :key="index"
-                        >
-                            <tr
-                                class="Small shadow"
-                            >
-                                <td class="col-1"  rowspan="2">{{ cambio._id +" - "+ new Date(cambio.fechaCambio + " 12:00").toLocaleDateString()   }}</td>
-                                
-                                <td class="col-1">{{ cambio.personal[0].legajo }}</td>
-                                <td class="col-1">{{ cambio.personal[0].apellido }}</td>
-                                <td class="col-1">{{ cambio.personal[0].nombres }}</td>
-                                <td class="col-1">{{ cambio.personal[0].base }}</td>
-                                <td class="col-1">
-                                    {{
-                                        cambio.personal[0].turno +
-                                        " / " +
-                                        dia_laboral(
-                                            obtenerNumeroDia(cambio.personal[0].franco),
-                                            today.getDay()
-                                        )
-                                    }}
-                                </td>
-                                <td class="col-1">{{ cambio.personal[0].franco }}</td>
-                                <td class="col-1" rowspan="2">
-                                    <i
-                                        class="material-icons cursor-hand rojo"
-                                        
-                                        @click="
-                                            deleteCambio(cambio._id, index)
-                                        "
-                                        >delete_forever</i
-                                    >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-1">{{ cambio.personal[1].legajo }}</td>
-                                <td class="col-1">{{ cambio.personal[1].apellido }}</td>
-                                <td class="col-1">{{ cambio.personal[1].nombres }}</td>
-                                <td class="col-1">{{ cambio.personal[1].base }}</td>
-                                <td class="col-1">
-                                    {{
-                                        cambio.personal[1].turno +
-                                        " / " +
-                                        dia_laboral(
-                                            obtenerNumeroDia(cambio.personal[1].franco),
-                                            today.getDay()
-                                        )
-                                    }}
-                                </td>
-                                <td class="col-1">{{ cambio.personal[1].franco }}</td>
-                                
-                            </tr>
-                            
-                        </tbody>
-                    </table>
+                    </div>
                 </div>
-            </main>
+            </div>
+            <h3 v-if="cambiosTurnosFiltrados.length == 0">
+                No se encontró ninguna novedad con los requerimientos
+                especificados.
+            </h3>
+
+            <table
+                v-if="cambiosTurnosFiltrados.length > 0"
+                class="table table-striped table-hover"
+            >
+                <thead>
+                    <tr>
+                        <th class="col-1" colspan="1">Consecutivo - Fecha</th>
+
+                        <th class="col-1" colspan="1">Legajo</th>
+                        <th class="col-1" colspan="1">Apellido</th>
+                        <th class="col-1" colspan="1">Nombres</th>
+                        <th class="col-1" colspan="1">Base</th>
+                        <th class="col-1" colspan="1">Turno</th>
+                        <th class="col-1" colspan="1">Franco</th>
+
+                        <th class="col-1">Borrar</th>
+                    </tr>
+                </thead>
+                <tbody
+                    v-for="(cambio, index) in cambiosTurnosFiltrados"
+                    :key="index"
+                >
+                    <tr class="Small shadow">
+                        <td class="col-1" rowspan="2">
+                            {{
+                                cambio._id +
+                                " - " +
+                                new Date(
+                                    cambio.fechaCambio + " 12:00"
+                                ).toLocaleDateString()
+                            }}
+                        </td>
+
+                        <td class="col-1">{{ cambio.personal[0].legajo }}</td>
+                        <td class="col-1">{{ cambio.personal[0].apellido }}</td>
+                        <td class="col-1">{{ cambio.personal[0].nombres }}</td>
+                        <td class="col-1">{{ cambio.personal[0].base }}</td>
+                        <td class="col-1">
+                            {{
+                                cambio.personal[0].turno +
+                                " / " +
+                                dia_laboral(
+                                    obtenerNumeroDia(cambio.personal[0].franco),
+                                    today.getDay()
+                                )
+                            }}
+                        </td>
+                        <td class="col-1">{{ cambio.personal[0].franco }}</td>
+                        <td class="col-1" rowspan="2">
+                            <i
+                                class="material-icons cursor-hand rojo"
+                                @click="deleteCambio(cambio._id, index)"
+                                >delete_forever</i
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-1">{{ cambio.personal[1].legajo }}</td>
+                        <td class="col-1">{{ cambio.personal[1].apellido }}</td>
+                        <td class="col-1">{{ cambio.personal[1].nombres }}</td>
+                        <td class="col-1">{{ cambio.personal[1].base }}</td>
+                        <td class="col-1">
+                            {{
+                                cambio.personal[1].turno +
+                                " / " +
+                                dia_laboral(
+                                    obtenerNumeroDia(cambio.personal[1].franco),
+                                    today.getDay()
+                                )
+                            }}
+                        </td>
+                        <td class="col-1">{{ cambio.personal[1].franco }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
-import { defineComponent} from "vue";
+import { defineComponent } from "vue";
 import { Novedad } from "../../interfaces/INovedades";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
-import { deleteCambioTurno, getCambioTurnos } from "../../services/cambioTurnoService";
-import { CambioTurno } from '../../interfaces/ICambioTurno';
+import {
+    deleteCambioTurno,
+    getCambioTurnos,
+} from "../../services/cambioTurnoService";
+import { CambioTurno } from "../../interfaces/ICambioTurno";
 
 export default defineComponent({
     data() {
@@ -286,6 +301,7 @@ export default defineComponent({
             checkboxEspecialidad: [] as string[],
             checkboxDescubierto: false,
             checkboxHoy: true,
+            mostrarModalSearch: false,
             username: "" as string,
             today: new Date(),
             search: "" as string,
@@ -342,6 +358,12 @@ export default defineComponent({
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
+        abrirModal() {
+            this.mostrarModalSearch = true;
+        },
+        cerrarModal() {
+            this.mostrarModalSearch = false;
+        },
         esFechaIgual(dateMayor: string, dateMenor: string) {
             if (dateMayor && dateMenor) {
                 const formattedDateMayor = new Date(dateMayor)
@@ -382,7 +404,7 @@ export default defineComponent({
                 return "";
             }
         },
-        ordenarDescendente(list:any[]) {
+        ordenarDescendente(list: any[]) {
             return list.sort((a: any, b: any) => (b._id > a._id ? 1 : -1));
         },
         edit(id: number) {
@@ -475,7 +497,9 @@ export default defineComponent({
                     (cambio: CambioTurno) => {
                         return (
                             cDotacion.includes(cambio.personal[0].base) &&
-                            cEspecialidad.includes(cambio.personal[0].especialidad) &&
+                            cEspecialidad.includes(
+                                cambio.personal[0].especialidad
+                            ) &&
                             (
                                 cambio.personal[0].apellido.toLowerCase() +
                                 " " +
@@ -488,15 +512,20 @@ export default defineComponent({
                     }
                 );
             }
-            if(this.checkboxHoy){
-                cambiosTurnosFiltrados = cambiosTurnosFiltrados.filter(cambio=>{
-                    return this.esFechaIgual(cambio.fechaCambio,this.today.toString())
-                })
+            if (this.checkboxHoy) {
+                cambiosTurnosFiltrados = cambiosTurnosFiltrados.filter(
+                    (cambio) => {
+                        return this.esFechaIgual(
+                            cambio.fechaCambio,
+                            this.today.toString()
+                        );
+                    }
+                );
             }
-            this.cambiosTurnosFiltrados = this.ordenarDescendente(cambiosTurnosFiltrados);
-
+            this.cambiosTurnosFiltrados = this.ordenarDescendente(
+                cambiosTurnosFiltrados
+            );
         },
-        
     },
     created() {
         try {
@@ -508,8 +537,7 @@ export default defineComponent({
         }
     },
     name: "App",
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
@@ -537,10 +565,10 @@ main {
 .gris {
     color: #aaa;
 }
-.grisClaro{
+.grisClaro {
     background: #dfdfdf;
 }
-.grisOscuro{
+.grisOscuro {
     color: #7b7b7b;
 }
 </style>

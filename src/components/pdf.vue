@@ -3,8 +3,8 @@
         <embed
             :src="rutaPdf"
             type="application/pdf"
-            width="100%"
-            height="100%"
+            width="101%"
+            height="100.43%"
         />
     </main>
 </template>
@@ -78,15 +78,14 @@ export default defineComponent({
 });
 </script>
 <style>
-.body {
+/* .body {
     position: relative;
     padding: 3rem 0;
     min-height: 100vh;
-}
+} */
 main {
-    height: 89vh;
-    
-  margin-top: 0rem;
+    height: calc(99vh - 60px);
+    margin-top: 60px;
 
 }
 </style>

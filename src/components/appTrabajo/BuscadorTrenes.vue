@@ -5,13 +5,7 @@
                         Buscador de trenes
                     </h2>
                     <div class="d-flex row">
-                        <div class="row justify-content-end">
-                            <!-- <p class="col">
-                            Fecha: {{ days[today.getDay()] }}
-                            {{ today.toLocaleDateString() }}
-                        </p> -->
-                        </div>
-                        <div class="row justify-content-between">
+                        <div class="row justify-content-evenly">
                             <input
                                 class="col-3"
                                 type="text"
@@ -41,7 +35,7 @@
                             />
                         </div>
 
-                        <div class="d-flex flex-wrap my-3">
+                        <div class="d-flex flex-wrap justify-content-center my-3">
                             <h6>Aplicar circular:</h6>
                             <div
                                 v-for="(circular, index) in circulares"
@@ -242,6 +236,28 @@ export default defineComponent({
                     this.circularSeleccionada,
                     parseInt(this.tren)
                 );
+                // Define un objeto de prioridad para las especialidades
+                const especialidadPrioridad: { [key: string]: number } = {
+                    "Conductor electrico": 1,
+                    "Conductor diesel": 2,
+                    "Ayudante habilitado": 3, // Equivalente a conductor
+                    "Ayudante conductor": 4,
+                    "Guardatren electrico": 5,
+                    "Guardatren diesel": 6,
+                };
+
+                // Función de comparación personalizada
+                function compararEspecialidades(a: ITurno, b: ITurno): number {
+                    const prioridadA = especialidadPrioridad[a.especialidad];
+                    const prioridadB = especialidadPrioridad[b.especialidad];
+
+                    return prioridadA - prioridadB;
+                }
+
+                // Ordena el array utilizando la función de comparación
+                this.turnosAImprimir.sort(compararEspecialidades);
+
+                
                 if (this.turnosAImprimir.length > 0) {
                     this.horarios = filtroItinerario(
                         itinerario,

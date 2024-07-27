@@ -1,351 +1,346 @@
 <template>
-        <main class="container">
-            <h1 class="d-flex justify-content-center m-3">Cambio de turno</h1>
-
-            <div
-                class="alert row"
-                :class="[
-                    message.status == 'danger'
-                        ? 'alert-danger'
-                        : message.status == 'success'
-                        ? 'alert-success'
-                        : message.status == 'warning'
-                        ? 'alert-warning'
-                        : '',
-                ]"
-                role="alert"
-                v-if="message.activo"
-            >
-                <h4 class="alert-heading">{{ message.title }}</h4>
-                <hr />
-                {{ message.message }}
-                <!-- <a
+    <main>
+        <h1>Cambio de turno</h1>
+        <div
+            class="alert row"
+            :class="[
+                message.status == 'danger'
+                    ? 'alert-danger'
+                    : message.status == 'success'
+                    ? 'alert-success'
+                    : message.status == 'warning'
+                    ? 'alert-warning'
+                    : '',
+            ]"
+            role="alert"
+            v-if="message.activo"
+        >
+            <h4 class="alert-heading">{{ message.title }}</h4>
+            <hr />
+            {{ message.message }}
+            <!-- <a
                     v-if="idNovedad !== 0"
                     class="btn btn-danger col-2"
                     @click="$router.push(`/editNovedades/${idNovedad}`)"
                     >Ir a la novedad</a
                 > -->
-            </div>
-            <!-- Modal de búsqueda -->
+        </div>
+        <!-- Modal de búsqueda -->
 
-            <div>
-                
+        <div>
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Buscar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input
+                                ref="inputSearch"
+                                type="text"
+                                class="form-control my-3"
+                                placeholder="Ingrese Nombre o Apellido"
+                                list="personales"
+                                v-model="search"
+                                autofocus
+                                @keyup="
+                                    searchPersonal(
+                                        selectRemplazo,
+                                        cambioTurno.personal[0].base,
+                                        cambioTurno.personal[0].especialidad
+                                    )
+                                "
+                            />
 
-                <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Buscar personales</h5>
-                                <button
-                                    type="button"
-                                    class="close"
-                                    @click="cerrarModal"
-                                >
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <input
-                                    ref="inputSearch"
-                                    type="text"
-                                    class="form-control my-3"
-                                    placeholder="Ingrese Nombre o Apellido"
-                                    list="personales"
-                                    v-model="search"
-                                    autofocus
-                                    @keyup="
-                                        searchPersonal(
-                                            selectRemplazo,
-                                            cambioTurno.personal[0].base,
-                                            cambioTurno.personal[0].especialidad
-                                        )
-                                    "
-                                />
-
-                                <div class="table-container">
-                                    <table
-                                        class="table table-hover"
-                                        v-if="search"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th>Legajo</th>
-                                                <th>Apellido</th>
-                                                <th>Nombre</th>
-                                                <th>Dotacion</th>
-                                                <th>Turno</th>
-                                                <th>Franco</th>
-                                                <th>Especialidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                v-for="(
-                                                    personal, index
-                                                ) in personalEncontrado"
-                                                :key="index"
-                                                @click="
-                                                    selectPersonal(personal)
-                                                "
-                                            >
-                                                <td class="col-1">
-                                                    {{ personal.legajo }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.apellido }}
-                                                </td>
-                                                <td class="col-2">
-                                                    {{ personal.nombres }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.dotacion }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ days[personal.franco] }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.especialidad }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="table-container">
+                                <table class="table table-hover" v-if="search">
+                                    <thead>
+                                        <tr>
+                                            <th>Legajo</th>
+                                            <th>Apellido</th>
+                                            <th>Nombre</th>
+                                            <th>Dotacion</th>
+                                            <th>Turno</th>
+                                            <th>Franco</th>
+                                            <th>Especialidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(personal,
+                                            index) in personalEncontrado"
+                                            :key="index"
+                                            @click="selectPersonal(personal)"
+                                        >
+                                            <td class="col-1">
+                                                {{ personal.legajo }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.apellido }}
+                                            </td>
+                                            <td class="col-2">
+                                                {{ personal.nombres }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.dotacion }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.turno }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ days[personal.franco] }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.especialidad }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Formulario -->
-            <form
-                @submit.prevent="saveNovedad()"
-                @keydown.enter.prevent=""
-                class="row"
-            >
-                <div class="row">
-                    <div class="col-3">
-                        <label for="fechaBaja"></label>
-                        Fecha del cambio
-                        <input
-                            required
-                            class="form-control mb-3"
-                            type="Date"
-                            name="fechaBaja"
-                            v-model="cambioTurno.fechaCambio"
-                        />
-                    </div>
+        </div>
+        <!-- Formulario -->
+        <form @submit.prevent="saveNovedad()" @keydown.enter.prevent="">
+            <div class="justify-content-between row">
+                <div class="col-3">
+                    <label for="fechaBaja"></label>
+                    Fecha del cambio
+                    <input
+                        required
+                        class="form-control mb-3"
+                        type="Date"
+                        name="fechaBaja"
+                        v-model="cambioTurno.fechaCambio"
+                    />
                 </div>
-                <div>
-                    <button class="btn btn-success" @click.prevent="abrirModal(false)">
-                        Buscar Personal
-                    </button>
+            </div>
+            <div>
+                <button
+                    class="btn btn-success"
+                    @click.prevent="abrirModal(false)"
+                >
+                    Buscar Personal
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <label for="legajo"></label>
+                    Legajo
+                    <input
+                        class="form-control mb-3"
+                        placeholder="Ingrese Legajo"
+                        type="number"
+                        name="legajo"
+                        autofocus
+                        required
+                        @change="searchPersonalPorLegajo()"
+                        v-model="cambioTurno.personal[0].legajo"
+                    />
                 </div>
-                <div class="row">
-                    <div class="col-2">
-                        <label for="legajo"></label>
-                        Legajo
-                        <input
-                            class="form-control mb-3"
-                            placeholder="Ingrese Legajo"
-                            type="number"
-                            name="legajo"
-                            autofocus
-                            required
-                            @change="searchPersonalPorLegajo()"
-                            v-model="cambioTurno.personal[0].legajo"
-                        />
-                    </div>
-                    <div class="col-3">
-                        <label for="Apellido"></label>
-                        Apellido
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="apellido"
-                            v-model="cambioTurno.personal[0].apellido"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-4">
-                        <label for="nombres"></label>
-                        Nombre
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="nombres"
-                            v-model="cambioTurno.personal[0].nombres"
-                            disabled
-                        />
-                    </div>
+                <div class="col-3">
+                    <label for="Apellido"></label>
+                    Apellido
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="apellido"
+                        v-model="cambioTurno.personal[0].apellido"
+                        disabled
+                    />
                 </div>
-                <div class="row">
-                    <div class="col-1">
-                        <label for="base"></label>
-                        Base
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="base"
-                            v-model="cambioTurno.personal[0].base"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-3">
-                        <label for="especialidad"></label>
-                        Especialidad
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="especialidad"
-                            v-model="cambioTurno.personal[0].especialidad"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="turno"></label>
-                        Turno
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="turno"
-                            v-model="cambioTurno.personal[0].turno"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="franco"></label>
-                        Franco
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="franco"
-                            v-model="cambioTurno.personal[0].franco"
-                            disabled
-                        />
-                    </div>
+                <div class="col-4">
+                    <label for="nombres"></label>
+                    Nombre
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="nombres"
+                        v-model="cambioTurno.personal[0].nombres"
+                        disabled
+                    />
                 </div>
+            </div>
+            <div class="justify-content-between row">
+                <div class="col-1">
+                    <label for="base"></label>
+                    Base
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="cambioTurno.personal[0].base"
+                        disabled
+                    />
+                </div>
+                <div class="col-3">
+                    <label for="especialidad"></label>
+                    Especialidad
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="especialidad"
+                        v-model="cambioTurno.personal[0].especialidad"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="turno"></label>
+                    Turno
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="turno"
+                        v-model="cambioTurno.personal[0].turno"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="franco"></label>
+                    Franco
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="franco"
+                        v-model="cambioTurno.personal[0].franco"
+                        disabled
+                    />
+                </div>
+            </div>
 
-                <!-- Llamada Modal búsqueda -->
-                <!-- <a class="btn btn-success col-2" @click="abrirModal(true)"
+            <!-- Llamada Modal búsqueda -->
+            <!-- <a class="btn btn-success col-2" @click="abrirModal(true)"
                     >Buscar Remplazo</a
                 > -->
-                <div>
-                    <button class="btn btn-success" @click.prevent="abrirModal(true)">
-                        Buscar Remplazo
-                    </button>
+            <div>
+                <button
+                    class="btn btn-success"
+                    @click.prevent="abrirModal(true)"
+                >
+                    Buscar Remplazo
+                </button>
+            </div>
+            <!-- Tabla remplazo -->
+            <div class="row">
+                <div class="col-2">
+                    <label for="legajo"></label>
+                    Legajo
+                    <input
+                        class="form-control mb-3"
+                        placeholder="Ingrese Legajo"
+                        type="number"
+                        name="legajo"
+                        autofocus
+                        required
+                        @change="
+                            asignarRelevoPorLegajo(
+                                cambioTurno.personal[1].legajo
+                            )
+                        "
+                        v-model="cambioTurno.personal[1].legajo"
+                    />
                 </div>
-                <!-- Tabla remplazo -->
-                <div class="row">
-                    <div class="col-2">
-                        <label for="legajo"></label>
-                        Legajo
-                        <input
-                            class="form-control mb-3"
-                            placeholder="Ingrese Legajo"
-                            type="number"
-                            name="legajo"
-                            autofocus
-                            required
-                            @change="
-                                asignarRelevoPorLegajo(
-                                    cambioTurno.personal[1].legajo
-                                )
-                            "
-                            v-model="cambioTurno.personal[1].legajo"
-                        />
-                    </div>
-                    <div class="col-3">
-                        <label for="Apellido"></label>
-                        Apellido
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="apellido"
-                            v-model="cambioTurno.personal[1].apellido"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-4">
-                        <label for="nombres"></label>
-                        Nombre
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="nombres"
-                            v-model="cambioTurno.personal[1].nombres"
-                            disabled
-                        />
-                    </div>
+                <div class="col-3">
+                    <label for="Apellido"></label>
+                    Apellido
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="apellido"
+                        v-model="cambioTurno.personal[1].apellido"
+                        disabled
+                    />
                 </div>
-                <div class="row">
-                    <div class="col-1">
-                        <label for="base"></label>
-                        Base
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="base"
-                            v-model="cambioTurno.personal[1].base"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-3">
-                        <label for="especialidad"></label>
-                        Especialidad
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="especialidad"
-                            v-model="cambioTurno.personal[1].especialidad"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="turno"></label>
-                        Turno
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="turno"
-                            v-model="cambioTurno.personal[1].turno"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="franco"></label>
-                        Franco
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="franco"
-                            v-model="cambioTurno.personal[1].franco"
-                            disabled
-                        />
-                    </div>
+                <div class="col-4">
+                    <label for="nombres"></label>
+                    Nombre
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="nombres"
+                        v-model="cambioTurno.personal[1].nombres"
+                        disabled
+                    />
                 </div>
-
+            </div>
+            <div class="justify-content-between row">
+                <div class="col-1">
+                    <label for="base"></label>
+                    Base
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="cambioTurno.personal[1].base"
+                        disabled
+                    />
+                </div>
+                <div class="col-3">
+                    <label for="especialidad"></label>
+                    Especialidad
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="especialidad"
+                        v-model="cambioTurno.personal[1].especialidad"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="turno"></label>
+                    Turno
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="turno"
+                        v-model="cambioTurno.personal[1].turno"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="franco"></label>
+                    Franco
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="franco"
+                        v-model="cambioTurno.personal[1].franco"
+                        disabled
+                    />
+                </div>
+            </div>
+            <div>
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i
+                <button
                     class="btn btn-secondary col-1 m-2"
                     @click="$router.push('/cambioTurno')"
-                    >Cerrar</i
                 >
-            </form>
-        </main>
+                    Cerrar
+                </button>
+            </div>
+        </form>
+    </main>
 </template>
 
 <script lang="ts">
@@ -422,8 +417,7 @@ export default defineComponent({
             /* Este método obtiene a traves de una consulta HTML:GET el ultimo
             Id de los documentos guardados con el fin de asignarle a la nueva novedad el id proximo */
             const res = await getUltimoCambioTurno();
-            this.ultimoId =  res.data.length > 0 ? res.data[0]._id : 0;
-            
+            this.ultimoId = res.data.length > 0 ? res.data[0]._id : 0;
         },
         async loadCambioTurnos() {
             const res = await getCambioTurnos();
@@ -437,10 +431,14 @@ export default defineComponent({
         async saveNovedad() {
             /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
             this.ultimoId++;
-            this.cambioTurno._id = this.ultimoId; 
+            this.cambioTurno._id = this.ultimoId;
             this.cambioTurno.fecha = this.today.toString();
-            
-            if (this.mismoPersonal(this.cambioTurno) || this.faltaPersonal(this.cambioTurno) || this.tieneCambioCargado(this.cambioTurno)) {
+
+            if (
+                this.mismoPersonal(this.cambioTurno) ||
+                this.faltaPersonal(this.cambioTurno) ||
+                this.tieneCambioCargado(this.cambioTurno)
+            ) {
                 // if(this.message.activo){
                 //     this.message.message = "Ocurrió un problema con la validación. Si el error persiste, Contacte al administrador con capturas de pantalla del error."
                 //     this.message.status = 'danger'
@@ -525,40 +523,57 @@ export default defineComponent({
                 return false;
             }
         },
-        tieneCambioCargado(cambio: CambioTurno){
+        tieneCambioCargado(cambio: CambioTurno) {
             let res = false;
             let num = -1;
-            const [repetido] = this.cambiosTurnos.filter(cambioTurno => {
-                return this.esFechaIgual(cambioTurno.fechaCambio,cambio.fechaCambio) &&
-                (cambioTurno.personal[0].legajo === cambio.personal[0].legajo ||
-                cambioTurno.personal[0].legajo === cambio.personal[1].legajo ||
-                cambioTurno.personal[1].legajo === cambio.personal[0].legajo ||
-                cambioTurno.personal[1].legajo === cambio.personal[1].legajo)
-            })
-            if(repetido !== undefined){
-                if( repetido.personal[0].legajo === cambio.personal[0].legajo ||
-                repetido.personal[0].legajo === cambio.personal[1].legajo){
+            const [repetido] = this.cambiosTurnos.filter((cambioTurno) => {
+                return (
+                    this.esFechaIgual(
+                        cambioTurno.fechaCambio,
+                        cambio.fechaCambio
+                    ) &&
+                    (cambioTurno.personal[0].legajo ===
+                        cambio.personal[0].legajo ||
+                        cambioTurno.personal[0].legajo ===
+                            cambio.personal[1].legajo ||
+                        cambioTurno.personal[1].legajo ===
+                            cambio.personal[0].legajo ||
+                        cambioTurno.personal[1].legajo ===
+                            cambio.personal[1].legajo)
+                );
+            });
+            if (repetido !== undefined) {
+                if (
+                    repetido.personal[0].legajo === cambio.personal[0].legajo ||
+                    repetido.personal[0].legajo === cambio.personal[1].legajo
+                ) {
                     num = 0;
-                } else if(repetido.personal[0].legajo === cambio.personal[0].legajo ||
-                repetido.personal[0].legajo === cambio.personal[1].legajo){
+                } else if (
+                    repetido.personal[0].legajo === cambio.personal[0].legajo ||
+                    repetido.personal[0].legajo === cambio.personal[1].legajo
+                ) {
                     num = 1;
                 }
-
             }
-            if(repetido){
+            if (repetido) {
                 res = true;
                 this.message.activo = true;
                 this.message.title = "Personal con cambio de turno asignado";
-                this.message.message =
-                    `El personal ${repetido.personal[num].apellido +' '+ repetido.personal[num].nombres} 
-                    ya tiene cargado un cambio de turno para la fecha asignada. Con el consecutivo N* ${repetido._id}. Finalícelo para continuar `;
+                this.message.message = `El personal ${
+                    repetido.personal[num].apellido +
+                    " " +
+                    repetido.personal[num].nombres
+                } 
+                    ya tiene cargado un cambio de turno para la fecha asignada. Con el consecutivo N* ${
+                        repetido._id
+                    }. Finalícelo para continuar `;
                 this.message.status = "danger";
             }
             return res;
         },
         mismoPersonal(cambio: CambioTurno): boolean {
             let res = false;
-            if(cambio.personal[0].legajo === cambio.personal[1].legajo){
+            if (cambio.personal[0].legajo === cambio.personal[1].legajo) {
                 res = true;
                 this.message.activo = true;
                 this.message.title = "Personal repetido";
@@ -568,17 +583,26 @@ export default defineComponent({
             }
             return res;
         },
-        faltaPersonal(cambio:CambioTurno):boolean{
-            let res = false
-            if(cambio.personal[0].apellido == '' || cambio.personal[1].apellido == ''){
+        faltaPersonal(cambio: CambioTurno): boolean {
+            let res = false;
+            if (
+                cambio.personal[0].apellido == "" ||
+                cambio.personal[1].apellido == ""
+            ) {
                 res = true;
                 this.message.activo = true;
                 this.message.title = "Falta Personal";
                 this.message.message =
                     "Tiene que estar ambos personales para realizar un cambio de turno";
                 this.message.status = "danger";
-                console.log(cambio.personal[0].apellido,cambio.personal[1].apellido);
-                console.log(cambio.personal[0].apellido == '' || cambio.personal[1].apellido == '');
+                console.log(
+                    cambio.personal[0].apellido,
+                    cambio.personal[1].apellido
+                );
+                console.log(
+                    cambio.personal[0].apellido == "" ||
+                        cambio.personal[1].apellido == ""
+                );
             }
             return res;
         },
@@ -660,22 +684,18 @@ export default defineComponent({
             );
             if (this.personalEncontrado[0]) {
                 // this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.cambioTurno.personal[0].apellido =
-                    this.personalEncontrado[0].apellido;
-                this.cambioTurno.personal[0].nombres =
-                    this.personalEncontrado[0].nombres;
-                this.cambioTurno.personal[0].base =
-                    this.personalEncontrado[0].dotacion;
-                this.cambioTurno.personal[0].especialidad =
-                    this.personalEncontrado[0].especialidad;
-                this.cambioTurno.personal[0].turno =
-                    this.personalEncontrado[0].turno;
-                this.cambioTurno.personal[0].franco =
-                    this.days[this.personalEncontrado[0].franco];
-                if(!this.cambioTurno.fechaCambio){
+                this.cambioTurno.personal[0].apellido = this.personalEncontrado[0].apellido;
+                this.cambioTurno.personal[0].nombres = this.personalEncontrado[0].nombres;
+                this.cambioTurno.personal[0].base = this.personalEncontrado[0].dotacion;
+                this.cambioTurno.personal[0].especialidad = this.personalEncontrado[0].especialidad;
+                this.cambioTurno.personal[0].turno = this.personalEncontrado[0].turno;
+                this.cambioTurno.personal[0].franco = this.days[
+                    this.personalEncontrado[0].franco
+                ];
+                if (!this.cambioTurno.fechaCambio) {
                     this.cambioTurno.fechaCambio = this.today
-                    .toISOString()
-                    .split("T")[0];
+                        .toISOString()
+                        .split("T")[0];
                 }
             }
         },
@@ -688,18 +708,14 @@ export default defineComponent({
             );
             if (this.personalEncontrado[0]) {
                 // this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.cambioTurno.personal[1].apellido =
-                    this.personalEncontrado[0].apellido;
-                this.cambioTurno.personal[1].nombres =
-                    this.personalEncontrado[0].nombres;
-                this.cambioTurno.personal[1].especialidad =
-                    this.personalEncontrado[0].especialidad;
-                this.cambioTurno.personal[1].base =
-                    this.personalEncontrado[0].dotacion;
-                this.cambioTurno.personal[1].turno =
-                    this.personalEncontrado[0].turno;
-                this.cambioTurno.personal[1].franco =
-                    this.days[this.personalEncontrado[0].franco];
+                this.cambioTurno.personal[1].apellido = this.personalEncontrado[0].apellido;
+                this.cambioTurno.personal[1].nombres = this.personalEncontrado[0].nombres;
+                this.cambioTurno.personal[1].especialidad = this.personalEncontrado[0].especialidad;
+                this.cambioTurno.personal[1].base = this.personalEncontrado[0].dotacion;
+                this.cambioTurno.personal[1].turno = this.personalEncontrado[0].turno;
+                this.cambioTurno.personal[1].franco = this.days[
+                    this.personalEncontrado[0].franco
+                ];
             } else {
                 this.cambioTurno.personal[1].apellido = "";
                 this.cambioTurno.personal[1].nombres = "";
@@ -720,56 +736,26 @@ export default defineComponent({
             console.error(error);
         }
     },
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
 main {
     margin-top: 5rem;
+    /* margin-left: 300px; */
 }
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+h1 {
+    display: flex;
+    justify-content: center;
 }
-
-.modal-dialog {
-    width: 80%;
-    --bs-modal-width: 1200px !important;
-    padding: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    max-height: 90vh;
-    border-radius: 10px;
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 250px;
+    width: 75%;
 }
-
-.d-block {
-    display: block !important;
-}
-
-.scroll-div {
-    overflow-y: scroll;
-    max-height: 800px; /* Ajusta según tus necesidades */
-}
-.table-container {
-    max-height: 600px; /* Ajusta según tus necesidades */
-    overflow-y: auto;
-    background-color: #fff; /* Estilo de fondo para el contenedor de la tabla */
-    border-radius: 15px; /* Ajusta según tus necesidades */
-}
-.table-container table {
-    width: 100%; /* Hacer que la tabla ocupe el 100% del contenedor */
-}
-.custom-modal .modal-dialog {
-    max-width: 1200px; /* Ajusta el ancho máximo según tus necesidades */
-    margin: 0 auto; /* Centra modal-dialog */
+.row {
+    margin-left: 0px;
 }
 </style>

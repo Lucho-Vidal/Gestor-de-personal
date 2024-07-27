@@ -1,111 +1,128 @@
 <template>
     <main class="container-fluid px-4">
-                
-                <div v-if="personalesFiltrados.length == 0">
-                    <div class="d-flex justify-content-center m-3" >
-                        <h2>Cargar nuevos personales desde Excel</h2>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <label for="nuevosTurnos" class="custom-file-upload">
-                            Seleccionar archivo
-                        </label>
-                        <input type="file" name="nuevosTurnos" id="nuevosTurnos" @change="handleFileChange"
-                            accept=".xlsx,.xls">
-                    </div>
-                </div>
-                <div  v-if="personalesFiltrados.length > 0">
-                    <h2 class="d-flex justify-content-center m-3">
-                        Listado Personal de Abordo
-                    </h2>
-                    <div class="d-flex">
-                        <button class="btn btn-primary d-flex end mx-3" @click="enviarTurnos()">Guardar turnos</button>
-                        <router-link class="btn btn-danger d-flex end" to="/personal">Cancelar</router-link>
-                    </div>
-                    <table class="table table-striped table-hover" >
-                        <thead>
-                            <tr>
-                                <th class="col-1" colspan="1">legajo</th>
-                                <th class="col-1" colspan="1">Apellido</th>
-                                <th class="col-1" colspan="1">Nombres</th>
-                                <th class="col-1" colspan="1">Turno</th>
-                                <th class="col-1" colspan="1">Franco</th>
-                                <th class="col-1" colspan="1">Especialidad</th>
-                                <th class="col-1" colspan="1">Dotacion</th>
-                                <th class="col-1" colspan="1">Observaciones</th>
-                                <th class="col-1" colspan="1">Orden</th>
-                                <th class="col-1">Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody v-for="(personal, index) in personalesFiltrados" :key="index" >
-                            <tr>
-                                <td class="col-1">{{ personal.legajo }}</td>
-                                <td class="col-1">{{ personal.apellido }}</td>
-                                <td class="col-2">{{ personal.nombres }}</td>
-                                <td class="col-1">{{ personal.turno }}</td>
-                                <td class="col-1">{{ days[personal.franco] }}</td>
-                                <td class="col-1">{{ personal.especialidad }}</td>
-                                <td class="col-1">{{ personal.dotacion }}</td>
-                                <td class="col-2">{{ personal.observaciones }}</td>
-                                <td class="col-1">{{ personal.orden }}</td>
-                                
-                                <td class="col-1">
-                                    <i class="material-icons cursor-hand rojo"
-                                        @click="deletePersonal( index)">delete_forever</i>
-                                </td>
-                            </tr>
-                            <tr v-if="personal.viewDetail && personal.conocimientos">
-                                <td colspan="12">
-                                    <div class="row">
-                                        <h6 class="col-12">Conocimientos:</h6>
-                                        <p class="col-1">
-                                            {{
-                                                personal.conocimientos.CML === true
-                                                    ? "CML"
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.CKD === true
-                                                    ? "CKD"
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.RO === true
-                                                    ? "RO "
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.MPN === true
-                                                    ? "MPN "
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.OL === true
-                                                    ? "OL "
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.LCI === true
-                                                    ? "LCI "
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.ELEC === true
-                                                    ? "ELEC "
-                                                    : ""
-                                            }}
-                                            {{
-                                                personal.conocimientos.DUAL === true
-                                                    ? "DUAL"
-                                                    : ""
-                                            }}
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+        <div v-if="personalesFiltrados.length == 0">
+            <div class="d-flex justify-content-center m-3">
+                <h2>Cargar nuevos Personales desde Excel</h2>
+            </div>
+            <div class="d-flex justify-content-center">
+                <label for="nuevosTurnos" class="custom-file-upload">
+                    Seleccionar archivo
+                </label>
+                <input
+                    type="file"
+                    name="nuevosTurnos"
+                    id="nuevosTurnos"
+                    @change="handleFileChange"
+                    accept=".xlsx,.xls,xlsm"
+                />
+            </div>
+        </div>
+        <div v-if="personalesFiltrados.length > 0">
+            <h2 class="d-flex justify-content-center m-3">
+                Listado Personal de Abordo
+            </h2>
+            <div class="d-flex justify-content-end">
+                <button
+                    class="btn btn-primary d-flex end mx-3"
+                    @click="enviarTurnos()"
+                >
+                    Guardar turnos
+                </button>
+                <router-link class="btn btn-danger d-flex end" to="/personal"
+                    >Cancelar</router-link
+                >
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-1" colspan="1">legajo</th>
+                        <th class="col-1" colspan="1">Apellido</th>
+                        <th class="col-1" colspan="1">Nombres</th>
+                        <th class="col-1" colspan="1">Turno</th>
+                        <th class="col-1" colspan="1">Franco</th>
+                        <th class="col-1" colspan="1">Especialidad</th>
+                        <th class="col-1" colspan="1">Dotacion</th>
+                        <th class="col-1" colspan="1">Observaciones</th>
+                        <th class="col-1" colspan="1">Orden</th>
+                        <th class="col-1">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody
+                    v-for="(personal, index) in personalesFiltrados"
+                    :key="index"
+                >
+                    <tr>
+                        <td class="col-1">{{ personal.legajo }}</td>
+                        <td class="col-1">{{ personal.apellido }}</td>
+                        <td class="col-2">{{ personal.nombres }}</td>
+                        <td class="col-1">{{ personal.turno }}</td>
+                        <td class="col-1">{{ days[personal.franco] }}</td>
+                        <td class="col-1">{{ personal.especialidad }}</td>
+                        <td class="col-1">{{ personal.dotacion }}</td>
+                        <td class="col-2">{{ personal.observaciones }}</td>
+                        <td class="col-1">{{ personal.orden }}</td>
+
+                        <td class="col-1">
+                            <i
+                                class="material-icons cursor-hand rojo"
+                                @click="deletePersonal(index)"
+                                >delete_forever</i
+                            >
+                        </td>
+                    </tr>
+                    <tr v-if="personal.viewDetail && personal.conocimientos">
+                        <td colspan="12">
+                            <div class="row">
+                                <h6 class="col-12">Conocimientos:</h6>
+                                <p class="col-1">
+                                    {{
+                                        personal.conocimientos.CML === true
+                                            ? "CML"
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.CKD === true
+                                            ? "CKD"
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.RO === true
+                                            ? "RO "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.MPN === true
+                                            ? "MPN "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.OL === true
+                                            ? "OL "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.LCI === true
+                                            ? "LCI "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.ELEC === true
+                                            ? "ELEC "
+                                            : ""
+                                    }}
+                                    {{
+                                        personal.conocimientos.DUAL === true
+                                            ? "DUAL"
+                                            : ""
+                                    }}
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
@@ -115,19 +132,22 @@ import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
-import * as XLSX from 'xlsx';
-import { createMultiplePersonal } from "../../services/personalService";
+import * as XLSX from "xlsx";
+import {
+    createMultiplePersonal,
+    deleteMultiplePersonal,
+} from "../../services/personalService";
 
 const daysOfWeek: { [key: string]: number } = {
-    'DOMINGO': 0,
-    'LUNES': 1,
-    'MARTES': 2,
-    'MIÉRCOLES': 3,
-    'MIERCOLES': 3,
-    'JUEVES': 4,
-    'VIERNES': 5,
-    'SÁBADO': 6,
-    'SABADO': 6,
+    DOMINGO: 0,
+    LUNES: 1,
+    MARTES: 2,
+    MIÉRCOLES: 3,
+    MIERCOLES: 3,
+    JUEVES: 4,
+    VIERNES: 5,
+    SÁBADO: 6,
+    SABADO: 6,
 };
 
 export default defineComponent({
@@ -153,7 +173,6 @@ export default defineComponent({
                 "Viernes",
                 "Sábado",
             ],
-            
         };
     },
     methods: {
@@ -162,56 +181,65 @@ export default defineComponent({
             if (target.files && target.files[0]) {
                 const file = target.files[0];
                 const arrayBuffer = await file.arrayBuffer();
-                this.workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                this.workbook = XLSX.read(arrayBuffer, { type: "array" });
                 // Obtener nombres de las hojas
                 this.sheetNames = this.workbook.SheetNames;
-                this.ConvertirPersonalJson()
+                this.ConvertirPersonalJson();
             }
         },
         async enviarTurnos() {
             try {
-                console.log("cantidad de registros: ",this.personalesFiltrados.length);
-                
-                
+                console.log(
+                    "cantidad de registros: ",
+                    this.personalesFiltrados.length
+                );
+
                 const confirmacion = window.confirm(
-                    "¿Estás seguro de que deseas de nuevo todos los personales? esta acción eliminara los personales actuales y cargara los personales nuevos"
+                    "¿Desea eliminar los personales anteriores? esta acción eliminara los personales ya cargados y cargara los nuevos"
                 );
                 if (confirmacion) {
-                    // await deleteMultiplePersonal();
-
-                    const batchSize = 300;
-                    const batches = [];
-
-                    for (let i = 0; i < this.personalesFiltrados.length; i += batchSize) {
-                        const batch = this.personalesFiltrados.slice(i, i + batchSize);
-                        batches.push(batch);
-                    }
-                    for (const batch of batches) {
-                        console.log("Enviando lote de tamaño: ", batch.length);                        
-                        await createMultiplePersonal(batch);
-                    }
-
-                    
-                    // guardamos registro
-                    const registro: Registro = {
-                        usuario: window.localStorage.getItem("username") || "",
-                        fecha: this.today.toString(),
-                        accion: "Agrego lista de personales",
-                    };
-
-                    await createRegistro(registro);
-                    alert("Se cargaron los personales satisfactoriamente.")
-    
-                    this.$router.push("/personal");
+                    await deleteMultiplePersonal();
                 }
+                const batchSize = 300;
+                const batches = [];
+
+                for (
+                    let i = 0;
+                    i < this.personalesFiltrados.length;
+                    i += batchSize
+                ) {
+                    const batch = this.personalesFiltrados.slice(
+                        i,
+                        i + batchSize
+                    );
+                    batches.push(batch);
+                }
+                for (const batch of batches) {
+                    console.log("Enviando lote de tamaño: ", batch.length);
+                    await createMultiplePersonal(batch);
+                }
+
+                // guardamos registro
+                const registro: Registro = {
+                    usuario: window.localStorage.getItem("username") || "",
+                    fecha: this.today.toString(),
+                    accion: "Agrego lista de personales",
+                };
+
+                await createRegistro(registro);
+                alert("Se cargaron los personales satisfactoriamente.");
+
+                this.$router.push("/personal");
             } catch (error) {
-                console.error('Error al crear turnos:', error);
+                console.error("Error al crear turnos:", error);
             }
         },
         capitalize(text: string): string {
-            return text.toLowerCase().replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+            return text
+                .toLowerCase()
+                .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
         },
-        separarNombreApellido(apellidoNombre:string) {
+        separarNombreApellido(apellidoNombre: string) {
             let apellidos = "";
             let nombres = "";
             let nombresLen = 0;
@@ -242,67 +270,89 @@ export default defineComponent({
             return { nombres: nombres, apellidos: apellidos };
         },
         ConvertirPersonalJson() {
-            
-                                
-                const sheet = this.workbook!.Sheets[this.sheetNames[0]]
-                if (!sheet) {
-                    console.error(`La hoja ${this.sheetNames[0]} no se pudo leer correctamente.`);
-                    alert("ocurrió un error al tratar de leer una hoja, recargue la pagina e intente nuevamente" )
-                    return;
-                }
-                const rangeRef = sheet['!ref'];
-                if (rangeRef) {
-                    const range = XLSX.utils.decode_range(rangeRef);
-                    const rows = range.e.r 
+            const sheet = this.workbook!.Sheets[this.sheetNames[0]];
+            if (!sheet) {
+                console.error(
+                    `La hoja ${this.sheetNames[0]} no se pudo leer correctamente.`
+                );
+                alert(
+                    "ocurrió un error al tratar de leer una hoja, recargue la pagina e intente nuevamente"
+                );
+                return;
+            }
+            const rangeRef = sheet["!ref"];
+            if (rangeRef) {
+                const range = XLSX.utils.decode_range(rangeRef);
+                const rows = range.e.r;
 
-                    let row = 2;
-                    while ( row <= rows + 1 ) {
-                        const cell = sheet[`A${row}`];
-                        if (cell && cell.v !== undefined) {
-                            const fullName = this.separarNombreApellido(sheet[`C${row}`]?.w)
-                            
-                            // Leer los datos del personal
-                            const personal: IPersonal = {
-                                _id: '',
-                                legajo: sheet[`A${row}`]?.v || 0,
-                                apellido: fullName.apellidos,
-                                nombres: fullName.nombres,
-                                turno: sheet[`D${row}`]?.w || '',
-                                franco: daysOfWeek[(sheet[`E${row}`]?.w?.trim() || '').toUpperCase()] ,
-                                especialidad: this.capitalize(sheet[`F${row}`]?.v || ''),
-                                dotacion: sheet[`G${row}`]?.v || '',
-                                observaciones: sheet[`Q${row}`]?.v || '',
-                                orden: sheet[`R${row}`]?.v || 0,
-                                conocimientos: {
-                                    CML: sheet[`H${row}`]?.v === 'SI',
-                                    CKD: sheet[`I${row}`]?.v === 'SI',
-                                    RO: sheet[`J${row}`]?.v === 'SI',
-                                    MPN: sheet[`K${row}`]?.v === 'SI',
-                                    OL: sheet[`L${row}`]?.v === 'SI',
-                                    LCI: sheet[`M${row}`]?.v === 'SI',
-                                    ELEC: sheet[`N${row}`]?.v === 'SI',
-                                    DUAL: sheet[`O${row}`]?.v === 'SI'
-                                },
-                                viewDetail: false
-                            };
-                            
-                            
+                let row = 2;
+                while (row <= rows + 1) {
+                    const cell = sheet[`A${row}`];
+                    if (cell && cell.v !== undefined) {
+                        const fullName = this.separarNombreApellido(
+                            sheet[`C${row}`]?.w
+                        );
 
-                            if (personal.turno.toUpperCase().includes("PROG")){
-                                const numero = parseInt(personal.turno.match(/\d+/)?.[0] || '', 10);
-                                const especialidad = personal.especialidad.toLowerCase().includes("conductor")?"C":personal.especialidad.toLowerCase().includes("guardatren")?"G":""
-                                personal.turno = "PROG."+ numero + especialidad + personal.dotacion
-                            }
-                            
-                            this.personalesFiltrados.push(personal);
-                            
+                        // Leer los datos del personal
+                        const personal: IPersonal = {
+                            _id: "",
+                            legajo: sheet[`A${row}`]?.v || 0,
+                            apellido: fullName.apellidos,
+                            nombres: fullName.nombres,
+                            turno: sheet[`D${row}`]?.w || "",
+                            franco:
+                                daysOfWeek[
+                                    (
+                                        sheet[`E${row}`]?.w?.trim() || ""
+                                    ).toUpperCase()
+                                ],
+                            especialidad: this.capitalize(
+                                sheet[`F${row}`]?.v || ""
+                            ),
+                            dotacion: sheet[`G${row}`]?.v || "",
+                            observaciones: sheet[`Q${row}`]?.v || "",
+                            orden: sheet[`R${row}`]?.v || 0,
+                            conocimientos: {
+                                CML: sheet[`H${row}`]?.v === "SI",
+                                CKD: sheet[`I${row}`]?.v === "SI",
+                                RO: sheet[`J${row}`]?.v === "SI",
+                                MPN: sheet[`K${row}`]?.v === "SI",
+                                OL: sheet[`L${row}`]?.v === "SI",
+                                LCI: sheet[`M${row}`]?.v === "SI",
+                                ELEC: sheet[`N${row}`]?.v === "SI",
+                                DUAL: sheet[`O${row}`]?.v === "SI",
+                            },
+                            viewDetail: false,
+                        };
+
+                        if (personal.turno.toUpperCase().includes("PROG")) {
+                            const numero = parseInt(
+                                personal.turno.match(/\d+/)?.[0] || "",
+                                10
+                            );
+                            const especialidad = personal.especialidad
+                                .toLowerCase()
+                                .includes("conductor")
+                                ? "C"
+                                : personal.especialidad
+                                      .toLowerCase()
+                                      .includes("guardatren")
+                                ? "G"
+                                : "";
+                            personal.turno =
+                                "PROG." +
+                                numero +
+                                especialidad +
+                                personal.dotacion;
                         }
-                        row++
+
+                        this.personalesFiltrados.push(personal);
                     }
+                    row++;
                 }
-            
+            }
         },
-        async deletePersonal( index: number) {
+        async deletePersonal(index: number) {
             try {
                 const confirmacion = window.confirm(
                     "¿Estás seguro de que deseas eliminar este Personal?"
@@ -329,9 +379,9 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
-                localStorage.removeItem("username")
-                localStorage.removeItem("roles")
-                localStorage.removeItem("token")
+                localStorage.removeItem("username");
+                localStorage.removeItem("roles");
+                localStorage.removeItem("token");
                 this.$router.push("/login");
             } else {
                 // Manejar otros errores de solicitud
@@ -461,9 +511,9 @@ export default defineComponent({
                     auxPersonales = this.personalesFiltrados;
                     this.personalesFiltrados = auxPersonales.filter(
                         (personal) => {
-                            return (
-                                personal.turno
-                            ).includes(this.searchTurno.toLowerCase().trim());
+                            return personal.turno.includes(
+                                this.searchTurno.toLowerCase().trim()
+                            );
                         }
                     );
                 }
@@ -491,8 +541,7 @@ export default defineComponent({
         }
     },
     name: "App",
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
@@ -505,14 +554,14 @@ main {
 }
 
 .verde {
-    color: #0f0
+    color: #0f0;
 }
 
 .rojo {
-    color: #f00
+    color: #f00;
 }
 
 .gris {
-    color: #aaa
+    color: #aaa;
 }
 </style>
