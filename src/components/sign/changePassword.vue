@@ -1,17 +1,28 @@
 <template>
     <div>
-        <main class="container">
-            <h1 class="d-flex justify-content-center m-3">
-                Cambiar Contraseña
-            </h1>
-            <form
-                name="form"
-                id="form"
-                v-on:submit.prevent="procesar()"
-                class="d-flex justify-content-center mb-5"
+        <main>
+            <div
+                class="alert row "
+                :class="[
+                    message.status == 'danger'
+                        ? 'alert-danger'
+                        : message.status == 'success'
+                        ? 'alert-success'
+                        : '',
+                ]"
+                role="alert"
+                v-if="message.status == 'danger' || message.status == 'success'"
             >
+                <h4 class="alert-heading">{{ message.title }}</h4>
+                <hr />
+                {{ message.message }}
+            </div>
+            <form name="form" id="form" v-on:submit.prevent="procesar()">
                 <div class="input-group-text col-5 row p-5">
-                    <label for="password" class="mb-3" style="width: 100%">
+                    <h1>
+                        Cambiar Contraseña
+                    </h1>
+                    <label for="password" class="mb-3" style="width: 100%;">
                         Contraseña actual
                         <input
                             :type="showPassword ? 'text' : 'password'"
@@ -23,7 +34,7 @@
                             required
                         />
                     </label>
-                    <label for="password" class="mb-3" style="width: 100%">
+                    <label for="password" class="mb-3" style="width: 100%;">
                         Nueva Contraseña
                         <input
                             :type="showPassword ? 'text' : 'password'"
@@ -36,7 +47,7 @@
                         />
                     </label>
                     <div>
-                        <label for="password" class="mb-3" style="width: 100%">
+                        <label for="password" class="mb-3" style="width: 100%;">
                             Repetir Contraseña
                             <input
                                 :type="showPassword ? 'text' : 'password'"
@@ -70,22 +81,7 @@
                     </div>
                 </div>
             </form>
-            <div
-                class="alert row"
-                :class="[
-                    message.status == 'danger'
-                        ? 'alert-danger'
-                        : message.status == 'success'
-                        ? 'alert-success'
-                        : '',
-                ]"
-                role="alert"
-                v-if="message.status == 'danger' || message.status == 'success'"
-            >
-                <h4 class="alert-heading">{{ message.title }}</h4>
-                <hr />
-                {{ message.message }}
-            </div>
+            
         </main>
     </div>
 </template>
@@ -132,12 +128,16 @@ export default defineComponent({
                     this.message = {
                         status: "danger",
                         title: "ATENCIÓN!",
-                        message: "La nueva contraseña no puede ser la misma que la anterior.",
+                        message:
+                            "La nueva contraseña no puede ser la misma que la anterior.",
                     };
                     return;
                 }
 
-                const res = await changePassword(this.currentPassword,this.newPassword);
+                const res = await changePassword(
+                    this.currentPassword,
+                    this.newPassword
+                );
 
                 if (res.status === 200) {
                     this.message = {
@@ -164,14 +164,17 @@ export default defineComponent({
             }
         },
     },
-    components: {
-    },
+    components: {},
 });
 </script>
 
 <style>
-
-main {
+.alert{
+    margin: 5rem;
+}
+form{
+    display: flex;
+    justify-content: center;
     margin-top: 5rem;
 }
 </style>
