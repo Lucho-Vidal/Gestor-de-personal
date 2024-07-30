@@ -243,7 +243,7 @@ export default defineComponent({
         },
         async enviarTurnos() {
             try {
-                const batchSize = 300;
+                const batchSize = 50;
                 const batches = [];
 
                 for (let i = 0; i < this.Filtradas.length; i += batchSize) {
