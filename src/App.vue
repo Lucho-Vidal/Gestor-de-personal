@@ -33,7 +33,7 @@ export default defineComponent({
         }
     },
     setup() {
-        const isAsideBarVisible = ref(false);
+        const isAsideBarVisible = ref(true);
         return { isAsideBarVisible };
     },
     methods:{
