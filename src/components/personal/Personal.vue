@@ -23,6 +23,134 @@
                     Filtrar Personal
                 </button>
             </div>
+            <!-- v-if="detalleLegajo!=0" para que no genere error -->
+            <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Detalle del personal</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="image-container ">
+                                <img v-if="datosPersonalesIndexados[detalleLegajo].Img" :src="datosPersonalesIndexados[detalleLegajo].Img" class="image rounded-circle" alt="Carnet">
+                                <img v-else class="image rounded-circle "  src="../../assets/usuario.png" alt="Carnet">
+
+                            </div>
+                            <h6>Personal:</h6>
+                            <div class=" border border-dark rounded p-3 m-3">
+                                <div class="my-3 d-flex ">
+                                <ul class="d-flex list-unstyled w-100 justify-content-evenly ">
+                                    <li class="list-inline-item">Legajo:  {{ personalIndexado[detalleLegajo].legajo }}</li>
+                                    <li class="list-inline-item">Apellido: {{ personalIndexado[detalleLegajo].apellido }}</li>
+                                    <li class="list-inline-item">Nombre: {{ personalIndexado[detalleLegajo].nombres }}</li>
+                                </ul>
+                            </div>
+                            <div class="my-3 d-flex">
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item">Base: {{ personalIndexado[detalleLegajo].dotacion }}</li>
+                                    <li class="list-inline-item">Especialidad: {{ personalIndexado[detalleLegajo].especialidad }}</li>
+                                    <li class="list-inline-item">Turno: {{ personalIndexado[detalleLegajo].turno }}</li>
+                                    <li class="list-inline-item">Franco: {{ days[personalIndexado[detalleLegajo].franco] }}</li>
+                                    <li class="list-inline-item">Orden: {{ personalIndexado[detalleLegajo].orden }}</li>
+                                </ul>
+                            </div>
+                            </div>
+                            <h6>Datos Personales:</h6>
+                            <div class="my-3 d-flex row  border border-dark rounded p-3 m-3">
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item">DNI: {{ datosPersonalesIndexados[detalleLegajo].Dni }}</li>
+                                    <li class="list-inline-item">Nacionalidad: {{ datosPersonalesIndexados[detalleLegajo].Nacionalidad }}</li>
+                                    <li class="list-inline-item">Fecha de Nacimiento: {{ datosPersonalesIndexados[detalleLegajo].Nacimiento }}</li>
+                                    <li class="list-inline-item">Sexo: {{ datosPersonalesIndexados[detalleLegajo].Sexo }}</li>
+                                    <li class="list-inline-item">Grupo Sanguíneo: {{ datosPersonalesIndexados[detalleLegajo].GrupoSanguíneo }}</li>
+                                </ul>
+                                <h6>Dirección y contacto: </h6>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item">Dirección: {{ datosPersonalesIndexados[detalleLegajo].Calle }}</li>
+                                    <li class="list-inline-item">Nro: {{ datosPersonalesIndexados[detalleLegajo].Nro }}</li>
+                                    <li class="list-inline-item">Piso: {{ datosPersonalesIndexados[detalleLegajo].Piso }}</li>
+                                    <li class="list-inline-item">Dpto: {{ datosPersonalesIndexados[detalleLegajo].Depto }}</li>
+                                    <li class="list-inline-item">Código Postal: {{ datosPersonalesIndexados[detalleLegajo].Postal }}</li>
+                                    <li class="list-inline-item">Localidad: {{ datosPersonalesIndexados[detalleLegajo].Localidad }}</li>
+                                </ul>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item">Celular: {{ datosPersonalesIndexados[detalleLegajo].Tel1 }}</li>
+                                    <li class="list-inline-item">Teléfono: {{ datosPersonalesIndexados[detalleLegajo].Tel2 }}</li>
+                                    <li class="list-inline-item">Mail: {{ datosPersonalesIndexados[detalleLegajo].Mail }}</li>
+                                </ul>
+                            </div>
+                            <h6>Observaciones:</h6>
+                            <div class="my-3 d-flex  border border-dark rounded p-3 m-3">
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item"> {{ personalIndexado[detalleLegajo].observaciones }}</li>
+                                    
+                                </ul>
+                            </div>
+                            <h6>Conocimientos:</h6>
+                            <div class="my-3 d-flex row border border-dark rounded p-3 m-3">
+                                <h6>Estudios:</h6>
+                                <ul class="d-flex list-unstyled w-100 justify-content-start">
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CML ? "CML" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CKD ? "CKD" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.RO ? "RO" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.MPN ? "MPN" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.OL ? "OL" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.LCI ? "LCI" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.ELEC ? "ELEC" : "" }}</li>
+                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.DUAL ? "DUAL" : "" }}</li>
+                                </ul>
+                                <h6>Vias:</h6>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pczz">PC-ZZ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pczz))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcak">PC-AK: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcak))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctybq">PC-TY-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctybq))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqlbq">PC-QL-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqlbq))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqllp">PC-QL-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqllp))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctylp">PC-TY-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctylp))  }}</li>
+                                </ul>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyhdo">TY-HDO: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyhdo))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyjg">TY-JG: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyjg))  }}</li>
+                                </ul>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Zzcñ">ZZ-CÑ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Zzcñ))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñmn">CÑ-MN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñmn))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñlb">CÑ-LB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñlb))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñgl">CÑ-GL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñgl))  }}</li>             
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñol">CÑ-OL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñol))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Olbb">OL-BB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Olbb))  }}</li>
+                                </ul>
+                                <ul class="d-flex list-unstyled w-100 justify-content-between">    
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akchc">AK-CHC: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akchc))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akmpn">AK-MPN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akmpn))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Gipx">GI-PX: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Gipx))  }}</li>
+                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Universitario">Universitario: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Universitario))  }}</li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                        <div class="m-3 d-flex justify-content-center">
+                            <button
+                                class="btn btn-primary mx-3"
+                                @click="edit(personalIndexado[detalleLegajo]._id)"                                
+                                >Editar personal</button>
+                                <button
+                                    type="button"
+                                    class="close btn btn-danger px-5"
+                                    @click="cerrarModal">
+                                    Cerrar
+                                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -261,14 +389,14 @@
                         <th class="col-1" colspan="1">Dotacion</th>
                         <th class="col-1" colspan="1">Observaciones</th>
                         <th class="col-1" colspan="1">Orden</th>
-                        <th class="col-1">Editar</th>
+                        <th class="col-1">Detalle</th>
                         <th class="col-1">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody
                     v-for="(personal, index) in personalesFiltrados"
                     :key="index"
-                    @dblclick="edit(personal._id)"
+                    @dblclick="abrirModalDetalle(personal.legajo)"
                     @click="viewDetail(personal)"
                 >
                     <tr>
@@ -284,7 +412,7 @@
                         <td class="col-1">
                             <i
                                 class="material-icons cursor-hand"
-                                @click="edit(personal._id)"
+                                @click="abrirModalDetalle(personal.legajo)"
                                 >edit_note</i
                             >
                         </td>
@@ -296,7 +424,7 @@
                             >
                         </td>
                     </tr>
-                    <tr v-if="personal.viewDetail && personal.conocimientos">
+                    <!-- <tr v-if="personal.viewDetail && personal.conocimientos">
                         <td colspan="12">
                             <div class="row">
                                 <h6 class="col-12">Conocimientos:</h6>
@@ -344,7 +472,7 @@
                                 </p>
                             </div>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -353,8 +481,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { deletePersonal, getPersonales } from "../../services/personalService";
-import { IPersonal } from "../../interfaces/IPersonal";
+import {
+    deletePersonal,
+    getConocimientosVias,
+    getDatosPersonales,
+    getPersonales,
+} from "../../services/personalService";
+import { IConocimientosVias, IDatoPersonal, IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
@@ -365,9 +498,16 @@ export default defineComponent({
         return {
             personales: [] as IPersonal[],
             personalesFiltrados: [] as IPersonal[],
+            datosPersonales: [] as IDatoPersonal[],
+            conocimientosVias: [] as IConocimientosVias[],
+            personalIndexado: {} as Record<number, IPersonal>,
+            datosPersonalesIndexados: {} as Record<number, IDatoPersonal>,
+            conocimientosViasIndexados: {} as Record<number, IConocimientosVias>,
+            detalleLegajo: 0 ,
             checkboxDotacion: [] as string[],
             checkboxEspecialidad: [] as string[],
             checkboxTurno: [] as string[],
+            mostrarModalDetalle: false,
             mostrarModalSearch: false,
             today: new Date(),
             search: "" as string,
@@ -390,6 +530,27 @@ export default defineComponent({
                 const res = await getPersonales();
                 this.personales = res.data;
                 this.filtrarPersonales();
+                this.personalIndexado = this.indexarPersonal(this.personales)
+                
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        async loadDatosPersonales() {
+            try {
+                const res = await getDatosPersonales();
+                this.datosPersonales = res.data;
+                this.datosPersonalesIndexados = this.IndexarDatosPersonales(this.datosPersonales);
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        async loadConocimientoVias() {
+            try {
+                const res = await getConocimientosVias();
+                this.conocimientosVias = res.data;
+                this.conocimientosViasIndexados = this.IndexarConocimientoVias(this.conocimientosVias);
+                
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -416,6 +577,39 @@ export default defineComponent({
                 this.handleRequestError(error as AxiosError);
             }
         },
+        indexarPersonal(personales: IPersonal[]): Record<number, IPersonal> {
+            return personales.reduce(
+                (acumulador: Record<number, IPersonal>, personal: IPersonal) => {
+                    acumulador[personal.legajo] = personal;
+                    return acumulador;
+                },
+                {} as Record<number, IPersonal>
+            );
+        },
+        IndexarDatosPersonales(datosPersonales: IDatoPersonal[]): Record<number, IDatoPersonal> {
+            return datosPersonales.reduce(
+                (acumulador: Record<number, IDatoPersonal>, dato: IDatoPersonal) => {
+                    acumulador[dato.Legajo] = dato;
+                    return acumulador;
+                },
+                {} as Record<number, IDatoPersonal>
+            );
+        },
+        IndexarConocimientoVias(datosPersonales: IConocimientosVias[]): Record<number, IConocimientosVias> {
+            return datosPersonales.reduce(
+                (acumulador: Record<number, IConocimientosVias>, dato: IConocimientosVias) => {
+                    acumulador[dato.Legajo] = dato;
+                    return acumulador;
+                },
+                {} as Record<number, IConocimientosVias>
+            );
+        },
+        formatFecha(fecha: Date): string {
+            const day = fecha.getDate().toString().padStart(2, '0');
+            const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+            const year = fecha.getFullYear();
+            return `${day}/${month}/${year}`;
+        },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
 
@@ -435,6 +629,14 @@ export default defineComponent({
         },
         cerrarModal() {
             this.mostrarModalSearch = false;
+            this.mostrarModalDetalle = false;
+        },
+        abrirModalDetalle(legajo:number) {
+
+            this.detalleLegajo = this.datosPersonalesIndexados[legajo].Legajo;
+            
+            this.mostrarModalDetalle = true;
+            
         },
         viewDetail(personal: IPersonal) {
             if (personal.viewDetail) {
@@ -580,13 +782,15 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        edit(id: string) {
+        edit(id: string) {            
             this.$router.push(`/editPersonal/${id}`);
         },
     },
     created() {
         try {
             this.loadPersonales();
+            this.loadDatosPersonales();
+            this.loadConocimientoVias();
             newToken();
         } catch (error) {
             console.error(error);
@@ -611,5 +815,16 @@ main {
 }
 .gris {
     color: #aaa;
+}
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ajusta la altura según sea necesario */
+}
+
+.image {
+    width: 200px;
+    height: auto; /* Mantiene la relación de aspecto de la imagen */
 }
 </style>

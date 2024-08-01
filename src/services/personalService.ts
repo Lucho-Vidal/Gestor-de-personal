@@ -1,4 +1,4 @@
-import { IPersonal } from "@/interfaces/IPersonal";
+import { IConocimientosVias, IDatoPersonal, IPersonal } from "@/interfaces/IPersonal";
 import axios from "./axios";
 import { AxiosResponse } from "axios";
 
@@ -33,3 +33,54 @@ export const deletePersonal = async (id: string): Promise<AxiosResponse> =>
 
 export const deleteMultiplePersonal = async (): Promise<AxiosResponse> => 
     await axios.delete("/Personal-multiple");
+
+
+// Datos Personales
+export const getDatosPersonales = async (): Promise<AxiosResponse<IDatoPersonal[]>> =>
+    await axios.get("/DatoPersonal");
+
+export const getDatoPersonal = async (
+    id: string
+): Promise<AxiosResponse<IDatoPersonal>> => await axios.get(`/DatoPersonal/${id}`);
+
+export const createDatoPersonal = async (
+    personal: IDatoPersonal
+): Promise<AxiosResponse> => {
+    const res = await axios.post("/DatoPersonal", personal);
+    return res;
+};
+
+export const updateDatoPersonal = async (
+    id: string,
+    newPersonal: IConocimientosVias
+): Promise<AxiosResponse<IDatoPersonal>> =>
+    await axios.put(`/DatoPersonal/${id}`, newPersonal);
+
+export const deleteDatoPersonal = async (id: string): Promise<AxiosResponse> =>
+    await axios.delete(`/DatoPersonal/${id}`);
+
+
+
+// Conocimiento de Vias
+export const getConocimientosVias = async (): Promise<AxiosResponse<IConocimientosVias[]>> =>
+    await axios.get("/vias");
+
+export const getConocimientoVia = async (
+    id: string
+): Promise<AxiosResponse<IConocimientosVias>> => await axios.get(`/vias/${id}`);
+
+export const createConocimientoVia = async (
+    via: IConocimientosVias
+): Promise<AxiosResponse> => {
+    const res = await axios.post("/vias", via);
+    return res;
+};
+
+export const updateConocimientoVia = async (
+    id: string,
+    newVia: IConocimientosVias
+): Promise<AxiosResponse<IConocimientosVias>> =>
+    await axios.put(`/vias/${id}`, newVia);
+
+export const deleteConocimientoVia = async (id: string): Promise<AxiosResponse> =>
+    await axios.delete(`/vias/${id}`);

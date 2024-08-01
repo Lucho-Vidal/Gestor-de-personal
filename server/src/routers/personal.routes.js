@@ -32,4 +32,41 @@ router.delete(
     personalCtrl.deleteMultiplePersonal
 );
 
+//Datos de Personales
+router.get("/DatoPersonal", [authJwt.verifyToken], personalCtrl.getDatosPersonales);
+router.get("/DatoPersonal/:id", [authJwt.verifyToken], personalCtrl.getDatoPersonal);
+router.post(
+    "/DatoPersonal",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.createDatoPersonal
+);
+router.put(
+    "/DatoPersonal/:id",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.updateDatoPersonalById
+);
+router.delete(
+    "/DatoPersonal/:id",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.deleteDatoPersonalById
+);
+
+//Conocimientos de Vias
+router.get("/vias", [authJwt.verifyToken], personalCtrl.getConocimientoVias);
+router.get("/vias/:id", [authJwt.verifyToken], personalCtrl.getConocimientoVia);
+router.post(
+    "/vias",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.createConocimientoVias
+);
+router.put(
+    "/vias/:id",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.updateConocimientoVias
+);
+router.delete(
+    "/vias/:id",
+    [authJwt.verifyToken, authJwt.isModerator],
+    personalCtrl.deleteConocimientoViasById
+);
 export default router;
