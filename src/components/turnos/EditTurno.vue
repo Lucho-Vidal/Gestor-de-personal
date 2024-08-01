@@ -1,6 +1,6 @@
 <template>
-        <main class="container">
-            <h1 class="d-flex justify-content-center m-3">
+        <main>
+            <h1>
                 Cargar Nuevo Turno
             </h1>
             <div class="alert alert-danger" role="alert" v-if="alerta">
@@ -10,8 +10,8 @@
             </div>
             <!-- <modalBuscarPersonal :personales="personales" /> -->
 
-            <form @submit.prevent="upTurno()" class="row">
-                <div class="row">
+            <form @submit.prevent="upTurno()">
+                <div class="justify-content-between row">
                     <div class="col-2">
                         <label for="legajo"></label>
                         Turno
@@ -314,26 +314,20 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 87vh;
+    margin-top: 5rem;
 }
-
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.8);
+h1{
+    display: flex;
+    justify-content: center;
 }
-.Modal {
-    position: fixed;
-
-    transform: translate((-50%, -50%));
-    background: #fff;
-    padding: 70px;
-    border-radius: 15px;
-    box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
-    z-index: 101;
+form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 250px;
+    width: 75%;
+}
+.row{
+    margin-left: 0px;
 }
 </style>
