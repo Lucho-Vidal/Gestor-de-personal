@@ -1,7 +1,6 @@
 import {Schema, model} from 'mongoose'
 
 const datosPersonalSchema = new Schema({
-    _id: String,
     Legajo: {
         type:Number,
         required: true,
@@ -50,6 +49,8 @@ const datosPersonalSchema = new Schema({
     },
     GrupoSanguíneo: String,
     Img: String,
+    certificadoIdoneidad: Date,
+    aptoMedico: Date,
 });
 
 export default model("Datos_Personale", datosPersonalSchema);

@@ -1,7 +1,6 @@
 import {Schema, model} from 'mongoose'
 
 const via = new Schema({
-    _id: String,
     Legajo: {
         type:Number,
         required: true,

@@ -32,6 +32,7 @@ router.delete(
     personalCtrl.deleteMultiplePersonal
 );
 
+//--------------------------------------------------------------------------------------------
 //Datos de Personales
 router.get("/DatoPersonal", [authJwt.verifyToken], personalCtrl.getDatosPersonales);
 router.get("/DatoPersonal/:id", [authJwt.verifyToken], personalCtrl.getDatoPersonal);
@@ -50,7 +51,7 @@ router.delete(
     [authJwt.verifyToken, authJwt.isModerator],
     personalCtrl.deleteDatoPersonalById
 );
-
+//--------------------------------------------------------------------------------------------
 //Conocimientos de Vias
 router.get("/vias", [authJwt.verifyToken], personalCtrl.getConocimientoVias);
 router.get("/vias/:id", [authJwt.verifyToken], personalCtrl.getConocimientoVia);

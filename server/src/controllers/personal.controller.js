@@ -1,6 +1,7 @@
 import Personal from "../models/Personal";
 import Datos_Personale from "../models/DatosPersonales";
 import mongoose from 'mongoose';
+const { ObjectId } = mongoose.Types;
 import Vias from "../models/Vias";
 
 export const getPersonales = async (req, res) => {
@@ -190,6 +191,9 @@ export const deleteMultiplePersonal = async (req, res) => {
     }
 };
 
+
+//--------------------------------------------------------------------------------------------
+
 export const getDatosPersonales = async (req, res) => {
     try {
         // Obtener todos los registros de la colección Personal
@@ -319,6 +323,7 @@ export const deleteDatoPersonalById = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+//--------------------------------------------------------------------------------------------
 
 export const getConocimientoVias = async (req, res) => {
     try {
@@ -334,8 +339,20 @@ export const getConocimientoVias = async (req, res) => {
     }
 };
 
+
+
 export const getConocimientoVia = async (req, res) => {
     try {
+        // Obtener y convertir el ID a ObjectId
+        const id = req.params.id;
+
+        // Verificar si el ID es válido
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "ID inválido" });
+        }
+
+        const objectId = new ObjectId(id);
+
         // Obtener un registro específico por ID
         const vias = await Vias.findById(req.params.id);
 
@@ -353,6 +370,7 @@ export const getConocimientoVia = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
 
 export const createConocimientoVias = async (req, res) => {
     try {
