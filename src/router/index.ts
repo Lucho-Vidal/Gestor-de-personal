@@ -116,6 +116,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/personal",
         name: "Personal",
+        props: true,
         meta: { title: "GNPA - Personal" },
         component: () => import("@/components/personal/Personal.vue"),
         beforeEnter: (to, from, next) => {
@@ -141,8 +142,9 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/editPersonal/:id",
+        path: "/editPersonal/:idPersonal/:idDato/:idVia",
         name: "editPersonal",
+        props: true,
         meta: { title: "GNPA - Editar personal" },
         component: () => import("@/components/personal/editPersonal.vue"),
         beforeEnter: (to, from, next) => {

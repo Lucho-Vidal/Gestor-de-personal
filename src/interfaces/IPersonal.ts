@@ -41,28 +41,30 @@ export interface IDatoPersonal {
         Mail: string;
         GrupoSanguíneo: string;
         Img: string;
+        certificadoIdoneidad: Date;
+        aptoMedico: Date;
 }
 
 export interface IConocimientosVias {
     _id: string;
-    Legajo: number,
-    Pczz: Date,
-    Pcak: Date,
-    Pctybq: Date,
-    Pcqllp: Date,
-    Zzcñ: Date,
-    Tyhdo: Date,
-    Cñmn: Date,
-    Cñlb: Date,
-    Pcqlbq: Date,
-    Pctylp: Date,
-    Tyjg: Date, 
-    Cñgl: Date,
-    Akchc: Date,
-    Akmpn: Date,
-    Cñolbb: Date,
-    Cñol: Date,
-    Olbb: Date,
-    Gipx: Date,
-    Universitario: Date,
+    Legajo: number;
+    Pczz: Date;
+    Pcak: Date;
+    Pctybq: Date;
+    Pcqllp: Date;
+    Zzcñ: Date;
+    Tyhdo: Date;
+    Cñmn: Date;
+    Cñlb: Date;
+    Pcqlbq: Date;
+    Pctylp: Date;
+    Tyjg: Date; 
+    Cñgl: Date;
+    Akchc: Date;
+    Akmpn: Date;
+    Cñolbb: Date;
+    Cñol: Date;
+    Olbb: Date;
+    Gipx: Date;
+    Universitario: Date;
 }

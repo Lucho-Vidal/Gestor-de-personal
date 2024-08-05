@@ -80,12 +80,12 @@
                             v-model="personal.especialidad"
                             required
                         >
-                            <option value="Conductor electrico">Conductor Eléctrico</option>
-                            <option value="Conductor diesel">Conductor Diesel</option>
-                            <option value="Ayudante habilitado">Ayudante Habilitado</option>
-                            <option value="Ayudante conductor">Ayudante Conductor</option>
-                            <option value="GuardaTren electrico">GuardaTren Eléctrico</option>
-                            <option value="GuardaTren diesel">GuardaTren Diesel</option>
+                            <option value="Conductor Electrico">Conductor Eléctrico</option>
+                            <option value="Conductor Diesel">Conductor Diesel</option>
+                            <option value="Ayudante Habilitado">Ayudante Habilitado</option>
+                            <option value="Ayudante Conductor">Ayudante Conductor</option>
+                            <option value="GuardaTren Electrico">GuardaTren Eléctrico</option>
+                            <option value="GuardaTren Diesel">GuardaTren Diesel</option>
                         </select>
                     </div>
                     <div class="col-2">
@@ -200,20 +200,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getPersonal , updatePersonal } from "../../services/personalService";
-import { IPersonal } from "../../interfaces/IPersonal";
+import { getConocimientoVia, getDatoPersonal, getPersonal , updatePersonal } from "../../services/personalService";
+import { IPersonal, IDatoPersonal, IConocimientosVias } from '../../interfaces/IPersonal';
 import { newToken } from "../../services/signService";
 import { Registro } from "../../interfaces/IRegistro";
 import { createRegistro } from "../../services/registrosService";
 import { AxiosError } from "axios";
 
-
-
 export default defineComponent({
+    props:["idPersonal","idDato","idVia"],
     data() {
         return {
             
             personal: {especialidad: ""} as IPersonal,
+            datoPersonal: {} as IDatoPersonal,
+            conocimientoVia:{} as IConocimientosVias,
             days: [
                 "Domingo",
                 "Lunes",
@@ -270,7 +271,7 @@ export default defineComponent({
         cerrar(){
             this.$router.push({ name: "Personal" });
         },
-        /* Este método trae la lista de todos los personales */
+        /* Este método trae el personal */
         async loadPersonal(id:string) {
             try {
                 const res = await getPersonal(id);
@@ -279,14 +280,46 @@ export default defineComponent({
             } catch (error) {
                 console.error(error);
             }
-            const res = await getPersonal(id);
-            this.personal = res.data;
         },
-        
+        async loadDatoPersonal(id:string) {
+            try {
+                const res = await getDatoPersonal(id);
+                this.datoPersonal = res.data;  
+                console.log(this.datoPersonal);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async loadConocimientoVia(id:string) {
+            try {
+                const res = await getConocimientoVia(id);
+                this.conocimientoVia = res.data;  
+                console.log(this.conocimientoVia);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        },
     },
     mounted() {
-        if (typeof this.$route.params.id === "string") {
-            this.loadPersonal(this.$route.params.id);
+        // if (typeof this.$route.params.id === "string") {
+        if (this.$route.params) {
+            const idPersonal = Array.isArray(this.$route.params.idPersonal) 
+                ? this.$route.params.idPersonal[0] 
+                : this.$route.params.idPersonal;
+
+            const idDato = Array.isArray(this.$route.params.idDato) 
+                ? this.$route.params.idDato[0] 
+                : this.$route.params.idDato;
+
+            const idVia = Array.isArray(this.$route.params.idVia) 
+                ? this.$route.params.idVia[0] 
+                : this.$route.params.idVia;
+            
+            this.loadPersonal(idPersonal);
+            this.loadDatoPersonal(idDato);
+            this.loadConocimientoVia(idVia);
         }
         newToken();
     },

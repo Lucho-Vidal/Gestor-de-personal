@@ -39,7 +39,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="image-container ">
-                                <img v-if="datosPersonalesIndexados[detalleLegajo].Img" :src="datosPersonalesIndexados[detalleLegajo].Img" class="image rounded-circle" alt="Carnet">
+                                <img v-if="datosPersonalesIndexados[detalleLegajo] && datosPersonalesIndexados[detalleLegajo].Img" :src="datosPersonalesIndexados[detalleLegajo].Img" class="image rounded-circle" alt="Carnet">
                                 <img v-else class="image rounded-circle "  src="../../assets/usuario.png" alt="Carnet">
 
                             </div>
@@ -52,7 +52,7 @@
                                     <li class="list-inline-item">Nombre: {{ personalIndexado[detalleLegajo].nombres }}</li>
                                 </ul>
                             </div>
-                            <div class="my-3 d-flex">
+                            <div class="my-3 d-flex" v-if="personalIndexado[detalleLegajo]">
                                 <ul class="d-flex list-unstyled w-100 justify-content-between">
                                     <li class="list-inline-item">Base: {{ personalIndexado[detalleLegajo].dotacion }}</li>
                                     <li class="list-inline-item">Especialidad: {{ personalIndexado[detalleLegajo].especialidad }}</li>
@@ -63,7 +63,7 @@
                             </div>
                             </div>
                             <h6>Datos Personales:</h6>
-                            <div class="my-3 d-flex row  border border-dark rounded p-3 m-3">
+                            <div class="my-3 d-flex row  border border-dark rounded p-3 m-3" v-if="datosPersonalesIndexados[detalleLegajo]">
                                 <ul class="d-flex list-unstyled w-100 justify-content-between">
                                     <li class="list-inline-item">DNI: {{ datosPersonalesIndexados[detalleLegajo].Dni }}</li>
                                     <li class="list-inline-item">Nacionalidad: {{ datosPersonalesIndexados[detalleLegajo].Nacionalidad }}</li>
@@ -86,6 +86,16 @@
                                     <li class="list-inline-item">Mail: {{ datosPersonalesIndexados[detalleLegajo].Mail }}</li>
                                 </ul>
                             </div>
+                            <div class="d-flex list-unstyled w-100 justify-content-evenly"  v-if="datosPersonalesIndexados[detalleLegajo]" >
+                                <ul v-if="datosPersonalesIndexados[detalleLegajo].aptoMedico">
+                                    <h6>Apto Medico</h6>
+                                    <li class="list-inline-item"> {{ formatFecha(new Date(datosPersonalesIndexados[detalleLegajo].aptoMedico)) }} </li>
+                                </ul>
+                                <ul v-if="datosPersonalesIndexados[detalleLegajo].certificadoIdoneidad">
+                                    <h6>Certificado Idoneidad</h6>
+                                    <li class="list-inline-item"> {{ formatFecha(new Date(datosPersonalesIndexados[detalleLegajo].certificadoIdoneidad)) }} </li>
+                                </ul>
+                            </div>
                             <h6>Observaciones:</h6>
                             <div class="my-3 d-flex  border border-dark rounded p-3 m-3">
                                 <ul class="d-flex list-unstyled w-100 justify-content-between">
@@ -106,40 +116,46 @@
                                     <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.ELEC ? "ELEC" : "" }}</li>
                                     <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.DUAL ? "DUAL" : "" }}</li>
                                 </ul>
-                                <h6>Vias:</h6>
-                                <ul class="d-flex list-unstyled w-100 justify-content-between">
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pczz">PC-ZZ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pczz))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcak">PC-AK: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcak))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctybq">PC-TY-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctybq))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqlbq">PC-QL-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqlbq))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqllp">PC-QL-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqllp))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctylp">PC-TY-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctylp))  }}</li>
-                                </ul>
-                                <ul class="d-flex list-unstyled w-100 justify-content-between">   
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyhdo">TY-HDO: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyhdo))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyjg">TY-JG: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyjg))  }}</li>
-                                </ul>
-                                <ul class="d-flex list-unstyled w-100 justify-content-between">   
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Zzcñ">ZZ-CÑ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Zzcñ))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñmn">CÑ-MN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñmn))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñlb">CÑ-LB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñlb))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñgl">CÑ-GL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñgl))  }}</li>             
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñol">CÑ-OL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñol))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Olbb">OL-BB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Olbb))  }}</li>
-                                </ul>
-                                <ul class="d-flex list-unstyled w-100 justify-content-between">    
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akchc">AK-CHC: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akchc))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akmpn">AK-MPN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akmpn))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Gipx">GI-PX: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Gipx))  }}</li>
-                                    <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Universitario">Universitario: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Universitario))  }}</li>
-                                </ul>
+                                <div v-if="conocimientosViasIndexados[detalleLegajo]">
+                                    <h6>Vias:</h6>
+                                    <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pczz">PC-ZZ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pczz))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcak">PC-AK: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcak))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctybq">PC-TY-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctybq))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqlbq">PC-QL-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqlbq))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqllp">PC-QL-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqllp))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctylp">PC-TY-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctylp))  }}</li>
+                                    </ul>
+                                    <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyhdo">TY-HDO: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyhdo))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyjg">TY-JG: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyjg))  }}</li>
+                                    </ul>
+                                    <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Zzcñ">ZZ-CÑ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Zzcñ))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñmn">CÑ-MN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñmn))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñlb">CÑ-LB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñlb))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñgl">CÑ-GL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñgl))  }}</li>             
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñol">CÑ-OL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñol))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Olbb">OL-BB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Olbb))  }}</li>
+                                    </ul>
+                                    <ul class="d-flex list-unstyled w-100 justify-content-between">    
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akchc">AK-CHC: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akchc))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akmpn">AK-MPN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akmpn))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Gipx">GI-PX: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Gipx))  }}</li>
+                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Universitario">Universitario: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Universitario))  }}</li>
+                                    </ul>
+                                </div>
                             </div>
                             
                         </div>
                         <div class="m-3 d-flex justify-content-center">
                             <button
                                 class="btn btn-primary mx-3"
-                                @click="edit(personalIndexado[detalleLegajo]._id)"                                
+                                @click="edit(
+                                    personalIndexado[detalleLegajo]._id,
+                                    datosPersonalesIndexados[detalleLegajo]._id,
+                                    conocimientosViasIndexados[detalleLegajo]._id
+                                    )"
                                 >Editar personal</button>
                                 <button
                                     type="button"
@@ -494,6 +510,7 @@ import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
 
 export default defineComponent({
+    props: ['idPersonal', 'idDato', 'idVia'],
     data() {
         return {
             personales: [] as IPersonal[],
@@ -633,7 +650,7 @@ export default defineComponent({
         },
         abrirModalDetalle(legajo:number) {
 
-            this.detalleLegajo = this.datosPersonalesIndexados[legajo].Legajo;
+            this.detalleLegajo = this.personalIndexado[legajo].legajo;
             
             this.mostrarModalDetalle = true;
             
@@ -782,8 +799,10 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        edit(id: string) {            
-            this.$router.push(`/editPersonal/${id}`);
+        edit(idPersonal: string,idDato: string,idVia: string) {            
+            // this.$router.push(`/editPersonal/${id}`);
+            this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia } });
+            // son 3 documentos diferentes, con 3 ids diferentes, los voy a guardar en el local storage para pasarlos
         },
     },
     created() {
@@ -801,20 +820,8 @@ export default defineComponent({
 });
 </script>
 <style>
-main {
-    min-height: 81.6vh;
-}
-.cursor-hand {
-    cursor: pointer;
-}
-.verde {
-    color: #0f0;
-}
-.rojo {
-    color: #f00;
-}
-.gris {
-    color: #aaa;
+main{
+    margin-top: 5rem;
 }
 .image-container {
     display: flex;

@@ -201,6 +201,15 @@
                         <option value="Servicio Especial">
                             Servicio Especial
                         </option>
+                        <option value="Donación Sangre">
+                            Donación Sangre
+                        </option>
+                        <option value="Donación Plaqueta">
+                            Donación Plaqueta
+                        </option>
+                        <option value="Licencia Deportiva">
+                            Licencia Deportiva
+                        </option>
                         <option value="Tarea Liviana">Tarea Liviana</option>
                         <option value="Licencia Gremial">
                             Licencia Gremial

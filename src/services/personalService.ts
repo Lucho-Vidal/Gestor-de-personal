@@ -34,7 +34,7 @@ export const deletePersonal = async (id: string): Promise<AxiosResponse> =>
 export const deleteMultiplePersonal = async (): Promise<AxiosResponse> => 
     await axios.delete("/Personal-multiple");
 
-
+//--------------------------------------------------------------------------------------------
 // Datos Personales
 export const getDatosPersonales = async (): Promise<AxiosResponse<IDatoPersonal[]>> =>
     await axios.get("/DatoPersonal");
@@ -60,7 +60,7 @@ export const deleteDatoPersonal = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/DatoPersonal/${id}`);
 
 
-
+//--------------------------------------------------------------------------------------------
 // Conocimiento de Vias
 export const getConocimientosVias = async (): Promise<AxiosResponse<IConocimientosVias[]>> =>
     await axios.get("/vias");
