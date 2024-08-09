@@ -42,15 +42,23 @@ const datosPersonalSchema = new Schema({
         type: String,
     },
     Sexo: {
-        type: Number,
+        type: String,
     },
     Mail: {
         type: String,
     },
-    GrupoSanguíneo: String,
-    Img: String,
-    certificadoIdoneidad: Date,
-    aptoMedico: Date,
+    GrupoSanguíneo: {
+        type: String,
+    },
+    Img: {
+        type: String,
+    },
+    certificadoIdoneidad:{
+        type: String,
+    },
+    aptoMedico: {
+        type: String,
+    },
 });
 
 export default model("Datos_Personale", datosPersonalSchema);

@@ -65,10 +65,22 @@
   cursor: pointer;
 }
 
-/* Ocultar el input file real */
-input[type="file"] {
-  display: none;
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ajusta la altura según sea necesario */
 }
+
+.image {
+  width: 200px;
+  height: auto; /* Mantiene la relación de aspecto de la imagen */
+}
+
+/* Ocultar el input file real */
+/* input[type="file"] {
+  display: none;
+} */
 .cursor-hand{
   cursor: pointer;
 }
@@ -83,6 +95,7 @@ textarea{
   /* form-sizing: content; */
   min-height: 40px;
   max-height: 200px;
+  width: 98%;
 }
 
 #layoutSidenav_content{

@@ -545,23 +545,5 @@ export default defineComponent({
 });
 </script>
 <style>
-main {
-    min-height: 81.6vh;
-}
 
-.cursor-hand {
-    cursor: pointer;
-}
-
-.verde {
-    color: #0f0;
-}
-
-.rojo {
-    color: #f00;
-}
-
-.gris {
-    color: #aaa;
-}
 </style>

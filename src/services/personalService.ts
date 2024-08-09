@@ -1,4 +1,8 @@
-import { IConocimientosVias, IDatoPersonal, IPersonal } from "@/interfaces/IPersonal";
+import {
+    IConocimientosVias,
+    IDatoPersonal,
+    IPersonal,
+} from "@/interfaces/IPersonal";
 import axios from "./axios";
 import { AxiosResponse } from "axios";
 
@@ -16,8 +20,12 @@ export const createPersonal = async (
     return res;
 };
 
-export const createMultiplePersonal = async (personales: IPersonal[]): Promise<AxiosResponse> => {
-    console.log(`Tamaño del payload: ${JSON.stringify(personales).length} bytes`);
+export const createMultiplePersonal = async (
+    personales: IPersonal[]
+): Promise<AxiosResponse> => {
+    console.log(
+        `Tamaño del payload: ${JSON.stringify(personales).length} bytes`
+    );
     const res = await axios.post("/Personal-multiple", personales);
     return res;
 };
@@ -31,17 +39,19 @@ export const updatePersonal = async (
 export const deletePersonal = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/Personal/${id}`);
 
-export const deleteMultiplePersonal = async (): Promise<AxiosResponse> => 
+export const deleteMultiplePersonal = async (): Promise<AxiosResponse> =>
     await axios.delete("/Personal-multiple");
 
 //--------------------------------------------------------------------------------------------
 // Datos Personales
-export const getDatosPersonales = async (): Promise<AxiosResponse<IDatoPersonal[]>> =>
-    await axios.get("/DatoPersonal");
+export const getDatosPersonales = async (): Promise<
+    AxiosResponse<IDatoPersonal[]>
+> => await axios.get("/DatoPersonal");
 
 export const getDatoPersonal = async (
     id: string
-): Promise<AxiosResponse<IDatoPersonal>> => await axios.get(`/DatoPersonal/${id}`);
+): Promise<AxiosResponse<IDatoPersonal>> =>
+    await axios.get(`/DatoPersonal/${id}`);
 
 export const createDatoPersonal = async (
     personal: IDatoPersonal
@@ -52,18 +62,34 @@ export const createDatoPersonal = async (
 
 export const updateDatoPersonal = async (
     id: string,
-    newPersonal: IConocimientosVias
+    newPersonal: IDatoPersonal
 ): Promise<AxiosResponse<IDatoPersonal>> =>
     await axios.put(`/DatoPersonal/${id}`, newPersonal);
 
 export const deleteDatoPersonal = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/DatoPersonal/${id}`);
 
+//--------------------------------------------------------------------------------------------
+// Cargar imagen de datos personales
+export const uploadImg = async (formData: FormData,id: string): Promise<AxiosResponse> => {
+    try {
+        const res = await axios.post(`/upload/${id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return res;
+    } catch (error) {
+        console.error("Error al Subir imagen:", error);
+        throw error;
+    }
+};
 
 //--------------------------------------------------------------------------------------------
 // Conocimiento de Vias
-export const getConocimientosVias = async (): Promise<AxiosResponse<IConocimientosVias[]>> =>
-    await axios.get("/vias");
+export const getConocimientosVias = async (): Promise<
+    AxiosResponse<IConocimientosVias[]>
+> => await axios.get("/vias");
 
 export const getConocimientoVia = async (
     id: string
@@ -82,5 +108,6 @@ export const updateConocimientoVia = async (
 ): Promise<AxiosResponse<IConocimientosVias>> =>
     await axios.put(`/vias/${id}`, newVia);
 
-export const deleteConocimientoVia = async (id: string): Promise<AxiosResponse> =>
-    await axios.delete(`/vias/${id}`);
+export const deleteConocimientoVia = async (
+    id: string
+): Promise<AxiosResponse> => await axios.delete(`/vias/${id}`);

@@ -24,47 +24,47 @@ export interface IConocimientos {
 }
 
 export interface IDatoPersonal {
-        _id: string;
-        Legajo: number;
-        Dni: number;
-        Nacionalidad: string;
-        Calle: string;
-        Nro: number;
-        Piso: string;
-        Depto: string;
-        Postal: number;
-        Localidad: string;
-        Tel1: string;
-        Tel2: string;
-        Nacimiento: string;
-        Sexo: number;
-        Mail: string;
-        GrupoSanguíneo: string;
-        Img: string;
-        certificadoIdoneidad: Date;
-        aptoMedico: Date;
+    _id: string;
+    Legajo: number;
+    Dni: number;
+    Nacionalidad: string;
+    Calle: string;
+    Nro: number;
+    Piso: string;
+    Depto: string;
+    Postal: number;
+    Localidad: string;
+    Tel1: string;
+    Tel2: string;
+    Nacimiento: string;
+    Sexo: number;
+    Mail: string;
+    GrupoSanguíneo: string;
+    Img: string;
+    certificadoIdoneidad: string;
+    aptoMedico: string;
 }
 
 export interface IConocimientosVias {
     _id: string;
     Legajo: number;
-    Pczz: Date;
-    Pcak: Date;
-    Pctybq: Date;
-    Pcqllp: Date;
-    Zzcñ: Date;
-    Tyhdo: Date;
-    Cñmn: Date;
-    Cñlb: Date;
-    Pcqlbq: Date;
-    Pctylp: Date;
-    Tyjg: Date; 
-    Cñgl: Date;
-    Akchc: Date;
-    Akmpn: Date;
-    Cñolbb: Date;
-    Cñol: Date;
-    Olbb: Date;
-    Gipx: Date;
-    Universitario: Date;
+    Pczz: string;
+    Pcak: string;
+    Pctybq: string;
+    Pcqllp: string;
+    Zzcñ: string;
+    Tyhdo: string;
+    Cñmn: string;
+    Cñlb: string;
+    Pcqlbq: string;
+    Pctylp: string;
+    Tyjg: string; 
+    Cñgl: string;
+    Akchc: string;
+    Akmpn: string;
+    Cñolbb: string;
+    Cñol: string;
+    Olbb: string;
+    Gipx: string;
+    Universitario: string;
 }

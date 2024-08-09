@@ -50,5 +50,7 @@ app.use("/api", ordenamientoRoutes);
 
 
 app.use(express.static(path.join(__dirname,"..","..","dist")));
+app.use('/uploads', express.static(path.join(__dirname,"..", 'uploads')));
+console.log(__dirname);
 
 export default app;

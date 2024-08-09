@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authJwt } from "../middlewares";
 import * as personalCtrl from "../controllers/personal.controller";
+import  {uploadFile} from "../controllers/uploads.controller";
 
 const router = Router();
 
@@ -51,6 +52,16 @@ router.delete(
     [authJwt.verifyToken, authJwt.isModerator],
     personalCtrl.deleteDatoPersonalById
 );
+//--------------------------------------------------------------------------------------------
+//Img de Datos personales
+// Ruta para la carga de archivos
+router.post('/upload/:id', 
+    [authJwt.verifyToken, authJwt.isModerator],
+    uploadFile,
+
+);
+
+
 //--------------------------------------------------------------------------------------------
 //Conocimientos de Vias
 router.get("/vias", [authJwt.verifyToken], personalCtrl.getConocimientoVias);

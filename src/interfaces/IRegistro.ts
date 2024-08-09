@@ -1,5 +1,5 @@
 import { Novedad } from './INovedades';
-import { IPersonal } from './IPersonal';
+import { IConocimientosVias, IDatoPersonal, IPersonal } from './IPersonal';
 import { ITurno } from './ITurno';
 import { User } from './IUser';
 import { Ordenamiento } from './IOrdenamientos';
@@ -14,4 +14,6 @@ export interface Registro {
     novedad?: Novedad;
     user?: User;
     ordenamiento?: Ordenamiento;
+    datoPersonal?: IDatoPersonal;
+    conocimientoVia?:IConocimientosVias;
 }

@@ -1,19 +1,41 @@
 <template>
-        <main>
-            <h1>
-                Editar Personal
-            </h1>
-            <div class="alert alert-danger" role="alert" v-if="alerta">
-                <h4 class="alert-heading">ATENCIÓN!</h4>
-                <hr>
-                {{ alerta }}
+    <main>
+        <h1>
+            Editar Personal
+        </h1>
+        <div class="alert alert-danger" role="alert" v-if="alerta">
+            <h4 class="alert-heading">ATENCIÓN!</h4>
+            <hr />
+            {{ alerta }}
+        </div>
+        <!-- <modalBuscarPersonal:personales="personales" /> -->
+        <form @submit.prevent="editPersonal()">
+            <div class="image-container">
+                <img
+                    v-if="datoPersonal && datoPersonal.Img"
+                    :src="`http://localhost:3000/${datoPersonal.Img}`"
+                    class="image rounded-circle"
+                    alt="Carnet"
+                />
+                <img
+                    v-else
+                    class="image rounded-circle"
+                    src="../../assets/usuario.png"
+                    alt="Carnet"
+                />
             </div>
-            <!-- <modalBuscarPersonal:personales="personales" /> -->
-            <form 
-                @submit.prevent="editPersonal()" >
+            <div class="d-flex justify-content-center">
+                <input
+                    type="file"
+                    name="Foto"
+                    id="Foto"    
+                    accept=".jpg,.jpeg,.png"
+                    @change="handleFileChange"
+                />
+            </div>
+            <div class="border border-dark rounded p-3 m-3">
                 <div class="justify-content-between row">
-                    <div class="col-2">
-                        <label for="legajo"></label>
+                    <label class="col-2">
                         Legajo
                         <input
                             class="form-control mb-3"
@@ -24,9 +46,8 @@
                             required
                             v-model="personal.legajo"
                         />
-                    </div>
-                    <div class="col-3">
-                        <label for="Apellido"></label>
+                    </label>
+                    <label class="col-2">
                         Apellido
                         <input
                             class="form-control mb-3"
@@ -36,9 +57,8 @@
                             v-model="personal.apellido"
                             required
                         />
-                    </div>
-                    <div class="col-4">
-                        <label for="nombres"></label>
+                    </label>
+                    <label class="col-3">
                         Nombre
                         <input
                             class="form-control mb-3"
@@ -48,18 +68,16 @@
                             v-model="personal.nombres"
                             required
                         />
-                    </div>
+                    </label>
                 </div>
                 <div class="justify-content-between row">
-                    
-                    <div class="col-1">
-                        <label for="base">Base </label>
+                    <label class="col-2">
+                        Base
                         <select
                             name="base"
                             id="base"
                             class="form-control mb-3"
                             v-model="personal.dotacion"
-                            
                         >
                             <option value="PC">PC</option>
                             <option value="LLV">LLV</option>
@@ -69,10 +87,9 @@
                             <option value="CÑ">CÑ</option>
                             <option value="AK">AK</option>
                         </select>
-                    </div>
-                    
-                    <div class="col-3">
-                        <label for="especialidad">Especialidad </label>
+                    </label>
+                    <label class="col-2">
+                        Especialidad
                         <select
                             name="especialidad"
                             id="especialidad"
@@ -80,16 +97,27 @@
                             v-model="personal.especialidad"
                             required
                         >
-                            <option value="Conductor Electrico">Conductor Eléctrico</option>
-                            <option value="Conductor Diesel">Conductor Diesel</option>
-                            <option value="Ayudante Habilitado">Ayudante Habilitado</option>
-                            <option value="Ayudante Conductor">Ayudante Conductor</option>
-                            <option value="GuardaTren Electrico">GuardaTren Eléctrico</option>
-                            <option value="GuardaTren Diesel">GuardaTren Diesel</option>
+                            <option value="Conductor Electrico"
+                                >Conductor Eléctrico</option
+                            >
+                            <option value="Conductor Diesel"
+                                >Conductor Diesel</option
+                            >
+                            <option value="Ayudante Habilitado"
+                                >Ayudante Habilitado</option
+                            >
+                            <option value="Ayudante Conductor"
+                                >Ayudante Conductor</option
+                            >
+                            <option value="GuardaTren Electrico"
+                                >GuardaTren Eléctrico</option
+                            >
+                            <option value="GuardaTren Diesel"
+                                >GuardaTren Diesel</option
+                            >
                         </select>
-                    </div>
-                    <div class="col-2">
-                        <label for="turno"></label>
+                    </label>
+                    <label class="col-2">
                         Turno/ Ciclo
                         <input
                             class="form-control mb-3"
@@ -98,9 +126,9 @@
                             name="turno"
                             v-model="personal.turno"
                         />
-                    </div>
-                    <div class="col-2">
-                        <label for="franco">Franco </label>
+                    </label>
+                    <label class="col-2">
+                        Franco
                         <select
                             name="franco"
                             id="franco"
@@ -108,17 +136,16 @@
                             v-model="personal.franco"
                             required
                         >
-                            <option value=0>Domingo</option>
-                            <option value=1>Lunes</option>
-                            <option value=2>Martes</option>
-                            <option value=3>Miércoles</option>
-                            <option value=4>Jueves</option>
-                            <option value=5>Viernes</option>
-                            <option value=6>Sábado</option>
+                            <option value="0">Domingo</option>
+                            <option value="1">Lunes</option>
+                            <option value="2">Martes</option>
+                            <option value="3">Miércoles</option>
+                            <option value="4">Jueves</option>
+                            <option value="5">Viernes</option>
+                            <option value="6">Sábado</option>
                         </select>
-                    </div>
-                    <div class="col-2">
-                        <label for="orden"></label>
+                    </label>
+                    <label class="col-2">
                         Orden
                         <input
                             class="form-control mb-3"
@@ -127,94 +154,469 @@
                             name="orden"
                             v-model="personal.orden"
                         />
-                    </div>
+                    </label>
                 </div>
-
-                <div class="justify-content-between row" 
-                    v-if="
-                        personal.especialidad.includes('Conductor') || 
-                        personal.especialidad.includes('Ayudante')" >
-                    <h5>Conocimientos</h5>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        CML
-                        <input type="checkbox" v-model="personal.conocimientos.CML" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        CKD
-                        <input type="checkbox" v-model="personal.conocimientos.CKD" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        RO                        
-                        <input type="checkbox" v-model="personal.conocimientos.RO" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        MPN                        
-                        <input type="checkbox" v-model="personal.conocimientos.MPN" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        OL
-                        <input type="checkbox" v-model="personal.conocimientos.OL" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        LCI
-                        <input type="checkbox" v-model="personal.conocimientos.LCI" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        ELEC
-                        <input type="checkbox" v-model="personal.conocimientos.ELEC" />
-                    </div>
-                    <div class="col-1">
-                        <label for="turno"></label>
-                        DUAL
-                        <input type="checkbox" v-model="personal.conocimientos.DUAL" />
-                    </div>
-                    
-                </div>
-                
-                <div class="row">
-                    <div class="col">
-                        <label for="detalle"></label>
-                        Observaciones
-                        <textarea
+            </div>
+            <h6>Datos personales:</h6>
+            <div class="d-flex flex-column border border-dark rounded p-3 m-3">
+                <div class="justify-content-between row">
+                    <label class="col-2">
+                        DNI
+                        <input
                             class="form-control mb-3"
-                            name="detalle"
-                            v-model="personal.observaciones"
-                        ></textarea>
+                            placeholder="DNI"
+                            type="number"
+                            v-model="datoPersonal.Dni"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Nacionalidad:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Nacionalidad"
+                            type="text"
+                            v-model="datoPersonal.Nacionalidad"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Fecha de nacimiento:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Fecha de Nacimiento"
+                            type="Date"
+                            v-model="datoPersonal.Nacimiento"
+                        />
+                    </label>
+                    
+                    <label class="col-2">
+                        Sexo:
+                        <select
+                            name="Sexo"
+                            id="Sexo"
+                            class="form-control mb-3"
+                            v-model="datoPersonal.Sexo"
+                        >
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </label>
+                    <label class="col-2">
+                        Grupo Sanguíneo:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Grupo Sanguíneo"
+                            type="text"
+                            v-model="datoPersonal.GrupoSanguíneo"
+                        />
+                    </label>
+                </div>
+            </div>
+            <h6>Dirección y contacto:</h6>
+            <div class="d-flex flex-column border border-dark rounded p-3 m-3">
+                <div class="row">
+                    <label class="col-3">
+                        Dirección:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Dirección"
+                            type="text"
+                            v-model="datoPersonal.Calle"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Nro:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Numero"
+                            type="number"
+                            v-model="datoPersonal.Nro"
+                        />
+                    </label>
+                    <label class="col-1">
+                        Piso:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Piso"
+                            type="text"
+                            v-model="datoPersonal.Piso"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Dpto:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Departamento"
+                            type="text"
+                            v-model="datoPersonal.Depto"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Código Postal:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Código Postal"
+                            type="number"
+                            v-model="datoPersonal.Postal"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Localidad:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Localidad"
+                            type="text"
+                            v-model="datoPersonal.Localidad"
+                        />
+                    </label>
+                </div>
+                <div class="justify-content-between row">
+                    <label class="col-3">
+                        Celular:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Dirección"
+                            type="text"
+                            v-model="datoPersonal.Tel1"
+                        />
+                    </label>
+                    <label class="col-3">
+                        Teléfono:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Teléfono"
+                            type="text"
+                            v-model="datoPersonal.Tel2"
+                        />
+                    </label>
+                    <label class="col-4">
+                        mail:
+                        <input
+                            class="form-control mb-3"
+                            placeholder="mail"
+                            type="text"
+                            v-model="datoPersonal.Mail"
+                        />
+                    </label>
+                </div>
+            </div>
+            <h6>Certificados:</h6>
+            <div
+                class="d-flex justify-content-evenly border border-dark rounded p-3 m-3"
+                v-if="
+                    personal.especialidad.includes('Conductor') ||
+                    personal.especialidad.includes('Ayudante')
+                "
+            >
+                <label class="col-3">
+                    Apto Medico:
+                    <input
+                        class="form-control mb-3"
+                        placeholder="Apto Medico"
+                        type="Date"
+                        v-model="datoPersonal.aptoMedico"
+                    />
+                </label>
+                <label class="col-3">
+                    Certificado Idoneidad:
+                    <input
+                        class="form-control mb-3"
+                        placeholder="Certificado Idoneidad"
+                        type="Date"
+                        v-model="datoPersonal.certificadoIdoneidad"
+                    />
+                </label>
+            </div>
+            <h6>Conocimientos</h6>
+            <div
+                class="d-flex flex-column border border-dark rounded p-3 m-3"
+                v-if="
+                    personal.especialidad.includes('Conductor') ||
+                    personal.especialidad.includes('Ayudante')
+                "
+            >
+                <div class="row justify-content-between">
+                    <h6>Estudios:</h6>
+                    <label class="col-1">
+                        CML
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.CML"
+                        />
+                    </label>
+                    <label class="col-1">
+                        CKD
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.CKD"
+                        />
+                    </label>
+
+                    <label class="col-1">
+                        RO
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.RO"
+                        />
+                    </label>
+                    <label class="col-1">
+                        MPN
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.MPN"
+                        />
+                    </label>
+                    <label class="col-1">
+                        OL
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.OL"
+                        />
+                    </label>
+                    <label class="col-1">
+                        LCI
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.LCI"
+                        />
+                    </label>
+                    <label class="col-1">
+                        ELEC
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.ELEC"
+                        />
+                    </label>
+                    <label class="col-1">
+                        DUAL
+                        <input
+                            type="checkbox"
+                            v-model="personal.conocimientos.DUAL"
+                        />
+                    </label>
+                </div>
+                <hr />
+                <div class="row justify-content-between my-5">
+                    <h6>Vias:</h6>
+                    <hr />
+                    Sector Electrico:
+                    <div
+                        class="d-flex list-unstyled w-100 justify-content-between"
+                    >
+                        <label class="col-2">
+                            PC-ZZ:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                            />
+                        </label>
+                        <label class="col-2">
+                            PC-AK:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Pcak"
+                            />
+                        </label>
+                        <label class="col-2">
+                            PC-TY-BQ:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Pctybq"
+                            />
+                        </label>
+                        <label class="col-2">
+                            PC-QL-BQ:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Pcqlbq"
+                            />
+                        </label>
+                        <label class="col-2">
+                            PC-QL-LP:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Pcqllp"
+                            />
+                        </label>
+                        <label class="col-2">
+                            PC-TY-LP:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Pctylp"
+                            />
+                        </label>
+                    </div>
+                    <hr class="mt-5" />
+                    Sector Temperley:
+                    <div
+                        class="d-flex list-unstyled w-100 justify-content-evenly"
+                    >
+                        <label class="col-2">
+                            TY-HDO:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Tyhdo"
+                            />
+                        </label>
+                        <label class="col-2">
+                            TY-JG:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Tyjg"
+                            />
+                        </label>
+                    </div>
+                    <hr class="mt-5" />
+                    Sector Cañuelas:
+                    <div
+                        class="d-flex list-unstyled w-100 justify-content-between"
+                    >
+                        <label class="col-2">
+                            ZZ-CÑ:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Zzcñ"
+                            />
+                        </label>
+                        <label class="col-2">
+                            CÑ-MN:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Cñmn"
+                            />
+                        </label>
+                        <label class="col-2">
+                            CÑ-LB:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Cñlb"
+                            />
+                        </label>
+                        <label class="col-2">
+                            CÑ-GL:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Cñgl"
+                            />
+                        </label>
+                        <label class="col-2">
+                            CÑ-OL:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Cñol"
+                            />
+                        </label>
+                        <label class="col-2">
+                            OL-BB:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Olbb"
+                            />
+                        </label>
+                    </div>
+                    <hr class="mt-5" />
+                    Sector Alejandro Korn:
+                    <div
+                        class="d-flex list-unstyled w-100 justify-content-between"
+                    >
+                        <label class="col-2">
+                            AK-CHC:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Akchc"
+                            />
+                        </label>
+                        <label class="col-2">
+                            AK-MPN:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Akmpn"
+                            />
+                        </label>
+                        <label class="col-2">
+                            GI-PX:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Gipx"
+                            />
+                        </label>
+                        <label class="col-2">
+                            Universitario:
+                            <input
+                                class="form-control mb-3"
+                                type="Date"
+                                v-model="conocimientoVia.Universitario"
+                            />
+                        </label>
                     </div>
                 </div>
-                <div>
-                    <button class="btn btn-primary col-1 m-2">Guardar</button>
-                    <button class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</button>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6>
+                        Observaciones:
+                    </h6>
+                    <textarea
+                        class="border border-dark rounded p-3 m-3"
+                        name="detalle"
+                        v-model="personal.observaciones"
+                    ></textarea>
                 </div>
-            </form>
-            
-        </main>
+            </div>
+            <div class="mb-5">
+                <button class="btn btn-primary col-1 m-2">Guardar</button>
+                <button class="btn btn-secondary col-1 m-2" @click="cerrar()">
+                    Cerrar
+                </button>
+            </div>
+        </form>
+    </main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getConocimientoVia, getDatoPersonal, getPersonal , updatePersonal } from "../../services/personalService";
-import { IPersonal, IDatoPersonal, IConocimientosVias } from '../../interfaces/IPersonal';
+import {
+    getConocimientoVia,
+    getDatoPersonal,
+    getPersonal,
+    updateConocimientoVia,
+    updateDatoPersonal,
+    updatePersonal,
+    uploadImg,
+} from "../../services/personalService";
+import {
+    IPersonal,
+    IDatoPersonal,
+    IConocimientosVias,
+} from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { Registro } from "../../interfaces/IRegistro";
 import { createRegistro } from "../../services/registrosService";
 import { AxiosError } from "axios";
 
 export default defineComponent({
-    props:["idPersonal","idDato","idVia"],
+    props: ["idPersonal", "idDato", "idVia"],
     data() {
         return {
-            
-            personal: {especialidad: ""} as IPersonal,
+            personal: { especialidad: "" } as IPersonal,
             datoPersonal: {} as IDatoPersonal,
-            conocimientoVia:{} as IConocimientosVias,
+            conocimientoVia: {} as IConocimientosVias,
             days: [
                 "Domingo",
                 "Lunes",
@@ -225,33 +627,64 @@ export default defineComponent({
                 "Sábado",
             ],
             alerta: "" as string,
-            today: new Date()
+            today: new Date(),
         };
     },
     methods: {
         async editPersonal() {
             try {
-                if(this.alerta){
-                    this.alerta =  " ATENCIÓN!!! NO ES POSIBLE ACTUALIZAR ESTA NOVEDAD!      " + this.alerta 
+                if (this.alerta) {
+                    this.alerta =
+                        " ATENCIÓN!!! NO ES POSIBLE ACTUALIZAR ESTA NOVEDAD!      " +
+                        this.alerta;
                     return;
                 }
-                await updatePersonal(
-                    this.personal._id,
-                    this.personal
-                    );
-                
+                await updatePersonal(this.personal._id, this.personal);
+                await updateDatoPersonal(this.datoPersonal._id, this.datoPersonal);
+                await updateConocimientoVia(this.conocimientoVia._id, this.conocimientoVia);
+
                 // guardamos registro
                 const registro: Registro = {
-                            usuario : window.localStorage.getItem("username")||'',
-                            fecha : this.today.toString() ,
-                            accion: "Edito",
-                            personal : this.personal,
-                        }
+                    usuario: window.localStorage.getItem("username") || "",
+                    fecha: this.today.toString(),
+                    accion: "Edito",
+                    personal: this.personal,
+                    conocimientoVia: this.conocimientoVia,
+                    datoPersonal: this.datoPersonal
+                };
                 await createRegistro(registro);
 
                 this.$router.push({ name: "Personal" });
             } catch (error) {
-                this.handleRequestError(error as AxiosError)
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        async handleFileChange(event: Event) {
+            const target = event.target as HTMLInputElement;
+            if (target.files && target.files[0]) {
+                const file = target.files[0];
+                const formData = new FormData();
+                formData.append('myFile', file);
+
+                try {
+                const response = await uploadImg(formData,this.datoPersonal._id);
+                this.datoPersonal.Img = response.data.Img; // Ajusta según el nombre del campo en la respuesta
+                formData.append('id', this.datoPersonal._id);
+                // guardamos registro
+                const registro: Registro = {
+                    usuario: window.localStorage.getItem("username") || "",
+                    fecha: this.today.toString(),
+                    accion: "Cambio Fotografía",
+                    personal: this.personal,
+                    conocimientoVia: this.conocimientoVia,
+                    datoPersonal: this.datoPersonal
+                };
+                await createRegistro(registro);
+                
+                } catch (error) {
+                console.error('Error al subir el archivo:', error);
+                }
+                
             }
         },
         handleRequestError(error: AxiosError) {
@@ -259,72 +692,72 @@ export default defineComponent({
 
             if (error.response && error.response.status === 401) {
                 // Manejar la lógica de redirección a la página de inicio de sesión
-                localStorage.removeItem("username")
-                localStorage.removeItem("roles")
-                localStorage.removeItem("token")
+                localStorage.removeItem("username");
+                localStorage.removeItem("roles");
+                localStorage.removeItem("token");
                 this.$router.push("/login");
             } else {
                 // Manejar otros errores de solicitud
                 // Puedes mostrar un mensaje de error o tomar otras acciones según tus necesidades
             }
         },
-        cerrar(){
+        cerrar() {
             this.$router.push({ name: "Personal" });
         },
         /* Este método trae el personal */
-        async loadPersonal(id:string) {
+        async loadPersonal(id: string) {
             try {
                 const res = await getPersonal(id);
-                this.personal = res.data;  
-                
+                this.personal = res.data;
             } catch (error) {
                 console.error(error);
             }
         },
-        async loadDatoPersonal(id:string) {
+        async loadDatoPersonal(id: string) {
             try {
                 const res = await getDatoPersonal(id);
-                this.datoPersonal = res.data;  
-                console.log(this.datoPersonal);
-                
+                this.datoPersonal = res.data;
             } catch (error) {
                 console.error(error);
             }
         },
-        async loadConocimientoVia(id:string) {
+        async loadConocimientoVia(id: string) {
             try {
                 const res = await getConocimientoVia(id);
-                this.conocimientoVia = res.data;  
-                console.log(this.conocimientoVia);
-                
+                this.conocimientoVia = res.data;
             } catch (error) {
                 console.error(error);
             }
+        },
+        formatFecha(fecha: Date): string {
+            const day = fecha.getDate().toString().padStart(2, "0");
+            const month = (fecha.getMonth() + 1).toString().padStart(2, "0");
+            const year = fecha.getFullYear();
+            return `${day}/${month}/${year}`;
         },
     },
     mounted() {
         // if (typeof this.$route.params.id === "string") {
         if (this.$route.params) {
-            const idPersonal = Array.isArray(this.$route.params.idPersonal) 
-                ? this.$route.params.idPersonal[0] 
+            const idPersonal = Array.isArray(this.$route.params.idPersonal)
+                ? this.$route.params.idPersonal[0]
                 : this.$route.params.idPersonal;
 
-            const idDato = Array.isArray(this.$route.params.idDato) 
-                ? this.$route.params.idDato[0] 
+            const idDato = Array.isArray(this.$route.params.idDato)
+                ? this.$route.params.idDato[0]
                 : this.$route.params.idDato;
 
-            const idVia = Array.isArray(this.$route.params.idVia) 
-                ? this.$route.params.idVia[0] 
+            const idVia = Array.isArray(this.$route.params.idVia)
+                ? this.$route.params.idVia[0]
                 : this.$route.params.idVia;
-            
+
             this.loadPersonal(idPersonal);
             this.loadDatoPersonal(idDato);
             this.loadConocimientoVia(idVia);
         }
         newToken();
     },
-    components: {
-    },
+    components: {},
 });
 </script>
 <style>
@@ -332,18 +765,20 @@ main {
     margin-top: 5rem;
     /* margin-left: 300px; */
 }
-h1{
+h1 {
     display: flex;
     justify-content: center;
 }
-form{
+form {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin-left: 300px;
     width: 75%;
 }
-row{
-    margin-left: 200px;
+h1{
+    width: 75%;
+    margin-left: 300px;
 }
+
 </style>

@@ -79,24 +79,12 @@
                         v-model="newPersonal.especialidad"
                         required
                     >
-                        <option value="Conductor electrico">
-                            Conductor Eléctrico
-                        </option>
-                        <option value="Conductor diesel">
-                            Conductor Diesel
-                        </option>
-                        <option value="Ayudante habilitado">
-                            Ayudante Habilitado
-                        </option>
-                        <option value="Ayudante conductor">
-                            Ayudante Conductor
-                        </option>
-                        <option value="GuardaTren electrico">
-                            GuardaTren Eléctrico
-                        </option>
-                        <option value="GuardaTren diesel">
-                            GuardaTren Diesel
-                        </option>
+                        <option value="Conductor Electrico">Conductor Eléctrico</option>
+                        <option value="Conductor Diesel">Conductor Diesel</option>
+                        <option value="Ayudante Habilitado">Ayudante Habilitado</option>
+                        <option value="Ayudante Conductor">Ayudante Conductor</option>
+                        <option value="GuardaTren Electrico">GuardaTren Eléctrico</option>
+                        <option value="GuardaTren Diesel">GuardaTren Diesel</option>
                     </select>
                 </div>
                 <div class="col-2">

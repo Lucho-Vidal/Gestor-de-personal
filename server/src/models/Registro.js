@@ -17,7 +17,10 @@ const registroSchema = new Schema({
     personal: {},
     novedad: {},
     user:{},
-    ordenamiento:{}
+    ordenamiento:{},
+    datoPersonal:{},
+    conocimientoVia:{},
+
 });
 
 export default model("Registro", registroSchema);

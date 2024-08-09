@@ -39,9 +39,10 @@
                         </div>
                         <div class="modal-body">
                             <div class="image-container ">
-                                <img v-if="datosPersonalesIndexados[detalleLegajo] && datosPersonalesIndexados[detalleLegajo].Img" :src="datosPersonalesIndexados[detalleLegajo].Img" class="image rounded-circle" alt="Carnet">
+                                <img v-if="datosPersonalesIndexados[detalleLegajo] && datosPersonalesIndexados[detalleLegajo].Img" 
+                                :src="`http://localhost:3000/${datosPersonalesIndexados[detalleLegajo].Img}`"
+                                class="image rounded-circle" alt="Carnet">
                                 <img v-else class="image rounded-circle "  src="../../assets/usuario.png" alt="Carnet">
-
                             </div>
                             <h6>Personal:</h6>
                             <div class=" border border-dark rounded p-3 m-3">
@@ -67,7 +68,7 @@
                                 <ul class="d-flex list-unstyled w-100 justify-content-between">
                                     <li class="list-inline-item">DNI: {{ datosPersonalesIndexados[detalleLegajo].Dni }}</li>
                                     <li class="list-inline-item">Nacionalidad: {{ datosPersonalesIndexados[detalleLegajo].Nacionalidad }}</li>
-                                    <li class="list-inline-item">Fecha de Nacimiento: {{ datosPersonalesIndexados[detalleLegajo].Nacimiento }}</li>
+                                    <li class="list-inline-item">Fecha de Nacimiento: {{ formatearFecha(datosPersonalesIndexados[detalleLegajo].Nacimiento) }}</li>
                                     <li class="list-inline-item">Sexo: {{ datosPersonalesIndexados[detalleLegajo].Sexo }}</li>
                                     <li class="list-inline-item">Grupo Sanguíneo: {{ datosPersonalesIndexados[detalleLegajo].GrupoSanguíneo }}</li>
                                 </ul>
@@ -89,11 +90,11 @@
                             <div class="d-flex list-unstyled w-100 justify-content-evenly"  v-if="datosPersonalesIndexados[detalleLegajo]" >
                                 <ul v-if="datosPersonalesIndexados[detalleLegajo].aptoMedico">
                                     <h6>Apto Medico</h6>
-                                    <li class="list-inline-item"> {{ formatFecha(new Date(datosPersonalesIndexados[detalleLegajo].aptoMedico)) }} </li>
+                                    <li class="list-inline-item"> {{ formatearFecha(datosPersonalesIndexados[detalleLegajo].aptoMedico) }} </li>
                                 </ul>
                                 <ul v-if="datosPersonalesIndexados[detalleLegajo].certificadoIdoneidad">
                                     <h6>Certificado Idoneidad</h6>
-                                    <li class="list-inline-item"> {{ formatFecha(new Date(datosPersonalesIndexados[detalleLegajo].certificadoIdoneidad)) }} </li>
+                                    <li class="list-inline-item"> {{ formatearFecha(datosPersonalesIndexados[detalleLegajo].certificadoIdoneidad) }} </li>
                                 </ul>
                             </div>
                             <h6>Observaciones:</h6>
@@ -627,6 +628,24 @@ export default defineComponent({
             const year = fecha.getFullYear();
             return `${day}/${month}/${year}`;
         },
+        formatearFecha(fechaString: string): string {
+            if (fechaString) {
+                const fecha: Date = new Date(fechaString);
+                const opcionesDeFormato: Intl.DateTimeFormatOptions = {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                };
+                const formatoFecha = new Intl.DateTimeFormat(
+                    "es-AR",
+                    opcionesDeFormato
+                );
+
+                return formatoFecha.format(fecha);
+            } else {
+                return "";
+            }
+        },
         handleRequestError(error: AxiosError) {
             console.error("Error en la solicitud:", error);
 
@@ -823,15 +842,5 @@ export default defineComponent({
 main{
     margin-top: 5rem;
 }
-.image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Ajusta la altura según sea necesario */
-}
 
-.image {
-    width: 200px;
-    height: auto; /* Mantiene la relación de aspecto de la imagen */
-}
 </style>
