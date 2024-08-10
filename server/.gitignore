@@ -10,3 +10,5 @@ dist
 build
 *.py
 *.yaml
+
+*.JPG

@@ -11,7 +11,7 @@
             <div class="d-flex justify-content-end">
                 <router-link
                     class="btn btn-primary d-flex end"
-                    to="/newPersonal"
+                    to="/editPersonal"
                     >Nuevo Personal</router-link
                 >
                 <router-link
@@ -24,7 +24,7 @@
                 </button>
             </div>
             <!-- v-if="detalleLegajo!=0" para que no genere error -->
-            <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0" @click="cerrarModal">
+            <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0" @click.self="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -104,49 +104,55 @@
                                     
                                 </ul>
                             </div>
-                            <h6>Conocimientos:</h6>
-                            <div class="my-3 d-flex row border border-dark rounded p-3 m-3">
-                                <h6>Estudios:</h6>
-                                <ul class="d-flex list-unstyled w-100 justify-content-start">
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CML ? "CML" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CKD ? "CKD" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.RO ? "RO" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.MPN ? "MPN" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.OL ? "OL" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.LCI ? "LCI" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.ELEC ? "ELEC" : "" }}</li>
-                                    <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.DUAL ? "DUAL" : "" }}</li>
-                                </ul>
-                                <div v-if="conocimientosViasIndexados[detalleLegajo]">
-                                    <h6>Vias:</h6>
-                                    <ul class="d-flex list-unstyled w-100 justify-content-between">
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pczz">PC-ZZ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pczz))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcak">PC-AK: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcak))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctybq">PC-TY-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctybq))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqlbq">PC-QL-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqlbq))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqllp">PC-QL-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqllp))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctylp">PC-TY-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctylp))  }}</li>
+                            <div v-if="
+                                personalIndexado[detalleLegajo].especialidad.includes('Conductor') ||
+                                personalIndexado[detalleLegajo].especialidad.includes('Ayudante')
+                                ">
+                                <h6>Conocimientos:</h6>
+                                <div class="my-3 d-flex row border border-dark rounded p-3 m-3">
+                                    <h6>Estudios:</h6>
+                                    <ul class="d-flex list-unstyled w-100 justify-content-start">
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CML ? "CML" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.CKD ? "CKD" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.RO ? "RO" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.MPN ? "MPN" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.OL ? "OL" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.LCI ? "LCI" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.ELEC ? "ELEC" : "" }}</li>
+                                        <li class="list-inline-item">{{ personalIndexado[detalleLegajo].conocimientos.DUAL ? "DUAL" : "" }}</li>
                                     </ul>
-                                    <ul class="d-flex list-unstyled w-100 justify-content-between">   
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyhdo">TY-HDO: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyhdo))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyjg">TY-JG: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyjg))  }}</li>
-                                    </ul>
-                                    <ul class="d-flex list-unstyled w-100 justify-content-between">   
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Zzcñ">ZZ-CÑ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Zzcñ))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñmn">CÑ-MN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñmn))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñlb">CÑ-LB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñlb))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñgl">CÑ-GL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñgl))  }}</li>             
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñol">CÑ-OL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñol))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Olbb">OL-BB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Olbb))  }}</li>
-                                    </ul>
-                                    <ul class="d-flex list-unstyled w-100 justify-content-between">    
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akchc">AK-CHC: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akchc))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akmpn">AK-MPN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akmpn))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Gipx">GI-PX: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Gipx))  }}</li>
-                                        <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Universitario">Universitario: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Universitario))  }}</li>
-                                    </ul>
+                                    <div v-if="conocimientosViasIndexados[detalleLegajo]">
+                                        <h6>Vias:</h6>
+                                        <ul class="d-flex list-unstyled w-100 justify-content-between">
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pczz">PC-ZZ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pczz))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcak">PC-AK: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcak))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctybq">PC-TY-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctybq))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqlbq">PC-QL-BQ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqlbq))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pcqllp">PC-QL-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pcqllp))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Pctylp">PC-TY-LP: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Pctylp))  }}</li>
+                                        </ul>
+                                        <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyhdo">TY-HDO: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyhdo))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Tyjg">TY-JG: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Tyjg))  }}</li>
+                                        </ul>
+                                        <ul class="d-flex list-unstyled w-100 justify-content-between">   
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Zzcñ">ZZ-CÑ: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Zzcñ))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñmn">CÑ-MN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñmn))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñlb">CÑ-LB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñlb))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñgl">CÑ-GL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñgl))  }}</li>             
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Cñol">CÑ-OL: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Cñol))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Olbb">OL-BB: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Olbb))  }}</li>
+                                        </ul>
+                                        <ul class="d-flex list-unstyled w-100 justify-content-between">    
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akchc">AK-CHC: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akchc))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Akmpn">AK-MPN: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Akmpn))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Gipx">GI-PX: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Gipx))  }}</li>
+                                            <li class="list-inline-item" v-if="conocimientosViasIndexados[detalleLegajo].Universitario">Universitario: {{ formatFecha(new Date(conocimientosViasIndexados[detalleLegajo].Universitario))  }}</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
+                            
                             
                         </div>
                         <div class="m-3 d-flex justify-content-center">
@@ -168,7 +174,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click="cerrarModal">
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click.self="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -499,7 +505,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
-    createDatoPersonal,
     deletePersonal,
     getConocimientosVias,
     getDatosPersonales,
@@ -820,15 +825,6 @@ export default defineComponent({
             }
         },
         async edit(idPersonal: string,idDato: string,idVia: string) {            
-            // this.$router.push(`/editPersonal/${id}`);
-            console.log(idPersonal);
-            console.log(idDato);
-            console.log(idVia);
-            
-            //asegurarnos de que exista aunque sea vacíos
-            // if(idDato == ''){
-            //     await createDatoPersonal()
-            // }
             this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia } });
         },
     },

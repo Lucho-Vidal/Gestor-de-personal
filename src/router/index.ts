@@ -142,7 +142,7 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/editPersonal/:idPersonal/:idDato/:idVia",
+        path: "/editPersonal/:idPersonal?/:idDato?/:idVia?",
         name: "editPersonal",
         props: true,
         meta: { title: "GNPA - Editar personal" },
