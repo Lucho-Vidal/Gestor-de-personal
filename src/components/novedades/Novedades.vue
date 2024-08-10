@@ -15,7 +15,7 @@
                     Filtrar novedades
                 </button>
             </div>
-            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">

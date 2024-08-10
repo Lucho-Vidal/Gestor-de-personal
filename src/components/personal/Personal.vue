@@ -24,7 +24,7 @@
                 </button>
             </div>
             <!-- v-if="detalleLegajo!=0" para que no genere error -->
-            <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0">
+            <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0" @click="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -154,8 +154,8 @@
                                 class="btn btn-primary mx-3"
                                 @click="edit(
                                     personalIndexado[detalleLegajo]._id,
-                                    datosPersonalesIndexados[detalleLegajo]._id,
-                                    conocimientosViasIndexados[detalleLegajo]._id
+                                    datosPersonalesIndexados[detalleLegajo]?._id || '',
+                                    conocimientosViasIndexados[detalleLegajo]?._id ||''
                                     )"
                                 >Editar personal</button>
                                 <button
@@ -168,7 +168,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal" :class="{ 'd-block': mostrarModalSearch }">
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -499,6 +499,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+    createDatoPersonal,
     deletePersonal,
     getConocimientosVias,
     getDatosPersonales,
@@ -818,10 +819,17 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        edit(idPersonal: string,idDato: string,idVia: string) {            
+        async edit(idPersonal: string,idDato: string,idVia: string) {            
             // this.$router.push(`/editPersonal/${id}`);
+            console.log(idPersonal);
+            console.log(idDato);
+            console.log(idVia);
+            
+            //asegurarnos de que exista aunque sea vacíos
+            // if(idDato == ''){
+            //     await createDatoPersonal()
+            // }
             this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia } });
-            // son 3 documentos diferentes, con 3 ids diferentes, los voy a guardar en el local storage para pasarlos
         },
     },
     created() {
