@@ -40,9 +40,9 @@
                     </option>
                 </select>
             </div>
-            <button class="btn btn-primary mx-5" @click="actualizarChartData()">
+            <!-- <button class="btn btn-primary mx-5" @click="actualizarChartData()">
                 Calcular
-            </button>
+            </button> -->
             <button class="btn btn-success mx-5" @click="exportToExcel">
                 Descargar Excel
             </button>
@@ -385,8 +385,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Pie } from "vue-chartjs";
-import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
+// import { Pie } from "vue-chartjs";
+// import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
@@ -403,11 +403,11 @@ import {
 import { IEstadistica, TipoAusentismo } from "../../interfaces/IEstadistica";
 import { ITurno } from "../../interfaces/ITurno";
 import { IPersonal } from "../../interfaces/IPersonal";
-ChartJS.register(ArcElement, Tooltip, Legend);
+// ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default defineComponent({
     components: {
-        Pie,
+        // Pie,
     },
     data() {
         return {
@@ -487,8 +487,8 @@ export default defineComponent({
 
             try {
                 // Captura la imagen del gráfico
-                const chartCanvas = await html2canvas(chartContainer);
-                const imageData = chartCanvas.toDataURL("image/png");
+                // const chartCanvas = await html2canvas(chartContainer);
+                // const imageData = chartCanvas.toDataURL("image/png");
 
                 // Crear un nuevo libro de trabajo
                 const workbook = new ExcelJS.Workbook();
@@ -539,14 +539,14 @@ export default defineComponent({
                 });
 
                 // Agregar la imagen del gráfico
-                const imageId = workbook.addImage({
-                    base64: imageData,
-                    extension: "png",
-                });
-                worksheet.addImage(imageId, {
-                    tl: { col: 0, row: rows.length + 1 },
-                    ext: { width: 600, height: 300 },
-                });
+                // const imageId = workbook.addImage({
+                //     base64: imageData,
+                //     extension: "png",
+                // });
+                // worksheet.addImage(imageId, {
+                //     tl: { col: 0, row: rows.length + 1 },
+                //     ext: { width: 600, height: 300 },
+                // });
 
                 // Guardar el archivo
                 const buffer = await workbook.xlsx.writeBuffer();
@@ -819,31 +819,31 @@ export default defineComponent({
 
             return conteoPorEspecialidad;
         },
-        actualizarChartData() {
-            this.chartData.datasets[0].data = [
-                this.estadistico.totales.enfermos,
-                this.estadistico.totales.res558,
-                this.estadistico.totales.licenciaAnual,
-                this.estadistico.totales.escTecnica,
-                this.estadistico.totales.ausenteDisciplinarios,
-                this.estadistico.totales.legalesConvencionales,
-                this.estadistico.totales.otrosMotivos,
-                this.estadistico.totales.franco,
-            ];
-            this.chartData.labels = [
-                "Enfermos",
-                "Res 558",
-                "Licencia anual",
-                "Esc Técnica",
-                "Ausente disciplinarios y suspensiones",
-                "Lic. Legales y convención",
-                "Ausente otros motivos",
-                "Franco",
-            ];
+        // actualizarChartData() {
+        //     this.chartData.datasets[0].data = [
+        //         this.estadistico.totales.enfermos,
+        //         this.estadistico.totales.res558,
+        //         this.estadistico.totales.licenciaAnual,
+        //         this.estadistico.totales.escTecnica,
+        //         this.estadistico.totales.ausenteDisciplinarios,
+        //         this.estadistico.totales.legalesConvencionales,
+        //         this.estadistico.totales.otrosMotivos,
+        //         this.estadistico.totales.franco,
+        //     ];
+        //     this.chartData.labels = [
+        //         "Enfermos",
+        //         "Res 558",
+        //         "Licencia anual",
+        //         "Esc Técnica",
+        //         "Ausente disciplinarios y suspensiones",
+        //         "Lic. Legales y convención",
+        //         "Ausente otros motivos",
+        //         "Franco",
+        //     ];
             
-            // Forzar actualización del gráfico
-            this.$forceUpdate();
-        },
+        //     // Forzar actualización del gráfico
+        //     this.$forceUpdate();
+        // },
         contarNovedadesPorFechaYEspecialidad(novedades: Novedad[],fecha: string,especialidad: string, tipoNovedad: string): number {
             return novedades.filter((novedad: Novedad) => {
                 const fechaParametro = new Date(fecha);
@@ -975,21 +975,21 @@ export default defineComponent({
         },
     },
     mounted() {
-        // Aquí se ejecuta el código después de que el componente se ha montado
-        this.$nextTick(() => {
-            console.log(this.chartData); // Verifica si los datos están configurados
-        console.log(this.chartOptions); // Verifica si las opciones están configuradas
-        console.log(this.$refs); // Verifica si 'pieChart' está en 'this.$refs'
+        // // Aquí se ejecuta el código después de que el componente se ha montado
+        // this.$nextTick(() => {
+        //     console.log(this.chartData); // Verifica si los datos están configurados
+        // console.log(this.chartOptions); // Verifica si las opciones están configuradas
+        // console.log(this.$refs); // Verifica si 'pieChart' está en 'this.$refs'
 
-            const pieChartInstance = this.$refs.pieChart as any;
+        //     const pieChartInstance = this.$refs.pieChart as any;
 
-            if (pieChartInstance) {
-                this.actualizarChartData();
-                pieChartInstance.__chartjs.update(); // Actualiza el gráfico
-            } else {
-                console.error("No se pudo encontrar el gráfico Pie.");
-            }
-        });
+        //     if (pieChartInstance) {
+        //         this.actualizarChartData();
+        //         pieChartInstance.__chartjs.update(); // Actualiza el gráfico
+        //     } else {
+        //         console.error("No se pudo encontrar el gráfico Pie.");
+        //     }
+        // });
     },
     async created() {
         try {
