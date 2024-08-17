@@ -188,45 +188,43 @@
                         class="form-control mb-3"
                         v-model="novedad.tipoNovedad"
                     >
-                        <option value="Estudio">Estudio</option>
+                        //Enfermos
                         <option value="Enfermedad">Enfermedad</option>
-                        <option value="Duelo">Duelo</option>
                         <option value="ART">ART</option>
-                        <option value="Arrollamiento 558">
-                            Arrollamiento 558
-                        </option>
-                        <option value="Resolución 404">
-                            Resolución 404
-                        </option>
-                        <option value="Servicio Especial">
-                            Servicio Especial
-                        </option>
-                        <option value="Donación Sangre">
-                            Donación Sangre
-                        </option>
-                        <option value="Donación Plaqueta">
-                            Donación Plaqueta
-                        </option>
-                        <option value="Licencia Deportiva">
-                            Licencia Deportiva
-                        </option>
-                        <option value="Tarea Liviana">Tarea Liviana</option>
-                        <option value="Licencia Gremial">
-                            Licencia Gremial
-                        </option>
-                        <option value="Ausente">Ausente</option>
-                        <option value="Practica">Practica</option>
+                        <hr>
+                        //res558
+                        <option value="Arrollamiento 558">Arrollamiento 558</option>
+                        <hr>
+                        //LicenciaAnual
+                        <option value="Licencia Anual">Licencia Anual</option>
+                        <hr>
+                        //escTecnica
+                        <option value="Escuela Tecnica">Escuela Tecnica</option>
+                        <hr>
+                        //disciplinarios
                         <option value="Suspension">Suspension</option>
-                        <option value="Rev. Medica">Rev. Medica</option>
-                        <option value="Descanso Anticipado">
-                            Descanso Anticipado
-                        </option>
-                        <option value="Licencia Anual">
-                            Licencia Anual
-                        </option>
-                        <option value="Baja definitiva">
-                            Baja definitiva
-                        </option>
+                        <hr>
+                        //Legales y convencionales
+                        <option value="Estudio">Estudio</option>
+                        <option value="Licencia Deportiva">Licencia Deportiva</option>
+                        <option value="Licencia Gremial">Licencia Gremial</option>
+                        <option value="Examen">Examen</option>
+                        <option value="Art17-23">Art 17 FT / Art 23 UF</option>
+                        <option value="Donación Sangre">Donación Sangre</option>
+                        <option value="Donación Plaqueta">Donación Plaqueta</option>
+                        <option value="Casamiento">Casamiento</option>
+                        <option value="Duelo">Duelo</option>
+                        <hr>
+                        //OtrosMotivos
+                        <option value="Ausente">Ausente</option>
+                        <hr>
+                        //Franco
+                        <option value="Descanso Adeudado">Descanso Adeudado</option>
+                        <hr>
+                        //sin efecto en el estadistico
+                        <option value="Practica">Practica via</option>
+                        <option value="Revision Medica">Revision Medica</option>
+                        <option value="Baja definitiva">Baja definitiva</option>
                     </select>
                 </div>
             </div>

@@ -296,6 +296,32 @@ export function obtenerTiposCirculares(turnos: ITurno[]) {
 
     return circularesUnicas;
 }
+// export function obtenerDotaciones(turnos: ITurno[]) {
+//     // Filtramos aquellos turnos que tengan definida la propiedad "dotacion"
+//     const turnosFiltrados = turnos.filter(
+//         (turno) => turno.dotacion !== undefined
+//     );
+
+//     // Usamos Set para obtener valores únicos de la propiedad "circular"
+//     const dotacionesUnicas = [
+//         ...new Set(turnosFiltrados.map((turno) => turno.dotacion)),
+//     ];
+
+//     return dotacionesUnicas;
+// }
+export function obtenerDotaciones(personal: IPersonal[]) {
+    // Filtramos aquellos turnos que tengan definida la propiedad "dotacion"
+    const personalFiltrados = personal.filter(
+        (personal) => personal.dotacion !== undefined
+    );
+
+    // Usamos Set para obtener valores únicos de la propiedad "circular"
+    const dotacionesUnicas = [
+        ...new Set(personalFiltrados.map((personal) => personal.dotacion)),
+    ];
+
+    return dotacionesUnicas;
+}
 export function buscarCambioTurno(cambiosTurnos:CambioTurno[],inputDate:string,legajo: number){
     
     let i = 0
@@ -473,5 +499,4 @@ export function itinerarioType(fecha: Date) {
     } else {
         return "H";
     }
-    
 }

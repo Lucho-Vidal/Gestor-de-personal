@@ -179,6 +179,15 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
+        path: "/estadisticas",
+        name: "estadisticas",
+        meta: { title: "GNPA - Estadisticas" },
+        component: () => import("@/components/novedades/estadisticas.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(next));
+        },
+    },
+    {
         path: "/turnos",
         name: "Turnos",
         meta: { title: "GNPA - Turnos" },

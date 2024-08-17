@@ -6,10 +6,16 @@
             </h2>
             <div class="d-flex justify-content-end">
                 <router-link
-                    class="btn btn-primary mx-3"
+                    class="btn btn-primary "
                     to="/newNovedades"
                 >
                     Nueva Novedad
+                </router-link>
+                <router-link
+                    class="btn btn-success mx-3"
+                    to="/estadisticas"
+                >
+                    Estadisticas
                 </router-link>
                 <button class="btn btn-warning" @click.prevent="abrirModal()">
                     Filtrar novedades
