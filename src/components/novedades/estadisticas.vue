@@ -389,7 +389,7 @@ import { defineComponent } from "vue";
 // import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import { Novedad } from "../../interfaces/INovedades";
 import { newToken } from "../../services/signService";
 import {
