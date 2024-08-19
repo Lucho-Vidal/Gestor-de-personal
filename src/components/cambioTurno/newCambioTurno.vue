@@ -357,11 +357,14 @@ import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
+import { ITurno } from "../../interfaces/ITurno";
+import { loadTurnos } from "../../utils/funciones";
 
 export default defineComponent({
     data() {
         return {
             today: new Date(),
+            lstTurnos: [] as ITurno[],
             cambiosTurnos: [] as CambioTurno[],
             cambioTurno: {
                 fechaCambio: "",
@@ -675,13 +678,11 @@ export default defineComponent({
             this.message.message = "";
             this.message.status = "";
             this.message.activo = false;
-            this.personalEncontrado = this.personales.filter(
-                (personal: IPersonal) => {
-                    return (
+            this.personalEncontrado = this.personales.filter((personal: IPersonal) => 
                         personal.legajo == this.cambioTurno.personal[0].legajo
-                    );
-                }
             );
+            console.log(this.personalEncontrado);
+            
             if (this.personalEncontrado[0]) {
                 // this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
                 this.cambioTurno.personal[0].apellido = this.personalEncontrado[0].apellido;
@@ -725,11 +726,12 @@ export default defineComponent({
             }
         },
     },
-    mounted() {
+    async mounted() {
         try {
             this.obtenerUltimoId();
             this.loadPersonales();
             this.loadCambioTurnos();
+            this.lstTurnos = await loadTurnos() || [];
             // this.novedad.HNA = true;
             newToken();
         } catch (error) {

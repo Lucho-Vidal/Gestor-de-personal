@@ -72,8 +72,7 @@ export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprim
     try {
         turnosAImprimir.forEach((turno: ITurno) => {
             const personal = filtroPersonal(turno.turno,fecha,personales);
-            // console.log(personal);
-            
+
             novedades.forEach((novedad: Novedad) => {
                 const {
                     legajo,
@@ -212,29 +211,24 @@ export function filtroItinerario(itinerario: string,listaItinerario: Itinerario[
 }
 export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal[],) {
     try {
-        let titular: IPersonal;
+        let titular: IPersonal[];
+
         turno = turno.trim();
-        let titus: IPersonal[];
-        if (
-            turno.indexOf(".") !== -1 &&
-            !turno.toLowerCase().includes("prog")
-        ) {
+        if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("prog")) {
             const indexPunto = turno.indexOf(".");
             const diaLab = Number(turno[indexPunto + 1]);
             const diag = turno.split(".")[0];
             const franco = dia_laboral(diaLab, fecha.getDay());
 
-            [titular] = personales.filter((personal) => {
-                // console.log("DEBUG personal.especialidad",personal.especialidad);
+            titular = personales.filter((personal) => {
                 if(personal.especialidad.toLowerCase().includes("cond")) {
-                    // console.log("DEBUG personal",personal);
                 }
                 return (
                     personal.turno === diag &&
                     Number(personal.franco) === franco
                 );
             });
-            titus = personales.filter((personal) => {
+            titular = personales.filter((personal) => {
                 return (
                     personal.turno === diag &&
                     Number(personal.franco) === franco
@@ -242,24 +236,27 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
             });
             
         } else {
-            [titular] = personales.filter(
-                (personal) =>
-                    personal.turno.toLowerCase() === turno.toLowerCase()
-            );
-            titus = personales.filter(
-                (personal) =>
-                    personal.turno.toLowerCase() === turno.toLowerCase()
-            );
+            
+            titular = personales.filter(
+                (personal) =>{
+                    // console.log("DEBUG turno",turno);
+                    if(personal.turno) return personal.turno.toLowerCase() === turno.toLowerCase()
+            });
+            titular = personales.filter(
+                (personal) =>{
+                    if(personal.turno) 
+                    return personal.turno.toLowerCase() === turno.toLowerCase()
+                });
         }
-        // console.log("DEBUG titular",titular);
-        // console.log("DEBUG personales",personales);
-        // console.log("DEBUG titus",titus);
+        
         
         return {
             turno: turno,
-            legajo: titular.legajo || 0,
-            nombres: titular
-                ? `${titular.apellido} ${titular.nombres}`
+            legajo: titular[0].legajo || 0,
+            nombres: titular[1]
+                ? `${titular[0].apellido} ${titular[0].nombres} - Ayudante: ${titular[1].apellido} ${titular[1].nombres}`:
+                titular[0]
+                ? `${titular[0].apellido} ${titular[0].nombres}`
                 : "",
         };
     } catch (e) {

@@ -245,7 +245,7 @@ const routes: RouteRecordRaw[] = [
         path: "/cambioTurno",
         name: "cambioTurno",
         meta: { title: "GNPA - Cambio de Turno" },
-        component: () => import("@/components/novedades/cambioTurno.vue"),
+        component: () => import("@/components/cambioTurno/cambioTurno.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },
@@ -254,7 +254,7 @@ const routes: RouteRecordRaw[] = [
         path: "/newCambioTurno",
         name: "newCambioTurno",
         meta: { title: "GNPA - Nuevo Cambio de Turno" },
-        component: () => import("@/components/novedades/newCambioTurno.vue"),
+        component: () => import("@/components/cambioTurno/newCambioTurno.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },
@@ -263,7 +263,7 @@ const routes: RouteRecordRaw[] = [
         path: "/ordenamiento",
         name: "ordenamiento",
         meta: { title: "GNPA - Ordenamiento" },
-        component: () => import("@/components/novedades/ordenamiento.vue"),
+        component: () => import("@/components/ordenamientos/ordenamiento.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },
@@ -272,7 +272,7 @@ const routes: RouteRecordRaw[] = [
         path: "/newOrdenamiento",
         name: "newOrdenamiento",
         meta: { title: "GNPA - Nuevo Ordenamiento" },
-        component: () => import("@/components/novedades/newOrdenamiento.vue"),
+        component: () => import("@/components/ordenamientos/newOrdenamiento.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },
