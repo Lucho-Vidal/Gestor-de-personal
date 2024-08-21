@@ -13,4 +13,7 @@ export interface Personal{
     especialidad: string;
     turno: string;
     franco: string;
+    turnoEfectivo: string;
+    tomada: string;
+    dejada: string;    
 }

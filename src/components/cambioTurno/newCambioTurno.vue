@@ -2,7 +2,7 @@
     <main>
         <h1>Cambio de turno</h1>
         <div
-            class="alert row"
+            class="alert row justify-content-center"
             :class="[
                 message.status == 'danger'
                     ? 'alert-danger'
@@ -15,7 +15,7 @@
             role="alert"
             v-if="message.activo"
         >
-            <h4 class="alert-heading">{{ message.title }}</h4>
+            <h4 class="alert-heading d-flex justify-content-center">{{ message.title }}</h4>
             <hr />
             {{ message.message }}
             <!-- <a
@@ -143,7 +143,7 @@
                         name="legajo"
                         autofocus
                         required
-                        @change="searchPersonalPorLegajo()"
+                        @change="buscarPersonalPorLegajo(0,cambioTurno.personal[0].legajo)"
                         v-model="cambioTurno.personal[0].legajo"
                     />
                 </div>
@@ -222,11 +222,41 @@
                     />
                 </div>
             </div>
-
-            <!-- Llamada Modal búsqueda -->
-            <!-- <a class="btn btn-success col-2" @click="abrirModal(true)"
-                    >Buscar Remplazo</a
-                > -->
+            <div class="justify-content-between row">
+                <label class="col-2">
+                    Turno Efectivo
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="cambioTurno.personal[0].turnoEfectivo"
+                        disabled
+                    />
+                </label>
+                <label class="col-2">
+                    Toma
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="cambioTurno.personal[0].tomada"
+                        disabled
+                    />
+                </label>
+                <label class="col-2">
+                    Deja
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="cambioTurno.personal[0].dejada"
+                        disabled
+                    />
+                </label>
+            </div>
             <div>
                 <button
                     class="btn btn-success"
@@ -238,43 +268,39 @@
             <!-- Tabla remplazo -->
             <div class="row">
                 <div class="col-2">
-                    <label for="legajo"></label>
+                    <label for="legajo2"></label>
                     Legajo
                     <input
                         class="form-control mb-3"
                         placeholder="Ingrese Legajo"
                         type="number"
-                        name="legajo"
+                        name="legajo2"
                         autofocus
                         required
-                        @change="
-                            asignarRelevoPorLegajo(
-                                cambioTurno.personal[1].legajo
-                            )
-                        "
+                        @change="buscarPersonalPorLegajo(1,cambioTurno.personal[1].legajo)"
                         v-model="cambioTurno.personal[1].legajo"
                     />
                 </div>
                 <div class="col-3">
-                    <label for="Apellido"></label>
+                    <label for="Apellido2"></label>
                     Apellido
                     <input
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="apellido"
+                        name="apellido2"
                         v-model="cambioTurno.personal[1].apellido"
                         disabled
                     />
                 </div>
                 <div class="col-4">
-                    <label for="nombres"></label>
+                    <label for="nombres2"></label>
                     Nombre
                     <input
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="nombres"
+                        name="nombres2"
                         v-model="cambioTurno.personal[1].nombres"
                         disabled
                     />
@@ -282,37 +308,37 @@
             </div>
             <div class="justify-content-between row">
                 <div class="col-1">
-                    <label for="base"></label>
+                    <label for="base2"></label>
                     Base
                     <input
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="base"
+                        name="base2"
                         v-model="cambioTurno.personal[1].base"
                         disabled
                     />
                 </div>
                 <div class="col-3">
-                    <label for="especialidad"></label>
+                    <label for="especialidad2"></label>
                     Especialidad
                     <input
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="especialidad"
+                        name="especialidad2"
                         v-model="cambioTurno.personal[1].especialidad"
                         disabled
                     />
                 </div>
                 <div class="col-2">
-                    <label for="turno"></label>
+                    <label for="turno2"></label>
                     Turno
                     <input
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="turno"
+                        name="turno2"
                         v-model="cambioTurno.personal[1].turno"
                         disabled
                     />
@@ -324,11 +350,46 @@
                         class="form-control mb-3"
                         placeholder=""
                         type="text"
-                        name="franco"
+                        name="franco2"
                         v-model="cambioTurno.personal[1].franco"
                         disabled
                     />
                 </div>
+            <div class="justify-content-between row">
+                <label class="col-2">
+                    Turno Efectivo
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="turnoEfectivo"
+                        v-model="cambioTurno.personal[1].turnoEfectivo"
+                        disabled
+                    />
+                </label>
+                <label class="col-2">
+                    Toma
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="toma2"
+                        v-model="cambioTurno.personal[1].tomada"
+                        disabled
+                    />
+                </label>
+                <label class="col-2">
+                    Deja
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="deja2"
+                        v-model="cambioTurno.personal[1].dejada"
+                        disabled
+                    />
+                </label>
+            </div>
             </div>
             <div>
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
@@ -358,7 +419,7 @@ import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
 import { ITurno } from "../../interfaces/ITurno";
-import { loadTurnos } from "../../utils/funciones";
+import { filtrarPorTurno, loadTurnos, itinerarioType, dia_laboral } from '../../utils/funciones';
 
 export default defineComponent({
     data() {
@@ -615,10 +676,10 @@ export default defineComponent({
         selectPersonal(personal: IPersonal) {
             if (this.selectRemplazo) {
                 this.cambioTurno.personal[1].legajo = personal.legajo;
-                this.asignarRelevoPorLegajo(personal.legajo);
+                this.buscarPersonalPorLegajo(1,personal.legajo);
             } else {
                 this.cambioTurno.personal[0].legajo = personal.legajo;
-                this.searchPersonalPorLegajo();
+                this.buscarPersonalPorLegajo(0,personal.legajo);
             }
 
             this.search = "";
@@ -673,56 +734,67 @@ export default defineComponent({
                 }
             );
         },
-        searchPersonalPorLegajo() {
+        buscarPersonalPorLegajo(index:number,legajo:number) {
             /*  realiza la búsqueda por el legajo introducido en el respectivo input */
+            this.message.title = "";
             this.message.message = "";
             this.message.status = "";
             this.message.activo = false;
-            this.personalEncontrado = this.personales.filter((personal: IPersonal) => 
-                        personal.legajo == this.cambioTurno.personal[0].legajo
-            );
-            console.log(this.personalEncontrado);
+            let personalEncontrado: IPersonal
+            let turno: ITurno;
             
-            if (this.personalEncontrado[0]) {
-                // this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.cambioTurno.personal[0].apellido = this.personalEncontrado[0].apellido;
-                this.cambioTurno.personal[0].nombres = this.personalEncontrado[0].nombres;
-                this.cambioTurno.personal[0].base = this.personalEncontrado[0].dotacion;
-                this.cambioTurno.personal[0].especialidad = this.personalEncontrado[0].especialidad;
-                this.cambioTurno.personal[0].turno = this.personalEncontrado[0].turno;
-                this.cambioTurno.personal[0].franco = this.days[
-                    this.personalEncontrado[0].franco
-                ];
-                if (!this.cambioTurno.fechaCambio) {
-                    this.cambioTurno.fechaCambio = this.today
-                        .toISOString()
-                        .split("T")[0];
-                }
+            if (!this.cambioTurno.fechaCambio) {
+                this.cambioTurno.fechaCambio = this.today.toISOString().split("T")[0];
             }
-        },
-        asignarRelevoPorLegajo(legajo: number) {
-            // al haber un cambio en el formulario remplazo.legajo se agregan el resto de los datos
-            this.personalEncontrado = this.personales.filter(
-                (personal: IPersonal) => {
-                    return personal.legajo == legajo;
-                }
+            const fecha = new Date(this.cambioTurno.fechaCambio+ "T12:00")
+            const itinerario: string = itinerarioType(fecha);
+
+            [personalEncontrado] = this.personales.filter((personal: IPersonal) => 
+                        personal.legajo == legajo
             );
-            if (this.personalEncontrado[0]) {
+
+            if(personalEncontrado.turno.toLowerCase().includes('ciclo')){
+                //TODO cuando se desarrolle servicio irregular
+            }else{
+                const turnos = filtrarPorTurno(
+                    itinerario,
+                    this.lstTurnos,
+                    ["Jul24"],// provisorio
+                    personalEncontrado.turno
+                );
+                
+                turno = turnos[0];
+                const jornada = dia_laboral(personalEncontrado.franco, fecha.getDay());
+
+                if(jornada === 0){
+                    this.message.title = "Personal de franco";
+                    this.message.message = `${personalEncontrado.apellido} ${personalEncontrado.nombres} se encuentra de franco para la fecha seleccionada.`;
+                    this.message.status = "danger";
+                    this.message.activo = true;
+                    return
+                }
+                
+                if (turnos.length > 1) {
+                    turno = turnos.find(turno => turno.turno === `${personalEncontrado.turno}.${jornada}`) || turno;
+                    
+                }
+
+                this.cambioTurno.personal[index].turnoEfectivo = turno.turno;
+                this.cambioTurno.personal[index].tomada = turno.toma;
+                this.cambioTurno.personal[index].dejada = turno.deja;
+                
+                }
+            
+            
+            if (personalEncontrado) {
                 // this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.cambioTurno.personal[1].apellido = this.personalEncontrado[0].apellido;
-                this.cambioTurno.personal[1].nombres = this.personalEncontrado[0].nombres;
-                this.cambioTurno.personal[1].especialidad = this.personalEncontrado[0].especialidad;
-                this.cambioTurno.personal[1].base = this.personalEncontrado[0].dotacion;
-                this.cambioTurno.personal[1].turno = this.personalEncontrado[0].turno;
-                this.cambioTurno.personal[1].franco = this.days[
-                    this.personalEncontrado[0].franco
-                ];
-            } else {
-                this.cambioTurno.personal[1].apellido = "";
-                this.cambioTurno.personal[1].nombres = "";
-                this.cambioTurno.personal[1].especialidad = "";
-                this.cambioTurno.personal[1].base = "";
-                this.cambioTurno.personal[1].turno = "";
+                this.cambioTurno.personal[index].apellido = personalEncontrado.apellido;
+                this.cambioTurno.personal[index].nombres = personalEncontrado.nombres;
+                this.cambioTurno.personal[index].base = personalEncontrado.dotacion;
+                this.cambioTurno.personal[index].especialidad = personalEncontrado.especialidad;
+                this.cambioTurno.personal[index].turno = personalEncontrado.turno;
+                this.cambioTurno.personal[index].franco = this.days[personalEncontrado.franco];
+                
             }
         },
     },
