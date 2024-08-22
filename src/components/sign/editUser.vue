@@ -241,20 +241,22 @@ export default defineComponent({
             try {
                 const res = await getUser(id);
                 this.user = res.data;
-                this.rol = this.getUbicacionRolMayorYLimpiar();
+                this.removeLowerRoles()
+
             } catch (error) {
                 console.error(error);
             }
         },
         hasRole(roleName: string): boolean {
+            //recibe un rol en string por Parametro y verifica si ese rol lo tiene el el usuario
             return (
                 Array.isArray(this.user.roles) &&
-                this.user.roles.some((role) => role.name === roleName)
+                this.user.roles.some((role: Role) => role.name === roleName)
             );
         },
         async procesar() {
             try {
-                let message;
+                let message:string;
                 if (this.actualizarPass) {
                     this.user.password = "Inicio1";
                     this.user.updatePass = true;
@@ -263,7 +265,7 @@ export default defineComponent({
                 } else {
                     message =
                         "La edición se guardo con éxito. seras redirigido en un momento...";
-                }
+                }                
 
                 const res = await updateUser(this.id, this.user);
 
@@ -303,46 +305,28 @@ export default defineComponent({
                 setTimeout(() => (this.message.status = ""), 10000);
             }
         },
-        getUbicacionRolMayorYLimpiar(): number {
-            let res = -1;
-            this.user.roles.forEach((rol, index) => {
-                if (rol.name == "admin") {
-                    this.user.roles = this.user.roles.filter(
-                        (rol) => rol.name == "admin"
-                    );
-                    res = index;
-                }
+        // Función para dejar solo el rol más alto en la lista de roles del usuario para la visualización 
+        removeLowerRoles() {
+            // Define el orden de prioridad de los roles
+            const rolePriority = ["user", "moderator","admin" ];
+
+            // Encuentra el rol más alto en la lista de roles del usuario
+            const highestRole = this.user.roles.reduce((highest, current) => {
+                // Si el rol actual tiene una prioridad más alta que el rol más alto hasta ahora, lo reemplaza
+                return rolePriority.indexOf(current.name) > rolePriority.indexOf(highest.name) ? current : highest;
             });
-            if (res >= 0) return res;
-            else {
-                this.user.roles.forEach((rol, index) => {
-                    if (rol.name == "moderator") {
-                        this.user.roles = this.user.roles.filter(
-                            (rol) => rol.name == "moderator"
-                        );
-                        res = index;
-                    }
-                });
-            }
-            if (res >= 0) return res;
-            else {
-                this.user.roles.forEach((rol, index) => {
-                    if (rol.name == "user") {
-                        this.user.roles = this.user.roles.filter(
-                            (rol) => rol.name == "user"
-                        );
-                        res = index;
-                    }
-                });
-            }
-            return res;
-        },
+
+            // Filtra la lista de roles del usuario para dejar solo el rol más alto
+            this.user.roles = this.user.roles.filter((rol: Role) => rol.name === highestRole.name);
+            
+        }
     },
     created() {
         try {
             if (typeof this.$route.params.id === "string") {
                 this.id = this.$route.params.id;
                 this.loadUser(this.id);
+
             }
         } catch (error) {
             console.error(error);

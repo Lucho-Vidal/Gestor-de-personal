@@ -41,27 +41,34 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { legajo, username, email, roles, password, updatePass } = req.body;
+        const { legajo, username, email, password, updatePass } = req.body;
+        let { roles } = req.body;
         const id = req.params.id;
-
+        
         // Verificar si el usuario existe
         const existingUser = await User.findById(id);
         if (!existingUser) {
             return res.status(404).json({ message: "Usuario no encontrado" });
-        }
-
-        if(roles.map(rol => rol.name) == 'admin'){
+        }        
+        
+        if(roles.includes('admin')|| roles.some(role => role.name === "admin")){
+            roles = []
+            roles.push({name:"admin"})
             roles.push({name:"moderator"})
             roles.push({name:"user"})
-        }else if (roles.map(rol => rol.name) == 'moderator'){
+        }else if (roles.includes('moderator') || roles.some(role => role.name === "moderator")){
+            roles = []
+            roles.push({name:"moderator"})
+            roles.push({name:"user"})
+        }else if (roles.includes('user') || roles.some(role => role.name === "user")){
+            roles = []
             roles.push({name:"user"})
         }
-
         // Actualizar los campos proporcionados
         existingUser.legajo = legajo || existingUser.legajo;
         existingUser.username = username || existingUser.username;
         existingUser.email = email || existingUser.email;
-        existingUser.password = await User.encryptPassword(password) || existingUser.password;
+        existingUser.password = password ? await User.encryptPassword(password) : existingUser.password;
         existingUser.updatePass = updatePass || existingUser.updatePass;
 
         if (roles && roles.length > 0) {
