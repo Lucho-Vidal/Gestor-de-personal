@@ -664,12 +664,10 @@ export default defineComponent({
             try {
                 if (this.alerta) {
                     this.alerta =
-                        " ATENCIÓN!!! NO ES POSIBLE ACTUALIZAR ESTA NOVEDAD!      " +
+                        " ATENCIÓN!!! NO ES POSIBLE ACTUALIZAR ESTE PERSONAL!      " +
                         this.alerta;
                         return;
                 }
-                console.log("probando alerta");
-                console.log(this.alerta);
                 
                 let accion = ""
                 this.datoPersonal.Legajo = this.personal.legajo
