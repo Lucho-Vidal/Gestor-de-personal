@@ -213,7 +213,25 @@
                                     v-on:change="filtrarPersonales()"
                                 />
                                 <h6>Filtro por Dotación:</h6>
-                                <label class="form-check-label mx-2">
+                                <div class="d-flex flex-wrap justify-content-center my-3">
+                                    <div
+                                        v-for="(dotacion, index) in dotacionesPermitidas"
+                                        :key="index"
+                                    >
+                                        <label class="form-check-label mx-2">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                :value="dotacion"
+                                                v-model="dotacionesSeleccionadas"
+                                                v-on:change="filtrarPersonales()"
+                                            />
+                                            {{ dotacion }}
+                                            <!-- Mostrar el valor de la variable circular en el label -->
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- <label class="form-check-label mx-2">
                                     <input
                                         class="form-check-input"
                                         type="checkbox"
@@ -292,7 +310,7 @@
                                         @change="filtrarPersonales()"
                                     />
                                     AK
-                                </label>
+                                </label> -->
                             </div>
                             <div class="my-3">
                                 <h6>Filtro por Especialidad:</h6>
@@ -515,6 +533,7 @@ import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
+import { obtenerDotaciones } from "../../utils/funciones";
 
 export default defineComponent({
     props: ['idPersonal', 'idDato', 'idVia'],
@@ -527,6 +546,8 @@ export default defineComponent({
             personalIndexado: {} as Record<number, IPersonal>,
             datosPersonalesIndexados: {} as Record<number, IDatoPersonal>,
             conocimientosViasIndexados: {} as Record<number, IConocimientosVias>,
+            dotacionesPermitidas: [] as string[],
+            dotacionesSeleccionadas: [] as string[],
             detalleLegajo: 0 ,
             checkboxDotacion: [] as string[],
             checkboxEspecialidad: [] as string[],
@@ -555,6 +576,8 @@ export default defineComponent({
                 this.personales = res.data;
                 this.filtrarPersonales();
                 this.personalIndexado = this.indexarPersonal(this.personales)
+                this.dotacionesPermitidas = obtenerDotaciones(this.personales);
+
                 
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
@@ -704,12 +727,12 @@ export default defineComponent({
                 filtrar = true;
             }
             if (
-                this.checkboxDotacion.length == 0 ||
-                this.checkboxDotacion == undefined
+                this.dotacionesSeleccionadas.length == 0 ||
+                this.dotacionesSeleccionadas == undefined
             ) {
-                cDotacion = ["PC", "LLV", "TY", "LP", "K5", "RE", "CÑ", "AK"];
+                cDotacion = this.dotacionesPermitidas;
             } else {
-                cDotacion = this.checkboxDotacion;
+                cDotacion = this.dotacionesSeleccionadas;
                 filtrar = true;
             }
             if (this.checkboxEspecialidad.length == 0) {
