@@ -132,15 +132,15 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireModerator(next));
         },
     },
-    {
-        path: "/newPersonal",
-        name: "newPersonal",
-        meta: { title: "GNPA - Nuevo personal" },
-        component: () => import("@/components/personal/newPersonal.vue"),
-        beforeEnter: (to, from, next) => {
-            requireAuth(to, from, () => requireModerator(next));
-        },
-    },
+    // {
+    //     path: "/newPersonal",
+    //     name: "newPersonal",
+    //     meta: { title: "GNPA - Nuevo personal" },
+    //     component: () => import("@/components/personal/newPersonal.vue"),
+    //     beforeEnter: (to, from, next) => {
+    //         requireAuth(to, from, () => requireModerator(next));
+    //     },
+    // },
     {
         path: "/editPersonal/:idPersonal?/:idDato?/:idVia?",
         name: "editPersonal",
@@ -161,7 +161,7 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/NewNovedades",
+        path: "/editNovedades/:id?",
         name: "NewNovedades",
         meta: { title: "GNPA - Nueva Novedad" },
         component: () => import("@/components/novedades/NewNovedades.vue"),
@@ -170,14 +170,23 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/editNovedades/:id?",
-        name: "editNovedades",
-        meta: { title: "GNPA - Editar Novedad" },
-        component: () => import("@/components/novedades/EditNovedades.vue"),
+        path: "/personalSinDiagrama",
+        name: "personalSinDiagrama",
+        meta: { title: "GNPA - Servicio Irregular" },
+        component: () => import("@/components/novedades/ServicioIrregular.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },
     },
+    // {
+    //     path: "/editNovedades/:id?",
+    //     name: "editNovedades",
+    //     meta: { title: "GNPA - Editar Novedad" },
+    //     component: () => import("@/components/novedades/EditNovedades.vue"),
+    //     beforeEnter: (to, from, next) => {
+    //         requireAuth(to, from, () => requireModerator(next));
+    //     },
+    // },
     {
         path: "/estadisticas",
         name: "estadisticas",
