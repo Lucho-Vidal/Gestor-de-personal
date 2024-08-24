@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>
-            Cargar Nueva Novedad
+            {{  titulo }}
         </h1>
         <div
             class="alert row"
@@ -111,7 +111,7 @@
             <div>
                 <button
                     class="btn btn-success"
-                    @click="abrirModal(false)"
+                    @click.prevent="abrirModal(false)"
                 >
                     Buscar Personal
                 </button>
@@ -128,7 +128,7 @@
                         autofocus
                         required
                         @change="searchPersonalPorLegajo()"
-                        v-model="newNovedad.legajo"
+                        v-model="novedad.legajo"
                     />
                 </div>
                 <div class="col-3">
@@ -139,7 +139,7 @@
                         placeholder=""
                         type="text"
                         name="apellido"
-                        v-model="newNovedad.apellido"
+                        v-model="novedad.apellido"
                         disabled
                     />
                 </div>
@@ -151,7 +151,7 @@
                         placeholder=""
                         type="text"
                         name="nombres"
-                        v-model="newNovedad.nombres"
+                        v-model="novedad.nombres"
                         disabled
                     />
                 </div>
@@ -165,7 +165,7 @@
                         placeholder=""
                         type="text"
                         name="base"
-                        v-model="newNovedad.base"
+                        v-model="novedad.base"
                         disabled
                     />
                 </div>
@@ -177,7 +177,7 @@
                         placeholder=""
                         type="text"
                         name="especialidad"
-                        v-model="newNovedad.especialidad"
+                        v-model="novedad.especialidad"
                         disabled
                     />
                 </div>
@@ -189,7 +189,7 @@
                         placeholder=""
                         type="text"
                         name="turno"
-                        v-model="newNovedad.turno"
+                        v-model="novedad.turno"
                         disabled
                     />
                 </div>
@@ -201,7 +201,7 @@
                         placeholder=""
                         type="text"
                         name="franco"
-                        v-model="newNovedad.franco"
+                        v-model="novedad.franco"
                         disabled
                     />
                 </div>
@@ -213,7 +213,7 @@
                         name="tipoNovedad"
                         id="tipoNovedad"
                         class="form-control mb-3"
-                        v-model="newNovedad.tipoNovedad"
+                        v-model="novedad.tipoNovedad"
                         required
                     >
                         //Enfermos
@@ -265,7 +265,7 @@
                         class="form-control mb-3"
                         type="Date"
                         name="fechaBaja"
-                        v-model="newNovedad.fechaBaja"
+                        v-model="novedad.fechaBaja"
                     />
                 </div>
                 <div class="form-check form-check-inline m-0">
@@ -275,11 +275,11 @@
                         name="HNA"
                         id="HNA"
                         checked
-                        v-model="newNovedad.HNA"
+                        v-model="novedad.HNA"
                     />
                     <label class="form-check-label" for="HNA">HNA</label>
                 </div>
-                <div class="col-3" v-if="!newNovedad.HNA">
+                <div class="col-3" v-if="!novedad.HNA">
                     <label for="fechaAlta"></label>
                     Fecha de fin
                     <input
@@ -287,11 +287,11 @@
                         class="form-control mb-3"
                         type="Date"
                         name="fechaAlta"
-                        v-model="newNovedad.fechaAlta"
+                        v-model="novedad.fechaAlta"
                         @change="calcularDiasNovedad(true)"
                     />
                 </div>
-                <div class="col-3" v-if="!newNovedad.HNA">
+                <div class="col-3" v-if="!novedad.HNA">
                     <label for="fechaAlta"></label>
                     Cantidad de días
                     <input
@@ -301,6 +301,7 @@
                         name="cantidadDias"
                         v-model="cantDias"
                         @change="calcularDiasNovedad(false)"
+                        @focus="handleInputFocus"
                     />
                 </div>
             </div>
@@ -311,7 +312,7 @@
                     <textarea
                         class="form-control mb-3"
                         name="detalle"
-                        v-model="newNovedad.detalle"
+                        v-model="novedad.detalle"
                     ></textarea>
                 </div>
             </div>
@@ -341,7 +342,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(remplazo, index) in newNovedad.remplazo"
+                        v-for="(remplazo, index) in novedad.remplazo"
                         :key="index"
                     >
                         <td>
@@ -387,7 +388,7 @@
                         <td>
                             <i
                                 class="material-icons cursor-hand rojo"
-                                @click="newNovedad.remplazo.splice(index, 1)"
+                                @click="novedad.remplazo.splice(index, 1)"
                                 >clear</i
                             >
                         </td>
@@ -412,6 +413,7 @@ import { defineComponent } from "vue";
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import {
     createNovedad,
+    getNovedad,
     getNovedades,
     getUltimaNovedad,
     updateNovedad,
@@ -427,7 +429,8 @@ export default defineComponent({
     data() {
         return {
             novedades: [] as Novedad[],
-            newNovedad: {} as Novedad,
+            novedad: {} as Novedad,
+            titulo:"" as string,
             ultimoId: 0,
             today: new Date(),
             personales: [] as IPersonal[],
@@ -464,6 +467,15 @@ export default defineComponent({
             const res = await getUltimaNovedad();
             this.ultimoId = res.data[0]._id;
         },
+        /* Este método busca la novedad en el backend por medio de una consulta HTML:GET */
+        async loadNovedad(id: number) {
+            try {
+                const { data } = await getNovedad(id);
+                this.novedad = data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
         async loadNovedades() {
             const res = await getNovedades();
             this.novedades = res.data;
@@ -476,10 +488,7 @@ export default defineComponent({
         async saveNovedad() {
             /* Método utilizado para realizar la consulta HTML:POST al backend para el guardado de los datos */
             try {
-                this.ultimoId++;
-                this.newNovedad._id = this.ultimoId;
-                this.newNovedad.fecha = this.today.toISOString().split("T")[0];
-
+                
                 // Validaciones
                 if (this.cicloRelevando) {
                     this.message.activo = false;
@@ -505,23 +514,34 @@ export default defineComponent({
                 this.terminaNovedadMismaFechaFinRelevo();
 
                 // Filtrar elementos vacíos en el array de remplazo
-                if (this.newNovedad.remplazo) {
-                    this.newNovedad.remplazo = this.newNovedad.remplazo.filter(
-                        (remp) => remp.apellido !== ""
+                if (this.novedad.remplazo) {
+                    this.novedad.remplazo = this.novedad.remplazo.filter(
+                        (remp:Remplazo) => remp.apellido !== ""
                     );
                 }
 
-                this.newNovedad.novedadInactiva = false;
-
+                let accion = ""
                 // Crear la novedad
-                await createNovedad(this.newNovedad);
+                if (this.$route.params.id && typeof this.$route.params.id === "string") {
+
+                    accion = "Edito"
+                    console.log(this.novedad._id);
+                    await updateNovedad(this.novedad._id, this.novedad);
+                } else {
+                    this.ultimoId++;
+                    this.novedad._id = this.ultimoId;
+                    this.novedad.fecha = this.today.toISOString().split("T")[0];
+                    this.novedad.novedadInactiva = false;
+                    accion = "Creo"
+                    await createNovedad(this.novedad);
+                }
 
                 // guardamos registro
                 const registro: Registro = {
                     usuario: window.localStorage.getItem("username") || "",
                     fecha: this.today.toString(),
-                    accion: "Creo",
-                    novedad: this.newNovedad,
+                    accion: accion,
+                    novedad: this.novedad,
                 };
                 await createRegistro(registro);
 
@@ -552,19 +572,19 @@ export default defineComponent({
         async actualizarRelevo() {
             const novedadesIndex = this.novedadesIndexada(this.novedades);
             novedadesIndex[this.idNovedad].remplazo.forEach((remp) => {
-                if (remp.legajo === this.newNovedad.legajo) {
+                if (remp.legajo === this.novedad.legajo) {
                     // const relevo:Remplazo = remp;
                     const fechaDiaAnterior = new Date(
-                        this.newNovedad.fechaBaja
+                        this.novedad.fechaBaja
                     );
                     fechaDiaAnterior.setDate(fechaDiaAnterior.getDate() - 1);
                     const fechaFinRelevo = remp.finRelevo;
                     remp.finRelevo = fechaDiaAnterior
                         .toISOString()
                         .split("T")[0];
-                    if (this.newNovedad.fechaAlta) {
+                    if (this.novedad.fechaAlta) {
                         const fechaDiaPosterior = new Date(
-                            this.newNovedad.fechaAlta
+                            this.novedad.fechaAlta
                         );
                         fechaDiaPosterior.setDate(
                             fechaDiaPosterior.getDate() + 1
@@ -583,27 +603,27 @@ export default defineComponent({
                 novedadesIndex[this.idNovedad].detalle =
                     novedadesIndex[this.idNovedad].detalle +
                     "\nEl Personal " +
-                    this.newNovedad.apellido +
+                    this.novedad.apellido +
                     " " +
-                    this.newNovedad.nombres +
+                    this.novedad.nombres +
                     " fue dado de baja por la novedad N*" +
                     (this.ultimoId + 1);
             } else {
                 novedadesIndex[this.idNovedad].detalle =
                     "El Personal " +
-                    this.newNovedad.apellido +
+                    this.novedad.apellido +
                     " " +
-                    this.newNovedad.nombres +
+                    this.novedad.nombres +
                     " fue dado de baja por la novedad N*" +
                     (this.ultimoId + 1);
             }
-            if (this.newNovedad.detalle) {
-                this.newNovedad.detalle =
-                    this.newNovedad.detalle +
+            if (this.novedad.detalle) {
+                this.novedad.detalle =
+                    this.novedad.detalle +
                     "Este personal estaba relevando la Novedad N* " +
                     this.idNovedad;
             } else {
-                this.newNovedad.detalle =
+                this.novedad.detalle =
                     "Este personal estaba relevando la Novedad N* " +
                     this.idNovedad;
             }
@@ -618,7 +638,12 @@ export default defineComponent({
                 {} as Record<number, Novedad>
             );
         },
-
+        handleInputFocus(event: FocusEvent) {
+            const inputElement = event.target as HTMLInputElement;
+            if (inputElement) {
+                inputElement.select(); // Selecciona el contenido del input
+            }
+        },
         // Validaciones:
         esFechaMayor(dateMayor: string, dateMenor: string) {
             if (dateMayor && dateMenor) {
@@ -647,11 +672,11 @@ export default defineComponent({
             }
         },
         esInicioRelevoMayorIgualFechaBaja() {
-            if (this.newNovedad.remplazo !== undefined) {
+            if (this.novedad.remplazo !== undefined) {
                 if (
                     this.esFechaMayor(
-                        this.newNovedad.fechaBaja,
-                        this.newNovedad.remplazo?.[0].inicioRelevo
+                        this.novedad.fechaBaja,
+                        this.novedad.remplazo?.[0].inicioRelevo
                     )
                 ) {
                     this.message.message =
@@ -667,11 +692,11 @@ export default defineComponent({
             }
         },
         esFechaBajaMayorFechaAlta() {
-            if (this.newNovedad.fechaAlta !== undefined) {
+            if (this.novedad.fechaAlta !== undefined) {
                 if (
                     this.esFechaMayor(
-                        this.newNovedad.fechaBaja,
-                        this.newNovedad.fechaAlta
+                        this.novedad.fechaBaja,
+                        this.novedad.fechaAlta
                     )
                 ) {
                     this.message.message =
@@ -687,25 +712,25 @@ export default defineComponent({
             }
         },
         esFinRelevoMayorFinNovedad() {
-            if (this.newNovedad.remplazo == undefined) {
+            if (this.novedad.remplazo == undefined) {
                 return false;
             }
-            if (this.newNovedad.remplazo.length === 0) {
+            if (this.novedad.remplazo.length === 0) {
                 return false;
             }
             if (
-                this.newNovedad.remplazo[this.newNovedad.remplazo.length - 1]
+                this.novedad.remplazo[this.novedad.remplazo.length - 1]
                     .finRelevo == ""
             ) {
                 return false;
             }
-            if (this.newNovedad.fechaAlta) {
+            if (this.novedad.fechaAlta) {
                 if (
                     this.esFechaMayor(
-                        this.newNovedad.remplazo[
-                            this.newNovedad.remplazo.length - 1
+                        this.novedad.remplazo[
+                            this.novedad.remplazo.length - 1
                         ].finRelevo,
-                        this.newNovedad.fechaAlta
+                        this.novedad.fechaAlta
                     )
                 ) {
                     this.message.message =
@@ -717,17 +742,17 @@ export default defineComponent({
             }
         },
         hayMasDeUnRelevo() {
-            if (this.newNovedad.remplazo !== undefined) {
+            if (this.novedad.remplazo !== undefined) {
                 let sinFechaFin = 0;
-                for (let i = 0; i < this.newNovedad.remplazo.length - 1; i++) {
-                    if (!this.newNovedad.remplazo[i].finRelevo) {
+                for (let i = 0; i < this.novedad.remplazo.length - 1; i++) {
+                    if (!this.novedad.remplazo[i].finRelevo) {
                         sinFechaFin++;
                     }
 
                     if (
                         this.esFechaMayor(
-                            this.newNovedad.remplazo[i].finRelevo,
-                            this.newNovedad.remplazo[i + 1].inicioRelevo
+                            this.novedad.remplazo[i].finRelevo,
+                            this.novedad.remplazo[i + 1].inicioRelevo
                         )
                     ) {
                         this.message.message =
@@ -748,16 +773,16 @@ export default defineComponent({
             return false;
         },
         terminaNovedadMismaFechaFinRelevo() {
-            if (this.newNovedad.remplazo !== undefined) {
+            if (this.novedad.remplazo !== undefined) {
                 if (
-                    !this.newNovedad.HNA &&
-                    !this.newNovedad.remplazo[
-                        this.newNovedad.remplazo.length - 1
+                    !this.novedad.HNA &&
+                    !this.novedad.remplazo[
+                        this.novedad.remplazo.length - 1
                     ].finRelevo
                 ) {
-                    this.newNovedad.remplazo[
-                        this.newNovedad.remplazo.length - 1
-                    ].finRelevo = this.newNovedad.fechaAlta;
+                    this.novedad.remplazo[
+                        this.novedad.remplazo.length - 1
+                    ].finRelevo = this.novedad.fechaAlta;
                 }
             }
         },
@@ -823,8 +848,8 @@ export default defineComponent({
         },
         // Funcionamiento del Formulario
         agregarRemplazo() {
-            if (this.newNovedad.remplazo !== undefined) {
-                this.newNovedad.remplazo.push({
+            if (this.novedad.remplazo !== undefined) {
+                this.novedad.remplazo.push({
                     legajo: 0,
                     apellido: "",
                     nombres: "",
@@ -837,7 +862,7 @@ export default defineComponent({
                     HNA: true,
                 });
             } else {
-                this.newNovedad.remplazo = [
+                this.novedad.remplazo = [
                     {
                         legajo: 0,
                         apellido: "",
@@ -858,44 +883,49 @@ export default defineComponent({
                 this.cantDias = 1;
                 return;
             }
-            if (esFecha) {
-                // Supongamos que tienes dos fechas almacenadas en variables llamadas "fecha1" y "fecha2"
-                const fecha1: Date = new Date(this.newNovedad.fechaBaja);
-                const fecha2: Date = new Date(this.newNovedad.fechaAlta);
+            try {
+                if (esFecha) {
+                    // Supongamos que tienes dos fechas almacenadas en variables llamadas "fecha1" y "fecha2"
+                    const fecha1: Date = new Date(this.novedad.fechaBaja);
+                    const fecha2: Date = new Date(this.novedad.fechaAlta);
 
-                // Calcula la diferencia en miliSegundos entre las dos fechas
-                const diferenciaEnMiliSegundos =
-                    fecha2.getTime() - fecha1.getTime();
+                    // Calcula la diferencia en miliSegundos entre las dos fechas
+                    const diferenciaEnMiliSegundos =
+                        fecha2.getTime() - fecha1.getTime();
 
-                // Convierte la diferencia de miliSegundos a días
-                const diferenciaEnDias =
-                    diferenciaEnMiliSegundos / (1000 * 60 * 60 * 24);
+                    // Convierte la diferencia de miliSegundos a días
+                    const diferenciaEnDias =
+                        diferenciaEnMiliSegundos / (1000 * 60 * 60 * 24);
 
-                this.cantDias = diferenciaEnDias + 1;
-            } else {
-                const newFechaAlta = new Date(this.newNovedad.fechaBaja);
-                newFechaAlta.setDate(
-                    newFechaAlta.getDate() + this.cantDias - 1
-                );
-                this.newNovedad.fechaAlta = newFechaAlta
-                    .toISOString()
-                    .split("T")[0];
+                    this.cantDias = diferenciaEnDias + 1;
+                } else {
+                    const newFechaAlta = new Date(this.novedad.fechaBaja);
+                    newFechaAlta.setDate(
+                        newFechaAlta.getDate() + this.cantDias - 1
+                    );
+                    this.novedad.fechaAlta = newFechaAlta
+                        .toISOString()
+                        .split("T")[0];
+                }
+            } catch (error) {
+                console.error(error)
             }
+            
         },
-        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el newNovedad.legajo y
+        /* Este método cuando se hace click en el modal desplegado toma el item y asigna el novedad.legajo y
         llama a el método de búsqueda por legajo  */
         selectPersonal(personal: IPersonal) {
             if (this.selectRemplazo) {
                 this.agregarRemplazo();
-                this.newNovedad.remplazo[
-                    this.newNovedad.remplazo.length - 1
+                this.novedad.remplazo[
+                    this.novedad.remplazo.length - 1
                 ].legajo = personal.legajo;
                 this.asignarRelevoPorLegajo(
                     personal.legajo,
-                    this.newNovedad.remplazo.length - 1
+                    this.novedad.remplazo.length - 1
                 );
             } else {
-                this.newNovedad.legajo = personal.legajo;
+                this.novedad.legajo = personal.legajo;
             }
 
             this.search = "";
@@ -939,14 +969,14 @@ export default defineComponent({
                             personal.turno.toLowerCase().includes("ciclo") &&
                             personal.dotacion
                                 .toUpperCase()
-                                .includes(this.newNovedad.base.toUpperCase()) &&
-                            (this.newNovedad.especialidad.includes("Conductor")
+                                .includes(this.novedad.base.toUpperCase()) &&
+                            (this.novedad.especialidad.includes("Conductor")
                                 ? personal.especialidad.includes("Conductor") ||
                                   personal.especialidad.includes(
                                       "Ayudante habilitado"
                                   )
                                 : personal.especialidad ==
-                                  this.newNovedad.especialidad)
+                                  this.novedad.especialidad)
                         );
                     }
                 }
@@ -959,20 +989,20 @@ export default defineComponent({
             this.message.activo = false;
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
-                    return personal.legajo == this.newNovedad.legajo;
+                    return personal.legajo == this.novedad.legajo;
                 }
             );
             if (this.personalEncontrado[0]) {
                 this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.newNovedad.apellido = this.personalEncontrado[0].apellido;
-                this.newNovedad.nombres = this.personalEncontrado[0].nombres;
-                this.newNovedad.base = this.personalEncontrado[0].dotacion;
-                this.newNovedad.especialidad = this.personalEncontrado[0].especialidad;
-                this.newNovedad.turno = this.personalEncontrado[0].turno;
-                this.newNovedad.franco = this.days[
+                this.novedad.apellido = this.personalEncontrado[0].apellido;
+                this.novedad.nombres = this.personalEncontrado[0].nombres;
+                this.novedad.base = this.personalEncontrado[0].dotacion;
+                this.novedad.especialidad = this.personalEncontrado[0].especialidad;
+                this.novedad.turno = this.personalEncontrado[0].turno;
+                this.novedad.franco = this.days[
                     this.personalEncontrado[0].franco
                 ];
-                /* this.newNovedad.fechaBaja = this.today
+                /* this.novedad.fechaBaja = this.today
                     .toISOString()
                     .split("T")[0]; */
             }
@@ -986,36 +1016,42 @@ export default defineComponent({
             );
             if (this.personalEncontrado[0]) {
                 this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.newNovedad.remplazo[
+                this.novedad.remplazo[
                     index
                 ].apellido = this.personalEncontrado[0].apellido;
-                this.newNovedad.remplazo[
+                this.novedad.remplazo[
                     index
                 ].nombres = this.personalEncontrado[0].nombres;
-                this.newNovedad.remplazo[
+                this.novedad.remplazo[
                     index
                 ].especialidad = this.personalEncontrado[0].especialidad;
-                this.newNovedad.remplazo[
+                this.novedad.remplazo[
                     index
                 ].base = this.personalEncontrado[0].dotacion;
-                this.newNovedad.remplazo[
+                this.novedad.remplazo[
                     index
                 ].turno = this.personalEncontrado[0].turno;
             } else {
-                this.newNovedad.remplazo[index].apellido = "";
-                this.newNovedad.remplazo[index].nombres = "";
-                this.newNovedad.remplazo[index].especialidad = "";
-                this.newNovedad.remplazo[index].base = "";
-                this.newNovedad.remplazo[index].turno = "";
+                this.novedad.remplazo[index].apellido = "";
+                this.novedad.remplazo[index].nombres = "";
+                this.novedad.remplazo[index].especialidad = "";
+                this.novedad.remplazo[index].base = "";
+                this.novedad.remplazo[index].turno = "";
             }
         },
     },
     mounted() {
         try {
-            this.obtenerUltimoId();
             this.loadPersonales();
+            if (this.$route.params.id && typeof this.$route.params.id === "string") {
+                this.titulo = "Editar novedad"
+                this.loadNovedad(parseInt(this.$route.params.id));
+            }else{
+                this.titulo = "Cargar nueva novedad"
+                this.obtenerUltimoId();
+            }
             this.loadNovedades();
-            this.newNovedad.HNA = true;
+            this.novedad.HNA = true;
             newToken();
         } catch (error) {
             console.error(error);
