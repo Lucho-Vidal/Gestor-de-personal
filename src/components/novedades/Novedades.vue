@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-end">
                 <router-link
                     class="btn btn-primary "
-                    to="/newNovedades"
+                    to="/editNovedades"
                 >
                     Nueva Novedad
                 </router-link>
