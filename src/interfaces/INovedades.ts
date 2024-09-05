@@ -1,7 +1,7 @@
 export interface Novedad {
     _id: number;
     fecha: string;
-    legajo: number;
+    legajo: number ;
     apellido: string;
     nombres: string;
     base: string;
@@ -18,7 +18,7 @@ export interface Novedad {
     remplazo: Array<Remplazo>;
 }
 export interface Remplazo{
-    legajo:number;
+    legajo:number | null;
     apellido: string;
     nombres: string;
     base: string;

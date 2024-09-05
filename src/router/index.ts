@@ -132,15 +132,6 @@ const routes: RouteRecordRaw[] = [
             requireAuth(to, from, () => requireModerator(next));
         },
     },
-    // {
-    //     path: "/newPersonal",
-    //     name: "newPersonal",
-    //     meta: { title: "GNPA - Nuevo personal" },
-    //     component: () => import("@/components/personal/newPersonal.vue"),
-    //     beforeEnter: (to, from, next) => {
-    //         requireAuth(to, from, () => requireModerator(next));
-    //     },
-    // },
     {
         path: "/editPersonal/:idPersonal?/:idDato?/:idVia?",
         name: "editPersonal",
@@ -172,8 +163,19 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/personalSinDiagrama",
         name: "personalSinDiagrama",
+        props: true,
         meta: { title: "GNPA - Servicio Irregular" },
-        component: () => import("@/components/novedades/ServicioIrregular.vue"),
+        component: () => import("@/components/personalSinDiagrama/lstPersonalSinDiagrama.vue"),
+        beforeEnter: (to, from, next) => {
+            requireAuth(to, from, () => requireModerator(next));
+        },
+    },
+    {
+        path: "/TarjetaPersonalSinDiagrama/:idPersonal?/:idTarjeta?",
+        name: "TarjetaPersonalSinDiagrama",
+        props: true,
+        meta: { title: "GNPA - Servicio Irregular" },
+        component: () => import("@/components/personalSinDiagrama/TarjetaPersonalSinDiagrama.vue"),
         beforeEnter: (to, from, next) => {
             requireAuth(to, from, () => requireModerator(next));
         },

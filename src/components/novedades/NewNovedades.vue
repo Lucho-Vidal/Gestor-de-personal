@@ -3,30 +3,32 @@
         <h1>
             {{  titulo }}
         </h1>
-        <div
-            class="alert row"
-            :class="[
-                message.status == 'danger'
-                    ? 'alert-danger'
-                    : message.status == 'success'
-                    ? 'alert-success'
-                    : message.status == 'warning'
-                    ? 'alert-warning'
-                    : '',
-            ]"
-            role="alert"
-            v-if="message.activo"
-        >
-            <h4 class="alert-heading">{{ message.title }}</h4>
-            <hr />
-            {{ message.message }}
-            <button
-                v-if="idNovedad !== 0"
-                class="btn btn-danger col-2"
-                @click="$router.push(`/editNovedades/${idNovedad}`)"
+        <div class="container d-flex">
+            <div
+                class="justify-content-center alert row"
+                :class="[
+                    message.status == 'danger'
+                        ? 'alert-danger'
+                        : message.status == 'success'
+                        ? 'alert-success'
+                        : message.status == 'warning'
+                        ? 'alert-warning'
+                        : '',
+                ]"
+                role="alert"
+                v-if="message.activo"
             >
-                Ir a la novedad
-            </button>
+                <h4 class="alert-heading">{{ message.title }}</h4>
+                <hr />
+                {{ message.message }}
+                <button
+                    v-if="idNovedad !== 0"
+                    class="btn btn-danger mx-3 col-2"
+                    @click="goToEdit(idNovedad)"
+                >
+                    Ir a la novedad
+                </button>
+            </div>
         </div>
         <!-- Modal de búsqueda -->
 
@@ -106,16 +108,16 @@
                 </div>
             </div>
         </div>
+        <div>
+            <button
+                class="btn btn-success btn-buscar-personal"
+                @click="abrirModal(false)"
+            >
+                Buscar Personal
+            </button>
+        </div>
         <!-- Formulario -->
         <form @submit.prevent="saveNovedad()">
-            <div>
-                <button
-                    class="btn btn-success"
-                    @click.prevent="abrirModal(false)"
-                >
-                    Buscar Personal
-                </button>
-            </div>
             <div class="justify-content-between row">
                 <div class="col-2">
                     <label for="legajo"></label>
@@ -217,42 +219,60 @@
                         required
                     >
                         //Enfermos
-                        <option value="Enfermedad">Enfermedad</option>
-                        <option value="ART">ART</option>
+                        <optgroup label="Enfermos">
+                            <option value="Enfermedad">Enfermedad</option>
+                            <option value="ART">ART</option>
+                        </optgroup>
                         <hr>
                         //res558
-                        <option value="Arrollamiento 558">Arrollamiento 558</option>
+                        <optgroup label="Res558">
+                            <option value="Arrollamiento 558">Arrollamiento 558</option>
+                        </optgroup>
                         <hr>
                         //LicenciaAnual
-                        <option value="Licencia Anual">Licencia Anual</option>
+                        <optgroup label="Licencia anual">
+                            <option value="Licencia Anual">Licencia Anual</option>
+                        </optgroup>
                         <hr>
                         //escTecnica
-                        <option value="Escuela Tecnica">Escuela Tecnica</option>
+                        <optgroup label="Escuela técnica">
+                            <option value="Escuela Tecnica">Escuela Tecnica</option>
+                        </optgroup>
                         <hr>
                         //disciplinarios
-                        <option value="Suspension">Suspension</option>
+                        <optgroup label="Disciplinarios">
+                            <option value="Suspension">Suspension</option>
+                        </optgroup>
                         <hr>
                         //Legales y convencionales
-                        <option value="Estudio">Estudio</option>
-                        <option value="Licencia Deportiva">Licencia Deportiva</option>
-                        <option value="Licencia Gremial">Licencia Gremial</option>
-                        <option value="Examen">Examen</option>
-                        <option value="Art17-23">Art 17 FT / Art 23 UF</option>
-                        <option value="Donación Sangre">Donación Sangre</option>
-                        <option value="Donación Plaqueta">Donación Plaqueta</option>
-                        <option value="Casamiento">Casamiento</option>
-                        <option value="Duelo">Duelo</option>
+                        <optgroup label="Legales y convencionales">
+                            <option value="Estudio">Estudio</option>
+                            <option value="Licencia Deportiva">Licencia Deportiva</option>
+                            <option value="Licencia Gremial">Licencia Gremial</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Art17-23">Art 17 FT / Art 23 UF</option>
+                            <option value="Donación Sangre">Donación Sangre</option>
+                            <option value="Donación Plaqueta">Donación Plaqueta</option>
+                            <option value="Casamiento">Casamiento</option>
+                            <option value="Duelo">Duelo</option>
+                        </optgroup>
                         <hr>
                         //OtrosMotivos
-                        <option value="Ausente">Ausente</option>
+                        <optgroup label="Otros motivos">
+                            <option value="Ausente">Ausente</option>
+                        </optgroup>
                         <hr>
                         //Franco
-                        <option value="Descanso Adeudado">Descanso Adeudado</option>
+                        <optgroup label="Franco">
+                            <option value="Descanso Adeudado">Descanso Adeudado</option>
+                        </optgroup>
                         <hr>
                         //sin efecto en el estadistico
-                        <option value="Practica">Practica via</option>
-                        <option value="Revision Medica">Revision Medica</option>
-                        <option value="Baja definitiva">Baja definitiva</option>
+                        <optgroup label="Sin efecto en el estadistico">
+                            <option value="Practica">Practica via</option>
+                            <option value="Revision Medica">Revision Medica</option>
+                            <option value="Baja definitiva">Baja definitiva</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>
@@ -317,20 +337,13 @@
                 </div>
             </div>
             <!-- Llamada Modal búsqueda -->
-            <button class="btn btn-success col-2" @click.prevent="abrirModal(true)" >
+            <button class="btn btn-success col-2 mb-3" @click.prevent="abrirModal(true)" >
                 Buscar Remplazo
             </button>
             <!-- Tabla remplazo -->
-            <table>
+            <table class="my-3">
                 <thead>
                     <tr>
-                        <th>Legajo</th>
-                        <th>Apellido</th>
-                        <th>Nombre</th>
-                        <th>Función</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>Borrar</th>
                         <th class="col-1 px-5">
                             <i
                                 class="material-icons cursor-hand verde"
@@ -338,6 +351,13 @@
                                 >person_add</i
                             >
                         </th>
+                        <th>Legajo</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Función</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -345,6 +365,7 @@
                         v-for="(remplazo, index) in novedad.remplazo"
                         :key="index"
                     >
+                        <td></td>
                         <td>
                             <input
                                 type="number"
@@ -352,10 +373,7 @@
                                 class="form-control mb-3"
                                 v-model="remplazo.legajo"
                                 @change="
-                                    asignarRelevoPorLegajo(
-                                        remplazo.legajo,
-                                        index
-                                    )
+                                    asignarRelevoPorLegajo(remplazo.legajo,index)
                                 "
                             />
                         </td>
@@ -450,6 +468,7 @@ export default defineComponent({
             mostrarModalSearch: false,
             cantDias: 1,
             idNovedad: 0,
+            idParam: 0,
             cicloRelevando: false,
             message: {
                 activo: false,
@@ -459,7 +478,25 @@ export default defineComponent({
             },
         };
     },
+    watch: {
+        //esta función esta para cuando aparece un alerta con el botón ir a la novedad actualice los datos funciona junto goToEdit
+        '$route.params.id': {
+            immediate: true,
+            handler(newId) {
+                const id = parseInt(newId, 10);
+                if (!isNaN(id)) {
+                    this.loadNovedad(id);
+                }
+            }
+        }
+    },
     methods: {
+        goToEdit(id:number) {
+            this.message.activo = false
+            this.$router.push(`/editNovedades/${id}`).then(() => {
+                this.$forceUpdate(); // Forzar la actualización del componente
+            });
+        },
         // Conexión con la API
         async obtenerUltimoId() {
             /* Este método obtiene a traves de una consulta HTML:GET el ultimo
@@ -530,6 +567,7 @@ export default defineComponent({
                 } else {
                     this.ultimoId++;
                     this.novedad._id = this.ultimoId;
+                    console.log(this.novedad._id);
                     this.novedad.fecha = this.today.toISOString().split("T")[0];
                     this.novedad.novedadInactiva = false;
                     accion = "Creo"
@@ -641,7 +679,7 @@ export default defineComponent({
         handleInputFocus(event: FocusEvent) {
             const inputElement = event.target as HTMLInputElement;
             if (inputElement) {
-                inputElement.select(); // Selecciona el contenido del input
+                inputElement.select(); // Selecciona el contenido del input cantidad de dias
             }
         },
         // Validaciones:
@@ -672,9 +710,10 @@ export default defineComponent({
             }
         },
         esInicioRelevoMayorIgualFechaBaja() {
-            if (this.novedad.remplazo !== undefined) {
-                if (
-                    this.esFechaMayor(
+            if (this.novedad.remplazo !== undefined && this.novedad.remplazo.length > 0) {
+                console.log(this.novedad.remplazo);
+                
+                if (this.esFechaMayor(
                         this.novedad.fechaBaja,
                         this.novedad.remplazo?.[0].inicioRelevo
                     )
@@ -773,7 +812,7 @@ export default defineComponent({
             return false;
         },
         terminaNovedadMismaFechaFinRelevo() {
-            if (this.novedad.remplazo !== undefined) {
+            if (this.novedad.remplazo !== undefined && this.novedad.remplazo.length > 0) {
                 if (
                     !this.novedad.HNA &&
                     !this.novedad.remplazo[
@@ -786,71 +825,86 @@ export default defineComponent({
                 }
             }
         },
+        activarAlerta(activarNovedad:boolean,title:string,message:string,status:string){
+            if (activarNovedad) {
+                this.message.title = title
+                this.message.message = message;
+                this.message.status = status;
+                this.message.activo = activarNovedad;
+                this.cicloRelevando = activarNovedad;
+            }
+        },
+        validarRelevoConNovedadActiva(novedad:Novedad,legajo:number):boolean{
+            return !novedad.novedadInactiva &&
+                novedad.remplazo.some(
+                    (remp: Remplazo) =>
+                        remp &&
+                        (!remp.finRelevo ||
+                            this.esFechaMayorIgual(
+                                remp.finRelevo,
+                                this.today.toISOString()
+                            )) &&
+                        remp.legajo === legajo 
+            );
+        },
+        validarPersonalConNovedadActiva(novedad:Novedad):boolean{
+            return !novedad.novedadInactiva &&
+                ((novedad.HNA &&
+                    this.esFechaMayorIgual(
+                        this.today.toString(),
+                        novedad.fechaBaja
+                    )) ||
+                    (this.esFechaMayorIgual(
+                        this.today.toString(),
+                        novedad.fechaBaja
+                    ) &&
+                        this.esFechaMayorIgual(
+                            novedad.fechaAlta,
+                            this.today.toString()
+                        )));
+        },
         validaPersonalConNovedadActiva(personal: IPersonal) {
-            let encontrado = false;
-
-            for (const novedad of this.novedades) {
-                if (encontrado) {
-                    break; // Salir del bucle si ya se encontró un caso
-                }
-
-                if (personal.turno.includes("Ciclo")) {
-                    const tieneRelevoActivo =
-                        !novedad.novedadInactiva &&
-                        novedad.remplazo.some(
-                            (remp: Remplazo) =>
-                                remp &&
-                                (!remp.finRelevo ||
-                                    this.esFechaMayorIgual(
-                                        remp.finRelevo,
-                                        this.today.toISOString()
-                                    )) &&
-                                remp.legajo === personal.legajo
-                        );
-
+            //TODO no esta encontrando a un personal de ciclo que esta relevando y se lo va a carga en otra novedad 16406 Doval 369.385
+            this.novedades.find((novedad:Novedad)=>{
+                if (personal.turno.toLowerCase().includes("ciclo")){// si el personal de baja es de ciclo se busca que no este relevando
+                    const tieneRelevoActivo = this.validarRelevoConNovedadActiva(novedad,personal.legajo)
+                    
+                    this.activarAlerta(
+                        tieneRelevoActivo,
+                        "Personal relevando",
+                        `El personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. 
+                        Si desea proceder se finalizara su relevo automáticamente. `,
+                        "warning"
+                    )
+                    
                     if (tieneRelevoActivo) {
                         this.idNovedad = novedad._id;
-                        this.message.message = `El personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. 
-                        Si desea proceder se finalizara su relevo automáticamente.`;
-                        this.message.status = "warning";
-                        this.message.activo = true;
-                        this.cicloRelevando = true;
-                        encontrado = true;
+                        return true
                     }
                 }
-
-                if (novedad.legajo === personal.legajo) {
-                    const estaDeBaja =
-                        !novedad.novedadInactiva &&
-                        ((novedad.HNA &&
-                            this.esFechaMayorIgual(
-                                this.today.toString(),
-                                novedad.fechaBaja
-                            )) ||
-                            (this.esFechaMayorIgual(
-                                this.today.toString(),
-                                novedad.fechaBaja
-                            ) &&
-                                this.esFechaMayorIgual(
-                                    novedad.fechaAlta,
-                                    this.today.toString()
-                                )));
+                if (novedad.legajo === personal.legajo && this.idParam !== novedad._id){ // se busca que no tenga una novedad activa y distinta a la actual
+                    const estaDeBaja = this.validarPersonalConNovedadActiva(novedad)
+                    
+                    this.activarAlerta(
+                        estaDeBaja,
+                        "Personal de baja",
+                        `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. 
+                            Por favor, finalice el relevo para poder continuar`,
+                        "danger"
+                    )
 
                     if (estaDeBaja) {
                         this.idNovedad = novedad._id;
-                        this.message.message = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
-                        this.message.activo = true;
-                        this.message.status = "danger";
-                        encontrado = true;
+                        return true
                     }
                 }
-            }
+                return false
+            })
         },
         // Funcionamiento del Formulario
         agregarRemplazo() {
-            if (this.novedad.remplazo !== undefined) {
-                this.novedad.remplazo.push({
-                    legajo: 0,
+            const remplazo:Remplazo = {
+                    legajo: null,
                     apellido: "",
                     nombres: "",
                     especialidad: "",
@@ -860,23 +914,11 @@ export default defineComponent({
                     turno: "",
                     franco: "",
                     HNA: true,
-                });
-            } else {
-                this.novedad.remplazo = [
-                    {
-                        legajo: 0,
-                        apellido: "",
-                        nombres: "",
-                        especialidad: "",
-                        inicioRelevo: this.today.toISOString().split("T")[0],
-                        finRelevo: "",
-                        base: "",
-                        turno: "",
-                        franco: "",
-                        HNA: true,
-                    },
-                ];
-            }
+                }
+            this.novedad.remplazo !== undefined ?
+                this.novedad.remplazo.push(remplazo) :
+                this.novedad.remplazo = [remplazo];
+            
         },
         calcularDiasNovedad(esFecha: boolean) {
             if (this.cantDias < 1) {
@@ -885,7 +927,6 @@ export default defineComponent({
             }
             try {
                 if (esFecha) {
-                    // Supongamos que tienes dos fechas almacenadas en variables llamadas "fecha1" y "fecha2"
                     const fecha1: Date = new Date(this.novedad.fechaBaja);
                     const fecha2: Date = new Date(this.novedad.fechaAlta);
 
@@ -917,20 +958,15 @@ export default defineComponent({
         selectPersonal(personal: IPersonal) {
             if (this.selectRemplazo) {
                 this.agregarRemplazo();
-                this.novedad.remplazo[
-                    this.novedad.remplazo.length - 1
-                ].legajo = personal.legajo;
-                this.asignarRelevoPorLegajo(
-                    personal.legajo,
-                    this.novedad.remplazo.length - 1
-                );
+                // this.novedad.remplazo[this.novedad.remplazo.length - 1].legajo = personal.legajo;
+                this.asignarRelevoPorLegajo(personal.legajo,this.novedad.remplazo.length - 1);
             } else {
                 this.novedad.legajo = personal.legajo;
+                this.searchPersonalPorLegajo();
             }
 
             this.search = "";
             this.cerrarModal();
-            this.searchPersonalPorLegajo();
         },
         abrirModal(selectRemplazo: boolean) {
             // Con este método abro el modal poniendo el focus en el input de búsqueda y asigno valor booleano
@@ -952,32 +988,35 @@ export default defineComponent({
         nombre y apellido el personal */
             this.personalEncontrado = this.personales.filter(
                 (personal: IPersonal) => {
-                    if (!soloCiclo) {
+                    if (soloCiclo) {
+                        return (
+                            //el remplazo debe ser personal de ciclo y de la misma base
+                            //1 que apellido o nombre coincida
+                            (personal.apellido.toLowerCase()+" "+personal.nombres.toLowerCase()
+                            ).includes(this.search.toLowerCase()) &&
+                            //2 que sea personal de ciclo
+                            personal.turno.toLowerCase().includes("ciclo") &&
+                            //3 que sea de la misma base
+                            personal.dotacion.toUpperCase()
+                                .includes(this.novedad.base.toUpperCase()) &&
+                            //4  
+                            //A) si es conductor también puede ser Ayudante habilitado
+                            //B) sino que sea de la misma especialidad
+                            (this.novedad.especialidad.toLowerCase().includes("conductor")
+                                ? personal.especialidad.toLowerCase().includes("conductor") ||
+                                    personal.especialidad.toLowerCase().includes(
+                                        "ayudante habilitado"
+                                    )
+                                : personal.especialidad.toLowerCase() == this.novedad.especialidad.toLowerCase())
+                        );
+                        
+                    } else {
+                        
                         return (
                             personal.apellido.toLowerCase() +
                             " " +
                             personal.nombres.toLowerCase()
                         ).includes(this.search.toLowerCase());
-                    } else {
-                        //el remplazo debe ser personal de ciclo y de la misma base
-                        return (
-                            (
-                                personal.apellido.toLowerCase() +
-                                " " +
-                                personal.nombres.toLowerCase()
-                            ).includes(this.search.toLowerCase()) &&
-                            personal.turno.toLowerCase().includes("ciclo") &&
-                            personal.dotacion
-                                .toUpperCase()
-                                .includes(this.novedad.base.toUpperCase()) &&
-                            (this.novedad.especialidad.includes("Conductor")
-                                ? personal.especialidad.includes("Conductor") ||
-                                  personal.especialidad.includes(
-                                      "Ayudante habilitado"
-                                  )
-                                : personal.especialidad ==
-                                  this.novedad.especialidad)
-                        );
                     }
                 }
             );
@@ -987,50 +1026,41 @@ export default defineComponent({
             this.message.message = "";
             this.message.status = "";
             this.message.activo = false;
-            this.personalEncontrado = this.personales.filter(
+            const [personalEncontrado] = this.personales.filter(
                 (personal: IPersonal) => {
                     return personal.legajo == this.novedad.legajo;
                 }
             );
-            if (this.personalEncontrado[0]) {
-                this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.novedad.apellido = this.personalEncontrado[0].apellido;
-                this.novedad.nombres = this.personalEncontrado[0].nombres;
-                this.novedad.base = this.personalEncontrado[0].dotacion;
-                this.novedad.especialidad = this.personalEncontrado[0].especialidad;
-                this.novedad.turno = this.personalEncontrado[0].turno;
+            if (personalEncontrado) {
+                this.validaPersonalConNovedadActiva(personalEncontrado);
+                this.novedad.apellido = personalEncontrado.apellido;
+                this.novedad.nombres = personalEncontrado.nombres;
+                this.novedad.base = personalEncontrado.dotacion;
+                this.novedad.especialidad = personalEncontrado.especialidad;
+                this.novedad.turno = personalEncontrado.turno;
                 this.novedad.franco = this.days[
-                    this.personalEncontrado[0].franco
+                    personalEncontrado.franco
                 ];
                 /* this.novedad.fechaBaja = this.today
                     .toISOString()
                     .split("T")[0]; */
             }
         },
-        asignarRelevoPorLegajo(legajo: number, index: number) {
+        asignarRelevoPorLegajo(legajo: number|null, index: number) {
             // al haber un cambio en el formulario remplazo.legajo se agregan el resto de los datos
-            this.personalEncontrado = this.personales.filter(
-                (personal: IPersonal) => {
+            const [personalEncontrado] = this.personales.filter((personal: IPersonal) => {
                     return personal.legajo == legajo;
-                }
-            );
-            if (this.personalEncontrado[0]) {
-                this.validaPersonalConNovedadActiva(this.personalEncontrado[0]);
-                this.novedad.remplazo[
-                    index
-                ].apellido = this.personalEncontrado[0].apellido;
-                this.novedad.remplazo[
-                    index
-                ].nombres = this.personalEncontrado[0].nombres;
-                this.novedad.remplazo[
-                    index
-                ].especialidad = this.personalEncontrado[0].especialidad;
-                this.novedad.remplazo[
-                    index
-                ].base = this.personalEncontrado[0].dotacion;
-                this.novedad.remplazo[
-                    index
-                ].turno = this.personalEncontrado[0].turno;
+            });
+
+            if (personalEncontrado) {
+                this.validaPersonalConNovedadActiva(personalEncontrado);
+                
+                this.novedad.remplazo[index].legajo = personalEncontrado.legajo;
+                this.novedad.remplazo[index].apellido = personalEncontrado.apellido;
+                this.novedad.remplazo[index].nombres = personalEncontrado.nombres;
+                this.novedad.remplazo[index].especialidad = personalEncontrado.especialidad;
+                this.novedad.remplazo[index].base = personalEncontrado.dotacion;
+                this.novedad.remplazo[index].turno = personalEncontrado.turno;
             } else {
                 this.novedad.remplazo[index].apellido = "";
                 this.novedad.remplazo[index].nombres = "";
@@ -1045,7 +1075,8 @@ export default defineComponent({
             this.loadPersonales();
             if (this.$route.params.id && typeof this.$route.params.id === "string") {
                 this.titulo = "Editar novedad"
-                this.loadNovedad(parseInt(this.$route.params.id));
+                this.idParam = parseInt(this.$route.params.id)
+                this.loadNovedad(this.idParam);
             }else{
                 this.titulo = "Cargar nueva novedad"
                 this.obtenerUltimoId();
@@ -1075,6 +1106,11 @@ form {
     flex-direction: column;
     margin-left: 250px;
     width: 75%;
+}
+.btn-buscar-personal{
+    margin-left: 250px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 .row {
     margin-left: 0px;

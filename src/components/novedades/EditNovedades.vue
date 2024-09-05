@@ -1,11 +1,13 @@
 <template>
     <main>
         <h1>Editar Novedad</h1>
+        <div class="container">
 
-        <div class="alert alert-danger" role="alert" v-if="alerta">
-            <h4 class="alert-heading">ATENCIÓN!</h4>
-            <hr />
-            {{ alerta }}
+            <div class="alert alert-danger" role="alert" v-if="message.activo">
+                <h4 class="alert-heading">ATENCIÓN!{{ message.title }}</h4>
+                <hr />
+                {{ message.message }}
+            </div>
         </div>
         <!-- Modal de búsqueda -->
         <div>
@@ -223,6 +225,7 @@
                         <hr>
                         //sin efecto en el estadistico
                         <option value="Practica">Practica via</option>
+                        <option value="otroServicio">Otro Servicio</option>
                         <option value="Revision Medica">Revision Medica</option>
                         <option value="Baja definitiva">Baja definitiva</option>
                     </select>
@@ -413,7 +416,7 @@ export default defineComponent({
             search: "" as string,
             selectRemplazo: false,
             personalEncontrado: [] as IPersonal[],
-            alerta: "" as string,
+            // alerta: "" as string,
             mostrarModalSearch: false,
             idNovedad: 0,
             cicloRelevando: false,
@@ -460,8 +463,8 @@ export default defineComponent({
                     this.hayMasDeUnRelevo() ||
                     this.esFechaBajaMayorFechaAlta()
                 ) {
-                    if (!this.alerta) {
-                        this.alerta =
+                    if (!this.message.activo) {
+                        this.message.message =
                             "Ocurrió un problema con la validación. Contacte al administrador con capturas de pantalla del error.";
                     }
                     return;
@@ -555,8 +558,9 @@ export default defineComponent({
                         this.novedad.remplazo?.[0].inicioRelevo
                     )
                 ) {
-                    this.alerta =
+                    this.message.message =
                         "La fecha de inicio del relevo no puede ser anterior a la del inicio de la novedad";
+                    this.message.activo = true;
                     return true;
                 } else {
                     return false;
@@ -573,8 +577,9 @@ export default defineComponent({
                         this.novedad.fechaAlta
                     )
                 ) {
-                    this.alerta =
+                    this.message.message =
                         "La fecha de fin de la novedad no puede ser anterior a la del inicio de la novedad";
+                    this.message.activo = true;
                     return true;
                 } else {
                     return false;
@@ -606,8 +611,9 @@ export default defineComponent({
                         this.novedad.fechaAlta
                     )
                 ) {
-                    this.alerta =
+                    this.message.message =
                         "La fecha de fin del relevo no puede ser posterior a la del fin de la novedad";
+                    this.message.activo = true;
                     return true;
                 }
             }
@@ -626,14 +632,18 @@ export default defineComponent({
                             this.novedad.remplazo[i + 1].inicioRelevo
                         )
                     ) {
-                        this.alerta =
+                        this.message.message =
                             "Un turno no puede ser relevado por dos personas el mismo día. Y los relevos deben están ordenados consecutivamente.";
-                        return true;
+                        this.message.activo = true;
+                        return true;                    
+
                     }
                 }
                 if (sinFechaFin > 1) {
-                    this.alerta =
+                    this.message.message =
                         "No puede haber más de un relevo sin fecha de finalización";
+                    this.message.activo = true;
+
                     return true;
                 }
             }
@@ -678,12 +688,15 @@ export default defineComponent({
 
                     if (tieneRelevoActivo) {
                         this.idNovedad = novedad._id;
-                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.message = `Este personal ${personal.apellido} ${personal.nombres} se encuentra relevando la novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.activo = true;
                         encontrado = true;
                     }
                 }
 
                 if (novedad.legajo === personal.legajo) {
+                    console.log(this.idNovedad);
+                    
                     const estaDeBaja =
                         !novedad.novedadInactiva &&
                         ((novedad.HNA &&
@@ -702,7 +715,8 @@ export default defineComponent({
 
                     if (estaDeBaja) {
                         this.idNovedad = novedad._id;
-                        this.alerta = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.message = `Este personal ${personal.apellido} ${personal.nombres} se encuentra de baja por la siguiente novedad N°${novedad._id}. Por favor, finalice el relevo para poder continuar`;
+                        this.message.activo = true;
                         encontrado = true;
                     }
                 }

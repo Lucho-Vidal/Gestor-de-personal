@@ -2,14 +2,16 @@ import { CambioTurno } from "@/interfaces/ICambioTurno";
 import { Novedad, Remplazo } from "@/interfaces/INovedades";
 import { Ordenamiento } from "@/interfaces/IOrdenamientos";
 import { IPersonal } from "@/interfaces/IPersonal";
+import { IPersonalSinDiagrama, Jornada } from "@/interfaces/IPersonalSinDiagrama";
 import { Registro } from "@/interfaces/IRegistro";
-import { ITurno } from "@/interfaces/ITurno";
+import { ITurno, Vueltas } from "@/interfaces/ITurno";
 import { User } from "@/interfaces/IUser";
 import { Itinerario } from "@/interfaces/Itinerario";
 import { getCambioTurnos } from "@/services/cambioTurnoService";
 import { getItinerario } from "@/services/itinerarioService";
 import { getNovedades } from "@/services/novedadesService";
-import { getPersonales } from "@/services/personalService";
+import { getPersonal, getPersonales } from "@/services/personalService";
+import { getPersonalSinDiagrama } from "@/services/personalSinDiagramaService";
 import { createRegistro } from "@/services/registrosService";
 import { getTurnos } from "@/services/turnosService";
 import { AxiosError } from "axios";
@@ -67,6 +69,81 @@ export function compararHoras(hora1: string, hora2: string): number {
 
     // Si las horas son iguales, comparar minutos
     return hora1Minutes - hora2Minutes;
+}
+export function diferenciaHoras(hora1: string, hora2: string): string {
+    // Función auxiliar para crear una fecha con la hora y minutos de la cadena proporcionada
+    function newDate(hora: string, incrementarDia: boolean = false) {
+        const [horaN, minutosN] = hora.split(":").map(Number);
+        let date = new Date();
+        date.setHours(horaN);
+        date.setMinutes(minutosN);
+        // Si incrementarDia es verdadero, sumamos 1 día a la fecha
+        if (incrementarDia) {
+            date.setDate(date.getDate() + 1);
+        }
+        return date;
+    }
+
+    // Crear las fechas
+    let dateDesde = newDate(hora1);
+    let dateHasta = newDate(hora2);
+
+    // Si la hora2 es anterior a la hora1, asumimos que es el día siguiente
+    if (dateHasta < dateDesde) {
+        dateHasta = newDate(hora2, true); // Incrementar el día en hora2
+    }
+
+    // Calcular la diferencia en minutos
+    let minutos = (dateHasta.getTime() - dateDesde.getTime()) / 1000 / 60;
+    
+    let horas = Math.floor(minutos / 60);  // Obtener las horas completas
+    minutos = minutos % 60;                // Obtener los minutos restantes
+    
+    // Formatear el resultado para que siempre muestre dos dígitos en horas y minutos
+    const horasStr = horas.toString().padStart(2, '0');
+    const minutosStr = minutos.toString().padStart(2, '0');
+    
+    return `${horasStr}:${minutosStr}`;
+}
+export function sumarHoras(hora: string, cantidadHoras: number): string {
+    // Función auxiliar para crear una fecha con la hora proporcionada
+    function newDate(hora: string) {
+        const [horaN, minutosN] = hora.split(":").map(Number);
+        let date = new Date();
+        date.setHours(horaN);
+        date.setMinutes(minutosN);
+        return date;
+    }
+
+    // Crear la fecha inicial a partir de la hora proporcionada
+    let date = newDate(hora);
+
+    // Sumar la cantidad de horas a la fecha
+    date.setHours(date.getHours() + cantidadHoras);
+
+    // Extraer las horas y minutos de la fecha resultante
+    let horas = date.getHours();
+    let minutos = date.getMinutes();
+
+    // Formatear para que siempre sean dos dígitos
+    const horasStr = horas.toString().padStart(2, '0');
+    const minutosStr = minutos.toString().padStart(2, '0');
+
+    return `${horasStr}:${minutosStr}`;
+}
+export function diaAnterior(fecha: string): string {
+    // Crear una instancia de Date a partir del string proporcionado
+    let date = new Date(fecha);
+
+    // Restar un día
+    date.setDate(date.getDate() - 1);
+
+    // Formatear el resultado como "YYYY-MM-DD"
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JS son de 0 a 11
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 }
 export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprimir: ITurno[],personales: IPersonal[],novedades: Novedad[],cambiosTurnos:CambioTurno[]) {
     try {
@@ -135,7 +212,7 @@ export function obtenerNombreConReemplazo(novedad: Novedad, inputDate: string , 
         });
         if (remplazo) {
             // vamos a verificar que no este cambiado de turno
-
+            if(remplazo.legajo == null) return ''
             const cambiado = buscarCambioTurno(cambiosTurnos,inputDate,remplazo.legajo)
             if(cambiado){
                 return `${cambiado.apellido} ${cambiado.nombres}`
@@ -293,19 +370,6 @@ export function obtenerTiposCirculares(turnos: ITurno[]) {
 
     return circularesUnicas;
 }
-// export function obtenerDotaciones(turnos: ITurno[]) {
-//     // Filtramos aquellos turnos que tengan definida la propiedad "dotacion"
-//     const turnosFiltrados = turnos.filter(
-//         (turno) => turno.dotacion !== undefined
-//     );
-
-//     // Usamos Set para obtener valores únicos de la propiedad "circular"
-//     const dotacionesUnicas = [
-//         ...new Set(turnosFiltrados.map((turno) => turno.dotacion)),
-//     ];
-
-//     return dotacionesUnicas;
-// }
 export function obtenerDotaciones(personal: IPersonal[]) {
     // Filtramos aquellos turnos que tengan definida la propiedad "dotacion"
     const personalFiltrados = personal.filter(
@@ -404,6 +468,22 @@ export async function  loadPersonales() {
         handleRequestError(error as AxiosError);
     }
 }
+export async function loadPersonal(id: string) {
+    try {
+        const res = await getPersonal(id);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export async function loadPersonalSinDiagrama(id: string) {
+    try {
+        const res = await getPersonalSinDiagrama(id);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
 export async function  loadNovedades() {
     try {
         const res = await getNovedades();
@@ -411,6 +491,96 @@ export async function  loadNovedades() {
     } catch (error) {
         handleRequestError(error as AxiosError);
     }
+}
+export function defaultPersonal(): IPersonal {
+    return {
+        _id: '',
+        legajo: 0,
+        apellido: '',
+        nombres: '',
+        turno: '',
+        franco: 0,
+        especialidad: '',
+        dotacion: '',
+        observaciones: '',
+        orden: 0,
+        conocimientos: {
+            CML: false,
+            CKD: false,
+            RO: false,
+            MPN: false,
+            OL: false,
+            LCI: false,
+            ELEC: false,
+            DUAL: false,
+        },
+        viewDetail: false,
+    };
+}
+export function defaultTurnos(): ITurno {
+    return {
+        _id: '',
+        turno: '',
+        itinerario: '',
+        circular: '',
+        personal: '',
+        toma: '',
+        deja: '',
+        dotacion: '',
+        especialidad: '',
+        ordenes: false,
+        viewDetail: false,
+        vueltas: [{} as Vueltas],
+    }
+}
+export function defaultNovedad(): Novedad {
+    return{
+            _id: 0,
+            fecha: '',
+            legajo: 0 ,
+            apellido: '',
+            nombres: '',
+            base: '',
+            especialidad: '',
+            turno: '',
+            franco: '',
+            tipoNovedad:'',
+            fechaBaja:'',
+            fechaAlta:'',
+            HNA: false,
+            detalle:'',
+            viewDetail:false,
+            novedadInactiva: false,
+
+            remplazo: [],
+            
+    }
+}
+export function defaultPersonalSinDiagrama(): IPersonalSinDiagrama {
+    return {
+        _id: '',
+        legajo: 0,
+        Ciclo: 0,
+        francoInicio: 0,
+        HoraInicio: '',
+        francoHasta: 0,
+        HoraHasta: '',
+        meses: {},
+    };
+}
+export function defaultJornada(): Jornada {
+    return {
+        tren: '', 
+        desde: '', 
+        hasta: '', 
+        disponibleHora: '', 
+        tomo: '', 
+        dejo: '', 
+        totalHoras: '', 
+        observaciones: '',
+        estilo: false, 
+        nroNovedad: null
+    };
 }
 export function formatearFecha(fechaString: string): string {
     const fecha: Date = new Date(fechaString);
@@ -459,34 +629,21 @@ export async function guardarRegistro(today:Date,accion:string,turno?: ITurno,pe
     };
     await createRegistro(registro);
 }
-export function obtenerNumeroDia(dia: string) {
-    const diasDeLaSemana = [
-        "Domingo",
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-    ];
-
-    // Obtén el índice del día en el array
-    const indice = diasDeLaSemana.findIndex((nombre) => nombre === dia);
-
+const diasDeLaSemana = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+];
+export function obtenerNumeroDia(dia: string):number {
     // Si se encuentra, devuelve el índice (0-6); de lo contrario, devuelve -1
-    return indice;
+    return diasDeLaSemana.findIndex((nombre) => nombre === dia);
 }
 export function obtenerDiaSemana(num:number):string{
-    const days= [
-        "Domingo",
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-    ]
-    return days[num]
+    return diasDeLaSemana[num]
 }
 export function itinerarioType(fecha: Date) {
     if (fecha.getDay() === 0) {

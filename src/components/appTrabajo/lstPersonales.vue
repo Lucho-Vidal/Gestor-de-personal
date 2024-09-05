@@ -4,7 +4,7 @@
             Lista de personales
         </h2>
         <div class="d-flex justify-content-center mb-3">
-            <label for="dotacion" class="col-2 mx-3">
+            <!-- <label for="dotacion" class="col-2 mx-3">
                 Dotacion
                 <select
                     name="dotacion"
@@ -22,7 +22,21 @@
                     <option value="CÑ">CÑ</option>
                     <option value="AK">AK</option>
                 </select>
-            </label>
+            </label> -->
+            <label for="dotacion" class="col-2 mx-3">
+                    Dotación
+                    <select
+                    name="dotacion"
+                    id="dotacion"
+                    class="col-6 mx-3"
+                    v-model="dotacionesSeleccionadas"
+                    @change="filtrar()"
+                    >
+                    <option v-for="(dotacion, index) in dotacionesPermitidas" :key="index" :value="dotacion">
+                        {{ dotacion }}
+                    </option>
+                    </select>
+                </label>
 
             <label for="it" class="col-2 mx-3">
                 Itinerario
@@ -125,13 +139,13 @@
                                         {{ turno.deja }}
                                     </td>
                                     <td class="col-1">
-                                        {{ turno.vueltas[0].refer }}
+                                        {{ turno.vueltas[0] ? turno.vueltas[0].refer : "-" }}
                                     </td>
                                     <td class="col-1">
-                                        {{ turno.vueltas[0].tren }}
+                                        {{ turno.vueltas[0] ?  turno.vueltas[0].tren : "-" }}
                                     </td>
                                     <td class="col-1">
-                                        {{ turno.vueltas[0].sale }}
+                                        {{ turno.vueltas[0] ?  turno.vueltas[0].sale : "-"}}
                                     </td>
                                     <td class="col-1">
                                         {{ turno.circular }}
@@ -735,6 +749,7 @@ import {
     buscarPersonalACargo,
     obtenerTiposCirculares,
     loadCambiosTurnos,
+    obtenerDotaciones,
 } from "../../utils/funciones";
 import { CambioTurno } from "../../interfaces/ICambioTurno";
 
@@ -745,7 +760,8 @@ export default defineComponent({
             turnos: [] as ITurno[],
             novedades: [] as Novedad[],
             today: new Date(),
-            checkboxDotacion: "" as string,
+            dotacionesPermitidas: [] as string[],
+            dotacionesSeleccionadas: ["PC"] as string[],
             turnosConductor: [] as ITurno[],
             turnosGuardas: [] as ITurno[],
             turnosConductorOrd: [] as ITurno[],
@@ -785,6 +801,8 @@ export default defineComponent({
                 /* Trae todos los elementos de la base de datos */
                 const res = await getPersonales();
                 this.personales = res.data;
+                this.dotacionesPermitidas = obtenerDotaciones(this.personales);
+
                 if (this.datosCargados > 1) {
                     this.filtrar();
                 } else {
@@ -815,16 +833,16 @@ export default defineComponent({
             }
         },
         filtrar() {
-            window.localStorage.setItem(
-                "dotacionSeleccionada",
-                this.checkboxDotacion
-            );
-            window.localStorage.setItem("itSeleccionada", this.checkboxIt);
+            // window.localStorage.setItem(
+            //     "dotacionSeleccionada",
+            //     this.checkboxDotacion
+            // );
+            // window.localStorage.setItem("itSeleccionada", this.checkboxIt);
 
             let turnosGuardas = this.turnos.filter((turno: ITurno) => {
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
-                    turno.dotacion == this.checkboxDotacion &&
+                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
                     this.checkboxIt == turno.itinerario &&
                     (turno.especialidad.toLowerCase() ==
                         "guardatren electrico" ||
@@ -836,7 +854,7 @@ export default defineComponent({
             let turnosConductor = this.turnos.filter((turno: ITurno) => {
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
-                    turno.dotacion == this.checkboxDotacion &&
+                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
                     this.checkboxIt == turno.itinerario &&
                     (turno.especialidad.toLowerCase() ==
                         "conductor electrico" ||
@@ -848,7 +866,7 @@ export default defineComponent({
             let turnosGuardasOrd = this.turnos.filter((turno: ITurno) => {
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
-                    turno.dotacion == this.checkboxDotacion &&
+                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
                     this.checkboxIt == turno.itinerario &&
                     (turno.especialidad.toLowerCase() ==
                         "guardatren electrico" ||
@@ -860,7 +878,7 @@ export default defineComponent({
             let turnosConductorOrd = this.turnos.filter((turno: ITurno) => {
                 return (
                     this.circularSeleccionada.includes(turno.circular) &&
-                    turno.dotacion == this.checkboxDotacion &&
+                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
                     this.checkboxIt == turno.itinerario &&
                     (turno.especialidad.toLowerCase() ==
                         "conductor electrico" ||
@@ -968,12 +986,9 @@ export default defineComponent({
             this.cambiosTurnos = (await loadCambiosTurnos()) || [];
             this.today.setHours(12, 0, 0, 0);
             newToken();
-            const dotacionSelectString = window.localStorage.getItem(
-                "dotacionSeleccionada"
-            );
-            this.checkboxDotacion = dotacionSelectString
-                ? dotacionSelectString
-                : "";
+            // const dotacionSelectString = window.localStorage.getItem(
+            //     "dotacionSeleccionada"
+            // );
             const itSelectString = window.localStorage.getItem(
                 "itSeleccionada"
             );

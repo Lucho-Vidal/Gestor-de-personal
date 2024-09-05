@@ -23,7 +23,6 @@
                     Filtrar Personal
                 </button>
             </div>
-            <!-- v-if="detalleLegajo!=0" para que no genere error -->
             <div class="modal" :class="{ 'd-block': mostrarModalDetalle }" v-if="detalleLegajo!=0" @click.self="cerrarModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -192,10 +191,11 @@
                                 <input
                                     class="col-2 gap rounded-3"
                                     type="number"
+                                    ref="inputSearch"
                                     placeholder="Buscar Legajo"
                                     autofocus
                                     v-model="searchLegajo"
-                                    v-on:change="filtrarPersonales()"
+                                    @keyup.enter="handleEnterKey"
                                 />
                                 <input
                                     class="col-3 gap mx-3 rounded"
@@ -536,7 +536,7 @@ import { Registro } from "../../interfaces/IRegistro";
 import { obtenerDotaciones } from "../../utils/funciones";
 
 export default defineComponent({
-    props: ['idPersonal', 'idDato', 'idVia'],
+    // props: ['idPersonal', 'idDato', 'idVia'],
     data() {
         return {
             personales: [] as IPersonal[],
@@ -557,7 +557,7 @@ export default defineComponent({
             today: new Date(),
             search: "" as string,
             searchTurno: "" as string,
-            searchLegajo: 0,
+            searchLegajo: null,
             days: [
                 "Domingo",
                 "Lunes",
@@ -691,10 +691,19 @@ export default defineComponent({
         },
         abrirModal() {
             this.mostrarModalSearch = true;
+            this.$nextTick(() => {
+                if (this.$refs.inputSearch) {
+                    (this.$refs.inputSearch as HTMLInputElement).focus();
+                }
+            });
         },
         cerrarModal() {
             this.mostrarModalSearch = false;
             this.mostrarModalDetalle = false;
+        },
+        handleEnterKey() {
+            this.filtrarPersonales();
+            this.cerrarModal();
         },
         abrirModalDetalle(legajo:number) {
 
@@ -720,7 +729,7 @@ export default defineComponent({
             if (this.search.length != 0) {
                 filtrar = true;
             }
-            if (this.searchLegajo != 0) {
+            if (this.searchLegajo ) {
                 filtrar = true;
             }
             if (this.searchTurno.length != 0) {
@@ -812,7 +821,6 @@ export default defineComponent({
                         }
                     }
                 });
-
                 if (this.search.length != 0) {
                     auxPersonales = this.personalesFiltrados;
                     this.personalesFiltrados = auxPersonales.filter(
@@ -835,7 +843,7 @@ export default defineComponent({
                         }
                     );
                 }
-                if (this.searchLegajo != 0) {
+                if (this.searchLegajo ) {
                     auxPersonales = this.personalesFiltrados;
                     this.personalesFiltrados = auxPersonales.filter(
                         (personal) => {
@@ -847,7 +855,7 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        async edit(idPersonal: string,idDato: string,idVia: string) {            
+        edit(idPersonal: string,idDato: string,idVia: string) {            
             this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia } });
         },
     },
