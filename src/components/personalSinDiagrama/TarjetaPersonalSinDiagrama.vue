@@ -38,6 +38,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="barraBotones">
+            <button class="btn btn-success">Guardar</button>
+        </div>
         <div class="container-fluid">
             <table class="table table-bordered">
                 <thead class="">
@@ -58,19 +61,83 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(day, index) in fechasDelMes" :key="index" :class="{ 'text-red': getJornadaForDay(selectedMonth, day).estilo  }">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ getJornadaForDay(selectedMonth, day).tren || '-' }}</td>
-                        <td>{{ getJornadaForDay(selectedMonth, day).disponibleHora || '' }}</td>
-                        <td>{{ getJornadaForDay(selectedMonth, day).tomo || '' }}</td>
-                        <td>{{ getJornadaForDay(selectedMonth, day).dejo || '' }}</td>
-                        <td>{{ getJornadaForDay(selectedMonth, day).totalHoras || '' }}</td>
-                        <td class="layout">{{ getJornadaForDay(selectedMonth, day).observaciones || '' }} 
-                            <button 
-                                class="btn btn-primary" 
-                                v-if="getJornadaForDay(selectedMonth,day).nroNovedad" 
+                    <tr v-for="(day, index) in fechasDelMes" :key="index" :class="{ 'text-red': getJornadaForDay(selectedMonth, day).estilo }">
+                        <td class="dia">{{   getDiaSemanaYMes(day,index) }}</td>
+                        <!-- Columna Diagrama -->
+                        <td class="celdaInput " @click="toggleEdit('tren', index)">
+                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'tren' && editIndex === index" 
+                                type="text" 
+                                v-model="editValue" 
+                                :ref="'inputField-' + index" 
+                                @keydown.enter="saveEdit('tren', index)">
+                        <span class="celdaInputAncho" v-else>
+                            {{ getJornadaForDay(selectedMonth, day).tren || '-' }}
+                        </span>
+                        </td>
+
+                        <!-- Columna Disponible a la Hora -->
+                        <td class="celdaInput " @click="toggleEdit('disponibleHora', index)">
+                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'disponibleHora' && editIndex === index" 
+                                type="text" 
+                                v-model="editValue" 
+                                :ref="'inputField-' + index"
+                                @keydown.enter="saveEdit('disponibleHora', index)">
+                        <span class="celdaInputAncho" v-else>
+                            {{ getJornadaForDay(selectedMonth, day).disponibleHora || '' }}
+                        </span>
+                        </td>
+
+                        <!-- Columna Tomó -->
+                        <td class="celdaInput " @click="toggleEdit('tomo', index)">
+                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'tomo' && editIndex === index" 
+                                type="text" 
+                                v-model="editValue" 
+                                :ref="'inputField-' + index" 
+                                @keydown.enter="saveEdit('tomo', index)">
+                        <span class="celdaInputAncho" v-else>
+                            {{ getJornadaForDay(selectedMonth, day).tomo || '' }}
+                        </span>
+                        </td>
+
+                        <!-- Columna Dejó -->
+                        <td class="celdaInput " @click="toggleEdit('dejo', index)">
+                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'dejo' && editIndex === index" 
+                                type="text" 
+                                v-model="editValue" 
+                                :ref="'inputField-' + index"
+                                @keydown.enter="saveEdit('dejo', index)">
+                        <span class="celdaInputAncho" v-else>
+                            {{ getJornadaForDay(selectedMonth, day).dejo || '' }}
+                        </span>
+                        </td>
+                        <!-- Columna Total horas trabajadas -->
+                        <td class="celdaInput" @click="toggleEdit('totalHoras', index)">
+                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'totalHoras' && editIndex === index" 
+                                type="text" 
+                                v-model="editValue" 
+                                :ref="'inputField-' + index"
+                                @keydown.enter="saveEdit('totalHoras', index)">
+                        <span class="celdaInputAncho" v-else>
+                            {{ getJornadaForDay(selectedMonth, day).totalHoras || '' }}
+                        </span>
+                        </td>
+
+                        <!-- Observaciones -->
+                        <td class="celdaInput layout"
+                            @click="toggleEdit('observaciones', index)" 
+                            >
+                            <input v-if="getJornadaForDay(selectedMonth, day).editable &&  editField === 'observaciones' && editIndex === index" 
+                                    type="text" v-model="editValue" 
+                                    :ref="'inputField-' + index" 
+                                    @keydown.enter="saveEdit('observaciones', index)">
+                            <span class="celdaInputAncho" v-else >
+                                {{ getJornadaForDay(selectedMonth, day).observaciones || '-' }}
+                            </span>
+                            <button class="btn btn-primary" v-if="getJornadaForDay(selectedMonth,day).nroNovedad" 
                                 @click="$router.push(`/editNovedades/${getJornadaForDay(selectedMonth,day).nroNovedad}`)">
-                                Ir a la novedad</button> </td>
+                                Ir a la novedad
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -81,7 +148,7 @@
 <script lang="ts">
 import { newToken } from "../../services/signService";
 import { defineComponent } from "vue";
-import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, dia_laboral,  diaAnterior,  diferenciaHoras, esFechaMayorIgual, filtrarPorTurno, itinerarioType, loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos,  obtenerNumeroDia, sumarHoras } from '../../utils/funciones';
+import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, dia_laboral, diaAnterior,   diferenciaHoras, dosDiasAnterior, esFechaMayorIgual, filtrarPorTurno, itinerarioType, loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos,  obtenerNumeroDia, sumarHoras } from '../../utils/funciones';
 import { IPersonal } from '../../interfaces/IPersonal';
 import { IPersonalSinDiagrama, Jornada } from '../../interfaces/IPersonalSinDiagrama';
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
@@ -97,6 +164,9 @@ export default defineComponent({
             today: new Date(),
             selectedMonth: "",
             fechasDelMes: [] as string[],
+            editField: null as string | null, // Campo en edición
+            editIndex: null as number | null, // Índice de la fila en edición
+            editValue: '' as string,          // Valor que se está editando
         };
     },
     methods: {
@@ -120,6 +190,10 @@ export default defineComponent({
                 }
                 this.fechasDelMes = days
 
+        },
+        getDiaSemanaYMes(day:string,index:number):string{
+            const fecha = new Date(day+'T12:00');
+            return `${this.diaSemanaStr(fecha.getDay())} - ${index + 1}` 
         },
         getColorClass(especialidad:string) {
             if (especialidad.includes("Ayudante")) {
@@ -158,6 +232,39 @@ export default defineComponent({
             ]
             return dias[dia]
         },
+        toggleEdit(field: string, index: number) {
+            this.editField = field;
+            this.editIndex = index;
+            this.editValue = this.getJornadaForDay(this.selectedMonth, this.fechasDelMes[index])[field] || '-';
+
+            // Espera hasta que el DOM esté listo para enfocar el input
+            this.$nextTick(() => {
+                const inputElement = this.$refs['inputField-' + index] as HTMLInputElement | null;
+                if (inputElement && typeof inputElement.focus === 'function') {
+                    inputElement.focus(); // Hace foco automáticamente en el input
+                    inputElement.select(); // Opcional: selecciona todo el texto dentro del input
+                }
+            });
+        },
+        saveEdit(field: string, index: number) {
+            // Guardar el valor editado en el campo correspondiente
+            
+            const jornada = this.getJornadaForDay(this.selectedMonth, this.fechasDelMes[index]);
+            
+            if (jornada) {
+                jornada[field] = this.editValue === '' ? '-' : this.editValue ;  // Actualiza directamente la propiedad
+            }
+            this.editField = null;
+            this.editIndex = null;
+            this.editValue = '';
+        },
+        handleKeydown(event: KeyboardEvent, field: string, index: number) {
+            
+            if (event.key === 'Enter') {
+                this.saveEdit(field, index);
+                event.preventDefault();  // Evitar el comportamiento por defecto del enter
+            }
+        },
         buscarJornadas(fecha:string, nombreTurno:string,jornada:number){
             const date = new Date(fecha+"T12:00")
             const itinerario: string = itinerarioType(date);
@@ -167,12 +274,8 @@ export default defineComponent({
                 ["Jul24"],// provisorio
                 nombreTurno
             );
-            // console.log(nombreTurno);
-            // console.log(date);
-            // console.log(itinerario);
-            // console.log(this.lstTurnos);
-            // console.log(turnosEncontrados);
             let turno:ITurno = defaultTurnos();
+            
             if (turnosEncontrados.length > 1) 
                 turno = turnosEncontrados.find((turno:ITurno) => turno.turno === `${nombreTurno}.${jornada}`) || defaultTurnos();
             else [turno] = turnosEncontrados
@@ -180,7 +283,6 @@ export default defineComponent({
             return {tomo:turno.toma,dejo:turno.deja}
         },
         buscarNovedadesActivas(){
-            let horaDisp:string = '--:--';
             const novedades = this.lstNovedades.filter((novedad:Novedad)=>{
                 return novedad.legajo === this.personal.legajo && 
                 !novedad.novedadInactiva
@@ -189,8 +291,36 @@ export default defineComponent({
                 return (novedad.remplazo.some((remplazo:Remplazo)=> remplazo.legajo === this.personal.legajo) && 
                 !novedad.novedadInactiva)
             })
+
+            // Función para calcular la disponibilidad
+            const calcularDisponibilidad = (dia: string) => {
+                const mes = this.personalSinDiagrama.meses[this.selectedMonth].days;
+                const especialidad = this.personal.especialidad.toLowerCase();
+
+                // Verificamos si existe el día anterior
+                const diaAnt = mes[diaAnterior(dia+'T12:00')];
+                const dosDiasAnt = mes[dosDiasAnterior(dia+'T12:00')];
+                
+                // Si el día anterior no existe, no hay nada que hacer
+                if (!diaAnt) return;
+                
+                let horasASumar = especialidad.includes('guardatren diesel') ? 17 : 18;
+                
+                // Si el día anterior es 'DH', verificamos el día de dos días antes
+                if (diaAnt.tomo === 'DH' && dosDiasAnt && dosDiasAnt.dejo !== '' ) {
+                    horasASumar = especialidad.includes('guardatren diesel') ? 41 : 42;
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[dia].disponibleHora = sumarHoras(dosDiasAnt.dejo, horasASumar);
+                } 
+                // Si el día anterior no es 'DH', calculamos con el día anterior
+                else if (diaAnt.dejo !== 'DH' && mes[dia].tomo !== 'DH' && diaAnt.dejo !== '') {
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[dia].disponibleHora = sumarHoras(diaAnt.dejo, horasASumar);
+                }else
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[dia].disponibleHora = '';
+            }
+
             
             this.fechasDelMes.forEach((dia:string)=>{
+                const fecha = new Date(dia+"T12:00")
                 // sino existe el dia se crea
                 if (!this.personalSinDiagrama.meses[this.selectedMonth]) {
                     this.personalSinDiagrama.meses[this.selectedMonth] = {days:{}} 
@@ -198,51 +328,62 @@ export default defineComponent({
                 if (!this.personalSinDiagrama.meses[this.selectedMonth].days[dia]) {
                     this.personalSinDiagrama.meses[this.selectedMonth].days[dia] = defaultJornada()
                 }
+                if(fecha.getDay() === this.personalSinDiagrama.francoInicio){
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[dia].observaciones = `DH del ciclo // desde ${this.diaSemanaStr(this.personalSinDiagrama.francoInicio)} ${this.personalSinDiagrama.HoraInicio}`
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = this.personalSinDiagrama.HoraInicio
+                }
+                if(fecha.getDay() === this.personalSinDiagrama.francoHasta && this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')]){
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].disponibleHora = ''
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[(dia)].disponibleHora = this.personalSinDiagrama.HoraHasta
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].tomo = 'DH'
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].dejo = 'DH'
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].observaciones = `DH del ciclo // hasta ${this.diaSemanaStr(this.personalSinDiagrama.francoHasta)} ${this.personalSinDiagrama.HoraHasta}`
+                }
+                //Busco si estuvo relevando
                 relevos.forEach((novedad:Novedad)=>{
                     novedad.remplazo.forEach((remplazo:Remplazo)=>{
-                        // tengo que buscar los datos del turno
-                                                    
                         if(remplazo.legajo === this.personal.legajo && esFechaMayorIgual(dia,remplazo.inicioRelevo) && (remplazo.finRelevo === '' || esFechaMayorIgual(remplazo.finRelevo,dia))){
                             // si tiene relevo por novedad se registra
                             this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tren = novedad.turno
                             this.personalSinDiagrama.meses[this.selectedMonth].days[dia].observaciones = `Relevando en la novedad N°${novedad._id} vice ${novedad.apellido} ${novedad.nombres} de baja por ${novedad.tipoNovedad}`
                             this.personalSinDiagrama.meses[this.selectedMonth].days[dia].nroNovedad = novedad._id
-                            const fecha = new Date(dia+"T12:00")
+                            this.personalSinDiagrama.meses[this.selectedMonth].days[dia].editable = false
+
                             const francoNroSemana = obtenerNumeroDia(novedad.franco)
+                            const jornada = dia_laboral(francoNroSemana, fecha.getDay());
+                            
+                            //reviso si esta de franco
                             if(francoNroSemana === fecha.getDay()){
                                 this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tomo = 'DH'
                                 this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = 'DH'
-                                if(this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia)])
-                                    horaDisp = sumarHoras(this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia)].dejo,18)
-                                else horaDisp = '-:-'
-
                             }else{
-                                const jornada = dia_laboral(francoNroSemana, fecha.getDay());
-                                
                                 const {tomo,dejo} = this.buscarJornadas(dia,novedad.turno,jornada)
-                                this.personalSinDiagrama.meses[this.selectedMonth].days[dia].disponibleHora = horaDisp
                                 this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tomo = tomo
                                 this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = dejo
                                 this.personalSinDiagrama.meses[this.selectedMonth].days[dia].totalHoras = diferenciaHoras(tomo,dejo)
-                                horaDisp = sumarHoras(dejo,18)
                             }
-
                         }                    
                     })
                 })
+                // calculamos la disponibilidad
+                calcularDisponibilidad(dia);
+
+                // busco si tuvo baja por enfermedad
                 novedades.forEach((novedad:Novedad)=>{
                     if(esFechaMayorIgual(dia,novedad.fechaBaja) && (novedad.fechaAlta === undefined || esFechaMayorIgual(novedad.fechaAlta,dia))){
                         // si tiene baja por novedad se registra
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tren = novedad.tipoNovedad
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].disponibleHora = '-'
-                        this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tomo = '-'
-                        this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = '-'
+                        this.personalSinDiagrama.meses[this.selectedMonth].days[dia].tomo = ''
+                        this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = ''
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].totalHoras = '-'
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].observaciones = `De baja por la novedad N°${novedad._id}`
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].nroNovedad = novedad._id
                         this.personalSinDiagrama.meses[this.selectedMonth].days[dia].estilo = true
-                    }                    
+                        this.personalSinDiagrama.meses[this.selectedMonth].days[dia].editable = false
+                    }  
                 })
+                
             })
         },
     },
@@ -263,9 +404,6 @@ export default defineComponent({
             this.personalSinDiagrama = await loadPersonalSinDiagrama(idTarjeta) || defaultPersonalSinDiagrama();
             this.lstNovedades = await loadNovedades() || [defaultNovedad()];
             this.lstTurnos = await loadTurnos() || [defaultTurnos()];
-            // console.log(this.personalSinDiagrama);
-            // this.personalSinDiagramaPorPeriodo = await loadPersonalSinDiagramaPorPeriodo(this.personal.legajo,this.selectedMonth) || defaultPersonalSinDiagrama();
-            // console.log(this.personalSinDiagramaPorPeriodo);
             this.daysInMonth()
             this.buscarNovedadesActivas()
         }
@@ -281,6 +419,7 @@ export default defineComponent({
 
 main{
     margin-top: 5rem;
+    font-size: 20px;
 }
 .table-bordered {
   border: 2px solid #aaa; /* Borde más grueso */
@@ -292,11 +431,11 @@ main{
 
 }
 
-table thead tr {
+/* table thead tr {
   background-color: #222;
   border: 2px solid #aaa;
   padding: .35em;
-}
+} */
 
 .layout {
     /* width: 100%; */
@@ -311,10 +450,41 @@ th {
 
 th,
 td {
-  padding: 10px; /* Espaciado para las celdas */
+    padding: 5px; 
+}
+td{
+    margin-top: 3px;
+}
+input{
+    widows: 100%;
+}
+.barraBotones{
+    display:flex;
+    justify-content: end;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+/* .barraBotones > button{
+    margin-top: 2px;
+} */
+.dia{
+    display:flex;
+    justify-content: end;
 }
 .celdaFecha{
     padding: 0;
+}
+.celdaInput{
+    padding: 0;
+}
+.celdaInput input {
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+.celdaInputAncho {
+    width: 100%;
+    text-align: left;
+    margin-top: 2px;
 }
 .text-red td {
     color: red; /* Asegurar que el estilo también se aplique a los td dentro del tr */

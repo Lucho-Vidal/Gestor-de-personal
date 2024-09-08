@@ -26,5 +26,7 @@ export interface Jornada {
     totalHoras: string; 
     observaciones: string; 
     estilo:boolean;
+    editable:boolean;
+    [key: string]: any;
     nroNovedad:number|null;
 }

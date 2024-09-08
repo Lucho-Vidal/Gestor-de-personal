@@ -145,6 +145,38 @@ export function diaAnterior(fecha: string): string {
 
     return `${year}-${month}-${day}`;
 }
+export function dosDiasAnterior(fecha: string): string {
+    // Crear una instancia de Date a partir del string proporcionado
+    let date = new Date(fecha);
+
+    // Restar un día
+    date.setDate(date.getDate() - 2);
+
+    // Formatear el resultado como "YYYY-MM-DD"
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JS son de 0 a 11
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+export function diaPosterior(fecha: string): string {
+    // Separar la fecha en año, mes y día
+    const [year, month, day] = fecha.split('-').map(Number);
+
+    // Crear una nueva fecha manualmente
+    let date = new Date(year, month - 1, day); // Los meses en JS van de 0 a 11
+
+    // Sumar un día
+    date.setDate(date.getDate() + 1);
+
+    // Obtener los nuevos valores de año, mes y día
+    const newYear = date.getFullYear();
+    const newMonth = (date.getMonth() + 1).toString().padStart(2, '0'); // Asegura formato de 2 dígitos
+    const newDay = date.getDate().toString().padStart(2, '0');
+
+    // Devolver la nueva fecha en formato YYYY-MM-DD
+    return `${newYear}-${newMonth}-${newDay}`;
+}
 export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprimir: ITurno[],personales: IPersonal[],novedades: Novedad[],cambiosTurnos:CambioTurno[]) {
     try {
         turnosAImprimir.forEach((turno: ITurno) => {
@@ -578,6 +610,7 @@ export function defaultJornada(): Jornada {
         dejo: '', 
         totalHoras: '', 
         observaciones: '',
+        editable: true,
         estilo: false, 
         nroNovedad: null
     };
