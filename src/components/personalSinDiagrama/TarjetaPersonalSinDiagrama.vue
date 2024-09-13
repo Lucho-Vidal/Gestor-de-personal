@@ -1,5 +1,12 @@
 <template>
     <main>
+        <div class="container">
+            <div class="alert alert-danger" role="alert" v-if="message.activo">
+                <h4 class="alert-heading">ATENCIÓN! {{ message.title }}</h4>
+                <hr />
+                {{ message.message }}
+            </div>
+        </div>
         <div class="container-fluid px-4">
             <h2 class="d-flex justify-content-start m-3">Linea Roca</h2>
             <h2 class="d-flex justify-content-end m-3">Registro de servicios personal sin diagrama C.C.P.T.</h2>
@@ -23,7 +30,7 @@
                         <td>{{ personal.apellido }}</td>
                         <td>{{ personal.nombres }}</td>
                         <td>{{ personal.especialidad }}</td>
-                        <td>{{ `${diaSemanaStr(personalSinDiagrama.francoInicio)} ${personalSinDiagrama.HoraInicio}` }}</td>
+                        <td>{{`${diaSemanaStr(personalSinDiagrama.francoInicio)} ${personalSinDiagrama.HoraInicio}`}}</td>
                         <td>{{ personal.dotacion }}</td>
                         <td class="celdaFecha">
                             <input
@@ -39,7 +46,8 @@
             </table>
         </div>
         <div class="barraBotones">
-            <button class="btn btn-success">Guardar</button>
+            <button class="btn btn-danger mx-3" @click="$router.push('/personalSinDiagrama')">Cerrar sin Guardar</button>
+            <button class="btn btn-success mx-3" @click="guardarTarjeta()" >Guardar Cambios</button>
         </div>
         <div class="container-fluid">
             <table class="table table-bordered">
@@ -65,11 +73,18 @@
                         <td class="dia">{{   getDiaSemanaYMes(day,index) }}</td>
                         <!-- Columna Diagrama -->
                         <td class="celdaInput " @click="toggleEdit('tren', index)">
-                        <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'tren' && editIndex === index" 
-                                type="text" 
-                                v-model="editValue" 
-                                :ref="'inputField-' + index" 
-                                @keydown.enter="saveEdit('tren', index)">
+                            <select 
+                                v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'tren' && editIndex === index"
+                                name="diagrama" 
+                                id="diagrama"
+                                v-model="editValue"
+                                @change="saveEdit('tren', index)"
+                                class="form-control"
+                            >
+                                <option  value=""> </option>
+                                <option  value="DH anticipado">DH anticipado</option>
+                                <option  value="Orden">Orden</option>
+                            </select>
                         <span class="celdaInputAncho" v-else>
                             {{ getJornadaForDay(selectedMonth, day).tren || '-' }}
                         </span>
@@ -78,10 +93,10 @@
                         <!-- Columna Disponible a la Hora -->
                         <td class="celdaInput " @click="toggleEdit('disponibleHora', index)">
                         <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'disponibleHora' && editIndex === index" 
-                                type="text" 
+                                type="time" 
                                 v-model="editValue" 
                                 :ref="'inputField-' + index"
-                                @keydown.enter="saveEdit('disponibleHora', index)">
+                                @change="saveEdit('disponibleHora', index)">
                         <span class="celdaInputAncho" v-else>
                             {{ getJornadaForDay(selectedMonth, day).disponibleHora || '' }}
                         </span>
@@ -90,10 +105,10 @@
                         <!-- Columna Tomó -->
                         <td class="celdaInput " @click="toggleEdit('tomo', index)">
                         <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'tomo' && editIndex === index" 
-                                type="text" 
+                                type="time" 
                                 v-model="editValue" 
                                 :ref="'inputField-' + index" 
-                                @keydown.enter="saveEdit('tomo', index)">
+                                @change="saveEdit('tomo', index)">
                         <span class="celdaInputAncho" v-else>
                             {{ getJornadaForDay(selectedMonth, day).tomo || '' }}
                         </span>
@@ -102,10 +117,10 @@
                         <!-- Columna Dejó -->
                         <td class="celdaInput " @click="toggleEdit('dejo', index)">
                         <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'dejo' && editIndex === index" 
-                                type="text" 
+                                type="time" 
                                 v-model="editValue" 
                                 :ref="'inputField-' + index"
-                                @keydown.enter="saveEdit('dejo', index)">
+                                @change="saveEdit('dejo', index)">
                         <span class="celdaInputAncho" v-else>
                             {{ getJornadaForDay(selectedMonth, day).dejo || '' }}
                         </span>
@@ -113,10 +128,10 @@
                         <!-- Columna Total horas trabajadas -->
                         <td class="celdaInput" @click="toggleEdit('totalHoras', index)">
                         <input v-if="getJornadaForDay(selectedMonth, day).editable && editField === 'totalHoras' && editIndex === index" 
-                                type="text" 
+                                type="time" 
                                 v-model="editValue" 
                                 :ref="'inputField-' + index"
-                                @keydown.enter="saveEdit('totalHoras', index)">
+                                @change="saveEdit('totalHoras', index)">
                         <span class="celdaInputAncho" v-else>
                             {{ getJornadaForDay(selectedMonth, day).totalHoras || '' }}
                         </span>
@@ -129,7 +144,7 @@
                             <input v-if="getJornadaForDay(selectedMonth, day).editable &&  editField === 'observaciones' && editIndex === index" 
                                     type="text" v-model="editValue" 
                                     :ref="'inputField-' + index" 
-                                    @keydown.enter="saveEdit('observaciones', index)">
+                                    @change="saveEdit('observaciones', index)">
                             <span class="celdaInputAncho" v-else >
                                 {{ getJornadaForDay(selectedMonth, day).observaciones || '-' }}
                             </span>
@@ -148,11 +163,12 @@
 <script lang="ts">
 import { newToken } from "../../services/signService";
 import { defineComponent } from "vue";
-import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, dia_laboral, diaAnterior,   diferenciaHoras, dosDiasAnterior, esFechaMayorIgual, filtrarPorTurno, itinerarioType, loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos,  obtenerNumeroDia, sumarHoras } from '../../utils/funciones';
+import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, dia_laboral, diaAnterior,   diaPosterior,   diferenciaHoras, dosDiasAnterior, esFechaMayorIgual, filtrarPorTurno, itinerarioType, loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos,  obtenerNumeroDia, sumarHoras } from '../../utils/funciones';
 import { IPersonal } from '../../interfaces/IPersonal';
 import { IPersonalSinDiagrama, Jornada } from '../../interfaces/IPersonalSinDiagrama';
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
 import { ITurno } from "../../interfaces/ITurno";
+import { updatePersonalSinDiagrama } from "../../services/personalSinDiagramaService";
 export default defineComponent({
     props: ["idPersonal", "idTarjeta"],
     data() {
@@ -167,9 +183,36 @@ export default defineComponent({
             editField: null as string | null, // Campo en edición
             editIndex: null as number | null, // Índice de la fila en edición
             editValue: '' as string,          // Valor que se está editando
+            message: {
+                activo: false,
+                status: "",
+                title: "",
+                message: "",
+            },
         };
     },
     methods: {
+        async guardarTarjeta(){
+            try {
+                await updatePersonalSinDiagrama(this.personalSinDiagrama.legajo,this.personalSinDiagrama);
+                this.message.activo = true
+                this.message.status = 'success'
+                this.message.title = 'Tarjeta guardada con éxito'
+                this.message.message = 'Se han guardado los datos satisfactoriamente!'
+                setTimeout(()=>{
+                    this.message.activo = false
+                },5000)
+            } catch (error) {
+                console.error('Error al guardar la tarjeta:', error);
+                this.message.activo = true
+                this.message.status = 'danger'
+                this.message.title = 'Ocurrió un error a guardar'
+                this.message.message = 'Se produjo un error al intentar guardar, re intente nuevamente más tarde o comuníquese con el administrador'
+                setTimeout(()=>{
+                    this.message.activo = false
+                },5000)
+            }
+        },
         daysInMonth() {
                 const days = [];
                 const date = new Date()
@@ -249,11 +292,47 @@ export default defineComponent({
         saveEdit(field: string, index: number) {
             // Guardar el valor editado en el campo correspondiente
             
+            const jornadaAnt = this.getJornadaForDay(this.selectedMonth, diaAnterior(this.fechasDelMes[index]));
             const jornada = this.getJornadaForDay(this.selectedMonth, this.fechasDelMes[index]);
+            const jornadaPos = this.getJornadaForDay(this.selectedMonth, diaPosterior(this.fechasDelMes[index]));
+            const especialidad = this.personal.especialidad.toLowerCase();
+
             
             if (jornada) {
-                jornada[field] = this.editValue === '' ? '-' : this.editValue ;  // Actualiza directamente la propiedad
+                jornada[field] = this.editValue ;  // Actualiza directamente la propiedad
             }
+
+            if(field === 'tren' && this.editValue === 'Orden' && jornada['disponibleHora'] !== ''){
+                jornada['tomo'] = jornada['tomo'] || jornada['disponibleHora']
+                jornada['dejo'] = jornada['dejo'] || sumarHoras(jornada['tomo'], especialidad.includes('guardatren diesel') ? 7 : 6)
+                jornada['totalHoras'] = diferenciaHoras(jornada['tomo'],jornada['dejo'])
+                jornadaPos['disponibleHora'] = sumarHoras(jornadaAnt['dejo'],especialidad.includes('guardatren diesel') ? 17 : 18)
+            }
+            if(field === 'tren' && this.editValue === 'DH anticipado'){
+                jornada['tomo'] = 'DH'
+                jornada['dejo'] = 'DH'
+                jornadaPos['disponibleHora'] = ''
+            }
+            if(field === 'tren' && this.editValue === ''){
+                jornada['tomo'] = ''
+                jornada['dejo'] = ''
+                jornada['totalHoras'] = ''
+            }
+            if(field === 'dejo' ){
+                jornadaPos['disponibleHora'] = sumarHoras(jornadaAnt['dejo'],especialidad.includes('guardatren diesel') ? 41 : 42)
+                jornada['totalHoras'] = diferenciaHoras(jornada['tomo'],jornada['dejo'])
+            }
+            if(field === 'tomo' ){
+                jornada['dejo'] = sumarHoras(jornada['tomo'], especialidad.includes('guardatren diesel') ? 7 : 6)
+                jornada['totalHoras'] = diferenciaHoras(jornada['tomo'],jornada['dejo'])
+                jornadaPos['disponibleHora'] = sumarHoras(jornadaAnt['dejo'],especialidad.includes('guardatren diesel') ? 41 : 42)
+            }
+            // if(field === 'disponibleHora' ){
+            //     jornada['dejo'] = sumarHoras(jornada['tomo'], especialidad.includes('guardatren diesel') ? 7 : 6)
+            //     jornada['totalHoras'] = diferenciaHoras(jornada['tomo'],jornada['dejo'])
+            //     jornadaPos['disponibleHora'] = sumarHoras(jornadaAnt['dejo'],especialidad.includes('guardatren diesel') ? 41 : 42)
+            // }
+
             this.editField = null;
             this.editIndex = null;
             this.editValue = '';
@@ -332,12 +411,12 @@ export default defineComponent({
                     this.personalSinDiagrama.meses[this.selectedMonth].days[dia].observaciones = `DH del ciclo // desde ${this.diaSemanaStr(this.personalSinDiagrama.francoInicio)} ${this.personalSinDiagrama.HoraInicio}`
                     this.personalSinDiagrama.meses[this.selectedMonth].days[dia].dejo = this.personalSinDiagrama.HoraInicio
                 }
-                if(fecha.getDay() === this.personalSinDiagrama.francoHasta && this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')]){
-                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].disponibleHora = ''
+                if(fecha.getDay() === this.personalSinDiagrama.francoInicio +1 ){
+                    // this.personalSinDiagrama.meses[this.selectedMonth].days[(dia+'T12:00')].disponibleHora = ''
                     this.personalSinDiagrama.meses[this.selectedMonth].days[(dia)].disponibleHora = this.personalSinDiagrama.HoraHasta
-                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].tomo = 'DH'
-                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].dejo = 'DH'
-                    this.personalSinDiagrama.meses[this.selectedMonth].days[diaAnterior(dia+'T12:00')].observaciones = `DH del ciclo // hasta ${this.diaSemanaStr(this.personalSinDiagrama.francoHasta)} ${this.personalSinDiagrama.HoraHasta}`
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[(dia)].tomo = 'DH'
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[(dia)].dejo = 'DH'
+                    this.personalSinDiagrama.meses[this.selectedMonth].days[(dia)].observaciones = `DH del ciclo // hasta ${this.diaSemanaStr(this.personalSinDiagrama.francoHasta)} ${this.personalSinDiagrama.HoraHasta}`
                 }
                 //Busco si estuvo relevando
                 relevos.forEach((novedad:Novedad)=>{
