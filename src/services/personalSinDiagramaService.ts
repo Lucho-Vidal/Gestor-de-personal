@@ -19,11 +19,9 @@ export const createPersonalSinDiagrama = async (
     return res;
 };
 
-export const updatePersonalSinDiagrama = async (
-    id: string,
-    newPersonal: IPersonalSinDiagrama
-): Promise<AxiosResponse<IPersonalSinDiagrama>> =>
-    await axios.put(`/PersonalSinDiagrama/${id}`, newPersonal);
+export const updatePersonalSinDiagrama = async (legajo: number,newPersonal: IPersonalSinDiagrama): Promise<AxiosResponse<IPersonalSinDiagrama>> => {
+    return await axios.put(`/PersonalSinDiagrama/${legajo}`, newPersonal)
+}
 
 export const deletePersonalSinDiagrama = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/PersonalSinDiagrama/${id}`);
