@@ -236,7 +236,7 @@
                         <hr>
                         //escTecnica
                         <optgroup label="Escuela técnica">
-                            <option value="Escuela Tecnica">Escuela Tecnica</option>
+                            <option value="Capacitación">Capacitación</option>
                         </optgroup>
                         <hr>
                         //disciplinarios
@@ -246,15 +246,16 @@
                         <hr>
                         //Legales y convencionales
                         <optgroup label="Legales y convencionales">
-                            <option value="Estudio">Estudio</option>
+                            <option value="Estudio">Estudio y examen</option>
                             <option value="Licencia Deportiva">Licencia Deportiva</option>
                             <option value="Licencia Gremial">Licencia Gremial</option>
-                            <option value="Examen">Examen</option>
                             <option value="Art17-23">Art 17 FT / Art 23 UF</option>
                             <option value="Donación Sangre">Donación Sangre</option>
                             <option value="Donación Plaqueta">Donación Plaqueta</option>
                             <option value="Casamiento">Casamiento</option>
                             <option value="Duelo">Duelo</option>
+                            <option value="Mudanza">Mudanza</option>
+                            <option value="Paternidad">Paternidad</option>
                         </optgroup>
                         <hr>
                         //OtrosMotivos
