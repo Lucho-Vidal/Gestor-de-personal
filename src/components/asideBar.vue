@@ -48,11 +48,24 @@
                             "
                         >
                         <h6 class="">Administración de Personal</h6>
-                            <router-link class="nav-link" to="/personal">
+                            <router-link class="nav-link" to="/ordenamiento">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fa-solid fa-database"></i>
+                                    <i class="fa-solid fa-address-book"></i>
                                 </div>
-                                Base de personales
+                                Ordenamientos y cancelaciones diagrama
+                            </router-link>
+                            <router-link class="nav-link" to="/cambioTurno">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fa fa-user-o"></i>
+                                    <i class="fa fa-user-o"></i>
+                                </div>
+                                Cambios de turnos
+                            </router-link>
+                            <router-link class="nav-link" to="/personalSinDiagrama">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fa fa-address-card"></i>
+                                </div>
+                                Personal sin diagrama
                             </router-link>
                             <router-link class="nav-link" to="/novedades">
                                 <div class="sb-nav-link-icon">
@@ -60,11 +73,11 @@
                                 </div>
                                 Novedades de personal
                             </router-link>
-                            <router-link class="nav-link" to="/cambioTurno">
+                            <router-link class="nav-link" to="/personal">
                                 <div class="sb-nav-link-icon">
-                                    <i class="fa-solid fa-table"></i>
+                                    <i class="fa-solid fa-database"></i>
                                 </div>
-                                Cambios de turnos
+                                Listado de personales
                             </router-link>
                             <a
                                 class="nav-link collapsed"
@@ -92,6 +105,16 @@
                                     class="sb-sidenav-menu-nested nav accordion"
                                     id="sidenavAccordionPages"
                                 >
+                                    <button
+                                        class="nav-link"
+                                        @click="
+                                            abrirPdf(
+                                                '/src/assets/OPE.30.20.10.30 Gestión de Novedades del Personal de Abordo.pdf'
+                                            )
+                                        "
+                                    >
+                                        Procedimiento GNPA
+                                    </button>
                                     <a
                                         class="nav-link collapsed"
                                         href="#"
