@@ -11,6 +11,9 @@ importers:
       '@babel/plugin-syntax-import-meta':
         specifier: ^7.10.4
         version: 7.10.4(@babel/core@7.25.2)
+      '@formkit/drag-and-drop':
+        specifier: ^0.1.6
+        version: 0.1.6
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -912,6 +915,9 @@ packages:
 
   '@fast-csv/parse@4.3.6':
     resolution: {integrity: sha512-uRsLYksqpbDmWaSmzvJcuApSEe38+6NQZBUsuAyMZKqHxH0g1wcJgsKUvN3WC8tewaqFjBMMGrkHmC+T7k8LvA==}
+
+  '@formkit/drag-and-drop@0.1.6':
+    resolution: {integrity: sha512-wZyxvk7WTbQ12q8ZGvLoYner1ktBOUf+lCblJT3P0LyqpjGCKTfQMKJtwToKQzJgTbhvow4LBu+yP92Mux321w==}
 
   '@fortawesome/fontawesome-common-types@6.6.0':
     resolution: {integrity: sha512-xyX0X9mc0kyz9plIyryrRbl7ngsA9jz77mCZJsUkLl+ZKs0KWObgaEBoSgQiYWAsSmjz/yjl0F++Got0Mdp4Rw==}
@@ -5786,6 +5792,8 @@ snapshots:
       lodash.isnil: 4.0.0
       lodash.isundefined: 3.0.1
       lodash.uniq: 4.5.0
+
+  '@formkit/drag-and-drop@0.1.6': {}
 
   '@fortawesome/fontawesome-common-types@6.6.0': {}
 
