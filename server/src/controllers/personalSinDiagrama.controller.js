@@ -90,13 +90,17 @@ export const createPersonalSinDiagrama = async (req, res) => {
 // Actualizar PersonalSinDiagrama por legajo y periodo
 export const updatePersonalSinDiagrama = async (req, res) => {
     try {
-        const { legajo, periodo } = req.params;
+        const { legajo } = req.params;
+        console.log("Legajo:", legajo);
+        console.log("req.params:", req.params);
+
 
         const updatedPersonal = await Personal.findOneAndUpdate(
-            { legajo, periodo },
+            { legajo  },
             req.body,
             { new: true }
         );
+        console.log("updatedPersonal:", updatedPersonal);
 
         if (!updatedPersonal) {
             return res.status(404).json({ error: "Registro no encontrado" });
