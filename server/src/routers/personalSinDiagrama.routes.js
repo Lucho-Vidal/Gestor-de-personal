@@ -14,7 +14,7 @@ router.post(
 );
 
 router.put(
-    "/PersonalSinDiagrama/:id",
+    "/PersonalSinDiagrama/:legajo",
     [authJwt.verifyToken, authJwt.isModerator],
     personalSinDiagramaCtrl.updatePersonalSinDiagrama
 );
