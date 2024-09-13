@@ -77,6 +77,10 @@ export function diferenciaHoras(hora1: string, hora2: string): string {
         let date = new Date();
         date.setHours(horaN);
         date.setMinutes(minutosN);
+
+        // Verificar si horaN y minutosN son números válidos
+        if (isNaN(horaN) || isNaN(minutosN)) return null;
+
         // Si incrementarDia es verdadero, sumamos 1 día a la fecha
         if (incrementarDia) {
             date.setDate(date.getDate() + 1);
@@ -88,9 +92,16 @@ export function diferenciaHoras(hora1: string, hora2: string): string {
     let dateDesde = newDate(hora1);
     let dateHasta = newDate(hora2);
 
+    
+    // Si la fecha no es válida, devolver una cadena vacía
+    if (!dateDesde || !dateHasta) return '';
+
     // Si la hora2 es anterior a la hora1, asumimos que es el día siguiente
     if (dateHasta < dateDesde) {
         dateHasta = newDate(hora2, true); // Incrementar el día en hora2
+        
+        // Volvemos a verificar si la fecha es válida
+        if (!dateHasta) return '';
     }
 
     // Calcular la diferencia en minutos
@@ -108,7 +119,16 @@ export function diferenciaHoras(hora1: string, hora2: string): string {
 export function sumarHoras(hora: string, cantidadHoras: number): string {
     // Función auxiliar para crear una fecha con la hora proporcionada
     function newDate(hora: string) {
-        const [horaN, minutosN] = hora.split(":").map(Number);
+        const partes = hora.split(":");
+
+        // Validar que la hora tenga el formato adecuado (hh:mm)
+        if (partes.length !== 2) return null;
+
+        const [horaN, minutosN] = partes.map(Number);
+
+        // Verificar si horaN y minutosN son números válidos
+        if (isNaN(horaN) || isNaN(minutosN)) return null;
+
         let date = new Date();
         date.setHours(horaN);
         date.setMinutes(minutosN);
@@ -117,6 +137,9 @@ export function sumarHoras(hora: string, cantidadHoras: number): string {
 
     // Crear la fecha inicial a partir de la hora proporcionada
     let date = newDate(hora);
+
+    // Si la fecha no es válida, devolver una cadena vacía
+    if (!date) return '';
 
     // Sumar la cantidad de horas a la fecha
     date.setHours(date.getHours() + cantidadHoras);
