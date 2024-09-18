@@ -418,7 +418,7 @@
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
                 <button
                     class="btn btn-secondary col-1 m-2"
-                    @click="$router.push('/novedades')"
+                    @click="goBack"
                 >
                     Cerrar
                 </button>
@@ -497,6 +497,11 @@ export default defineComponent({
             this.$router.push(`/editNovedades/${id}`).then(() => {
                 this.$forceUpdate(); // Forzar la actualización del componente
             });
+        },
+        goBack() {
+            const fromRoute = localStorage.getItem('fromRoute') || '/novedades'; // Recuperar la ruta o usar 'novedades'
+            localStorage.removeItem('fromRoute')
+            this.$router.push(fromRoute);
         },
         // Conexión con la API
         async obtenerUltimoId() {
@@ -585,7 +590,7 @@ export default defineComponent({
                 await createRegistro(registro);
 
                 // Redireccionar
-                this.$router.push({ name: "Novedades" });
+                this.goBack()
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
