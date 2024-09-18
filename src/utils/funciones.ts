@@ -70,23 +70,30 @@ export function compararHoras(hora1: string, hora2: string): number {
     // Si las horas son iguales, comparar minutos
     return hora1Minutes - hora2Minutes;
 }
-export function diferenciaHoras(hora1: string, hora2: string): string {
-    // Función auxiliar para crear una fecha con la hora y minutos de la cadena proporcionada
-    function newDate(hora: string, incrementarDia: boolean = false) {
-        const [horaN, minutosN] = hora.split(":").map(Number);
-        let date = new Date();
-        date.setHours(horaN);
-        date.setMinutes(minutosN);
+/**
+ * recibe una hora en string y devuelve una fecha con la hora recibida por Parametro
+ * si el Parametro no es convertible a number retorna null
+ * @param hora string con formato hora '--:--' - Parametro obligatorio
+ * @param incrementarDia boolean por default false, si se pasa true suma un dia a la fecha que retorna
+ * @returns Date | null, con la hora pasada por Parametro 
+ */
+export function newDate(hora: string, incrementarDia: boolean = false): Date|null {
+    const [horaN, minutosN] = hora.split(":").map(Number);
+    let date = new Date();
+    date.setHours(horaN);
+    date.setMinutes(minutosN);
 
-        // Verificar si horaN y minutosN son números válidos
-        if (isNaN(horaN) || isNaN(minutosN)) return null;
+    // Verificar si horaN y minutosN son números válidos
+    if (isNaN(horaN) || isNaN(minutosN)) return null;
 
-        // Si incrementarDia es verdadero, sumamos 1 día a la fecha
-        if (incrementarDia) {
-            date.setDate(date.getDate() + 1);
-        }
-        return date;
+    // Si incrementarDia es verdadero, sumamos 1 día a la fecha
+    if (incrementarDia) {
+        date.setDate(date.getDate() + 1);
     }
+    return date;
+}
+
+export function diferenciaHoras(hora1: string, hora2: string): string {
 
     // Crear las fechas
     let dateDesde = newDate(hora1);
@@ -200,6 +207,8 @@ export function diaPosterior(fecha: string): string {
     // Devolver la nueva fecha en formato YYYY-MM-DD
     return `${newYear}-${newMonth}-${newDay}`;
 }
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 export function buscarPersonalACargo(fecha: Date,inputDate: string,turnosAImprimir: ITurno[],personales: IPersonal[],novedades: Novedad[],cambiosTurnos:CambioTurno[]) {
     try {
         turnosAImprimir.forEach((turno: ITurno) => {
