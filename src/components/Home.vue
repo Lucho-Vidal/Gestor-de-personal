@@ -28,7 +28,7 @@
                 <h4>30. Trasporte > 20. Personal Operativo > 10. Gestión Personal Operativo > 30. Gestión de Novedades del Personal de Abordo</h4>
                 <img class="" src="../assets/GNPA diagrama procesos.JPG" alt="Flujograma">
                 <ul class="mx-5">
-                    <li>Operador del CCPT / CCP: Personal oficina de conducción</li>
+                    <li>Operador del CCPT / CCP: Personal oficina de conducción / Supervisor de la mesa de elementos</li>
                     <li>Coordinador de TR: Coordinador de PCT</li>
                 </ul>
             </div>
