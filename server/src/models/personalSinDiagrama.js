@@ -1,30 +1,3 @@
-// import {Schema, model} from 'mongoose'
-
-// const personalSinDiagramaSchema = new Schema({
-    //     legajo: Number,
-    //     periodo: String,
-    //     Ciclo: Number,
-    //     francoInicio: Number,
-    //     HoraInicio: String,
-    //     francoHasta: Number,
-    //     HoraHasta: String,
-//     jornadas: [] 
-// });
-
-//     // dia: string;
-//     // tren: string; 
-//     // desde: string; 
-//     // hasta: string; 
-//     // disponibleHora: string; 
-//     // tomo: string; 
-//     // dejo: string; 
-//     // totalHoras: string; 
-//     // observaciones: string 
-
-
-// export default model("PersonalSinDiagrama", personalSinDiagramaSchema);
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
 import {Schema, mongoose} from 'mongoose'
 
 // Definir el esquema de Jornada
@@ -36,7 +9,9 @@ const JornadaSchema = new Schema({
     tomo: { type: String },
     dejo: { type: String },
     totalHoras: { type: String },
-    observaciones: { type: String }
+    observaciones: { type: String },
+    editable: {type:Boolean}
+
 });
 
 // Definir el esquema de Meses
