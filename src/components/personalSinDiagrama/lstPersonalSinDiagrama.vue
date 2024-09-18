@@ -1,7 +1,10 @@
 <template>
     <main>
         <div class="container-fluid px-4">
-            <h2 class="d-flex justify-content-end m-3">Listado personal sin diagrama</h2>
+            <div class="d-flex justify-content-between m-3">
+                <span class="fs-3 ">Fecha: {{ today.toLocaleDateString() }}</span>
+                <h2 class="">Tarjetas  de personal sin diagrama</h2>
+            </div>
 
             <div class="d-flex justify-content-end">
                 <label class="col-2">
@@ -12,7 +15,7 @@
                         class="form-control "
                         v-model="CEspecialidad"
                         required
-                        @change="filtrarPersonales()"
+                        @change="loadLists()"
                     >
                         <option value="Conductor Electrico"
                             >Conductor Eléctrico</option
@@ -34,14 +37,14 @@
                         >
                     </select>
                 </label>
-                <label for="dotacion" class="col-2 mx-3">
+                <label for="dotacion" class="col-1 mx-3">
                     Dotación:
                     <select
                     name="dotacion"
                     id="dotacion"
                     class="form-control"
+                    @change="loadLists()"
                     v-model="dotacionesSeleccionadas"
-                    @change="filtrarPersonales()"
                     >
                     <option v-for="(dotacion, index) in dotacionesPermitidas" :key="index" :value="dotacion">
                         {{ dotacion }}
@@ -113,13 +116,19 @@
                     </div>
                 </div>
             </div>
-            <h3 v-if="personalesFiltrados.length == 0">
-                No se encontró ningún personal
-            </h3>
-            <table
-                class="table table-striped table-hover "
-                v-if="personalesFiltrados.length > 0"
-            >
+            <hr>
+            <div class="d-flex justify-content-between">
+                <h2 class="d-flex justify-content-center">Lista de tarjetas Disponibles</h2>
+                <div>
+                    <button class="btn btn-info mx-1" @click.prevent="toggleExpandirTarjetas(firstList,'Disponible')">
+                        {{ tarjetasDisponibleExpandido ? 'Contraer todas las Tarjetas' : 'Expandir todas las Tarjetas' }}
+                    </button>
+                    <button class="btn btn-warning mx-1 " @click.prevent="ordenarPorDisponibilidad(firstList)">
+                            Ordenar Por Disponibilidad
+                    </button>
+                </div>
+            </div>
+            <table class="table table-striped table-hover ">
                 <thead>
                     <tr>
                         <th class="col-1" colspan="1">N</th>
@@ -135,36 +144,167 @@
                     </tr>
                 </thead>
                 <tbody
-                    v-for="(personal, index) in personalesFiltrados"
-                    :key="index"
-                    @dblclick="edit(personal._id,personalIndexadoSinDiagrama[personal.legajo]._id)"
+                    v-for="(personal, index) in firstList"
+                    :key="personal._id"
                     @click="viewDetail(personal)"
+                    @dragstart="handleDragStart(index, $event, 'todo')"
+                    @drop="handleDrop(index, $event, 'todo')"
+                    @dragover="handleDragOver($event)"
+                    draggable="true"
                     :class="getColorClass(personal.especialidad)"
                 >
                     <tr>
-                        <td class="index-column">{{ index +1 }}</td>
-                        <td class="col-1">{{ personal.legajo }}</td>
+                        <td class="index-column" v-if="personal.legajo !== 0">{{ index +1 }}</td>
+                        <td class="col-1" v-else></td>
+                        <td class="col-1"  v-if="personal.legajo !== 0">{{ personal.legajo }}</td>
+                        <td class="col-1" v-else></td>
                         <td class="col-1">{{ personal.apellido }}</td>
                         <td class="col-2">{{ personal.nombres }}</td>
                         <td class="col-1">{{ personal.turno }}</td>
-                        <td class="col-1">{{ personalIndexadoSinDiagrama[personal.legajo] ? 
+                        <td class="col-1"  v-if="personal.legajo !== 0">{{ personalIndexadoSinDiagrama[personal.legajo] ? 
                                                 `${diaSemanaStr(personalIndexadoSinDiagrama[personal.legajo].francoInicio)} 
                                                 ${personalIndexadoSinDiagrama[personal.legajo].HoraInicio}`
                                                 :"-" }}</td>
+                        <td class="col-1" v-else></td>
                         <td class="col-1">{{ personal.especialidad }}</td>
                         <td class="col-1">{{ personal.dotacion }}</td>
                         <td class="col-2">{{ personal.observaciones }}</td>
-                        <td class="col-1">
+                        <td class="col-1" v-if="personal.legajo !== 0">
                             <i
                                 class="material-icons cursor-hand"
                                 @click="edit(personal._id,personalIndexadoSinDiagrama[personal.legajo]._id)"
                                 >edit_note</i
                             >
                         </td>
+                        <td class="col-1" v-else></td>
+                    </tr>
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <!-- <tr  class='custom-orange' v-if="personal.viewDetail  && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
+                        <th class="col-1" colspan="1">fecha</th>
+                        <th class="col-1" colspan="1">Diagrama</th>
+                        <th class="col-1" colspan="1">Disponible a </th>
+                        <th class="col-1" colspan="1">Toma</th>
+                        <th class="col-1" colspan="1">Deja</th>
+                        <th class="col-1" colspan="1">Total hs trabajado</th>
+                        <th class="col-1" colspan="6">Observaciones</th>
+                        
+                    </tr>
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <!-- <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
+                        <td colspan="1">{{ today.toLocaleDateString() }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].observaciones }}</td>
+                    </tr>
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <!-- <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
+                        <td colspan="1">{{ new Date(tomorrowStr+'T12:00').toLocaleDateString() }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].observaciones }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <h2 class="d-flex justify-content-center">Lista de tarjetas HTT</h2>
+                <div>
+                    <button class="btn btn-info mx-1" @click.prevent="toggleExpandirTarjetas(secondList,'HTT')">
+                        {{ tarjetasHTTExpandido ? 'Contraer todas las Tarjetas' : 'Expandir todas las Tarjetas' }}
+                    </button>
+                    <button class="btn btn-warning mx-1 " @click.prevent="ordenarPorDisponibilidad(secondList)">
+                            Ordenar Por Disponibilidad
+                    </button>
+                </div>
+            </div>
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th class="col-1" colspan="1">N</th>
+                        <th class="col-1" colspan="1">legajo</th>
+                        <th class="col-1" colspan="1">Apellido</th>
+                        <th class="col-1" colspan="1">Nombres</th>
+                        <th class="col-1" colspan="1">Turno</th>
+                        <th class="col-1" colspan="1">Franco</th>
+                        <th class="col-1" colspan="1">Especialidad</th>
+                        <th class="col-1" colspan="1">Dotacion</th>
+                        <th class="col-1" colspan="1">Observaciones</th>
+                        <th class="col-1">Abrir</th>
+                    </tr>
+                </thead>
+                <tbody
+                    v-for="(personal, index) in secondList"
+                    :key="personal._id"
+                    @click="viewDetail(personal)"
+                    @dragstart="handleDragStart(index, $event, 'done')"
+                    @drop="handleDrop(index, $event, 'done')"
+                    @dragover="handleDragOver($event)"
+                    draggable="true"
+                    :class="getColorClass(personal.especialidad)"
+                >
+                <tr>
+                        <td class="index-column" v-if="personal.legajo !== 0">{{ index +1 }}</td>
+                        <td class="col-1" v-else></td>
+                        <td class="col-1"  v-if="personal.legajo !== 0">{{ personal.legajo }}</td>
+                        <td class="col-1" v-else></td>
+                        <td class="col-1">{{ personal.apellido }}</td>
+                        <td class="col-2">{{ personal.nombres }}</td>
+                        <td class="col-1">{{ personal.turno }}</td>
+                        <td class="col-1"  v-if="personal.legajo !== 0">{{ personalIndexadoSinDiagrama[personal.legajo] ? 
+                                                `${diaSemanaStr(personalIndexadoSinDiagrama[personal.legajo].francoInicio)} 
+                                                ${personalIndexadoSinDiagrama[personal.legajo].HoraInicio}`
+                                                :"-" }}</td>
+                        <td class="col-1" v-else></td>
+                        <td class="col-1">{{ personal.especialidad }}</td>
+                        <td class="col-1">{{ personal.dotacion }}</td>
+                        <td class="col-2">{{ personal.observaciones }}</td>
+                        <td class="col-1" v-if="personal.legajo !== 0">
+                            <i
+                                class="material-icons cursor-hand"
+                                @click="edit(personal._id,personalIndexadoSinDiagrama[personal.legajo]._id)"
+                                >edit_note</i
+                            >
+                        </td>
+                        <td class="col-1" v-else></td>
+                    </tr>
+                    <tr  class='custom-orange' v-if="personal.viewDetail  && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                        <th class="col-1" colspan="1">fecha</th>
+                        <th class="col-1" colspan="1">Diagrama</th>
+                        <th class="col-1" colspan="1">Disponible a </th>
+                        <th class="col-1" colspan="1">Toma</th>
+                        <th class="col-1" colspan="1">Deja</th>
+                        <th class="col-1" colspan="1">Total hs trabajado</th>
+                        <th class="col-1" colspan="6">Observaciones</th>
+                        
+                    </tr>
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                        <td colspan="1">{{ today.toLocaleDateString() }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].observaciones }}</td>
+                    </tr>
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                        <td colspan="1">{{ new Date(tomorrowStr+'T12:00').toLocaleDateString() }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].observaciones }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        
     </main>
 </template>
 
@@ -174,7 +314,7 @@ import {getPersonales} from "../../services/personalService";
 import { IConocimientosVias, IDatoPersonal, IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
-import { obtenerDotaciones } from '../../utils/funciones';
+import { defaultPersonal, obtenerDotaciones, diaPosterior, newDate } from '../../utils/funciones';
 import { getPersonalesSinDiagrama } from "../../services/personalSinDiagramaService";
 import { IPersonalSinDiagrama } from "../../interfaces/IPersonalSinDiagrama";
 
@@ -184,20 +324,31 @@ export default defineComponent({
         return {
             personales: [] as IPersonal[],
             personalesSinDiagrama: [] as IPersonalSinDiagrama[],
-            personalesFiltrados: [] as IPersonal[],
+            // personalesFiltrados: [] as IPersonal[],
             datosPersonales: [] as IDatoPersonal[],
             conocimientosVias: [] as IConocimientosVias[],
             personalIndexado: {} as Record<number, IPersonal>,
             personalIndexadoSinDiagrama: {} as Record<number, IPersonalSinDiagrama>,
             dotacionesPermitidas: [] as string[],
-            dotacionesSeleccionadas: "PC" as string,
+            dotacionesSeleccionadas: "" as string,
             CEspecialidad: "Conductor Electrico" as string,
             checkboxTurno: [] as string[],
             mostrarModalSearch: false,
             today: new Date(),
+            tomorrowStr: '' as string,
+            selectedMonth: '' as string,
             search: "" as string,
             searchTurno: "" as string,
             searchLegajo: null,
+            tarjetasDisponibleExpandido: false,
+            tarjetasHTTExpandido: false,
+
+            //drag And Drop
+            firstList: [] as IPersonal[], // Lista de 'todo'
+            secondList: [] as IPersonal[], // Lista de 'done'
+            dragIndex: null as number | null,
+            draggedItem: null as IPersonal | null,
+
             days: [
                 "Domingo",
                 "Lunes",
@@ -210,14 +361,15 @@ export default defineComponent({
         };
     },
     methods: {
-        async loadPersonales() {
+        async loadPersonales(){
             try {
                 const res = await getPersonales();
                 this.personales = this.filtrarCiclo(res.data);
-                this.filtrarPersonales();
+                
                 this.personalIndexado = this.indexarPersonal(this.personales)
                 this.dotacionesPermitidas = obtenerDotaciones(this.personales);
-
+                // this.loadPersonalesFiltrados()
+                this.loadLists()
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -243,6 +395,119 @@ export default defineComponent({
             ]
             return dias[dia]
         },
+
+        // drag and drop
+        handleDragStart(index: number, event: DragEvent, listType: string) {
+            this.dragIndex = index;
+            this.draggedItem = listType === 'todo' ? this.firstList[index] : this.secondList[index];
+            if (event.dataTransfer) {
+                event.dataTransfer.setData('text/plain', index.toString());
+                event.dataTransfer.effectAllowed = 'move';
+            }
+        },
+        handleDragOver(event: DragEvent) {
+            event.preventDefault(); // Necesario para permitir el drop
+        },
+        handleDrop(index: number, event: DragEvent, listType: string) {
+            event.preventDefault();
+
+            const draggedIndex = this.dragIndex;
+            if (this.draggedItem && draggedIndex !== null) {
+                // Si se suelta en la misma lista (reordenar)
+                if (listType === 'todo' && this.firstList.includes(this.draggedItem)) {
+                    if (draggedIndex !== index) {
+                        const [item] = this.firstList.splice(draggedIndex, 1);
+                        this.firstList.splice(index, 0, item);
+                    }
+                } else if (listType === 'done' && this.secondList.includes(this.draggedItem)) {
+                    if (draggedIndex !== index) {
+                        const [item] = this.secondList.splice(draggedIndex, 1);
+                        this.secondList.splice(index, 0, item);
+                    }
+                }
+                // Si se suelta en la otra lista (mover entre listas)
+                else if (listType === 'todo' && this.secondList.includes(this.draggedItem)) {
+                    if(this.firstList.length === 1 && this.firstList[0].legajo === 0) this.firstList = []
+                    const [item] = this.secondList.splice(draggedIndex, 1);
+                    this.firstList.splice(index, 0, item);
+                    if(this.secondList.length === 0 ) this.secondList.push(defaultPersonal())
+
+                } else if (listType === 'done' && this.firstList.includes(this.draggedItem)) {
+                    if(this.secondList.length === 1 && this.secondList[0].legajo === 0) this.secondList = []
+                    const [item] = this.firstList.splice(draggedIndex, 1);
+                    this.secondList.splice(index, 0, item);
+                    if(this.firstList.length === 0 ) this.firstList.push(defaultPersonal())
+                }
+
+                // Guardar las listas en localStorage después de cada cambio
+                this.saveLists();
+            }
+
+            // Resetear dragIndex y draggedItem después de soltar
+            this.dragIndex = null;
+            this.draggedItem = null;
+        },
+        saveLists() {
+            // Guardar ambas listas en localStorage
+            localStorage.setItem(`firstDragAndDrop${this.dotacionesSeleccionadas}-${this.CEspecialidad}`, JSON.stringify(this.firstList));
+            localStorage.setItem(`secondDragAndDrop${this.dotacionesSeleccionadas}-${this.CEspecialidad}`, JSON.stringify(this.secondList));
+        },
+        loadLists() {
+            localStorage.setItem('dotacion', this.dotacionesSeleccionadas );
+             // Cargar las listas desde localStorage
+            const savedFirstList = localStorage.getItem(`firstDragAndDrop${this.dotacionesSeleccionadas}-${this.CEspecialidad}`);
+            const savedSecondList = localStorage.getItem(`secondDragAndDrop${this.dotacionesSeleccionadas}-${this.CEspecialidad}`);
+            
+            
+            if (savedFirstList && savedSecondList) {
+                this.firstList = JSON.parse(savedFirstList);
+                this.secondList = JSON.parse(savedSecondList);                
+            } else {
+                // Si no hay datos en localStorage, cargar datos iniciales
+                this.filtrarPersonales();
+            }
+            
+        },
+
+        ordenarPorDisponibilidad(list:IPersonal[]){
+            const fechaStr: string = this.today.toISOString().split('T')[0]
+            list.sort((a: IPersonal, b: IPersonal) => {
+            const mesesA = this.personalIndexadoSinDiagrama[a.legajo]?.meses?.[this.selectedMonth];
+            const mesesB = this.personalIndexadoSinDiagrama[b.legajo]?.meses?.[this.selectedMonth];
+
+            const dispA = mesesA?.days?.[fechaStr]?.disponibleHora ? newDate(mesesA.days[fechaStr].disponibleHora) : null;
+            const dispB = mesesB?.days?.[fechaStr]?.disponibleHora ? newDate(mesesB.days[fechaStr].disponibleHora) : null;
+
+            // Si ambos son null, mantener el orden
+            if (dispA === null && dispB === null) return 0;
+
+            // Si `dispA` es null, queremos que A aparezca antes en la lista
+            if (dispA === null) return -1;
+
+            // Si `dispB` es null, queremos que B aparezca antes en la lista
+            if (dispB === null) return 1;
+
+            // Comparar las horas si ambos son válidos
+            return dispA.getTime() - dispB.getTime();
+            });
+        },
+        toggleExpandirTarjetas(list: IPersonal[],lista:string) {
+            let tarjetasExpandido: boolean = false;
+
+            if(lista === 'Disponible'){
+                tarjetasExpandido = !this.tarjetasDisponibleExpandido  
+                this.tarjetasDisponibleExpandido = tarjetasExpandido 
+            }
+            else if(lista === 'HTT'){
+                tarjetasExpandido = !this.tarjetasHTTExpandido  
+                this.tarjetasHTTExpandido = tarjetasExpandido 
+            }
+
+            list.forEach((personal: IPersonal) => {
+                personal.viewDetail = tarjetasExpandido; // Expande o contrae las tarjetas
+            });
+        },
+
         edit(idPersonal: string,idTarjeta: string) {            
             this.$router.push({ name: 'TarjetaPersonalSinDiagrama', params: { idPersonal: idPersonal, idTarjeta: idTarjeta}});
         },
@@ -339,7 +604,8 @@ export default defineComponent({
             })
         },
         filtrarPersonales() {
-            this.personalesFiltrados = [];
+            this.firstList = [];
+            this.secondList = [];
             let cDotacion:string[] = [this.dotacionesSeleccionadas];
             let cEspecialidad = [this.CEspecialidad];
             let auxPersonales: IPersonal[] =  this.personales;
@@ -387,7 +653,8 @@ export default defineComponent({
                 })
             }
             //Ordeno la lista
-            this.personalesFiltrados = this.ordenarPorTurno(auxPersonales)
+            this.firstList = this.ordenarPorTurno(auxPersonales)
+            this.secondList.push(defaultPersonal())
         },
         getColorClass(especialidad:string) {
             if (especialidad.includes("Ayudante")) {
@@ -400,8 +667,13 @@ export default defineComponent({
     },
     created() {
         try {
+            // this.loadPersonalesFiltrados();
+            this.dotacionesSeleccionadas = localStorage.getItem('dotacion')||'PC';
             this.loadPersonales();
             this.loadPersonalSinDiagrama()
+            const [year, month] = this.today.toISOString().split("-")
+            this.selectedMonth = `${year}-${month}`;
+            this.tomorrowStr = diaPosterior(this.today.toISOString().split('T')[0])
             newToken();
         } catch (error) {
             console.error(error);
@@ -420,6 +692,9 @@ main{
 }
 .ayudante-clase{
     background-color: #e0de5873;
+}
+.custom-orange{
+    background-color: #fd7d1485;
 }
 .index-column {
     width: 50px !important;
