@@ -1,7 +1,16 @@
 <template>
     <main>
         <div class="container">
-            <div class="alert alert-danger" role="alert" v-if="message.activo">
+            <div class="justify-content-center alert row"
+                :class="[
+                    message.status == 'danger'
+                        ? 'alert-danger'
+                        : message.status == 'success'
+                        ? 'alert-success'
+                        : message.status == 'warning'
+                        ? 'alert-warning'
+                        : '',
+                ]" role="alert" v-if="message.activo">
                 <h4 class="alert-heading">ATENCIÓN! {{ message.title }}</h4>
                 <hr />
                 {{ message.message }}
@@ -149,7 +158,7 @@
                                 {{ getJornadaForDay(selectedMonth, day).observaciones || '-' }}
                             </span>
                             <button class="btn btn-primary" v-if="getJornadaForDay(selectedMonth,day).nroNovedad" 
-                                @click="$router.push(`/editNovedades/${getJornadaForDay(selectedMonth,day).nroNovedad}`)">
+                                @click="goToNovedad(getJornadaForDay(selectedMonth, day).nroNovedad)">
                                 Ir a la novedad
                             </button>
                         </td>
@@ -163,7 +172,9 @@
 <script lang="ts">
 import { newToken } from "../../services/signService";
 import { defineComponent } from "vue";
-import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, dia_laboral, diaAnterior,   diaPosterior,   diferenciaHoras, dosDiasAnterior, esFechaMayorIgual, filtrarPorTurno, itinerarioType, loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos,  obtenerNumeroDia, sumarHoras } from '../../utils/funciones';
+import {  defaultJornada, defaultNovedad, defaultPersonal, defaultPersonalSinDiagrama, defaultTurnos, 
+    dia_laboral, diaAnterior, diaPosterior, diferenciaHoras, dosDiasAnterior, esFechaMayorIgual, filtrarPorTurno, itinerarioType,  obtenerNumeroDia, sumarHoras,
+    loadNovedades, loadPersonal, loadPersonalSinDiagrama, loadTurnos } from '../../utils/funciones';
 import { IPersonal } from '../../interfaces/IPersonal';
 import { IPersonalSinDiagrama, Jornada } from '../../interfaces/IPersonalSinDiagrama';
 import { Novedad, Remplazo } from "../../interfaces/INovedades";
@@ -214,24 +225,26 @@ export default defineComponent({
             }
         },
         daysInMonth() {
-                const days = [];
-                const date = new Date()
-                let year = date.getFullYear()
-                let month = date.getMonth() + 1 // 0-indexed
-                if(this.selectedMonth === ''){
-                    year = date.getFullYear()
-                    month = date.getMonth() + 1 // 0-indexed
-                }else{
-                    year = parseInt(this.selectedMonth.split("-")[0])
-                    month = parseInt(this.selectedMonth.split("-")[1])
-                }
-                
-                const diasDelMes = new Date(year, month, 0).getDate();
+            const days = [];
+            const date = new Date()
+            let year = date.getFullYear()
+            let month = date.getMonth() + 1 // 0-indexed
+            if(this.selectedMonth === ''){
+                year = date.getFullYear()
+                month = date.getMonth() + 1 // 0-indexed
+            }else{
+                year = parseInt(this.selectedMonth.split("-")[0])
+                month = parseInt(this.selectedMonth.split("-")[1])
+            }
+            
+            const diasDelMes = new Date(year, month, 0).getDate();
 
-                for (let i = 1; i <= diasDelMes; i++) {
-                    days.push(new Date(year, month - 1, i).toISOString().split('T')[0]);
-                }
-                this.fechasDelMes = days
+            for (let i = 1; i <= diasDelMes; i++) {
+                days.push(new Date(year, month - 1, i).toISOString().split('T')[0]);
+            }
+            
+            this.fechasDelMes = days
+            this.buscarNovedadesActivas()
 
         },
         getDiaSemanaYMes(day:string,index:number):string{
@@ -263,6 +276,10 @@ export default defineComponent({
             // Retorna la jornada correspondiente al día
             return mes.days[day];
         },
+        goToNovedad(nroNovedad:number|null) {
+            localStorage.setItem('fromRoute', this.$route.fullPath); // Guardar la ruta actual en localStorage
+            this.$router.push(`/editNovedades/${nroNovedad}`);
+        },
         diaSemanaStr(dia:number):string{
             const dias =[
                 "Domingo",
@@ -279,6 +296,10 @@ export default defineComponent({
             this.editField = field;
             this.editIndex = index;
             this.editValue = this.getJornadaForDay(this.selectedMonth, this.fechasDelMes[index])[field] || '-';
+            
+            if(!this.getJornadaForDay(this.selectedMonth, this.fechasDelMes[index]).editable && field !== 'observaciones'){
+                alert("Editar desde la novedad asignada en este día")
+            }
 
             // Espera hasta que el DOM esté listo para enfocar el input
             this.$nextTick(() => {
@@ -483,8 +504,10 @@ export default defineComponent({
             this.personalSinDiagrama = await loadPersonalSinDiagrama(idTarjeta) || defaultPersonalSinDiagrama();
             this.lstNovedades = await loadNovedades() || [defaultNovedad()];
             this.lstTurnos = await loadTurnos() || [defaultTurnos()];
+
+            //construimos la tarjeta
             this.daysInMonth()
-            this.buscarNovedadesActivas()
+            
         }
         // this.loadPersonales();
         newToken();
