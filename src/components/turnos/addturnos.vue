@@ -22,7 +22,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="row" v-if="sheetNamesSeleccionado.length != 0">
+                    <div class="row d-flex justify-content-center" v-if="sheetNamesSeleccionado.length != 0">
                         <div class="col-3">
                             <label for="itinerario">
                             Itinerario
@@ -39,7 +39,7 @@
                             </select>
                         </label>
                         </div>
-                        <div class="col-3" v-if="itinerario">
+                        <div class="col-3" >
                             <label for="circular">
                             Circular
                             <input
@@ -52,7 +52,7 @@
                         </label>
                         </div>
 
-                        <div class="col-3" v-if="circular">
+                        <div class="col-3" >
                             <label for="especialidad">Especialidad </label>
                             <select
                                 name="especialidad"
@@ -76,14 +76,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center" v-if="especialidad">
+                    <div class="d-flex justify-content-center" v-if="especialidad && circular && itinerario">
                         <button class="btn btn-primary" @click="ConvertirJson()">
                             Cargar turnos
                         </button>
                     </div>
-
                 </div>
-
                 <div class="container-fluid px-4" v-if="Filtradas.length > 0">
                     <h2 class="d-flex justify-content-center m-3">
                         Cargar turnos
@@ -121,9 +119,11 @@
                     <table v-if="Filtradas.length > 0" class="table table-striped table-hover">
                         <thead>
                             <tr>
+                                <th class="col-1" colspan="1">N°</th>
                                 <th class="col-1" colspan="1">Turno</th>
                                 <th class="col-1" colspan="1">Itinerario</th>
                                 <th class="col-1" colspan="1">Circular</th>
+                                <th class="col-1" colspan="1">Dotacion</th>
                                 <th class="col-1" colspan="1"></th>
                                 <th class="col-1" colspan="1">Toma</th>
                                 <th class="col-1" colspan="1">Deja</th>
@@ -134,9 +134,11 @@
                         <tbody v-for="(turno, index) in Filtradas" :key="index" 
                             @dblclick="viewDetail(turno)">
                             <tr class="Small shadow">
+                                <td class="col-1">{{ index + 1 }}</td>
                                 <td class="col-1">{{ turno.turno }}</td>
                                 <td class="col-1">{{ turno.itinerario }}</td>
                                 <td class="col-1">{{ turno.circular }}</td>
+                                <td class="col-1">{{ turno.dotacion }}</td>
                                 <td class="col-1">{{ turno.personal }}</td>
                                 <td class="col-1">{{ turno.toma }}</td>
                                 <td class="col-1">{{ turno.deja }}</td>
@@ -146,55 +148,30 @@
                                         @click="deleteTurno(index)">delete_forever</i>
                                 </td>
                             </tr>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Vuelta
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Referencia
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Tren
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Origen
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Sale
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Destino
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Llega
-                            </th>
-                            <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                                Observaciones
-                            </th>
+                            <tr v-if="turno.viewDetail">
+                                <th></th>
+                                <th class="col-1" colspan="1">Vuelta</th>
+                                <th class="col-1" colspan="1">Referencia</th>
+                                <th class="col-1" colspan="1">Tren</th>
+                                <th class="col-1" colspan="1">Origen</th>
+                                <th class="col-1" colspan="1">Sale</th>
+                                <th class="col-1" colspan="1">Destino</th>
+                                <th class="col-1" colspan="1">Llega</th>
+                                <th class="col-1" colspan="1">Observaciones</th>
+                                <th></th>
+                            </tr>
+                            
                             <tr style="margin-bottom: 10px" v-for="(vuelta, index) in turno.vueltas" :key="index">
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.vuelta }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.refer }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.tren }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.origen }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.sale }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.destino }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.llega }}
-                                </td>
-                                <td colspan="1" v-if="turno.viewDetail">
-                                    {{ vuelta.observaciones }}
-                                </td>
+                                <td colspan="1" v-if="turno.viewDetail"></td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.vuelta }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.refer }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.tren }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.origen }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.sale }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.destino }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.llega }}</td>
+                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.observaciones }}</td>
+                                <td colspan="1" v-if="turno.viewDetail"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -290,18 +267,19 @@ export default defineComponent({
                 }else if (sheetName.toUpperCase().includes('AK')||sheetName.toUpperCase().includes('KORN')){
                     dotacion = 'AK'
                 }else {
-                    dotacion = prompt("No se pudo reconocer la dotación para "+ sheetName,"Por favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK" )||''
+                    dotacion = '-'
+                    // dotacion = prompt("No se pudo reconocer la dotación para "+ sheetName,"Por favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK" )||''
                 }
                 return dotacion
         },
         ConvertirJson() {
             this.sheetNamesSeleccionado.forEach(sheetName => {
                 let dotacion = this.determinarDotacion(sheetName);
-                
+                let validarDotacion = false
                 if (dotacion == ''){
                     alert("Ocurrió un error con la dotación y se detuvo el proceso.")
                     return
-                }
+                }else if (dotacion == '-') validarDotacion = true 
                 
                 const sheet = this.workbook!.Sheets[sheetName]
                 if (!sheet) {
@@ -338,6 +316,26 @@ export default defineComponent({
                                 if(turno.toUpperCase().includes("DH")){
                                     turno = turno.replace(" DH","")
                                 }
+
+                                //TODO darle color a la celda  el turno al desplegar
+                                if(validarDotacion){
+                                    if(turno[0] === '1') dotacion = 'RE'
+                                    else if(turno[0] === '2') dotacion = 'TY'
+                                    else if(turno[0] === '3') dotacion = 'LP'
+                                    else if(turno[0] === '4') dotacion = 'PC'
+                                    else if(turno[0] === '5') dotacion = 'LLV'
+                                    else if(turno[0] === '6' && turno[1] === '0' ) dotacion = 'PC'
+                                    else if(turno[0] === '6' && turno[1] !== '0' ) dotacion = 'LP'
+                                    else if(turno[0] === '7' && turno[1] === '9') dotacion = 'TY'
+                                    else if(turno[0] === '7' && turno[1] !== '9') dotacion = 'LLV'
+                                    else if(turno[0] === '8' || turno[0] === '9' || turno[0] === 'P' ){
+                                        dotacion = prompt(
+`El sistema no puede reconocer la dotacion a la que pertenece el turno ${turno}.\nPor favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK`,
+                                            dotacion)||'-'
+                                    }
+                                }
+                                console.log(dotacion,turno[0]);
+
                                 if (turno.toUpperCase().includes("PROG")){
                                     const numero = parseInt(turno.match(/\d+/)?.[0] || '', 10);
                                     const especialidad = this.especialidad.includes("Conductor")?"C":this.especialidad.includes("GuardaTren")?"G":""
@@ -355,6 +353,7 @@ export default defineComponent({
                                         turno = turno.replace("D","")
                                     }
                                 }
+                                
                                 
                                 // Crear el objeto ITurno
                                 const newTurno: ITurno = {
@@ -374,12 +373,24 @@ export default defineComponent({
                                 // Avanzar a la fila donde comienzan las vueltas (2 filas abajo)
                                 row += 3;
                                 let numVuelta = 1
+                                let recorrerTurno = true
                                 // Leer las vueltas hasta encontrar una fila vacía
-                                while (row <= rows && sheet[`C${row + 1}`]?.w != "T./Scio.") {
+                                while (row <= rows && sheet[`C${row + 1}`]?.w != "T./Scio." && recorrerTurno ) {
+                                    if(sheet[`A${row}`]?.w.toUpperCase().includes("O  R  D")){
+                                        newTurno.ordenes = true
+                                    }
+                                    let valorA:string = sheet[`A${row + 1}`]?.w || ''
+                                    recorrerTurno = !valorA.toUpperCase().includes('ESTOS TRENES SERAN CUBIERTOS POR PERSONAL SIN DIAGRAMA') 
+                                    
+                                    valorA = sheet[`A${row}`]?.w || ''
+                                    valorA = valorA.toUpperCase().includes('O  R  D') ? 'Ordenes' : valorA
+                                    valorA = valorA.toUpperCase().includes('D  I  S') ? 'Disponible' : valorA
+                                    
+
                                     const vuelta: Vueltas = {
                                         vuelta: numVuelta, 
-                                        refer: sheet[`A${row}`]?.w || '',
-                                        tren: Number(sheet[`B${row}`]?.w) || 0,
+                                        refer: valorA,
+                                        tren: Number(sheet[`B${row}`]?.w) || null,
                                         origen: sheet[`C${row}`]?.w || '',
                                         sale: sheet[`D${row}`]?.w || '',
                                         destino: sheet[`E${row}`]?.w || '',
@@ -387,9 +398,6 @@ export default defineComponent({
                                         observaciones: sheet[`G${row}`]?.w || '',
                                     };
                                     
-                                    if(sheet[`A${row}`]?.w.toUpperCase().includes("O  R  D")){
-                                        newTurno.ordenes = true
-                                    }
                                     newTurno.vueltas.push(vuelta);
                                     row++;
                                     numVuelta++;
