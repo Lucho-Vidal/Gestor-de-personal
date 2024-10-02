@@ -4,58 +4,64 @@
                     <h2 class="d-flex justify-content-center m-3">
                         Buscador de trenes
                     </h2>
-                    <div class="d-flex row">
-                        <div class="row justify-content-evenly">
-                            <input
-                                class="col-3"
-                                type="text"
-                                placeholder="Buscar por tren o por turno"
-                                autofocus
-                                v-model="tren"
-                                v-on:change="buscar()"
-                            />
-                            <select
-                                name="itinerario"
-                                id="itinerario"
-                                class="col-2"
-                                required
-                                v-model="inputIt"
-                                v-on:change="buscar()"
-                            >
-                                <option value=""></option>
-                                <option value="H">Hábil</option>
-                                <option value="S">Sábado</option>
-                                <option value="D">Domingo</option>
-                            </select>
-                            <input
-                                class="col-3"
-                                type="date"
-                                v-model="inputDate"
-                                v-on:change="buscar()"
-                            />
-                        </div>
-
-                        <div class="d-flex flex-wrap justify-content-center my-3">
-                            <h6>Aplicar circular:</h6>
-                            <div
-                                v-for="(circular, index) in circulares"
-                                :key="index"
-                            >
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        :value="circular"
-                                        v-model="circularSeleccionada"
-                                        v-on:change="cambioCirculares()"
-                                    />
-                                    {{ circular }}
-                                    <!-- Mostrar el valor de la variable circular en el label -->
-                                </label>
+                    <div class="d-flex flex-column">
+                    <!-- Inputs alineados a la derecha -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="d-flex align-items-center w-50">
+                            <div class="input-group w-50">
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    placeholder="Buscar por tren o por turno"
+                                    v-model="tren"
+                                    @change="buscar"
+                                />
+                                <button
+                                    class="btn btn-outline-secondary"
+                                    @click="toggleSearchType"
+                                >
+                                    {{ isSearchByTurno ? 'Turno' : 'Tren' }}
+                                </button>
                             </div>
                         </div>
+                        <select
+                            name="itinerario"
+                            id="itinerario"
+                            class="form-control ms-3 w-auto"
+                            required
+                            v-model="inputIt"
+                            @change="buscar"
+                        >
+                            <option value=""></option>
+                            <option value="H">Hábil</option>
+                            <option value="S">Sábado</option>
+                            <option value="D">Domingo</option>
+                        </select>
+                        <input
+                            class="form-control ms-3 w-auto"
+                            type="date"
+                            v-model="inputDate"
+                            @change="buscar"
+                        />
                     </div>
 
+                    <!-- Sección "Aplicar circular" centrada -->
+                    <div class="d-flex flex-wrap justify-content-center my-3">
+                        <h6>Aplicar:</h6>
+                        <div v-for="(circular, index) in circulares" :key="index">
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    :value="circular"
+                                    v-model="circularSeleccionada"
+                                    @change="cambioCirculares"
+                                />
+                                {{ circular }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
                     <div class=""></div>
                     <table class="table table-striped table-hover">
                         <thead v-if="horarios !== null">
@@ -177,7 +183,9 @@ export default defineComponent({
     data() {
         return {
             tren: "" as string,
-            turno: [] as ITurno[],
+            searchType: 'tren',
+            isSearchByTurno: false,
+            lstTurnos: [] as ITurno[],
             circulares: [] as string[],
             circularSeleccionada: ["Dic23"] as string[],
             turnosAImprimir: [] as ITurno[] | null,
@@ -205,14 +213,14 @@ export default defineComponent({
             /* Trae todos los elementos de la base de datos  */
             try {
                 const res = await getTurnos();
-                this.turno = res.data;
+                this.lstTurnos = res.data;
                 const circularSeleccionadaString = window.localStorage.getItem(
                     "circularSeleccionada"
                 );
                 this.circularSeleccionada = circularSeleccionadaString
                     ? circularSeleccionadaString.split(",")
                     : [];
-                this.circulares = obtenerTiposCirculares(this.turno);
+                this.circulares = obtenerTiposCirculares(this.lstTurnos);
             } catch (error) {
                 handleRequestError(error as AxiosError);
             }
@@ -229,13 +237,6 @@ export default defineComponent({
             const itinerario: string = this.itinerarioType(fecha);
 
             if (this.tren !== "") {
-                //si no se encuentra tren no continuo con la búsqueda
-                this.turnosAImprimir = filtroTrenes(
-                    itinerario,
-                    this.turno,
-                    this.circularSeleccionada,
-                    parseInt(this.tren)
-                );
                 // Define un objeto de prioridad para las especialidades
                 const especialidadPrioridad: { [key: string]: number } = {
                     "Conductor electrico": 1,
@@ -254,42 +255,39 @@ export default defineComponent({
                     return prioridadA - prioridadB;
                 }
 
-                // Ordena el array utilizando la función de comparación
-                this.turnosAImprimir.sort(compararEspecialidades);
 
-                
-                if (this.turnosAImprimir.length > 0) {
+                if(!this.isSearchByTurno){
+                    this.turnosAImprimir = filtroTrenes(
+                        itinerario,
+                        this.lstTurnos,
+                        this.circularSeleccionada,
+                        parseInt(this.tren)
+                    );
+                    // Ordena el array utilizando la función de comparación
+                    this.turnosAImprimir.sort(compararEspecialidades);
+                    
                     this.horarios = filtroItinerario(
                         itinerario,
                         this.itinerario,
                         parseInt(this.tren)
                     );
-                    //this.turnosAImprimir = this.filtroTurno(itinerario);
-                    buscarPersonalACargo(
-                        fecha,
-                        this.inputDate,
-                        this.turnosAImprimir,
-                        this.personales,
-                        this.novedades,
-                        this.cambiosTurnos
-                    );
-                } else {
+                }else {
                     this.turnosAImprimir = filtrarPorTurno(
                         itinerario,
-                        this.turno,
+                        this.lstTurnos,
                         this.circularSeleccionada,
                         this.tren
                     );
                     //this.filtroTurno(itinerario);
-                    buscarPersonalACargo(
-                        fecha,
-                        this.inputDate,
-                        this.turnosAImprimir,
-                        this.personales,
-                        this.novedades,
-                        this.cambiosTurnos
-                    );
                 }
+                buscarPersonalACargo(
+                    fecha,
+                    this.inputDate,
+                    this.turnosAImprimir,
+                    this.personales,
+                    this.novedades,
+                    this.cambiosTurnos
+                );
             }
         },
         obtenerFecha(fecha: string, today: Date) {
@@ -324,7 +322,10 @@ export default defineComponent({
                 "circularSeleccionada",
                 this.circularSeleccionada.join(",")
             );
-
+            this.buscar();
+        },
+        toggleSearchType() {
+            this.isSearchByTurno = !this.isSearchByTurno;
             this.buscar();
         },
     },
