@@ -18,7 +18,6 @@
                                 <input class="form-check-input" type="checkbox" :value="sheetName"
                                     v-model="sheetNamesSeleccionado" />
                                 {{ sheetName }}
-                                <!-- Mostrar el valor de la variable circular en el label -->
                             </label>
                         </div>
                     </div>
@@ -90,26 +89,6 @@
                         <button class="btn btn-primary d-flex end mx-3" @click="enviarTurnos()">Guardar turnos</button>
                         <router-link class="btn btn-danger d-flex end" to="/turnos">Cancelar</router-link>
                     </div>
-                    
-                    <!-- <div class="my-3 row">
-                        <input class="col-3 gap col" type="text" placeholder="Buscar por turno" autofocus
-                            v-on:keyup="filtrar" v-model="search" />
-                        <label class="form-check-label mx-2 col-1">
-                            <input class="form-check-input" type="checkbox" :value="'H'" v-model="itSeleccionado"
-                                v-on:change="filtrar()" />
-                            Hábil
-                        </label>
-                        <label class="form-check-label mx-2 col-1">
-                            <input class="form-check-input" type="checkbox" :value="'S'" v-model="itSeleccionado"
-                                v-on:change="filtrar()" />
-                            Sábado
-                        </label>
-                        <label class="form-check-label mx-2 col-2">
-                            <input class="form-check-input" type="checkbox" :value="'D'" v-model="itSeleccionado"
-                                v-on:change="filtrar()" />
-                            Domingo
-                        </label>
-                    </div> -->
 
                     <h3 v-if="Filtradas.length == 0">
                         No se encontró ningún turno con los requerimientos
@@ -148,7 +127,7 @@
                                         @click="deleteTurno(index)">delete_forever</i>
                                 </td>
                             </tr>
-                            <tr v-if="turno.viewDetail">
+                            <tr v-if="turno.viewDetail" class="custom-orange">
                                 <th></th>
                                 <th class="col-1" colspan="1">Vuelta</th>
                                 <th class="col-1" colspan="1">Referencia</th>
@@ -161,7 +140,7 @@
                                 <th></th>
                             </tr>
                             
-                            <tr style="margin-bottom: 10px" v-for="(vuelta, index) in turno.vueltas" :key="index">
+                            <tr style="margin-bottom: 10px" class="custom-orange" v-for="(vuelta, index) in turno.vueltas" :key="index">
                                 <td colspan="1" v-if="turno.viewDetail"></td>
                                 <td colspan="1" v-if="turno.viewDetail">{{ vuelta.vuelta }}</td>
                                 <td colspan="1" v-if="turno.viewDetail">{{ vuelta.refer }}</td>
@@ -334,7 +313,6 @@ export default defineComponent({
                                             dotacion)||'-'
                                     }
                                 }
-                                console.log(dotacion,turno[0]);
 
                                 if (turno.toUpperCase().includes("PROG")){
                                     const numero = parseInt(turno.match(/\d+/)?.[0] || '', 10);
@@ -468,7 +446,9 @@ export default defineComponent({
 main {
     min-height: 81.6vh;
 }
-
+.custom-orange{
+    background-color: #fd7d1485;
+}
 .hidden-row {
     display: none;
 }
