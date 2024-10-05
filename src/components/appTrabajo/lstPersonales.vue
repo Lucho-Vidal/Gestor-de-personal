@@ -1,28 +1,9 @@
 <template>
     <main>
         <h2 class="d-flex justify-content-center m-3">
-            Lista de personales
+            Lista de personales por base
         </h2>
         <div class="d-flex justify-content-center mb-3">
-            <!-- <label for="dotacion" class="col-2 mx-3">
-                Dotacion
-                <select
-                    name="dotacion"
-                    id="dotacion"
-                    class="col-6 mx-3"
-                    v-model="checkboxDotacion"
-                    @change="filtrar()"
-                >
-                    <option value="PC">PC</option>
-                    <option value="LLV">LLV</option>
-                    <option value="TY">TY</option>
-                    <option value="LP">LP</option>
-                    <option value="K5">K5</option>
-                    <option value="RE">RE</option>
-                    <option value="CÑ">CÑ</option>
-                    <option value="AK">AK</option>
-                </select>
-            </label> -->
             <label for="dotacion" class="col-2 mx-3">
                     Dotación
                     <select
@@ -44,7 +25,7 @@
                     name="it"
                     id="it"
                     class="col-6 mx-3"
-                    v-model="checkboxIt"
+                    v-model="itinerarioSeleccionado"
                     @change="filtrar()"
                 >
                     <option value="H">Hábil</option>
@@ -60,6 +41,16 @@
                 v-model="inputDate"
                 @change="filtrar()"
             />
+            <button
+                class="btn mx-5"
+                :class="[isOnlySinCubrir ? 'btn-secondary' : 'btn-danger' ]"
+                @click="toggleSinCubrir"
+            >
+                {{ isOnlySinCubrir ? 'Todos' : 'Sin Cubrir' }}
+            </button>
+            <button class="btn btn-info mx-1" @click.prevent="toggleExpandirTurnos()">
+                {{ turnosExpandidos ? 'Contraer todos los Turnos' : 'Expandir todos los Turnos' }}
+            </button>
         </div>
         <div class="d-flex justify-content-center flex-wrap my-3">
             <h6>Aplicar circular:</h6>
@@ -224,7 +215,7 @@
                 <div class="col-md-6">
                     <ul class="list-unstyled">
                         <li>
-                            <h4>Guarda tren</h4>
+                            <h4>Guarda trenes</h4>
                         </li>
                         <table
                             v-if="turnosGuardas.length > 0"
@@ -258,9 +249,12 @@
                                     <td class="col-1">{{ turno.turno }}</td>
                                     <td class="col-1">{{ turno.toma }}</td>
                                     <td class="col-1">{{ turno.deja }}</td>
-                                    <td class="col-1">{{ turno.vueltas[0].refer }}</td>
-                                    <td class="col-1">{{ turno.vueltas[0].tren }}</td>
-                                    <td class="col-1">{{ turno.vueltas[0].sale }}</td>
+                                    <td class="col-1" v-if="turno.vueltas[0]">{{ turno.vueltas[0].refer }}</td>
+                                    <td class="col-1" v-else>--</td>
+                                    <td class="col-1" v-if="turno.vueltas[0]">{{ turno.vueltas[0].tren }}</td>
+                                    <td class="col-1" v-else>--</td>
+                                    <td class="col-1" v-if="turno.vueltas[0]">{{ turno.vueltas[0].sale }}</td>
+                                    <td class="col-1" v-else>--</td>
                                     <td class="col-1">{{ turno.circular }}</td>
                                     <td class="col-6">{{ turno.personal }}</td>
                                 </tr>
@@ -320,7 +314,7 @@
                                 <tr
                                     :class="{
                                         'fila-oscura':
-                                            turno.personal == 'Sin Cubrir',
+                                            turno.personal === 'Sin Cubrir',
                                     }"
                                 >
                                     <td class="col-1">{{ turno.turno }}</td>
@@ -395,19 +389,25 @@ export default defineComponent({
             personales: [] as IPersonal[],
             turnos: [] as ITurno[],
             novedades: [] as Novedad[],
+
             today: new Date(),
+
             dotacionesPermitidas: [] as string[],
-            dotacionesSeleccionadas: ["PC"] as string[],
+            dotacionesSeleccionadas: "" as string,
+            circulares: [] as string[],
+            circularSeleccionada: [] as string[],
+
             turnosConductor: [] as ITurno[],
             turnosGuardas: [] as ITurno[],
             turnosConductorOrd: [] as ITurno[],
             turnosGuardasOrd: [] as ITurno[],
-            checkboxIt: "" as string,
+
+            itinerarioSeleccionado: "" as string,
             inputDate: "" as string,
-            circulares: [] as string[],
-            circularSeleccionada: ["Jul24"] as string[],
             datosCargados: 0 as number,
             cambiosTurnos: [] as CambioTurno[],
+            isOnlySinCubrir:false,
+            turnosExpandidos:false,
         };
     },
     methods: {
@@ -416,7 +416,7 @@ export default defineComponent({
             try {
                 const res = await getTurnos();
                 this.turnos = res.data;
-                const circularSeleccionadaString = window.localStorage.getItem(
+                const circularSeleccionadaString = localStorage.getItem(
                     "circularSeleccionada"
                 );
                 this.circularSeleccionada = circularSeleccionadaString
@@ -461,6 +461,11 @@ export default defineComponent({
                 handleRequestError(error as AxiosError);
             }
         },
+        toggleExpandirTurnos(){
+            this.turnosExpandidos = !this.turnosExpandidos
+            this.turnosConductor.forEach((turno) => (turno.viewDetail = this.turnosExpandidos));
+            this.turnosGuardas.forEach((turno) => (turno.viewDetail = this.turnosExpandidos));
+        },
         viewDetail(turno: ITurno) {
             if (turno.viewDetail) {
                 turno.viewDetail = false;
@@ -468,132 +473,60 @@ export default defineComponent({
                 turno.viewDetail = true;
             }
         },
-        filtrar() {
-            // window.localStorage.setItem(
-            //     "dotacionSeleccionada",
-            //     this.checkboxDotacion
-            // );
-            // window.localStorage.setItem("itSeleccionada", this.checkboxIt);
-
-            let turnosGuardas = this.turnos.filter((turno: ITurno) => {
-                return (
-                    this.circularSeleccionada.includes(turno.circular) &&
-                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
-                    this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() ==
-                        "guardatren electrico" ||
-                        turno.especialidad.toLowerCase() ==
-                            "guardatren diesel") &&
-                    !turno.ordenes
-                );
-            });
-            let turnosConductor = this.turnos.filter((turno: ITurno) => {
-                return (
-                    this.circularSeleccionada.includes(turno.circular) &&
-                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
-                    this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() ==
-                        "conductor electrico" ||
-                        turno.especialidad.toLowerCase() ==
-                            "conductor diesel") &&
-                    !turno.ordenes
-                );
-            });
-            let turnosGuardasOrd = this.turnos.filter((turno: ITurno) => {
-                return (
-                    this.circularSeleccionada.includes(turno.circular) &&
-                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
-                    this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() ==
-                        "guardatren electrico" ||
-                        turno.especialidad.toLowerCase() ==
-                            "guardatren diesel") &&
-                    turno.ordenes
-                );
-            });
-            let turnosConductorOrd = this.turnos.filter((turno: ITurno) => {
-                return (
-                    this.circularSeleccionada.includes(turno.circular) &&
-                    this.dotacionesSeleccionadas.includes(turno.dotacion) &&
-                    this.checkboxIt == turno.itinerario &&
-                    (turno.especialidad.toLowerCase() ==
-                        "conductor electrico" ||
-                        turno.especialidad.toLowerCase() ==
-                            "conductor diesel") &&
-                    turno.ordenes
-                );
-            });
-            turnosGuardas = quitarDuplicados(
-                turnosGuardas,
-                this.circularSeleccionada
-            );
-            turnosConductor = quitarDuplicados(
-                turnosConductor,
-                this.circularSeleccionada
-            );
-            turnosGuardasOrd = quitarDuplicados(
-                turnosGuardasOrd,
-                this.circularSeleccionada
-            );
-            turnosConductorOrd = quitarDuplicados(
-                turnosConductorOrd,
-                this.circularSeleccionada
-            );
-
-            this.turnosGuardas = turnosGuardas.sort(
-                (turno1: ITurno, turno2: ITurno) => {
-                    return compararHoras(turno1.toma, turno2.toma);
-                }
-            );
-            this.turnosConductor = turnosConductor.sort(
-                (turno1: ITurno, turno2: ITurno) => {
-                    return compararHoras(turno1.toma, turno2.toma);
-                }
-            );
-            this.turnosGuardasOrd = turnosGuardasOrd.sort(
-                (turno1: ITurno, turno2: ITurno) => {
-                    return compararHoras(turno1.toma, turno2.toma);
-                }
-            );
-            this.turnosConductorOrd = turnosConductorOrd.sort(
-                (turno1: ITurno, turno2: ITurno) => {
-                    return compararHoras(turno1.toma, turno2.toma);
-                }
-            );
-
-            buscarPersonalACargo(
-                this.obtenerFecha(this.inputDate, this.today),
-                this.inputDate,
-                turnosConductor,
-                this.personales,
-                this.novedades,
-                this.cambiosTurnos
-            );
-            buscarPersonalACargo(
-                this.obtenerFecha(this.inputDate, this.today),
-                this.inputDate,
-                turnosGuardas,
-                this.personales,
-                this.novedades,
-                this.cambiosTurnos
-            );
-            buscarPersonalACargo(
-                this.obtenerFecha(this.inputDate, this.today),
-                this.inputDate,
-                this.turnosConductorOrd,
-                this.personales,
-                this.novedades,
-                this.cambiosTurnos
-            );
-            buscarPersonalACargo(
-                this.obtenerFecha(this.inputDate, this.today),
-                this.inputDate,
-                this.turnosGuardasOrd,
-                this.personales,
-                this.novedades,
-                this.cambiosTurnos
-            );
+        toggleSinCubrir(){
+            this.isOnlySinCubrir = ! this.isOnlySinCubrir
+            this.filtrar()
         },
+        filtrar() {
+            localStorage.setItem("dotacionSeleccionada", this.dotacionesSeleccionadas.toString());
+            localStorage.setItem("itSeleccionada", this.itinerarioSeleccionado);
+
+            if (this.dotacionesSeleccionadas.length === 0 || (this.inputDate === '' && this.itinerarioSeleccionado === '')) return;
+
+            const filtroTurnos = (especialidad:string[], ordenes:boolean) => {
+                return this.turnos.filter((turno) => {
+                    return (
+                        this.circularSeleccionada.includes(turno.circular) &&
+                        this.dotacionesSeleccionadas.includes(turno.dotacion) &&
+                        this.itinerarioSeleccionado === turno.itinerario &&
+                        especialidad.includes(turno.especialidad.toLowerCase()) &&
+                        turno.ordenes === ordenes
+                    );
+                });
+            };
+
+            let turnosGuardas = filtroTurnos(["guardatren electrico", "guardatren diesel"], false);
+            let turnosConductor = filtroTurnos(["conductor electrico", "conductor diesel"], false);
+            let turnosGuardasOrd = filtroTurnos(["guardatren electrico", "guardatren diesel"], true);
+            let turnosConductorOrd = filtroTurnos(["conductor diesel"], true);
+
+            turnosGuardas = quitarDuplicados(turnosGuardas, this.circularSeleccionada);
+            turnosConductor = quitarDuplicados(turnosConductor, this.circularSeleccionada);
+            turnosGuardasOrd = quitarDuplicados(turnosGuardasOrd, this.circularSeleccionada);
+            turnosConductorOrd = quitarDuplicados(turnosConductorOrd, this.circularSeleccionada);
+
+            const fecha = this.obtenerFecha(this.inputDate, this.today);
+
+            [turnosGuardas, turnosConductor, turnosGuardasOrd, turnosConductorOrd].forEach((turnos) => {
+                buscarPersonalACargo(fecha, this.inputDate, turnos, this.personales, this.novedades, this.cambiosTurnos);
+            });
+
+            if (this.isOnlySinCubrir) {
+                turnosConductor = turnosConductor.filter((turno) => turno.personal === "Sin Cubrir");
+                turnosGuardas = turnosGuardas.filter((turno) => turno.personal === "Sin Cubrir");
+
+                turnosConductor.forEach((turno) => (turno.viewDetail = true));
+                turnosGuardas.forEach((turno) => (turno.viewDetail = true));
+            }
+
+            const ordenarPorHora = (turnos:ITurno[]) => turnos.sort((turno1: ITurno, turno2: ITurno) => compararHoras(turno1.toma, turno2.toma));
+
+            this.turnosGuardas = ordenarPorHora(turnosGuardas);
+            this.turnosConductor = ordenarPorHora(turnosConductor);
+            this.turnosGuardasOrd = ordenarPorHora(turnosGuardasOrd);
+            this.turnosConductorOrd = ordenarPorHora(turnosConductorOrd);
+        },
+
         obtenerFecha(fecha: string, today: Date) {
             if (fecha == "") {
                 // Formatear la fecha en formato ISO (YYYY-MM-DD)
@@ -610,7 +543,6 @@ export default defineComponent({
                 "circularSeleccionada",
                 this.circularSeleccionada.join(",")
             );
-
             this.filtrar();
         },
     },
@@ -622,13 +554,11 @@ export default defineComponent({
             this.cambiosTurnos = (await loadCambiosTurnos()) || [];
             this.today.setHours(12, 0, 0, 0);
             newToken();
-            // const dotacionSelectString = window.localStorage.getItem(
-            //     "dotacionSeleccionada"
-            // );
-            const itSelectString = window.localStorage.getItem(
-                "itSeleccionada"
-            );
-            this.checkboxIt = itSelectString ? itSelectString : "";
+            
+            this.dotacionesSeleccionadas = localStorage.getItem("dotacionSeleccionada") || "";
+            this.itinerarioSeleccionado = localStorage.getItem("itSeleccionada")||"";
+            
+
         } catch (error) {
             console.error(error);
         }
@@ -638,6 +568,10 @@ export default defineComponent({
 });
 </script>
 <style>
+
+main{
+    margin-top: 5rem;
+}
 
 .hidden-row {
     display: none;
