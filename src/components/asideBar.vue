@@ -32,7 +32,7 @@
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-list-ul"></i>
                                 </div>
-                                Listado de personal
+                                Personal por base
                             </router-link>
                             <router-link class="nav-link" to="/" disabled>
                                 <div class="sb-nav-link-icon">
@@ -52,7 +52,7 @@
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-address-book"></i>
                                 </div>
-                                Ordenamientos y cancelaciones diagrama
+                                Ordenamientos 
                             </router-link>
                             <router-link class="nav-link" to="/cambioTurno">
                                 <div class="sb-nav-link-icon">
@@ -61,17 +61,17 @@
                                 </div>
                                 Cambios de turnos
                             </router-link>
-                            <router-link class="nav-link" to="/personalSinDiagrama">
-                                <div class="sb-nav-link-icon">
-                                    <i class="fa fa-address-card"></i>
-                                </div>
-                                Personal sin diagrama
-                            </router-link>
                             <router-link class="nav-link" to="/novedades">
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-table"></i>
                                 </div>
                                 Novedades de personal
+                            </router-link>
+                            <router-link class="nav-link" to="/personalSinDiagrama">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fa fa-address-card"></i>
+                                </div>
+                                Personal sin diagrama
                             </router-link>
                             <router-link class="nav-link" to="/personal">
                                 <div class="sb-nav-link-icon">
@@ -113,7 +113,7 @@
                                             )
                                         "
                                     >
-                                        Procedimiento GNPA
+                                        Procesos GNPA
                                     </button>
                                     <a
                                         class="nav-link collapsed"
