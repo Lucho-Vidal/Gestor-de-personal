@@ -4,10 +4,9 @@
             <h2 class="d-flex justify-content-center m-3">
                 Registro de ordenamiento al Personal de Abordo
             </h2>
-            <div class="d-flex">
-                <Button class="btn btn-primary d-flex end" @click="$router.push('/newOrdenamiento')"
-                    >Nuevo ordenamiento</Button
-                >
+            <div class="d-flex justify-content-end">
+                <Button class="btn btn-primary " @click="$router.push('/newOrdenamiento')"
+                    >Nuevo ordenamiento</Button>
             </div>
 
             <details>
@@ -262,7 +261,6 @@ import {
     getOrdenamientos,
     deleteOrdenamiento,
 } from "../../services/ordenamientoService";
-import { RouterView } from "vue-router";
 
 export default defineComponent({
     data() {

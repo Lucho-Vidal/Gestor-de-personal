@@ -1,27 +1,28 @@
 <template>
-        <main class="container">
-            <h1 class="d-flex justify-content-center m-3">{{ 
-                ordenamiento.tipo === 'ordenamiento' ?
-                    'Ordenamiento' :
-                ordenamiento.tipo === 'informe' ?
-                    'Informe' :
-                ordenamiento.tipo === 'cancelacionDiagrama' ?
-                    'Cancelación Diagrama': ''
-                }}</h1>
-
+    <main>
+        <h1 >{{ 
+            ordenamiento.tipo === 'ordenamiento' ?
+                'Ordenamiento' :
+            ordenamiento.tipo === 'informe' ?
+                'Informe' :
+            ordenamiento.tipo === 'cancelacionDiagrama' ?
+                'Cancelación Diagrama': ''
+            }}
+        </h1>
+        <div class="container d-flex">
             <div
-                class="alert row"
-                :class="[
-                    message.status == 'danger'
-                        ? 'alert-danger'
-                        : message.status == 'success'
-                        ? 'alert-success'
-                        : message.status == 'warning'
-                        ? 'alert-warning'
-                        : '',
-                ]"
-                role="alert"
-                v-if="message.activo"
+            class="justify-content-center alert row "
+            :class="[
+                message.status == 'danger'
+                    ? 'alert-danger'
+                    : message.status == 'success'
+                    ? 'alert-success'
+                    : message.status == 'warning'
+                    ? 'alert-warning'
+                    : '',
+            ]"
+            role="alert"
+            v-if="message.activo"
             >
                 <h4 class="alert-heading">{{ message.title }}</h4>
                 <hr />
@@ -33,337 +34,340 @@
                     >Ir a la novedad</a
                 > -->
             </div>
-            <!-- Modal de búsqueda -->
+        </div>
+        
+        <!-- Modal de búsqueda -->
+        <div>
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click.self="cerrarModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Buscar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input
+                                ref="inputSearch"
+                                type="text"
+                                class="form-control my-3"
+                                placeholder="Ingrese Nombre o Apellido"
+                                list="personales"
+                                v-model="search"
+                                autofocus
+                                @keyup="searchPersonal()"
+                            />
 
-            <div>
-                <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click.self="cerrarModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Buscar personales</h5>
-                                <button
-                                    type="button"
-                                    class="close"
-                                    @click="cerrarModal"
+                            <div class="table-container">
+                                <table
+                                    class="table table-hover"
+                                    v-if="search"
                                 >
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <input
-                                    ref="inputSearch"
-                                    type="text"
-                                    class="form-control my-3"
-                                    placeholder="Ingrese Nombre o Apellido"
-                                    list="personales"
-                                    v-model="search"
-                                    autofocus
-                                    @keyup="searchPersonal()"
-                                />
-
-                                <div class="table-container">
-                                    <table
-                                        class="table table-hover"
-                                        v-if="search"
-                                    >
-                                        <thead>
-                                            <tr>
-                                                <th>Legajo</th>
-                                                <th>Apellido</th>
-                                                <th>Nombre</th>
-                                                <th>Dotacion</th>
-                                                <th>Turno</th>
-                                                <th>Franco</th>
-                                                <th>Especialidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                v-for="(
-                                                    personal, index
-                                                ) in personales"
-                                                :key="index"
-                                                @click="
-                                                    selectPersonal(personal)
-                                                "
-                                            >
-                                                <td class="col-1">
-                                                    {{ personal.legajo }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.apellido }}
-                                                </td>
-                                                <td class="col-2">
-                                                    {{ personal.nombres }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.dotacion }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.turno }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ days[personal.franco] }}
-                                                </td>
-                                                <td class="col-1">
-                                                    {{ personal.especialidad }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    <thead>
+                                        <tr>
+                                            <th>Legajo</th>
+                                            <th>Apellido</th>
+                                            <th>Nombre</th>
+                                            <th>Dotacion</th>
+                                            <th>Turno</th>
+                                            <th>Franco</th>
+                                            <th>Especialidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(
+                                                personal, index
+                                            ) in personales"
+                                            :key="index"
+                                            @click="
+                                                selectPersonal(personal)
+                                            "
+                                        >
+                                            <td class="col-1">
+                                                {{ personal.legajo }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.apellido }}
+                                            </td>
+                                            <td class="col-2">
+                                                {{ personal.nombres }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.dotacion }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.turno }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ days[personal.franco] }}
+                                            </td>
+                                            <td class="col-1">
+                                                {{ personal.especialidad }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Formulario -->
-            <form
-                @submit.prevent="saveNovedad()"
-                @keydown.enter.prevent=""
-                class="row"
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label for="tipoNovedad">Tipo de Novedad </label>
+                <select
+                    name="tipoNovedad"
+                    id="tipoNovedad"
+                    class="form-control mb-3 w-50"
+                    required
+                    v-model="ordenamiento.tipo"
+                >
+                    <option value="ordenamiento" selected>Ordenamiento</option>
+                    <option value="informe">Informe</option>
+                    <option value="cancelacionDiagrama">Cancelación Diagrama</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <button
+                class="btn btn-success"
+                @click.prevent="abrirModal(false)"
             >
-                
-                <div class="row">
-                    <div class="col-3">
-                        <label for="tipoNovedad">Tipo de Novedad </label>
-                        <select
-                            name="tipoNovedad"
-                            id="tipoNovedad"
-                            class="form-control mb-3"
-                            required
-                            v-model="ordenamiento.tipo"
-                        >
-                            <option value="ordenamiento" selected>Ordenamiento</option>
-                            <option value="informe">Informe</option>
-                            <option value="cancelacionDiagrama">Cancelación Diagrama</option>
-                        </select>
-                    </div>
+                Buscar Personal
+            </button>
+        </div>
+        <!-- Formulario -->
+        <form
+            @submit.prevent="saveNovedad()"
+            @keydown.enter.prevent=""
+            class="justify-content-between row"
+            >
+            <div class="row">
+                <div class="col-2">
+                    <label for="legajo"></label>
+                    Legajo
+                    <input
+                        class="form-control mb-3"
+                        placeholder="Ingrese Legajo"
+                        type="number"
+                        name="legajo"
+                        autofocus
+                        required
+                        @change="searchPersonalPorLegajo()"
+                        v-model="ordenamiento.personal.legajo"
+                        />
                 </div>
-                <div>
-                    <button
-                        class="btn btn-success"
-                        @click.prevent="abrirModal(false)"
+                <div class="col-3">
+                    <label for="Apellido"></label>
+                    Apellido
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="apellido"
+                        v-model="ordenamiento.personal.apellido"
+                        disabled
+                    />
+                </div>
+                <div class="col-4">
+                    <label for="nombres"></label>
+                    Nombre
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="nombres"
+                        v-model="ordenamiento.personal.nombres"
+                        disabled
+                    />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1">
+                    <label for="base"></label>
+                    Base
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="base"
+                        v-model="ordenamiento.personal.dotacion"
+                        disabled
+                    />
+                </div>
+                <div class="col-3">
+                    <label for="especialidad"></label>
+                    Especialidad
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="especialidad"
+                        v-model="ordenamiento.personal.especialidad"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="turno"></label>
+                    Turno
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="turno"
+                        v-model="ordenamiento.personal.turno"
+                        disabled
+                    />
+                </div>
+                <div class="col-2">
+                    <label for="franco"></label>
+                    Franco
+                    <input
+                        class="form-control mb-3"
+                        placeholder=""
+                        type="text"
+                        name="franco"
+                        v-model="days[ordenamiento.personal.franco]"
+                        disabled
+                    />
+                </div>
+            </div>
+            
+            <div class="row" v-if="ordenamiento.tipo === 'informe'">
+                <div class="col">
+                    <label for="detalle"></label>
+                    Detalle
+                    <textarea
+                        class="form-control mb-3"
+                        name="detalle"
+                    ></textarea>
+                </div>
+            </div>
+
+            <table v-if="ordenamiento.tipo === 'ordenamiento'||ordenamiento.tipo === 'cancelacionDiagrama'">
+                <thead>
+                    <tr>
+                        <th>tren</th>
+                        <th>Desde</th>
+                        <th>Sale</th>
+                        <th>Hasta</th>
+                        <th>Llega</th>
+                        <th>Borrar</th>
+                        <th class="col-1 px-5">
+                            <i class="material-icons cursor-hand verde"
+                            @click="agregarTren()" >person_add</i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="(tren, index) in ordenamiento.turno.vueltas"
+                        :key="index"
                     >
-                        Buscar Personal
-                    </button>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <label for="legajo"></label>
-                        Legajo
-                        <input
-                            class="form-control mb-3"
-                            placeholder="Ingrese Legajo"
-                            type="number"
-                            name="legajo"
-                            autofocus
-                            required
-                            @change="searchPersonalPorLegajo()"
-                            v-model="ordenamiento.personal.legajo"
+                        <td>
+                            <input
+                                type="number"
+                                class="form-control mb-3"
+                                name="tren"
+                                v-model="tren.tren"
                             />
-                    </div>
-                    <div class="col-3">
-                        <label for="Apellido"></label>
-                        Apellido
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="apellido"
-                            v-model="ordenamiento.personal.apellido"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-4">
-                        <label for="nombres"></label>
-                        Nombre
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="nombres"
-                            v-model="ordenamiento.personal.nombres"
-                            disabled
-                        />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-1">
-                        <label for="base"></label>
-                        Base
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="base"
-                            v-model="ordenamiento.personal.dotacion"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-3">
-                        <label for="especialidad"></label>
-                        Especialidad
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="especialidad"
-                            v-model="ordenamiento.personal.especialidad"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="turno"></label>
-                        Turno
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="turno"
-                            v-model="ordenamiento.personal.turno"
-                            disabled
-                        />
-                    </div>
-                    <div class="col-2">
-                        <label for="franco"></label>
-                        Franco
-                        <input
-                            class="form-control mb-3"
-                            placeholder=""
-                            type="text"
-                            name="franco"
-                            v-model="days[ordenamiento.personal.franco]"
-                            disabled
-                        />
-                    </div>
-                </div>
-                
-                <div class="row" v-if="ordenamiento.tipo === 'informe'">
-                    <div class="col">
-                        <label for="detalle"></label>
-                        Detalle
-                        <textarea
-                            class="form-control mb-3"
-                            name="detalle"
-                        ></textarea>
-                    </div>
-                </div>
-
-                <table v-if="ordenamiento.tipo === 'ordenamiento'||ordenamiento.tipo === 'cancelacionDiagrama'">
-                    <thead>
-                        <tr>
-                            <th>tren</th>
-                            <th>Desde</th>
-                            <th>Sale</th>
-                            <th>Hasta</th>
-                            <th>Llega</th>
-                            <th>Borrar</th>
-                            <th class="col-1 px-5">
-                                <i class="material-icons cursor-hand verde"
-                                @click="agregarTren()" >person_add</i>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(tren, index) in ordenamiento.turno.vueltas"
-                            :key="index"
-                        >
-                            <td>
-                                <input
-                                    type="number"
-                                    class="form-control mb-3"
-                                    name="tren"
-                                    v-model="tren.tren"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    class="form-control mb-3"
-                                    name="desde"
-                                    v-model="tren.origen"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    class="form-control mb-3"
-                                    name="sale"
-                                    v-model="tren.sale"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    class="form-control mb-3"
-                                    name="llega"
-                                    v-model="tren.llega"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    class="form-control mb-3"
-                                    name="hasta"
-                                    v-model="tren.destino"
-                                />
-                            </td>
-                            <td>    
-                                <i class="material-icons cursor-hand rojo"
-                                    @click="ordenamiento.turno.vueltas.splice(index, 1)"
-                                >clear</i>
-                                
-                            </td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control mb-3"
+                                name="desde"
+                                v-model="tren.origen"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control mb-3"
+                                name="sale"
+                                v-model="tren.sale"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control mb-3"
+                                name="llega"
+                                v-model="tren.llega"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control mb-3"
+                                name="hasta"
+                                v-model="tren.destino"
+                            />
+                        </td>
+                        <td>    
+                            <i class="material-icons cursor-hand rojo"
+                                @click="ordenamiento.turno.vueltas.splice(index, 1)"
+                            >clear</i>
+                            
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            <div>
                 <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <i
+                <button
                     class="btn btn-secondary col-1 m-2"
                     @click="$router.push('/ordenamiento')"
-                    >Cerrar</i
                 >
-            </form>
-            <div v-if="esDiagramado && !turnosEncontrado.ordenes" class="container mt-5">
-                <h5>El personal es diagramado, deberá cargar una cancelacion de diagrama para ordenarlo. Cargue los trenes que no va a correr</h5>
-            
-                <!-- <table  class="table table-striped table-hover">
-                    <thead v-if="turnosEncontrado" class="">
-                        <tr>
-                            <th colspan="1">Vuelta</th>
-                            <th colspan="1">Ref</th>
-                            <th colspan="1">Tren</th>
-                            <th colspan="1">Origen</th>
-                            <th colspan="1">Sale</th>
-                            <th colspan="1">Destino</th>
-                            <th colspan="1">Llega</th>
-                            <th colspan="1">Observaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(vuelta, index) in turnosEncontrado.vueltas"
-                            :key="index"
-                        >
-                            <td class="col-3">{{ vuelta.vuelta }}</td>
-                            <td class="col-1">{{ vuelta.refer }}</td>
-                            <td class="col-1">{{ vuelta.tren }}</td>
-                            <td class="col-1">{{ vuelta.origen }}</td>
-                            <td class="col-1">{{ vuelta.sale }}</td>
-                            <td class="col-1">{{ vuelta.destino }}</td>
-                            <td class="col-1">{{ vuelta.llega }}</td>
-                            <td class="col-3">
-                                {{ vuelta.observaciones }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> -->
+                    Cerrar
+                </button>
             </div>
-        </main>
+            
+        </form>
+        <div v-if="esDiagramado && !turnosEncontrado.ordenes" class="container mt-5">
+            <h5>El personal es diagramado, deberá cargar una cancelacion de diagrama para ordenarlo. Cargue los trenes que no va a correr</h5>
+        
+            <!-- <table  class="table table-striped table-hover">
+                <thead v-if="turnosEncontrado" class="">
+                    <tr>
+                        <th colspan="1">Vuelta</th>
+                        <th colspan="1">Ref</th>
+                        <th colspan="1">Tren</th>
+                        <th colspan="1">Origen</th>
+                        <th colspan="1">Sale</th>
+                        <th colspan="1">Destino</th>
+                        <th colspan="1">Llega</th>
+                        <th colspan="1">Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="(vuelta, index) in turnosEncontrado.vueltas"
+                        :key="index"
+                    >
+                        <td class="col-3">{{ vuelta.vuelta }}</td>
+                        <td class="col-1">{{ vuelta.refer }}</td>
+                        <td class="col-1">{{ vuelta.tren }}</td>
+                        <td class="col-1">{{ vuelta.origen }}</td>
+                        <td class="col-1">{{ vuelta.sale }}</td>
+                        <td class="col-1">{{ vuelta.destino }}</td>
+                        <td class="col-1">{{ vuelta.llega }}</td>
+                        <td class="col-3">
+                            {{ vuelta.observaciones }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+        </div>
+    </main>
 </template>
 
 <script lang="ts">
@@ -620,7 +624,7 @@ export default defineComponent({
 main {
     margin-top: 5rem;
 }
-.modal {
+/* .modal {
     display: none;
     position: fixed;
     top: 0;
@@ -628,9 +632,9 @@ main {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-}
+} */
 
-.modal-dialog {
+/* .modal-dialog {
     width: 80%;
     --bs-modal-width: 1200px !important;
     padding: 20px;
@@ -641,27 +645,40 @@ main {
     right: 0;
     max-height: 90vh;
     border-radius: 10px;
-}
+} */
 
-.d-block {
+/* .d-block {
     display: block !important;
+} */
+h1 {
+    display: flex;
+    justify-content: center;
 }
-
-.scroll-div {
+main{
+    margin-left: 150px;
+}
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 250px;
+    width: 75%;
+}
+/* .scroll-div {
     overflow-y: scroll;
-    max-height: 800px; /* Ajusta según tus necesidades */
+    max-height: 800px; 
 }
 .table-container {
-    max-height: 600px; /* Ajusta según tus necesidades */
+    max-height: 600px; 
     overflow-y: auto;
-    background-color: #fff; /* Estilo de fondo para el contenedor de la tabla */
-    border-radius: 15px; /* Ajusta según tus necesidades */
+    background-color: #fff; 
+    border-radius: 15px; 
 }
 .table-container table {
-    width: 100%; /* Hacer que la tabla ocupe el 100% del contenedor */
+    width: 100%; 
 }
 .custom-modal .modal-dialog {
-    max-width: 1200px; /* Ajusta el ancho máximo según tus necesidades */
-    margin: 0 auto; /* Centra modal-dialog */
-}
+    max-width: 1200px;
+    margin: 0 auto;
+} */
 </style>
