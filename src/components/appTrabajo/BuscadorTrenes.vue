@@ -1,170 +1,170 @@
 <template>
-            <main>
-                <div class="container-fluid px-4">
-                    <h2 class="d-flex justify-content-center m-3">
-                        Buscador de trenes
-                    </h2>
-                    <div class="d-flex flex-column">
-                    <!-- Inputs alineados a la derecha -->
-                    <div class="d-flex justify-content-end mb-3">
-                        <div class="d-flex align-items-center w-50">
-                            <div class="input-group w-50">
-                                <input
-                                    class="form-control"
-                                    type="text"
-                                    placeholder="Buscar por tren o por turno"
-                                    v-model="tren"
-                                    @change="buscar"
-                                />
-                                <button
-                                    class="btn btn-outline-secondary"
-                                    @click="toggleSearchType"
-                                >
-                                    {{ isSearchByTurno ? 'Turno' : 'Tren' }}
-                                </button>
-                            </div>
-                        </div>
-                        <select
-                            name="itinerario"
-                            id="itinerario"
-                            class="form-control ms-3 w-auto"
-                            required
-                            v-model="inputIt"
-                            @change="buscar"
-                        >
-                            <option value=""></option>
-                            <option value="H">Hábil</option>
-                            <option value="S">Sábado</option>
-                            <option value="D">Domingo</option>
-                        </select>
+    <main>
+        <div class="container-fluid px-4">
+            <h2 class="d-flex justify-content-center m-3">
+                Buscador de trenes
+            </h2>
+            <div class="d-flex flex-column">
+            <!-- Inputs alineados a la derecha -->
+            <div class="d-flex justify-content-end mb-3">
+                <div class="d-flex align-items-center w-50">
+                    <div class="input-group w-50">
                         <input
-                            class="form-control ms-3 w-auto"
-                            type="date"
-                            v-model="inputDate"
+                            class="form-control"
+                            type="text"
+                            placeholder="Buscar por tren o por turno"
+                            v-model="tren"
                             @change="buscar"
                         />
+                        <button
+                            class="btn btn-outline-secondary"
+                            @click="toggleSearchType"
+                        >
+                            {{ isSearchByTurno ? 'Turno' : 'Tren' }}
+                        </button>
                     </div>
+                </div>
+                <select
+                    name="itinerario"
+                    id="itinerario"
+                    class="form-control ms-3 w-auto"
+                    required
+                    v-model="inputIt"
+                    @change="buscar"
+                >
+                    <option value=""></option>
+                    <option value="H">Hábil</option>
+                    <option value="S">Sábado</option>
+                    <option value="D">Domingo</option>
+                </select>
+                <input
+                    class="form-control ms-3 w-auto"
+                    type="date"
+                    v-model="inputDate"
+                    @change="buscar"
+                />
+            </div>
 
-                    <!-- Sección "Aplicar circular" centrada -->
-                    <div class="d-flex flex-wrap justify-content-center my-3">
-                        <h6>Aplicar:</h6>
-                        <div v-for="(circular, index) in circulares" :key="index">
-                            <label class="form-check-label mx-2">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    :value="circular"
-                                    v-model="circularSeleccionada"
-                                    @change="cambioCirculares"
-                                />
-                                {{ circular }}
-                            </label>
-                        </div>
-                    </div>
+            <!-- Sección "Aplicar circular" centrada -->
+            <div class="d-flex flex-wrap justify-content-center my-3">
+                <h6>Aplicar:</h6>
+                <div v-for="(circular, index) in circulares" :key="index">
+                    <label class="form-check-label mx-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            :value="circular"
+                            v-model="circularSeleccionada"
+                            @change="cambioCirculares"
+                        />
+                        {{ circular }}
+                    </label>
                 </div>
-                    <div class=""></div>
-                    <table class="table table-striped table-hover">
-                        <thead v-if="horarios !== null">
-                            <tr v-if="horarios.estaciones !== undefined">
-                                <th
-                                    v-for="i in horarios.estaciones.length"
-                                    :key="i"
-                                    colspan="1"
-                                >
-                                    {{ horarios.estaciones[i - 1] }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="horarios !== null">
-                            <tr v-if="horarios.horarios !== undefined">
-                                <th
-                                    v-for="i in horarios.horarios.length"
-                                    :key="i"
-                                    colspan="1"
-                                >
-                                    {{ horarios.horarios[i - 1] }}
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table
-                        v-if="turnosAImprimir !== null"
-                        class="table table-striped table-hover"
+            </div>
+        </div>
+            <div class=""></div>
+            <table class="table table-striped table-hover">
+                <thead v-if="horarios !== null">
+                    <tr v-if="horarios.estaciones !== undefined">
+                        <th
+                            v-for="i in horarios.estaciones.length"
+                            :key="i"
+                            colspan="1"
+                        >
+                            {{ horarios.estaciones[i - 1] }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody v-if="horarios !== null">
+                    <tr v-if="horarios.horarios !== undefined">
+                        <th
+                            v-for="i in horarios.horarios.length"
+                            :key="i"
+                            colspan="1"
+                        >
+                            {{ horarios.horarios[i - 1] }}
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <table
+                v-if="turnosAImprimir !== null"
+                class="table table-striped table-hover"
+            >
+                <thead>
+                    <tr v-if="turnosAImprimir.length != 0">
+                        <th colspan="1">Ref</th>
+                        <th colspan="1">Turno</th>
+                        <th colspan="1">Circular</th>
+                        <th colspan="1">Observación</th>
+                        <th colspan="2">Titular</th>
+                        <th colspan="1">Toma</th>
+                        <th colspan="1">Deja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="(ind, index) in turnosAImprimir"
+                        :key="index"
                     >
-                        <thead>
-                            <tr v-if="turnosAImprimir.length != 0">
-                                <th colspan="1">Ref</th>
-                                <th colspan="1">Turno</th>
-                                <th colspan="1">Circular</th>
-                                <th colspan="1">Observación</th>
-                                <th colspan="2">Titular</th>
-                                <th colspan="1">Toma</th>
-                                <th colspan="1">Deja</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(ind, index) in turnosAImprimir"
-                                :key="index"
-                            >
-                                <td class="w-10">{{ ind.vueltas[0].refer }}</td>
-                                <td class="w-10">{{ ind.turno }}</td>
-                                <td class="w-10">{{ ind.circular }}</td>
-                                <td class="w-10">
-                                    {{ ind.vueltas[0].observaciones }}
-                                </td>
-                                <td colspan="2" class="w-10">
-                                    {{ ind.especialidad+ ': ' +  ind.personal }}
-                                </td>
-                                <td class="w-10">{{ ind.toma }}</td>
-                                <td class="w-10">{{ ind.deja }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div
-                        v-for="(t, tIndex) in turnosAImprimir"
-                        :key="tIndex"
-                        class="row"
-                    >
-                        <h4 class="Personal col-1">{{ t.turno }}</h4>
-                        <h4 class="col-4">{{ t.personal }}</h4>
-                        <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
-                        <h5 class="col-2">Toma: {{ t.toma }}</h5>
-                        <h5 class="col-2">Deja: {{ t.deja }}</h5>
-                        <table class="table table-striped table-hover">
-                            <thead class="">
-                                <tr>
-                                    <th colspan="1">Vuelta</th>
-                                    <th colspan="1">Ref</th>
-                                    <th colspan="1">Tren</th>
-                                    <th colspan="1">Origen</th>
-                                    <th colspan="1">Sale</th>
-                                    <th colspan="1">Destino</th>
-                                    <th colspan="1">Llega</th>
-                                    <th colspan="1">Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="(vuelta, index) in t.vueltas"
-                                    :key="index"
-                                >
-                                    <td class="col-3">{{ vuelta.vuelta }}</td>
-                                    <td class="col-1">{{ vuelta.refer }}</td>
-                                    <td class="col-1">{{ vuelta.tren }}</td>
-                                    <td class="col-1">{{ vuelta.origen }}</td>
-                                    <td class="col-1">{{ vuelta.sale }}</td>
-                                    <td class="col-1">{{ vuelta.destino }}</td>
-                                    <td class="col-1">{{ vuelta.llega }}</td>
-                                    <td class="col-3">
-                                        {{ vuelta.observaciones }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+                        <td class="w-10">{{ ind.vueltas[0].refer }}</td>
+                        <td class="w-10">{{ ind.turno }}</td>
+                        <td class="w-10">{{ ind.circular }}</td>
+                        <td class="w-10">
+                            {{ ind.vueltas[0].observaciones }}
+                        </td>
+                        <td colspan="2" class="w-10">
+                            {{ ind.especialidad+ ': ' +  ind.personal }}
+                        </td>
+                        <td class="w-10">{{ ind.toma }}</td>
+                        <td class="w-10">{{ ind.deja }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div
+                v-for="(t, tIndex) in turnosAImprimir"
+                :key="tIndex"
+                class="row"
+            >
+                <h4 class="Personal col-1">{{ t.turno }}</h4>
+                <h4 class="col-4">{{ t.personal }}</h4>
+                <h5 class="col-2">{{ "<<" + t.circular + ">>" }}</h5>
+                <h5 class="col-2">Toma: {{ t.toma }}</h5>
+                <h5 class="col-2">Deja: {{ t.deja }}</h5>
+                <table class="table table-striped table-hover">
+                    <thead class="">
+                        <tr>
+                            <th colspan="1">Vuelta</th>
+                            <th colspan="1">Ref</th>
+                            <th colspan="1">Tren</th>
+                            <th colspan="1">Origen</th>
+                            <th colspan="1">Sale</th>
+                            <th colspan="1">Destino</th>
+                            <th colspan="1">Llega</th>
+                            <th colspan="1">Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="(vuelta, index) in t.vueltas"
+                            :key="index"
+                        >
+                            <td class="col-3">{{ vuelta.vuelta }}</td>
+                            <td class="col-1">{{ vuelta.refer }}</td>
+                            <td class="col-1">{{ vuelta.tren }}</td>
+                            <td class="col-1">{{ vuelta.origen }}</td>
+                            <td class="col-1">{{ vuelta.sale }}</td>
+                            <td class="col-1">{{ vuelta.destino }}</td>
+                            <td class="col-1">{{ vuelta.llega }}</td>
+                            <td class="col-3">
+                                {{ vuelta.observaciones }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 </template>
 
 <script lang="ts">

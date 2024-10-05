@@ -30,8 +30,8 @@
                 </button>
             </div>
         </div>
+        
         <!-- Modal de búsqueda -->
-
         <div>
             <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click.self="cerrarModal">
                 <div class="modal-dialog">
@@ -117,7 +117,7 @@
             </button>
         </div>
         <!-- Formulario -->
-        <form @submit.prevent="saveNovedad()">
+        <form @submit.prevent="saveNovedad()" @keydown.enter.prevent="">
             <div class="justify-content-between row">
                 <div class="col-2">
                     <label for="legajo"></label>
