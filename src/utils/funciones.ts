@@ -350,25 +350,40 @@ export function filtroItinerario(itinerario: string,listaItinerario: Itinerario[
     }
     return horarios;
 }
+/**
+ * Filtra el personal según el turno y la fecha proporcionada.
+ *
+ * @param turno - El turno que se desea buscar. Puede tener formato 'diag.diaLab' o ser un turno directo.
+ * @param fecha - La fecha que se utilizará para calcular el franco del personal.
+ * @param personales - La lista de personal en la que se buscará.
+ * @returns Un objeto con el turno, el legajo del personal encontrado, y una cadena con el nombre y apellido del personal (y su ayudante si existe).
+ */
 export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal[],) {
     try {
         let titular: IPersonal[];
 
-        turno = turno.trim();
-        if (turno.indexOf(".") !== -1 && !turno.toLowerCase().includes("prog")) {
+        turno = turno.trim().toLowerCase();
+
+        if (turno.includes("prog")) {
+            // Manejo especial si contiene 'prog'
+            titular = personales.filter(
+                (personal) => personal.turno && personal.turno.toLowerCase().includes("prog")
+            );
+
+        }else if (turno.indexOf(".") !== -1) {
+            // Caso general cuando el turno contiene un punto pero no contiene 'prog'
             const indexPunto = turno.indexOf(".");
-            const diaLab = Number(turno[indexPunto + 1]);
+            const diaLabStr = turno[indexPunto + 1];
+            const diaLab = Number(diaLabStr);
+            
+            // Verifica que `diaLab` sea un número válido antes de continuar
+            if (isNaN(diaLab)) {
+                throw new Error(`El valor después del punto no es un número válido: ${turno}`);
+            }
+
             const diag = turno.split(".")[0];
             const franco = dia_laboral(diaLab, fecha.getDay());
 
-            titular = personales.filter((personal) => {
-                if(personal.especialidad.toLowerCase().includes("cond")) {
-                }
-                return (
-                    personal.turno === diag &&
-                    Number(personal.franco) === franco
-                );
-            });
             titular = personales.filter((personal) => {
                 return (
                     personal.turno === diag &&
@@ -377,12 +392,7 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
             });
             
         } else {
-            
-            titular = personales.filter(
-                (personal) =>{
-                    // console.log("DEBUG turno",turno);
-                    if(personal.turno) return personal.turno.toLowerCase() === turno.toLowerCase()
-            });
+            // Caso para turnos normales sin punto ni 'prog'
             titular = personales.filter(
                 (personal) =>{
                     if(personal.turno) 
@@ -390,10 +400,17 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
                 });
         }
         
+        if (titular.length === 0) {
+            return {
+                turno: turno,
+                legajo: 0,
+                nombres: "",
+            };
+        }
         
         return {
             turno: turno,
-            legajo: titular[0].legajo || 0,
+            legajo: titular[0].legajo,
             nombres: titular[1]
                 ? `${titular[0].apellido} ${titular[0].nombres} - Ayudante: ${titular[1].apellido} ${titular[1].nombres}`:
                 titular[0]
@@ -402,7 +419,11 @@ export function filtroPersonal(turno: string, fecha: Date, personales: IPersonal
         };
     } catch (e) {
         console.error(e);
-        return {};
+        return {
+            turno: "",
+            legajo: 0,
+            nombres: "",
+        };
     }
 }
 export function dia_laboral(diaLaboral: number, hoy: number) {
@@ -663,6 +684,14 @@ export function formatearFecha(fechaString: string): string {
 
     return formatoFecha.format(fecha);
 }
+
+/**
+ * Esta función se utiliza para quitar los duplicados que pueda tener la lista 
+ * al seleccionar varias circulares.
+ * @param lista de turnos
+ * @param circularSeleccionada lista de string con los nombres de las circulares
+ * @returns array con cada elemento filtrados
+ */
 export function quitarDuplicados(lista: ITurno[],circularSeleccionada: String[]): ITurno[] {
     const mapa: Map<string, ITurno> = new Map();
 
