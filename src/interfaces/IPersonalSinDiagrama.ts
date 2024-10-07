@@ -1,9 +1,11 @@
 export interface Mes {
+    mes: string; // El mes (e.g., '2024-08')
     days: {
-        [key: string]: Jornada; // Permite acceder a los días del mes usando una cadena como clave
+      [key: string]: Jornada; // Permite acceder a los días del mes usando una cadena como clave
     };
-}
-export interface IPersonalSinDiagrama {
+  }
+  
+  export interface IPersonalSinDiagrama {
     _id: string;
     legajo: number;
     Ciclo: number;
@@ -11,22 +13,21 @@ export interface IPersonalSinDiagrama {
     HoraInicio: string;
     francoHasta: number;
     HoraHasta: string;
-    meses: {
-        [key: string]: Mes; // Cada mes está indexado por una cadena (e.g., '2024-08')
-    };
-}
-
-export interface Jornada { 
-    tren: string; 
-    desde: string; 
-    hasta: string; 
-    disponibleHora: string; 
-    tomo: string; 
-    dejo: string; 
-    totalHoras: string; 
-    observaciones: string; 
-    estilo:boolean;
-    editable:boolean;
+    mes: Mes; // Un solo mes por documento
+  }
+  
+  export interface Jornada {
+    tren: string;
+    desde: string;
+    hasta: string;
+    disponibleHora: string;
+    tomo: string;
+    dejo: string;
+    totalHoras: string;
+    observaciones: string;
+    editable: boolean;
+    estilo: boolean;
     [key: string]: any;
-    nroNovedad:number|null;
-}
+    nroNovedad: number | null;
+  }
+  

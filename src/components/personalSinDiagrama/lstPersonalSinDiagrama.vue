@@ -178,7 +178,7 @@
                         </td>
                         <td class="col-1" v-else></td>
                     </tr>
-                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].mes && personalIndexadoSinDiagrama[personal.legajo].mes">
                     <!-- <tr  class='custom-orange' v-if="personal.viewDetail  && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
                         <th class="col-1" colspan="1">fecha</th>
                         <th class="col-1" colspan="1">Diagrama</th>
@@ -189,25 +189,25 @@
                         <th class="col-1" colspan="6">Observaciones</th>
                         
                     </tr>
-                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].mes && personalIndexadoSinDiagrama[personal.legajo].mes">
                     <!-- <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
                         <td colspan="1">{{ today.toLocaleDateString() }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tren }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].disponibleHora }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tomo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].dejo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].totalHoras }}</td>
-                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].observaciones }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].observaciones }}</td>
                     </tr>
-                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].meses && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo] && personalIndexadoSinDiagrama[personal.legajo].mes && personalIndexadoSinDiagrama[personal.legajo].mes">
                     <!-- <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]"> -->
                         <td colspan="1">{{ new Date(tomorrowStr+'T12:00').toLocaleDateString() }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tren }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].disponibleHora }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tomo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].dejo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].totalHoras }}</td>
-                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].observaciones }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].observaciones }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -273,7 +273,7 @@
                         </td>
                         <td class="col-1" v-else></td>
                     </tr>
-                    <tr  class='custom-orange' v-if="personal.viewDetail  && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr  class='custom-orange' v-if="personal.viewDetail  && personalIndexadoSinDiagrama[personal.legajo].mes">
                         <th class="col-1" colspan="1">fecha</th>
                         <th class="col-1" colspan="1">Diagrama</th>
                         <th class="col-1" colspan="1">Disponible a </th>
@@ -283,23 +283,23 @@
                         <th class="col-1" colspan="6">Observaciones</th>
                         
                     </tr>
-                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].mes">
                         <td colspan="1">{{ today.toLocaleDateString() }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tren }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].disponibleHora }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].tomo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].dejo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].totalHoras }}</td>
-                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[today.toISOString().split('T')[0]].observaciones }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[today.toISOString().split('T')[0]].observaciones }}</td>
                     </tr>
-                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth]">
+                    <tr class='custom-orange' v-if="personal.viewDetail && personalIndexadoSinDiagrama[personal.legajo].mes">
                         <td colspan="1">{{ new Date(tomorrowStr+'T12:00').toLocaleDateString() }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tren }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].disponibleHora }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].tomo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].dejo }}</td>
-                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].totalHoras }}</td>
-                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].meses[selectedMonth].days[tomorrowStr].observaciones }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].tren }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].disponibleHora }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].tomo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].dejo }}</td>
+                        <td colspan="1">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].totalHoras }}</td>
+                        <td colspan="6">{{ personalIndexadoSinDiagrama[personal.legajo].mes.days[tomorrowStr].observaciones }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -314,7 +314,7 @@ import {getPersonales} from "../../services/personalService";
 import { IConocimientosVias, IDatoPersonal, IPersonal } from "../../interfaces/IPersonal";
 import { newToken } from "../../services/signService";
 import { AxiosError } from "axios";
-import { defaultPersonal, obtenerDotaciones, diaPosterior, newDate } from '../../utils/funciones';
+import { defaultPersonal, obtenerDotaciones, diaPosterior } from '../../utils/funciones';
 import { getPersonalesSinDiagrama } from "../../services/personalSinDiagramaService";
 import { IPersonalSinDiagrama } from "../../interfaces/IPersonalSinDiagrama";
 
@@ -364,9 +364,8 @@ export default defineComponent({
         async loadPersonales(){
             try {
                 const res = await getPersonales();
-                this.personales = this.filtrarCiclo(res.data);
-                
-                this.personalIndexado = this.indexarPersonal(this.personales)
+                this.personales = this.filtrarCiclo(res.data);                
+                this.personalIndexado = this.indexarPersonal(this.personales);
                 this.dotacionesPermitidas = obtenerDotaciones(this.personales);
                 // this.loadPersonalesFiltrados()
                 this.loadLists()
@@ -379,6 +378,7 @@ export default defineComponent({
                 const res = await getPersonalesSinDiagrama();
                 this.personalesSinDiagrama = res.data;
                 this.personalIndexadoSinDiagrama = this.indexarPersonalSinDiagrama(this.personalesSinDiagrama)
+
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -469,26 +469,28 @@ export default defineComponent({
             
         },
 
-        ordenarPorDisponibilidad(list:IPersonal[]){
-            const fechaStr: string = this.today.toISOString().split('T')[0]
+        ordenarPorDisponibilidad(list: IPersonal[]) {
+            const fechaStr: string = this.today.toISOString().split('T')[0];
+            
             list.sort((a: IPersonal, b: IPersonal) => {
-            const mesesA = this.personalIndexadoSinDiagrama[a.legajo]?.meses?.[this.selectedMonth];
-            const mesesB = this.personalIndexadoSinDiagrama[b.legajo]?.meses?.[this.selectedMonth];
+                const mesA = this.personalIndexadoSinDiagrama[a.legajo]?.mes; // Acceso a un solo mes
+                const mesB = this.personalIndexadoSinDiagrama[b.legajo]?.mes;
 
-            const dispA = mesesA?.days?.[fechaStr]?.disponibleHora ? newDate(mesesA.days[fechaStr].disponibleHora) : null;
-            const dispB = mesesB?.days?.[fechaStr]?.disponibleHora ? newDate(mesesB.days[fechaStr].disponibleHora) : null;
+                // Acceder a los días de ese mes
+                const dispA = mesA?.days?.[fechaStr]?.disponibleHora ? new Date(mesA.days[fechaStr].disponibleHora) : null;
+                const dispB = mesB?.days?.[fechaStr]?.disponibleHora ? new Date(mesB.days[fechaStr].disponibleHora) : null;
 
-            // Si ambos son null, mantener el orden
-            if (dispA === null && dispB === null) return 0;
+                // Si ambos son null, mantener el orden
+                if (dispA === null && dispB === null) return 0;
 
-            // Si `dispA` es null, queremos que A aparezca antes en la lista
-            if (dispA === null) return -1;
+                // Si `dispA` es null, queremos que A aparezca antes en la lista
+                if (dispA === null) return -1;
 
-            // Si `dispB` es null, queremos que B aparezca antes en la lista
-            if (dispB === null) return 1;
+                // Si `dispB` es null, queremos que B aparezca antes en la lista
+                if (dispB === null) return 1;
 
-            // Comparar las horas si ambos son válidos
-            return dispA.getTime() - dispB.getTime();
+                // Comparar las horas si ambos son válidos
+                return dispA.getTime() - dispB.getTime();
             });
         },
         toggleExpandirTarjetas(list: IPersonal[],lista:string) {
@@ -646,12 +648,16 @@ export default defineComponent({
                 this.dotacionesSeleccionadas = "";
                 this.CEspecialidad = "";
             } else{
-                // filtro dotacion y especialidad
+                // console.log("DEBUG1",auxPersonales);
+            // filtro dotacion y especialidad
                 auxPersonales = auxPersonales.filter((personal:IPersonal) =>{
+                    console.log("DEBUG4",personal.especialidad);
                     return cDotacion.includes(personal.dotacion) && 
                         cEspecialidad.includes(personal.especialidad)
                 })
             }
+            // console.log("DEBUG2",auxPersonales);
+
             //Ordeno la lista
             this.firstList = this.ordenarPorTurno(auxPersonales)
             this.secondList.push(defaultPersonal())

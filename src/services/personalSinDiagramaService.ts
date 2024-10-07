@@ -9,8 +9,9 @@ export const getPersonalSinDiagrama = async (
     id: string
 ): Promise<AxiosResponse<IPersonalSinDiagrama>> => await axios.get(`/PersonalSinDiagrama/${id}`);
 
-export const getPersonalSinDiagramaPorPeriodo = async (legajo:number,periodo: string)
-    :Promise<AxiosResponse<IPersonalSinDiagrama>> => await axios.get(`/PersonalSinDiagramaPorPeriodo/${legajo}/${periodo}`);
+export const getPersonalSinDiagramaPorLegajoYMes = async (legajo: number, mes: string): Promise<AxiosResponse<IPersonalSinDiagrama>> => 
+    await axios.get(`/PersonalSinDiagramaPorMes?legajo=${legajo}&mes=${mes}`);
+
 
 export const createPersonalSinDiagrama = async (
     personal: IPersonalSinDiagrama

@@ -39,14 +39,14 @@ export const getPersonalSinDiagrama = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
-export const getPersonalSinDiagramaPorLegajoYPeriodo = async (req, res) => {
+export const getPersonalSinDiagramaPorLegajoYMes = async (req, res) => {
     try {
-        // Obtener legajo y periodo de los parámetros de la consulta
-        const { legajo, periodo } = req.query;
+        // Obtener legajo y mes de los parámetros de la consulta
+        const { legajo, mes } = req.query;
 
-        // Validar que legajo y periodo existan en la consulta
-        if (!legajo || !periodo) {
-            return res.status(400).json({ error: 'Faltan parámetros legajo o periodo' });
+        // Validar que legajo y mes existan en la consulta
+        if (!legajo || !mes) {
+            return res.status(400).json({ error: 'Faltan parámetros legajo o mes' });
         }
 
         // Convertir legajo a número para asegurar el tipo correcto
@@ -57,11 +57,11 @@ export const getPersonalSinDiagramaPorLegajoYPeriodo = async (req, res) => {
             return res.status(400).json({ error: 'Legajo debe ser un número' });
         }
 
-        // Buscar en la base de datos por legajo y periodo
-        const personal = await Personal.find({ legajo: legajoNumber, periodo: periodo });
+        // Buscar en la base de datos por legajo y mes
+        const personal = await MesPersonal.findOne({ legajo: legajoNumber, mes });
 
         // Verificar si se encontró algún registro
-        if (personal.length === 0) {
+        if (!personal) {
             return res.status(404).json({ error: 'No se encontraron registros con los parámetros proporcionados' });
         }
 
@@ -69,7 +69,7 @@ export const getPersonalSinDiagramaPorLegajoYPeriodo = async (req, res) => {
         res.json(personal);
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la búsqueda
-        console.error("Error al obtener el registro de Personal por ID:", error);
+        console.error("Error al obtener el registro de Personal por Legajo y Mes:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
