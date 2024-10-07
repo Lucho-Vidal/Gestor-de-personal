@@ -5,180 +5,198 @@
                 Registro de ordenamiento al Personal de Abordo
             </h2>
             <div class="d-flex justify-content-end">
-                <Button class="btn btn-primary " @click="$router.push('/newOrdenamiento')"
+                <Button class="btn btn-primary mx-3" @click="$router.push('/newOrdenamiento')"
                     >Nuevo ordenamiento</Button>
+                    
+                <button class="btn btn-warning" @click.prevent="abrirModal()">
+                    Filtrar novedades
+                </button>
             </div>
-
-            <details>
-                <summary>Filtros:</summary>
-                <div class="my-3">
-                    <input
-                        class="col-3 gap rounded"
-                        type="text"
-                        placeholder="Buscar por apellido y/o nombre"
-                        v-model="search"
-                        v-on:keyup="filtrar()"
-                    />
+            <div class="modal" :class="{ 'd-block': mostrarModalSearch }"  @click.self="cerrarModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filtrar personales</h5>
+                            <button
+                                type="button"
+                                class="close btn btn-danger"
+                                @click="cerrarModal"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-3">
+                                <input
+                                    class="col-3 gap rounded"
+                                    type="text"
+                                    placeholder="Buscar por apellido y/o nombre"
+                                    v-model="search"
+                                    v-on:keyup="filtrar()"
+                                />
+                            </div>
+                            <div class="my-3">
+                                <h6>Solo las ordenes del dia:</h6>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="HNA"
+                                        v-model="checkboxHoy"
+                                        @change="filtrar()"
+                                    />
+                                    Solo hoy
+                                </label>
+                            </div>
+                            <div class="my-3">
+                                <h6>Filtro por Especialidad:</h6>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Conductor electrico"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Conductor eléctrico
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Conductor diesel"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Conductor Diesel
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Ayudante habilitado"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Ayudante Habilitado
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Ayudante conductor"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Ayudante Conductor
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Guardatren electrico"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Guarda Tren Electrico
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="Guardatren diesel"
+                                        v-model="checkboxEspecialidad"
+                                        @change="filtrar()"
+                                    />
+                                    Guarda Tren Diesel
+                                </label>
+                            </div>
+                            <div class="my-3">
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="PC"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    PC
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="LLV"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    LLV
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="TY"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    TY
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="LP"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    LP
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="K5"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    K5
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="RE"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    RE
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="CÑ"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    CÑ
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value="AK"
+                                        v-model="checkboxDotacion"
+                                        @change="filtrar()"
+                                    />
+                                    AK
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="my-3">
-                    <h6>Solo las ordenes del dia:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="HNA"
-                            v-model="checkboxHoy"
-                            @change="filtrar()"
-                        />
-                        Solo hoy
-                    </label>
-                </div>
-                <div class="my-3">
-                    <h6>Filtro por Especialidad:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Conductor eléctrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Conductor Diesel
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante habilitado"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Ayudante Habilitado
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante conductor"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Ayudante Conductor
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Guarda Tren Electrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Guarda Tren Diesel
-                    </label>
-                </div>
-                <div class="my-3">
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="PC"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        PC
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LLV"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        LLV
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="TY"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        TY
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LP"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        LP
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="K5"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        K5
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="RE"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        RE
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="CÑ"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        CÑ
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="AK"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        AK
-                    </label>
-                </div>
-            </details>
+            </div>
             <h3 v-if="ordenamientosFiltrados.length == 0">
                 No se encontró ninguna novedad con los requerimientos
                 especificados.
@@ -191,7 +209,6 @@
                 <thead>
                     <tr>
                         <th class="col-1" colspan="1">Consecutivo - Fecha</th>
-
                         <th class="col-1" colspan="1">Legajo</th>
                         <th class="col-1" colspan="1">Apellido</th>
                         <th class="col-1" colspan="1">Nombres</th>
@@ -208,13 +225,8 @@
                 >
                     <tr class="Small shadow">
                         <td class="col-1" rowspan="2">
-                            {{
-                                new Date(
-                                    orden.fecha + " 12:00"
-                                ).toLocaleDateString()
-                            }}
+                            {{ `${orden.personal._id} - ${new Date(orden.fecha + " 12:00").toLocaleDateString()}` }}
                         </td>
-
                         <td class="col-1">{{ orden.personal.legajo }}</td>
                         <td class="col-1">{{ orden.personal.apellido }}</td>
                         <td class="col-1">{{ orden.personal.nombres }}</td>
@@ -233,11 +245,7 @@
                             {{ obtenerDiaSemana(orden.personal.franco) }}
                         </td>
                         <td class="col-1" rowspan="2">
-                            <i
-                                class="material-icons cursor-hand rojo"
-                                @click="deleteOrdenamiento(orden._id, index)"
-                                >delete_forever</i
-                            >
+                            <i class="material-icons cursor-hand rojo" @click="deleteOrdenamiento(orden._id, index)">delete_forever</i>
                         </td>
                     </tr>
                 </tbody>
@@ -267,6 +275,7 @@ export default defineComponent({
         return {
             ordenamientos: [] as Ordenamiento[],
             ordenamientosFiltrados: [] as Ordenamiento[],
+            mostrarModalSearch: false,
             checkboxDotacion: [] as string[],
             checkboxEspecialidad: [] as string[],
             checkboxDescubierto: false,
@@ -309,6 +318,12 @@ export default defineComponent({
             } catch (error) {
                 handleRequestError(error as AxiosError);
             }
+        },
+        abrirModal() {
+            this.mostrarModalSearch = true;
+        },
+        cerrarModal() {
+            this.mostrarModalSearch = false;
         },
         obtenerDiaSemana(num: number): string {
             const days = [
