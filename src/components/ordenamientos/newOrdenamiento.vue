@@ -119,37 +119,34 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-3">
-                <label for="tipoNovedad">Tipo de Novedad </label>
-                <select
-                    name="tipoNovedad"
-                    id="tipoNovedad"
-                    class="form-control mb-3 w-50"
-                    required
-                    v-model="ordenamiento.tipo"
-                >
-                    <option value="ordenamiento" selected>Ordenamiento</option>
-                    <option value="informe">Informe</option>
-                    <option value="cancelacionDiagrama">Cancelación Diagrama</option>
-                </select>
+        <div>
+            <div class="col-3 btn-buscar-personal" >
+                <label for="tipoNovedad">Tipo de Novedad 
+                    <select
+                        name="tipoNovedad"
+                        id="tipoNovedad"
+                        class="form-control mb-3 w-100"
+                        required
+                        v-model="ordenamiento.tipo"
+                    >
+                        <option value="ordenamiento" selected>Ordenamiento</option>
+                        <option value="informe">Informe</option>
+                        <option value="cancelacionDiagrama">Cancelación Diagrama</option>
+                    </select>
+                </label>
             </div>
         </div>
-        <div>
+        <div class=" btn-buscar-personal">
             <button
-                class="btn btn-success"
+                class="btn btn-success "
                 @click.prevent="abrirModal(false)"
             >
                 Buscar Personal
             </button>
         </div>
         <!-- Formulario -->
-        <form
-            @submit.prevent="saveNovedad()"
-            @keydown.enter.prevent=""
-            class="justify-content-between row"
-            >
-            <div class="row">
+        <form @submit.prevent="saveNovedad()" @keydown.enter.prevent="" >
+            <div class="justify-content-between row">
                 <div class="col-2">
                     <label for="legajo"></label>
                     Legajo
@@ -624,32 +621,6 @@ export default defineComponent({
 main {
     margin-top: 5rem;
 }
-/* .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-} */
-
-/* .modal-dialog {
-    width: 80%;
-    --bs-modal-width: 1200px !important;
-    padding: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    max-height: 90vh;
-    border-radius: 10px;
-} */
-
-/* .d-block {
-    display: block !important;
-} */
 h1 {
     display: flex;
     justify-content: center;
@@ -659,26 +630,15 @@ main{
 }
 form {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     flex-direction: column;
     margin-left: 250px;
     width: 75%;
 }
-/* .scroll-div {
-    overflow-y: scroll;
-    max-height: 800px; 
+.btn-buscar-personal{
+    margin-left: 250px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 50%;
 }
-.table-container {
-    max-height: 600px; 
-    overflow-y: auto;
-    background-color: #fff; 
-    border-radius: 15px; 
-}
-.table-container table {
-    width: 100%; 
-}
-.custom-modal .modal-dialog {
-    max-width: 1200px;
-    margin: 0 auto;
-} */
 </style>
