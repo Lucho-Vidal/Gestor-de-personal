@@ -15,7 +15,7 @@
                     class="btn btn-success mx-3"
                     to="/estadisticas"
                 >
-                    Estadisticas
+                    Estadísticas
                 </router-link>
                 <button class="btn btn-warning" @click.prevent="abrirModal()">
                     Filtrar novedades
@@ -35,204 +35,204 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                <div class="my-3">
-                    <input
-                        class="col-3 gap rounded"
-                        type="text"
-                        placeholder="Buscar por apellido y/o nombre"
-                        v-model="search"
-                        v-on:keyup="filtrar()"
-                    />
-                </div>
-                <div class="my-3">
-                    <h6>Filtrar por HNA / descubiertos:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="HNA"
-                            v-model="checkboxHna"
-                            @change="filtrar()"
-                        />
-                        HNA
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="descubierto"
-                            v-model="checkboxDescubierto"
-                            @change="filtrar()"
-                        />
-                        Sin Cubrir
-                    </label>
-                    <label class="form-check-label mx-2" v-if="!checkboxTodas">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Finalizadas"
-                            v-model="checkboxFinalizadas"
-                            @change="filtrar()"
-                        />
-                        Finalizadas
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Todas"
-                            v-model="checkboxTodas"
-                            @change="filtrar()"
-                        />
-                        Todas las Novedades
-                    </label>
-                </div>
-                <div class="my-3">
-                    <h6>Filtro por Especialidad:</h6>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Conductor eléctrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Conductor diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Conductor Diesel
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante habilitado"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Ayudante Habilitado
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Ayudante conductor"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Ayudante Conductor
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren electrico"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Guarda Tren Electrico
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="Guardatren diesel"
-                            v-model="checkboxEspecialidad"
-                            @change="filtrar()"
-                        />
-                        Guarda Tren Diesel
-                    </label>
-                </div>
-                <div class="my-3">
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="PC"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        PC
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LLV"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        LLV
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="TY"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        TY
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="LP"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        LP
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="K5"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        K5
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="RE"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        RE
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="CÑ"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        CÑ
-                    </label>
-                    <label class="form-check-label mx-2">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value="AK"
-                            v-model="checkboxDotacion"
-                            @change="filtrar()"
-                        />
-                        AK
-                    </label>
-                </div>
-            </div>
+                        <div class="my-3">
+                            <input
+                                class="col-3 gap rounded"
+                                type="text"
+                                placeholder="Buscar por apellido y/o nombre"
+                                v-model="search"
+                                v-on:keyup="filtrar()"
+                            />
+                        </div>
+                        <div class="my-3">
+                            <h6>Filtrar por HNA / descubiertos:</h6>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="HNA"
+                                    v-model="checkboxHna"
+                                    @change="filtrar()"
+                                />
+                                HNA
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="descubierto"
+                                    v-model="checkboxDescubierto"
+                                    @change="filtrar()"
+                                />
+                                Sin Cubrir
+                            </label>
+                            <label class="form-check-label mx-2" v-if="!checkboxTodas">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Finalizadas"
+                                    v-model="checkboxFinalizadas"
+                                    @change="filtrar()"
+                                />
+                                Finalizadas
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Todas"
+                                    v-model="checkboxTodas"
+                                    @change="filtrar()"
+                                />
+                                Todas las Novedades
+                            </label>
+                        </div>
+                        <div class="my-3">
+                            <h6>Filtro por Especialidad:</h6>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Conductor electrico"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Conductor eléctrico
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Conductor diesel"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Conductor Diesel
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Ayudante habilitado"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Ayudante Habilitado
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Ayudante conductor"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Ayudante Conductor
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Guardatren electrico"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Guarda Tren Electrico
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Guardatren diesel"
+                                    v-model="checkboxEspecialidad"
+                                    @change="filtrar()"
+                                />
+                                Guarda Tren Diesel
+                            </label>
+                        </div>
+                        <div class="my-3">
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="PC"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                PC
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="LLV"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                LLV
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="TY"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                TY
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="LP"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                LP
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="K5"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                K5
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="RE"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                RE
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="CÑ"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                CÑ
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="AK"
+                                    v-model="checkboxDotacion"
+                                    @change="filtrar()"
+                                />
+                                AK
+                            </label>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
