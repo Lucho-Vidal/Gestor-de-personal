@@ -13,16 +13,14 @@ export const getPersonalSinDiagramaPorLegajoYMes = async (legajo: number, mes: s
     await axios.get(`/PersonalSinDiagramaPorMes?legajo=${legajo}&mes=${mes}`);
 
 
-export const createPersonalSinDiagrama = async (
-    personal: IPersonalSinDiagrama
-): Promise<AxiosResponse> => {
+export const createPersonalSinDiagrama = async (personal: IPersonalSinDiagrama): Promise<AxiosResponse> => {
     const res = await axios.post("/PersonalSinDiagrama", personal);
     return res;
 };
 
 export const updatePersonalSinDiagrama = async (legajo: number,newPersonal: IPersonalSinDiagrama): Promise<AxiosResponse<IPersonalSinDiagrama>> => {
     return await axios.put(`/PersonalSinDiagrama/${legajo}`, newPersonal)
-}
+};
 
 export const deletePersonalSinDiagrama = async (id: string): Promise<AxiosResponse> =>
     await axios.delete(`/PersonalSinDiagrama/${id}`);

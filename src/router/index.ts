@@ -133,7 +133,7 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/editPersonal/:idPersonal?/:idDato?/:idVia?",
+        path: "/editPersonal/:idPersonal?/:idDato?/:idVia?/:idTarjeta?",
         name: "editPersonal",
         props: true,
         meta: { title: "GNPA - Editar personal" },
@@ -171,7 +171,7 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/TarjetaPersonalSinDiagrama/:idPersonal?/:idTarjeta?",
+        path: "/TarjetaPersonalSinDiagrama/:idPersonal?/:idPersonalSinDiagrama?/:idTarjetaPersonalSinDiagrama?",
         name: "TarjetaPersonalSinDiagrama",
         props: true,
         meta: { title: "GNPA - Servicio Irregular" },

@@ -159,6 +159,74 @@
                     </label>
                 </div>
             </div>
+            <h6 v-if="personal.turno.toLowerCase().includes('ciclo')">Ciclo:</h6>
+            <div class="d-flex flex-column border border-dark rounded p-3 m-3" v-if="personal.turno.toLowerCase().includes('ciclo')">
+                <div class="justify-content-between row">
+                    <label class="col-2">
+                        Número de ciclo
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Ciclo"
+                            type="number"
+                            v-model="personalSinDiagrama.Ciclo"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Inicio del franco
+                        <select
+                            name="francoInicio"
+                            id="francoInicio"
+                            class="form-control mb-3"
+                            v-model="personalSinDiagrama.francoInicio"
+                            required
+                        >
+                            <option value="0">Domingo</option>
+                            <option value="1">Lunes</option>
+                            <option value="2">Martes</option>
+                            <option value="3">Miércoles</option>
+                            <option value="4">Jueves</option>
+                            <option value="5">Viernes</option>
+                            <option value="6">Sábado</option>
+                        </select>
+                    </label>
+                    <label class="col-2">
+                        Hora inicia el franco
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Ciclo"
+                            type="time"
+                            v-model="personalSinDiagrama.HoraInicio"
+                        />
+                    </label>
+                    <label class="col-2">
+                        Finaliza el franco
+                        <select
+                            name="francoHasta"
+                            id="francoHasta"
+                            class="form-control mb-3"
+                            v-model="personalSinDiagrama.francoHasta"
+                            required
+                        >
+                            <option value="0">Domingo</option>
+                            <option value="1">Lunes</option>
+                            <option value="2">Martes</option>
+                            <option value="3">Miércoles</option>
+                            <option value="4">Jueves</option>
+                            <option value="5">Viernes</option>
+                            <option value="6">Sábado</option>
+                        </select>
+                    </label>
+                    <label class="col-2">
+                        Hora finaliza el franco
+                        <input
+                            class="form-control mb-3"
+                            placeholder="Ciclo"
+                            type="time"
+                            v-model="personalSinDiagrama.HoraHasta"
+                        />
+                    </label>
+                </div>
+            </div>
             <h6>Datos personales:</h6>
             <div class="d-flex flex-column border border-dark rounded p-3 m-3">
                 <div class="justify-content-between row">
@@ -354,7 +422,6 @@
                                 v-model="personal.conocimientos.CKD"
                             />
                         </label>
-    
                         <label class="col-1">
                             RO
                             <input
@@ -617,34 +684,20 @@ import { newToken } from "../../services/signService";
 import { Registro } from "../../interfaces/IRegistro";
 import { createRegistro } from "../../services/registrosService";
 import { AxiosError } from "axios";
+import { createPersonalSinDiagrama, getPersonalSinDiagrama, updatePersonalSinDiagrama } from "../../services/personalSinDiagramaService";
+import { IPersonalSinDiagrama } from "../../interfaces/IPersonalSinDiagrama";
+import { defaultPersonal } from "../../utils/funciones";
 
 export default defineComponent({
-    props: ["idPersonal", "idDato", "idVia"],
+    props: ["idPersonal", "idDato", "idVia","idTarjeta"],
     data() {
         return {
             legajoPersonal: 0 as number,
             personales: [] as IPersonal[],
-            personal: {
-                legajo: 0,
-                apellido: "",
-                nombres: "",
-                turno: "",
-                franco: 0,
-                especialidad: "",
-                dotacion: "",
-                observaciones: "",
-                orden: 0,
-                conocimientos: {
-                    CML: false,
-                    CKD: false,
-                    RO: false,
-                    MPN: false,
-                    OL: false,
-                    LCI: false,
-                    ELEC: false,
-                },} as IPersonal,
+            personal: defaultPersonal() as IPersonal,
             datoPersonal: {} as IDatoPersonal,
             conocimientoVia: {} as IConocimientosVias,
+            personalSinDiagrama: {} as IPersonalSinDiagrama,
             days: [
                 "Domingo",
                 "Lunes",
@@ -689,6 +742,12 @@ export default defineComponent({
                     this.conocimientoVia._id ?
                     await updateConocimientoVia(this.conocimientoVia._id, this.conocimientoVia):
                     await createConocimientoVia(this.conocimientoVia)
+                }
+                if(this.personal.turno.toLowerCase().includes('ciclo')){
+                    this.personalSinDiagrama.legajo ? 
+                    await updatePersonalSinDiagrama(this.personalSinDiagrama.legajo,this.personalSinDiagrama):
+                    this.personalSinDiagrama.legajo = this.personal.legajo
+                    await createPersonalSinDiagrama(this.personalSinDiagrama)
                 }
 
                 // guardamos registro
@@ -783,11 +842,13 @@ export default defineComponent({
                 console.error(error);
             }
         },
-        formatFecha(fecha: Date): string {
-            const day = fecha.getDate().toString().padStart(2, "0");
-            const month = (fecha.getMonth() + 1).toString().padStart(2, "0");
-            const year = fecha.getFullYear();
-            return `${day}/${month}/${year}`;
+        async loadPersonalSinDiagrama(id: string) {
+            try {
+                const res = await getPersonalSinDiagrama(id);
+                this.personalSinDiagrama = res.data;                
+            } catch (error) {
+                console.error(error);
+            }
         },
         searchPersonalPorLegajo() {
             this.alerta = "";
@@ -815,9 +876,14 @@ export default defineComponent({
                 ? this.$route.params.idVia[0]
                 : this.$route.params.idVia;
 
+            const idTarjeta = Array.isArray(this.$route.params.idTarjeta)
+                ? this.$route.params.idTarjeta[0]
+                : this.$route.params.idTarjeta;
+                        
             this.loadPersonal(idPersonal);
             this.loadDatoPersonal(idDato);
             this.loadConocimientoVia(idVia);
+            this.loadPersonalSinDiagrama(idTarjeta);
         }else{
             this.titulo = "Cargar nuevo personal"
         }

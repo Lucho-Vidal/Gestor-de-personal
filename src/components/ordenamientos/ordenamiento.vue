@@ -26,16 +26,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="my-3">
-                                <input
-                                    class="col-3 gap rounded"
-                                    type="text"
-                                    placeholder="Buscar por apellido y/o nombre"
-                                    v-model="search"
-                                    v-on:keyup="filtrar()"
-                                />
-                            </div>
-                            <div class="my-3">
+                            <input
+                                class="col-3 gap rounded"
+                                type="text"
+                                placeholder="Buscar por apellido y/o nombre"
+                                v-model="search"
+                                v-on:keyup="filtrar()"
+                            />
+                            <div class="my-3 form-check form-switch">
                                 <h6>Solo las ordenes del dia:</h6>
                                 <label class="form-check-label mx-2">
                                     <input
@@ -48,7 +46,7 @@
                                     Solo hoy
                                 </label>
                             </div>
-                            <div class="my-3">
+                            <div class="my-3 ">
                                 <h6>Filtro por Especialidad:</h6>
                                 <label class="form-check-label mx-2">
                                     <input

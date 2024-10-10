@@ -7,6 +7,7 @@ import { createRoles } from "./libs/initialSetup";
 
 import personales from "./routers/personal.routes";
 import personalSinDiagrama from "./routers/personalSinDiagrama.routes";
+import tarjetaPersonalSinDiagrama from "./routers/tarjetaPersonalSinDiagrama.routes";
 import itinerario from "./routers/itinerario.routes";
 import novedades from "./routers/novedades.routes";
 import novedadesHome from "./routers/novedadesHome.routes";
@@ -42,6 +43,7 @@ app.use(cors(corsOptions));
 
 app.use("/api", personales);
 app.use("/api", personalSinDiagrama);
+app.use("/api", tarjetaPersonalSinDiagrama);
 app.use("/api", itinerario);
 app.use("/api", novedades);
 app.use("/api", novedadesHome);

@@ -2,8 +2,9 @@ import { CambioTurno } from "@/interfaces/ICambioTurno";
 import { Novedad, Remplazo } from "@/interfaces/INovedades";
 import { Ordenamiento } from "@/interfaces/IOrdenamientos";
 import { IPersonal } from "@/interfaces/IPersonal";
-import { IPersonalSinDiagrama, Jornada } from "@/interfaces/IPersonalSinDiagrama";
+import { IPersonalSinDiagrama } from "@/interfaces/IPersonalSinDiagrama";
 import { Registro } from "@/interfaces/IRegistro";
+import { ITarjetaPersonalSinDiagrama, Jornada } from "@/interfaces/ITarjetaPersonalSinDiagrama";
 import { ITurno, Vueltas } from "@/interfaces/ITurno";
 import { User } from "@/interfaces/IUser";
 import { Itinerario } from "@/interfaces/Itinerario";
@@ -13,6 +14,7 @@ import { getNovedades } from "@/services/novedadesService";
 import { getPersonal, getPersonales } from "@/services/personalService";
 import { getPersonalSinDiagrama } from "@/services/personalSinDiagramaService";
 import { createRegistro } from "@/services/registrosService";
+import {  getTarjetaPersonalSinDiagrama } from "@/services/tarjetaPersonalSinDiagramaService";
 import { getTurnos } from "@/services/turnosService";
 import { AxiosError } from "axios";
 import * as XLSX from 'xlsx';
@@ -569,6 +571,14 @@ export async function loadPersonalSinDiagrama(id: string) {
         console.error(error);
     }
 }
+export async function loadTarjetaPersonalSinDiagrama(id: string) {
+    try {
+        const res = await getTarjetaPersonalSinDiagrama(id);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
 export async function  loadNovedades() {
     try {
         const res = await getNovedades();
@@ -650,7 +660,21 @@ export function defaultPersonalSinDiagrama(): IPersonalSinDiagrama {
         HoraInicio: '',
         francoHasta: 0,
         HoraHasta: '',
-        meses: {},
+    };
+}
+export function defaultTarjetaPersonalSinDiagrama(): ITarjetaPersonalSinDiagrama {
+    return {
+        _id: '',
+        legajo: 0,
+        Ciclo: 0,
+        francoInicio: 0,
+        HoraInicio: '',
+        francoHasta: 0,
+        HoraHasta: '',
+        mes: {
+            mes: '',
+            days:{}
+        } 
     };
 }
 export function defaultJornada(): Jornada {
@@ -662,6 +686,7 @@ export function defaultJornada(): Jornada {
         tomo: '', 
         dejo: '', 
         totalHoras: '', 
+        dia_laboral: null,
         observaciones: '',
         editable: true,
         estilo: false, 

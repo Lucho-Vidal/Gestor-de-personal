@@ -151,8 +151,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                         </div>
                         <div class="m-3 d-flex justify-content-center">
                             <button
@@ -160,7 +158,8 @@
                                 @click="edit(
                                     personalIndexado[detalleLegajo]._id,
                                     datosPersonalesIndexados[detalleLegajo]?._id || '',
-                                    conocimientosViasIndexados[detalleLegajo]?._id ||''
+                                    conocimientosViasIndexados[detalleLegajo]?._id ||'',
+                                    personalSinDiagramaIndexados[detalleLegajo]?._id ||''
                                     )"
                                 >Editar personal</button>
                                 <button
@@ -231,86 +230,6 @@
                                         </label>
                                     </div>
                                 </div>
-                                <!-- <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="PC"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    PC
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="LLV"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    LLV
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="TY"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    TY
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="LP"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    LP
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="K5"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    K5
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="RE"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    RE
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="CÑ"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    CÑ
-                                </label>
-                                <label class="form-check-label mx-2">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value="AK"
-                                        v-model="checkboxDotacion"
-                                        @change="filtrarPersonales()"
-                                    />
-                                    AK
-                                </label> -->
                             </div>
                             <div class="my-3">
                                 <h6>Filtro por Especialidad:</h6>
@@ -438,7 +357,6 @@
                     v-for="(personal, index) in personalesFiltrados"
                     :key="index"
                     @dblclick="abrirModalDetalle(personal.legajo)"
-                    @click="viewDetail(personal)"
                 >
                     <tr>
                         <td class="col-1">{{ personal.legajo }}</td>
@@ -465,55 +383,6 @@
                             >
                         </td>
                     </tr>
-                    <!-- <tr v-if="personal.viewDetail && personal.conocimientos">
-                        <td colspan="12">
-                            <div class="row">
-                                <h6 class="col-12">Conocimientos:</h6>
-                                <p class="col-1">
-                                    {{
-                                        personal.conocimientos.CML === true
-                                            ? "CML"
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.CKD === true
-                                            ? "CKD"
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.RO === true
-                                            ? "RO "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.MPN === true
-                                            ? "MPN "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.OL === true
-                                            ? "OL "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.LCI === true
-                                            ? "LCI "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.ELEC === true
-                                            ? "ELEC "
-                                            : ""
-                                    }}
-                                    {{
-                                        personal.conocimientos.DUAL === true
-                                            ? "DUAL"
-                                            : ""
-                                    }}
-                                </p>
-                            </div>
-                        </td>
-                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -534,6 +403,8 @@ import { AxiosError } from "axios";
 import { createRegistro } from "../../services/registrosService";
 import { Registro } from "../../interfaces/IRegistro";
 import { obtenerDotaciones } from "../../utils/funciones";
+import { IPersonalSinDiagrama } from "../../interfaces/IPersonalSinDiagrama";
+import { getPersonalesSinDiagrama } from "../../services/personalSinDiagramaService";
 
 export default defineComponent({
     // props: ['idPersonal', 'idDato', 'idVia'],
@@ -543,21 +414,29 @@ export default defineComponent({
             personalesFiltrados: [] as IPersonal[],
             datosPersonales: [] as IDatoPersonal[],
             conocimientosVias: [] as IConocimientosVias[],
+            personalSinDiagrama: [] as IPersonalSinDiagrama[],
+            
             personalIndexado: {} as Record<number, IPersonal>,
             datosPersonalesIndexados: {} as Record<number, IDatoPersonal>,
             conocimientosViasIndexados: {} as Record<number, IConocimientosVias>,
+            personalSinDiagramaIndexados: [] as Record<number,IPersonalSinDiagrama>,
+            
             dotacionesPermitidas: [] as string[],
             dotacionesSeleccionadas: [] as string[],
+            
             detalleLegajo: 0 ,
             checkboxDotacion: [] as string[],
             checkboxEspecialidad: [] as string[],
             checkboxTurno: [] as string[],
             mostrarModalDetalle: false,
             mostrarModalSearch: false,
+            
             today: new Date(),
+            
             search: "" as string,
             searchTurno: "" as string,
             searchLegajo: null,
+            
             days: [
                 "Domingo",
                 "Lunes",
@@ -598,6 +477,15 @@ export default defineComponent({
                 this.conocimientosVias = res.data;
                 this.conocimientosViasIndexados = this.IndexarConocimientoVias(this.conocimientosVias);
                 
+            } catch (error) {
+                this.handleRequestError(error as AxiosError);
+            }
+        },
+        async loadPersonalSinDiagrama() {
+            try {
+                const res = await getPersonalesSinDiagrama();
+                this.personalSinDiagrama = res.data;
+                this.personalSinDiagramaIndexados = this.IndexarPersonalSinDiagrama(this.personalSinDiagrama);                
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -649,6 +537,15 @@ export default defineComponent({
                     return acumulador;
                 },
                 {} as Record<number, IConocimientosVias>
+            );
+        },
+        IndexarPersonalSinDiagrama(personalSinDiagrama: IPersonalSinDiagrama[]): Record<number, IPersonalSinDiagrama> {
+            return personalSinDiagrama.reduce(
+                (acumulador: Record<number, IPersonalSinDiagrama>, dato: IPersonalSinDiagrama) => {
+                    acumulador[dato.legajo] = dato;
+                    return acumulador;
+                },
+                {} as Record<number, IPersonalSinDiagrama>
             );
         },
         formatFecha(fecha: Date): string {
@@ -706,18 +603,8 @@ export default defineComponent({
             this.cerrarModal();
         },
         abrirModalDetalle(legajo:number) {
-
-            this.detalleLegajo = this.personalIndexado[legajo].legajo;
-            
+            this.detalleLegajo = legajo;
             this.mostrarModalDetalle = true;
-            
-        },
-        viewDetail(personal: IPersonal) {
-            if (personal.viewDetail) {
-                personal.viewDetail = false;
-            } else {
-                personal.viewDetail = true;
-            }
         },
         filtrarPersonales() {
             let cDotacion = [];
@@ -855,8 +742,8 @@ export default defineComponent({
                 this.personalesFiltrados = this.personales;
             }
         },
-        edit(idPersonal: string,idDato: string,idVia: string) {            
-            this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia } });
+        edit(idPersonal: string,idDato: string,idVia: string,idTarjeta:string) {   
+            this.$router.push({ name: 'editPersonal', params: { idPersonal: idPersonal, idDato: idDato, idVia: idVia, idTarjeta: idTarjeta } });
         },
     },
     created() {
@@ -864,12 +751,13 @@ export default defineComponent({
             this.loadPersonales();
             this.loadDatosPersonales();
             this.loadConocimientoVias();
+            this.loadPersonalSinDiagrama();
             newToken();
         } catch (error) {
             console.error(error);
         }
     },
-    name: "App",
+    name: "Personal",
     components: {},
 });
 </script>

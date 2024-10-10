@@ -1,14 +1,14 @@
-import Personal from "../models/personalSinDiagrama";
+import Tarjeta from "../models/tarjetaPersonalSinDiagrama";
 import mongoose from 'mongoose';
 
-export const getPersonalesSinDiagrama = async (req, res) => {
+export const getTarjetaPersonalesSinDiagrama = async (req, res) => {
     try {
         // Obtener todos los registros de la colección Personal
-        const personales = await Personal.find();
+        const tarjeta = await Tarjeta.find();
         
 
         // Responder con los registros obtenidos
-        res.json(personales);
+        res.json(tarjeta);
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la búsqueda
         console.error("Error al obtener los registros de Personal:", error);
@@ -16,37 +16,37 @@ export const getPersonalesSinDiagrama = async (req, res) => {
     }
 };
 
-export const getPersonalSinDiagrama = async (req, res) => {
+export const getTarjetaPersonalSinDiagrama = async (req, res) => {
     try {
         // Verificar si el ID es válido
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ error: "ID inválido" });
         }
         // Obtener un registro específico por ID
-        const personal = await Personal.findById(req.params.id);
+        const tarjeta = await Tarjeta.findById(req.params.id);
 
         // Verificar si se encontró el registro
-        if (!personal) {
+        if (!tarjeta) {
             // No se encontró el registro, responder con código 404
             return res.status(404).json({ error: "Registro no encontrado" });
         }
 
         // Responder con el registro encontrado
-        res.json(personal);
+        res.json(tarjeta);
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la búsqueda
-        console.error("Error al obtener el registro de Personal por ID:", error);
+        console.error("Error al obtener el registro de tarjeta por ID:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
-export const getPersonalSinDiagramaPorLegajoYMes = async (req, res) => {
+export const getTarjetaPersonalSinDiagramaPorLegajo = async (req, res) => {
     try {
         // Obtener legajo y mes de los parámetros de la consulta
-        const { legajo, mes } = req.query;
+        const { legajo } = req.query;
 
         // Validar que legajo y mes existan en la consulta
-        if (!legajo || !mes) {
-            return res.status(400).json({ error: 'Faltan parámetros legajo o mes' });
+        if (!legajo ) {
+            return res.status(400).json({ error: 'Falta parámetro legajo' });
         }
 
         // Convertir legajo a número para asegurar el tipo correcto
@@ -57,65 +57,65 @@ export const getPersonalSinDiagramaPorLegajoYMes = async (req, res) => {
             return res.status(400).json({ error: 'Legajo debe ser un número' });
         }
 
-        // Buscar en la base de datos por legajo y mes
-        const personal = await MesPersonal.findOne({ legajo: legajoNumber, mes });
+        // Buscar en la base de datos por legajo 
+        const tarjeta = await Tarjeta.findOne({ legajo: legajoNumber});
 
         // Verificar si se encontró algún registro
-        if (!personal) {
+        if (!tarjeta) {
             return res.status(404).json({ error: 'No se encontraron registros con los parámetros proporcionados' });
         }
 
         // Responder con el registro encontrado
-        res.json(personal);
+        res.json(tarjeta);
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la búsqueda
-        console.error("Error al obtener el registro de Personal por Legajo y Mes:", error);
+        console.error("Error al obtener el registro de Personal por Legajo:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
-export const createPersonalSinDiagrama = async (req, res) => {
+export const createTarjetaPersonalSinDiagrama = async (req, res) => {
     try {
-        const newPersonal = new Personal(req.body);
+        const newTarjeta = new Tarjeta(req.body);
 
-        await newPersonal.save();
+        await newTarjeta.save();
 
-        res.status(201).json(newPersonal);
+        res.status(201).json(newTarjeta);
     } catch (error) {
-        console.error("Error al crear PersonalSinDiagrama:", error);
+        console.error("Error al crear TarjetaPersonalSinDiagrama:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
 // Actualizar PersonalSinDiagrama por legajo y periodo
-export const updatePersonalSinDiagrama = async (req, res) => {
+export const updateTarjetaPersonalSinDiagrama = async (req, res) => {
     try {
         const { legajo } = req.params;
 
-        const updatedPersonal = await Personal.findOneAndUpdate(
+        const updatedTarjeta = await Tarjeta.findOneAndUpdate(
             { legajo  },
             req.body,
             { new: true }
         );
 
-        if (!updatedPersonal) {
+        if (!updatedTarjeta) {
             return res.status(404).json({ error: "Registro no encontrado" });
         }
 
-        res.json(updatedPersonal);
+        res.json(updatedTarjeta);
     } catch (error) {
-        console.error("Error al actualizar PersonalSinDiagrama:", error);
+        console.error("Error al actualizar TarjetaPersonalSinDiagrama:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 
-export const deletePersonalSinDiagramaById = async (req, res) => {
+export const deleteTarjetaPersonalSinDiagramaById = async (req, res) => {
     try {
         // Eliminar el registro específico por ID
-        const personal = await Personal.findByIdAndDelete(req.params.id);
+        const tarjeta = await Tarjeta.findByIdAndDelete(req.params.id);
 
         // Verificar si se encontró el registro
-        if (!personal) {
+        if (!tarjeta) {
             // No se encontró el registro, responder con código 404
             return res.status(404).json({ error: "Registro no encontrado" });
         }
@@ -124,7 +124,7 @@ export const deletePersonalSinDiagramaById = async (req, res) => {
         res.status(204).end();
     } catch (error) {
         // Manejar cualquier error que pueda ocurrir durante la eliminación
-        console.error("Error al eliminar el registro de Personal por ID:", error);
+        console.error("Error al eliminar el registro de TarjetaPersonal por ID:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
