@@ -77,7 +77,7 @@
                                 <div class="sb-nav-link-icon">
                                     <i class="fa-solid fa-database"></i>
                                 </div>
-                                Listado de personales
+                                Gestión de personal
                             </router-link>
                             <a
                                 class="nav-link collapsed"

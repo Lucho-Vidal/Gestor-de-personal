@@ -5,13 +5,13 @@ import { AxiosResponse } from "axios";
 export const getPersonalesSinDiagrama = async (): Promise<AxiosResponse<IPersonalSinDiagrama[]>> =>
     await axios.get("/PersonalSinDiagrama");
 
-export const getPersonalSinDiagrama = async (
-    id: string
-): Promise<AxiosResponse<IPersonalSinDiagrama>> => await axios.get(`/PersonalSinDiagrama/${id}`);
+export const getPersonalSinDiagrama = async (id: string): Promise<AxiosResponse<IPersonalSinDiagrama>> => 
+    await axios.get(`/PersonalSinDiagrama/${id}`);
 
-export const getPersonalSinDiagramaPorLegajoYMes = async (legajo: number, mes: string): Promise<AxiosResponse<IPersonalSinDiagrama>> => 
-    await axios.get(`/PersonalSinDiagramaPorMes?legajo=${legajo}&mes=${mes}`);
-
+export const getPersonalSinDiagramaPorLegajoYMes = async (legajo: number, mes: string): Promise<AxiosResponse<IPersonalSinDiagrama>> => {
+    const res = await axios.get(`/PersonalSinDiagramaPorMes?legajo=${legajo}&mes=${mes}`);
+    return res.data
+}
 
 export const createPersonalSinDiagrama = async (personal: IPersonalSinDiagrama): Promise<AxiosResponse> => {
     const res = await axios.post("/PersonalSinDiagrama", personal);

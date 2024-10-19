@@ -215,7 +215,7 @@ export default defineComponent({
                 vueltas: [
                     {
                         vuelta: 1,
-                        tren: 0,
+                        tren: '',
                         refer: "",
                         origen: "",
                         sale: "",
@@ -262,7 +262,7 @@ export default defineComponent({
         agregarVuelta() {
             this.newTurno.vueltas.push({
                 vuelta: this.newTurno.vueltas.length + 1,
-                tren: 0, // Valor inicial
+                tren: '', // Valor inicial
                 refer: "",
                 origen: "",
                 sale: "",

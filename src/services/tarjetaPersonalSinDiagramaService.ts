@@ -6,10 +6,10 @@ export const getTarjetaPersonalesSinDiagrama = async (): Promise<AxiosResponse<I
     await axios.get("/tarjetaPersonalSinDiagrama");
 
 export const getTarjetaPersonalSinDiagrama = async (id: string): Promise<AxiosResponse<ITarjetaPersonalSinDiagrama>> => 
-    await axios.get(`/tarjetaPersonalSinDiagrama/${id}`);
+    await axios.get(`/tarjetaPersonalSinDiagramaById/${id}`);
 
-export const getTarjetaPersonalSinDiagramaPorLegajo = async (legajo: number, mes: string): Promise<AxiosResponse<ITarjetaPersonalSinDiagrama>> => 
-    await axios.get(`/tarjetaPersonalSinDiagramaPorMes?legajo=${legajo}&mes=${mes}`);
+export const getTarjetaPersonalSinDiagramaPorLegajoYMes = async (legajo: number, mes: string): Promise<AxiosResponse<ITarjetaPersonalSinDiagrama>> => 
+    await axios.get(`/tarjetaPersonalSinDiagramaPorLegajoYMes?legajo=${legajo}&mes=${mes}`);
 
 
 export const createTarjetaPersonalSinDiagrama = async (personal: ITarjetaPersonalSinDiagrama): Promise<AxiosResponse> => {
@@ -17,8 +17,8 @@ export const createTarjetaPersonalSinDiagrama = async (personal: ITarjetaPersona
     return res;
 };
 
-export const updateTarjetaPersonalSinDiagrama = async (legajo: number,newPersonal: ITarjetaPersonalSinDiagrama): Promise<AxiosResponse<ITarjetaPersonalSinDiagrama>> => {
-    return await axios.put(`/tarjetaPersonalSinDiagrama/${legajo}`, newPersonal)
+export const updateTarjetaPersonalSinDiagrama = async (id: string,newPersonal: ITarjetaPersonalSinDiagrama): Promise<AxiosResponse<ITarjetaPersonalSinDiagrama>> => {
+    return await axios.put(`/tarjetaPersonalSinDiagrama/${id}`, newPersonal)
 }
 
 export const deleteTarjetaPersonalSinDiagrama = async (id: string): Promise<AxiosResponse> =>

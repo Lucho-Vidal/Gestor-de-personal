@@ -5,7 +5,8 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "types": ["node", "vue", "./global.d.ts"],
+    "types": ["node", "vue", "./global.d.ts","jest"],
+    "esModuleInterop": true,  // Esto es útil si importas módulos ES.
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -25,7 +26,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*"],
   "exclude": [
     "node_modules"
   ],

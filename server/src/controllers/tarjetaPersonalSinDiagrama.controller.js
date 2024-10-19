@@ -16,7 +16,7 @@ export const getTarjetaPersonalesSinDiagrama = async (req, res) => {
     }
 };
 
-export const getTarjetaPersonalSinDiagrama = async (req, res) => {
+export const getTarjetaPersonalSinDiagramaById = async (req, res) => {
     try {
         // Verificar si el ID es válido
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -24,7 +24,7 @@ export const getTarjetaPersonalSinDiagrama = async (req, res) => {
         }
         // Obtener un registro específico por ID
         const tarjeta = await Tarjeta.findById(req.params.id);
-
+        
         // Verificar si se encontró el registro
         if (!tarjeta) {
             // No se encontró el registro, responder con código 404
@@ -74,8 +74,47 @@ export const getTarjetaPersonalSinDiagramaPorLegajo = async (req, res) => {
     }
 };
 
+export const getTarjetaPersonalSinDiagramaPorLegajoYMes = async (req, res) => {
+    try {
+        // Obtener legajo y mes de los parámetros de la ruta
+        const { legajo, mes } = req.query;
+
+        // Validar que legajo y mes existan en la consulta
+        if (!legajo || !mes) {
+            return res.status(400).json({ error: 'Faltan parámetros legajo o mes' });
+        }
+
+        // Convertir legajo a número para asegurar el tipo correcto
+        const legajoNumber = Number(legajo);
+
+        // Verificar si la conversión a número fue exitosa
+        if (isNaN(legajoNumber)) {
+            return res.status(400).json({ error: 'Legajo debe ser un número' });
+        }
+
+        // Buscar en la base de datos por legajo y mes
+        const tarjeta = await Tarjeta.findOne({ legajo: legajoNumber, mes });
+
+        // Verificar si se encontró algún registro
+        if (!tarjeta) {
+            return res.status(404).json({ error: 'No se encontraron registros con los parámetros proporcionados' });
+        }
+
+        // Responder con el registro encontrado
+        res.json(tarjeta);
+    } catch (error) {
+        console.error("Error al obtener el registro de Personal por Legajo y Mes:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+
 export const createTarjetaPersonalSinDiagrama = async (req, res) => {
     try {
+         // Si el _id está vacío, genera uno nuevo
+        if (!req.body._id || req.body._id === '') {
+            req.body._id = new mongoose.Types.ObjectId();
+        }
         const newTarjeta = new Tarjeta(req.body);
 
         await newTarjeta.save();
@@ -90,10 +129,10 @@ export const createTarjetaPersonalSinDiagrama = async (req, res) => {
 // Actualizar PersonalSinDiagrama por legajo y periodo
 export const updateTarjetaPersonalSinDiagrama = async (req, res) => {
     try {
-        const { legajo } = req.params;
-
-        const updatedTarjeta = await Tarjeta.findOneAndUpdate(
-            { legajo  },
+        const { id } = req.params;
+        
+        const updatedTarjeta = await Tarjeta.findByIdAndUpdate(
+            id  ,
             req.body,
             { new: true }
         );

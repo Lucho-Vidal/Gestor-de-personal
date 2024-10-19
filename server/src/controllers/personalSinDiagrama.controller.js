@@ -39,40 +39,7 @@ export const getPersonalSinDiagrama = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
-export const getPersonalSinDiagramaPorLegajoYMes = async (req, res) => {
-    try {
-        // Obtener legajo y mes de los parámetros de la consulta
-        const { legajo, mes } = req.query;
 
-        // Validar que legajo y mes existan en la consulta
-        if (!legajo || !mes) {
-            return res.status(400).json({ error: 'Faltan parámetros legajo o mes' });
-        }
-
-        // Convertir legajo a número para asegurar el tipo correcto
-        const legajoNumber = Number(legajo);
-
-        // Verificar si la conversión a número fue exitosa
-        if (isNaN(legajoNumber)) {
-            return res.status(400).json({ error: 'Legajo debe ser un número' });
-        }
-
-        // Buscar en la base de datos por legajo y mes
-        const personal = await MesPersonal.findOne({ legajo: legajoNumber, mes });
-
-        // Verificar si se encontró algún registro
-        if (!personal) {
-            return res.status(404).json({ error: 'No se encontraron registros con los parámetros proporcionados' });
-        }
-
-        // Responder con el registro encontrado
-        res.json(personal);
-    } catch (error) {
-        // Manejar cualquier error que pueda ocurrir durante la búsqueda
-        console.error("Error al obtener el registro de Personal por Legajo y Mes:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
-    }
-};
 
 export const createPersonalSinDiagrama = async (req, res) => {
     try {

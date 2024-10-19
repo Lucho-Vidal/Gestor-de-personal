@@ -171,7 +171,7 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: "/TarjetaPersonalSinDiagrama/:idPersonal?/:idPersonalSinDiagrama?/:idTarjetaPersonalSinDiagrama?",
+        path: "/TarjetaPersonalSinDiagrama/:idPersonal?/:idPersonalSinDiagrama?",
         name: "TarjetaPersonalSinDiagrama",
         props: true,
         meta: { title: "GNPA - Servicio Irregular" },

@@ -6,7 +6,6 @@ const router = Router();
 
 router.get("/PersonalSinDiagrama", [authJwt.verifyToken], personalSinDiagramaCtrl.getPersonalesSinDiagrama);
 router.get("/PersonalSinDiagrama/:id", [authJwt.verifyToken], personalSinDiagramaCtrl.getPersonalSinDiagrama);
-router.get("/PersonalSinDiagramaPorPeriodo/:legajo/:periodo", [authJwt.verifyToken], personalSinDiagramaCtrl.getPersonalSinDiagramaPorLegajoYMes);
 router.post(
     "/PersonalSinDiagrama",
     [authJwt.verifyToken, authJwt.isModerator],

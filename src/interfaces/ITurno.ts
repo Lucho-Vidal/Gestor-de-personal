@@ -15,7 +15,7 @@ export interface ITurno {
 
 export interface Vueltas {
     vuelta: number;
-    tren: number|null;
+    tren: string;
     refer: string;
     origen: string;
     sale: string;

@@ -14,7 +14,7 @@ import { getNovedades } from "@/services/novedadesService";
 import { getPersonal, getPersonales } from "@/services/personalService";
 import { getPersonalSinDiagrama } from "@/services/personalSinDiagramaService";
 import { createRegistro } from "@/services/registrosService";
-import {  getTarjetaPersonalSinDiagrama } from "@/services/tarjetaPersonalSinDiagramaService";
+import { getTarjetaPersonalSinDiagrama, getTarjetaPersonalSinDiagramaPorLegajoYMes } from "@/services/tarjetaPersonalSinDiagramaService";
 import { getTurnos } from "@/services/turnosService";
 import { AxiosError } from "axios";
 import * as XLSX from 'xlsx';
@@ -94,7 +94,36 @@ export function newDate(hora: string, incrementarDia: boolean = false): Date|nul
     }
     return date;
 }
-
+/**
+ * Calcula la diferencia entre dos horas en formato 'HH:mm'.
+ * 
+ * @param {string} hora1 - La primera hora en formato 'HH:mm' o 'HH:mm:ss'. 
+ * Debe estar en un formato que pueda ser interpretado por el objeto Date.
+ * 
+ * @param {string} hora2 - La segunda hora en formato 'HH:mm' o 'HH:mm:ss'.
+ * Debe estar en un formato que pueda ser interpretado por el objeto Date.
+ * 
+ * @returns {string} La diferencia entre las dos horas en formato 'HH:mm'.
+ * Si la diferencia es negativa (es decir, hora2 es anterior a hora1),
+ * se asume que hora2 corresponde al día siguiente y se ajusta en consecuencia.
+ * Si alguna de las horas no es válida, se devuelve una cadena vacía.
+ * 
+ * @example
+ * // Devuelve '02:30' si hora1 es '12:00' y hora2 es '14:30'
+ * diferenciaHoras('12:00', '14:30');
+ * 
+ * @example
+ * // Devuelve '01:30' si hora1 es '23:00' y hora2 es '00:30' (del día siguiente)
+ * diferenciaHoras('23:00', '00:30');
+ * 
+ * @example
+ * // Devuelve '' si la hora es inválida
+ * diferenciaHoras('invalid', '14:30'); // Devuelve ''
+ * 
+ * @example
+ * // Devuelve '' si la hora es inválida
+ * diferenciaHoras('12:00', 'invalid'); // Devuelve ''
+ */
 export function diferenciaHoras(hora1: string, hora2: string): string {
 
     // Crear las fechas
@@ -124,6 +153,52 @@ export function diferenciaHoras(hora1: string, hora2: string): string {
     const minutosStr = minutos.toString().padStart(2, '0');
     
     return `${horasStr}:${minutosStr}`;
+}
+/**
+ * Calcula y actualiza el total de horas en cada día a partir de los valores 'tomo' y 'dejo'.
+ * Reinicia el conteo total cuando 'tomo' es igual a 'DH'.
+ *
+ * @param {Record<string, any>} dias - Un objeto que representa los días.
+ * @returns {Record<string, any>} El objeto original con las propiedades 'totalHoras' actualizadas.
+ */
+export function calcularTotalHoras(dias: Record<string, any>): Record<string, any> {
+    let totalMinutosAcumulados = 0; // Total acumulado de minutos
+    let reiniciar = false; // Indicador para reiniciar el conteo
+
+    // Recorre cada día en el objeto dias
+    for (const dia in dias) {
+        const jornada = dias[dia];
+
+        // Si 'tomo' es 'DH', reiniciar el total acumulado
+        if (jornada.tomo === 'DH') {
+            reiniciar = true; // Activar el reinicio
+            jornada.totalHoras = ''; // Reiniciar el totalHoras
+            continue; // Saltar el cálculo para este día
+        }
+        
+        // Si 'tomo' no es 'DH', calcular la diferencia de horas
+        if (!reiniciar) {
+            const horas = diferenciaHoras(jornada.tomo, jornada.dejo);
+            if (horas) {
+                const [horasHH, minutosMM] = horas.split(':').map(Number); // Descomponer en horas y minutos
+                const minutosTotales = horasHH * 60 + minutosMM; // Convertir a minutos
+                totalMinutosAcumulados += minutosTotales; // Sumar a total acumulado
+            }
+        }
+
+        // Actualizar totalHoras en formato 'HH:mm'
+        const horasTotales = Math.floor(totalMinutosAcumulados / 60); // Obtener horas completas
+        const minutosRestantes = totalMinutosAcumulados % 60; // Obtener minutos restantes
+
+        // Formatear a dos dígitos
+        const horasStr = horasTotales.toString().padStart(2, '0');
+        const minutosStr = minutosRestantes.toString().padStart(2, '0');
+
+        // Asignar el valor formateado a totalHoras
+        jornada.totalHoras = `${horasStr}:${minutosStr}`;
+    }
+
+    return dias; // Retornar el objeto original con totalHoras actualizadas
 }
 export function sumarHoras(hora: string, cantidadHoras: number): string {
     // Función auxiliar para crear una fecha con la hora proporcionada
@@ -306,7 +381,7 @@ export function filtrarPorTurno(itinerario: string,listaTurnos: ITurno[],circula
     });
     return turnos;
 }
-export function filtroTrenes(itinerario: string,listaTurnos: ITurno[],circularSeleccionada: string[],tren: number) {
+export function filtroTrenes(itinerario: string,listaTurnos: ITurno[],circularSeleccionada: string[],tren: string) {
     /* Este método buscar y filtra en el array turno el tren que se desea buscar.
     guarda en el array indFiltrado el resultado (los turnos que viajan en el tren). */
     const turnosEnTren: ITurno[] = [];
@@ -328,7 +403,7 @@ export function filtroItinerario(itinerario: string,listaItinerario: Itinerario[
     las guarda en el array itFiltrado  */
     const itFiltrados: Itinerario[] = listaItinerario.filter(
         (it: Itinerario) => {
-            return it.tren == tren && it.itinerario == itinerario;
+            return it.tren === tren && it.itinerario == itinerario;
         }
     );
     let horarios: Itinerario = {
@@ -579,6 +654,14 @@ export async function loadTarjetaPersonalSinDiagrama(id: string) {
         console.error(error);
     }
 }
+export async function loadTarjetaPersonalSinDiagramaPorLegajoYMes(legajo:number,mes: string) {
+    try {
+        const res = await getTarjetaPersonalSinDiagramaPorLegajoYMes(legajo,mes);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
 export async function  loadNovedades() {
     try {
         const res = await getNovedades();
@@ -671,10 +754,8 @@ export function defaultTarjetaPersonalSinDiagrama(): ITarjetaPersonalSinDiagrama
         HoraInicio: '',
         francoHasta: 0,
         HoraHasta: '',
-        mes: {
-            mes: '',
-            days:{}
-        } 
+        mes: '',
+        days:{}
     };
 }
 export function defaultJornada(): Jornada {

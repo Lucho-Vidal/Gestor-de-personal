@@ -5,8 +5,10 @@ import * as personalSinDiagramaCtrl from "../controllers/tarjetaPersonalSinDiagr
 const router = Router();
 
 router.get("/tarjetaPersonalSinDiagrama", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalesSinDiagrama);
-router.get("/tarjetaPersonalSinDiagrama/:id", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalSinDiagrama);
-router.get("/tarjetaPersonalSinDiagramaPorPeriodo/:legajo/:periodo", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalSinDiagramaPorLegajo);
+router.get("/tarjetaPersonalSinDiagramaById/:id", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalSinDiagramaById);
+// router.get("/tarjetaPersonalSinDiagramaPorLegajoYMes/:legajo/:mes", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalSinDiagramaPorLegajoYMes);
+router.get("/tarjetaPersonalSinDiagramaPorLegajoYMes", [authJwt.verifyToken], personalSinDiagramaCtrl.getTarjetaPersonalSinDiagramaPorLegajoYMes);
+
 router.post(
     "/tarjetaPersonalSinDiagrama",
     [authJwt.verifyToken, authJwt.isModerator],
@@ -14,7 +16,7 @@ router.post(
 );
 
 router.put(
-    "/tarjetaPersonalSinDiagrama/:legajo",
+    "/tarjetaPersonalSinDiagrama/:id",
     [authJwt.verifyToken, authJwt.isModerator],
     personalSinDiagramaCtrl.updateTarjetaPersonalSinDiagrama
 );

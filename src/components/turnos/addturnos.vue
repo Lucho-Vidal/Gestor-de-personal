@@ -85,7 +85,7 @@
                     <h2 class="d-flex justify-content-center m-3">
                         Cargar turnos
                     </h2>
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-end">
                         <button class="btn btn-primary d-flex end mx-3" @click="enviarTurnos()">Guardar turnos</button>
                         <router-link class="btn btn-danger d-flex end" to="/turnos">Cancelar</router-link>
                     </div>
@@ -103,7 +103,7 @@
                                 <th class="col-1" colspan="1">Itinerario</th>
                                 <th class="col-1" colspan="1">Circular</th>
                                 <th class="col-1" colspan="1">Dotacion</th>
-                                <th class="col-1" colspan="1"></th>
+                                <th class="col-1" colspan="1">Especialidad</th>
                                 <th class="col-1" colspan="1">Toma</th>
                                 <th class="col-1" colspan="1">Deja</th>
                                 <th class="col-1" colspan="1">Orden</th>
@@ -114,14 +114,41 @@
                             @dblclick="viewDetail(turno)">
                             <tr class="Small shadow">
                                 <td class="col-1">{{ index + 1 }}</td>
-                                <td class="col-1">{{ turno.turno }}</td>
-                                <td class="col-1">{{ turno.itinerario }}</td>
-                                <td class="col-1">{{ turno.circular }}</td>
-                                <td class="col-1">{{ turno.dotacion }}</td>
-                                <td class="col-1">{{ turno.personal }}</td>
-                                <td class="col-1">{{ turno.toma }}</td>
-                                <td class="col-1">{{ turno.deja }}</td>
-                                <td class="col-1"> <input type="checkbox" name="orden" id="orden" v-model="turno.ordenes"></td>
+                                <td class="col-1"><input class="form-control" type="text" v-model="turno.turno"></td>
+                                <td class="col-1">
+                                    <select class="form-control" v-model="turno.itinerario" name="Itinerario" id="Itinerario">
+                                        <option value="H">Hábil</option>
+                                        <option value="S">Sábado</option>
+                                        <option value="D">Domingo</option>
+                                    </select>
+                                </td>
+                                <td class="col-1"><input class="form-control" type="text" v-model="turno.circular"></td>
+                                <td class="col-1"><input class="form-control" type="text" v-model="turno.dotacion"></td>
+                                <td class="col-1">
+                                    <select
+                                        name="especialidad"
+                                        id="especialidad"
+                                        class="form-control mb-3"
+                                        v-model="turno.especialidad"
+                                        required
+                                    >
+                                        <option value="Conductor electrico">
+                                            Conductor Eléctrico
+                                        </option>
+                                        <option value="Conductor diesel">
+                                            Conductor Diesel
+                                        </option>
+                                        <option value="Guardatren electrico">
+                                            GuardaTren Eléctrico
+                                        </option>
+                                        <option value="Guardatren diesel">
+                                            GuardaTren Diesel
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="col-1"><input class="form-control" type="text" v-model="turno.toma"></td>
+                                <td class="col-1"><input class="form-control" type="text" v-model="turno.deja"></td>
+                                <td class="col-1"><input type="checkbox" name="orden" id="orden" v-model="turno.ordenes"></td>
                                 <td class="col-1">
                                     <i class="material-icons cursor-hand rojo"
                                         @click="deleteTurno(index)">delete_forever</i>
@@ -140,16 +167,16 @@
                                 <th></th>
                             </tr>
                             
-                            <tr style="margin-bottom: 10px" class="custom-orange" v-for="(vuelta, index) in turno.vueltas" :key="index">
+                            <tr class="custom-orange" v-for="(vuelta, index) in turno.vueltas" :key="index">
                                 <td colspan="1" v-if="turno.viewDetail"></td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.vuelta }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.refer }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.tren }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.origen }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.sale }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.destino }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.llega }}</td>
-                                <td colspan="1" v-if="turno.viewDetail">{{ vuelta.observaciones }}</td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.vuelta"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.refer"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.tren"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.origen"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.sale"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.destino"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.llega"></td>
+                                <td colspan="1" v-if="turno.viewDetail"><input class="form-control" type="text" v-model="vuelta.observaciones"></td>
                                 <td colspan="1" v-if="turno.viewDetail"></td>
                             </tr>
                         </tbody>
@@ -296,7 +323,6 @@ export default defineComponent({
                                     turno = turno.replace(" DH","")
                                 }
 
-                                //TODO darle color a la celda  el turno al desplegar
                                 if(validarDotacion){
                                     if(turno[0] === '1') dotacion = 'RE'
                                     else if(turno[0] === '2') dotacion = 'TY'
@@ -309,7 +335,8 @@ export default defineComponent({
                                     else if(turno[0] === '7' && turno[1] !== '9') dotacion = 'LLV'
                                     else if(turno[0] === '8' || turno[0] === '9' || turno[0] === 'P' ){
                                         dotacion = prompt(
-`El sistema no puede reconocer la dotacion a la que pertenece el turno ${turno}.\nPor favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK`,
+                                                `El sistema no puede reconocer la dotacion a la que pertenece el turno ${turno}.\n
+                                                Por favor ingrese la correspondiente entre: PC, LLV, TY, LP, OA, K5, RE, CÑ, AK`,
                                             dotacion)||'-'
                                     }
                                 }
@@ -368,7 +395,7 @@ export default defineComponent({
                                     const vuelta: Vueltas = {
                                         vuelta: numVuelta, 
                                         refer: valorA,
-                                        tren: Number(sheet[`B${row}`]?.w) || null,
+                                        tren: sheet[`B${row}`]?.w || '',
                                         origen: sheet[`C${row}`]?.w || '',
                                         sale: sheet[`D${row}`]?.w || '',
                                         destino: sheet[`E${row}`]?.w || '',
@@ -444,7 +471,7 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
 }
 .custom-orange{
     background-color: #fd7d1485;

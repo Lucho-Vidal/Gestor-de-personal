@@ -1,4 +1,4 @@
-import { Schema, mongoose } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 // Definir el esquema de Jornada
 const JornadaSchema = new Schema({
@@ -9,10 +9,12 @@ const JornadaSchema = new Schema({
   tomo: { type: String },
   dejo: { type: String },
   totalHoras: { type: String },
+  dia_laboral: { type: Number, default: null },
   observaciones: { type: String },
-  editable: { type: Boolean },
+  editable: { type: Boolean, default: true },
+  estilo: { type: Boolean, default: false },
   nroNovedad: { type: Number, default: null }
-});
+}, { _id: false }); // No generar un _id para cada Jornada
 
 // Definir el esquema de Mes
 const MesSchema = new Schema({
@@ -27,7 +29,6 @@ const MesSchema = new Schema({
 });
 
 // Crear el modelo basado en el esquema
-const MesPersonal = mongoose.model('tarjetaPersonalSinDiagrama', MesSchema);
+const MesPersonal = model('tarjetaPersonalSinDiagrama', MesSchema);
 
-module.exports = MesPersonal;
-
+export default MesPersonal;

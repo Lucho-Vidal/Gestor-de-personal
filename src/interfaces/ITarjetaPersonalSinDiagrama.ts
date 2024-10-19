@@ -1,19 +1,14 @@
-export interface Mes {
-  mes: string; // El mes (e.g., '2024-08')
-  days: {
-    [key: string]: Jornada; // Permite acceder a los días del mes usando una cadena como clave
-  };
-}
-
 export interface ITarjetaPersonalSinDiagrama {
   _id: string;
+  mes: string;
   legajo: number;
   Ciclo: number;
   francoInicio: number;
   HoraInicio: string;
   francoHasta: number;
   HoraHasta: string;
-  mes: Mes; // Un solo mes por documento
+  // mes: Mes; // Un solo mes por documento
+  days: { [key: string]: Jornada; }
 }
 
 export interface Jornada {

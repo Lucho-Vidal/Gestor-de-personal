@@ -89,8 +89,7 @@
                         <td class="col-1">{{ turno.circular }}</td>
                         <td class="col-1">{{ turno.dotacion }}</td>
                         <td class="col-1">{{ turno.especialidad }}</td>
-                        <td class="col-1">
-                            {{ turno.ordenes ? "Orden" : "" }}
+                        <td class="col-1">{{ turno.ordenes ? "Orden" : "" }}
                         </td>
                         <td class="col-1">{{ turno.toma }}</td>
                         <td class="col-1">{{ turno.deja }}</td>
@@ -109,59 +108,31 @@
                             >
                         </td>
                     </tr>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Vuelta
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Referencia
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Tren
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Origen
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Sale
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Destino
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Llega
-                    </th>
-                    <th class="col-1" colspan="1" v-if="turno.viewDetail">
-                        Observaciones
-                    </th>
+                        <tr class="custom-orange" v-if="turno.viewDetail">
+                            <th></th>
+                            <th class="col-1" colspan="1">Vuelta</th>
+                            <th class="col-1" colspan="1">Referencia</th>
+                            <th class="col-1" colspan="1">Tren</th>
+                            <th class="col-1" colspan="1">Origen</th>
+                            <th class="col-1" colspan="1">Sale</th>
+                            <th class="col-1" colspan="1">Destino</th>
+                            <th class="col-1" colspan="1">Llega</th>
+                            <th class="col-1" colspan="1">Observaciones</th>
+                        </tr>
                     <tr
-                        style="margin-bottom: 10px;"
+                        class="custom-orange"
                         v-for="(vuelta, index) in turno.vueltas"
                         :key="index"
                     >
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.vuelta }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.refer }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.tren }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.origen }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.sale }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.destino }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.llega }}
-                        </td>
-                        <td colspan="1" v-if="turno.viewDetail">
-                            {{ vuelta.observaciones }}
-                        </td>
+                        <td  v-if="turno.viewDetail"></td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.vuelta }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.refer }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.tren }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.origen }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.sale }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.destino }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.llega }}</td>
+                        <td colspan="1" v-if="turno.viewDetail">{{ vuelta.observaciones }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -270,7 +241,10 @@ export default defineComponent({
 </script>
 <style>
 main {
-    min-height: 81.6vh;
+    margin-top: 5rem;
+}
+.custom-orange{
+    background-color: #fd7d1485;
 }
 
 .hidden-row {

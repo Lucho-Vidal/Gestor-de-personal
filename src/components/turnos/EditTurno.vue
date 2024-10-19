@@ -12,8 +12,8 @@
 
             <form @submit.prevent="upTurno()">
                 <div class="justify-content-between row">
-                    <div class="col-2">
-                        <label for="legajo"></label>
+                    
+                    <label for="turno" class="col-1">
                         Turno
                         <input
                             class="form-control mb-3"
@@ -24,25 +24,45 @@
                             required
                             v-model="newTurno.turno"
                         />
-                    </div>
-                    <div class="col-2">
-                        <label for="itinerario">
-                            Itinerario
-                            <select
-                                name="itinerario"
-                                id="itinerario"
+                    </label>
+                    <label for="especialidad" class="col-2">
+                        Especialidad
+                        <select
+                                name="especialidad"
+                                id="especialidad"
                                 class="form-control mb-3"
+                                v-model="newTurno.especialidad"
                                 required
-                                v-model="newTurno.itinerario"
                             >
-                                <option value="H">Hábil</option>
-                                <option value="S">Sábado</option>
-                                <option value="D">Domingo</option>
+                                <option value="Conductor electrico">
+                                    Conductor Eléctrico
+                                </option>
+                                <option value="Conductor diesel">
+                                    Conductor Diesel
+                                </option>
+                                <option value="Guardatren electrico">
+                                    GuardaTren Eléctrico
+                                </option>
+                                <option value="Guardatren diesel">
+                                    GuardaTren Diesel
+                                </option>
                             </select>
-                        </label>
-                    </div>
-                    <div class="col-2">
-                        <label for="nombres"></label>
+                    </label>
+                    <label for="itinerario" class="col-2">
+                        Itinerario
+                        <select
+                            name="itinerario"
+                            id="itinerario"
+                            class="form-control mb-3"
+                            required
+                            v-model="newTurno.itinerario"
+                        >
+                            <option value="H">Hábil</option>
+                            <option value="S">Sábado</option>
+                            <option value="D">Domingo</option>
+                        </select>
+                    </label>
+                    <label for="nombres" class="col-2">
                         Circular
                         <input
                             class="form-control mb-3"
@@ -51,9 +71,8 @@
                             name="nombres"
                             v-model="newTurno.circular"
                         />
-                    </div>
-                    <div class="col-2">
-                        <label for="nombres"></label>
+                    </label>
+                    <label for="nombres" class="col-1">
                         Toma
                         <input
                             class="form-control mb-3"
@@ -62,9 +81,8 @@
                             name="nombres"
                             v-model="newTurno.toma"
                         />
-                    </div>
-                    <div class="col-2">
-                        <label for="nombres"></label>
+                    </label>
+                    <label for="nombres" class="col-1">
                         Deja
                         <input
                             class="form-control mb-3"
@@ -73,17 +91,17 @@
                             name="nombres"
                             v-model="newTurno.deja"
                         />
-                    </div>
-                    <div class="col-2">
-                        <label for="ordenes">
-                            Ordenes
-                            <input
-                            type="checkbox"
-                            v-model="newTurno.ordenes"
-                            />
-                        </label>
-                    </div>
+                    </label>
+                    <label for="ordenes" class="form-check form-switch col-2 mt-4 ">
+                        Ordenes
+                        <input
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model="newTurno.ordenes"
+                        />
+                    </label>
                 </div>
+                <hr>
                 <table>
                     <thead>
                         <tr>
@@ -181,7 +199,7 @@
                                     v-model="vuelta.observaciones"
                                 />
                             </td>
-                            <td class="col-1 px-5">
+                            <td class="col-1 px-5 ">
                                 <i
                                     class="fa-solid fa-circle-minus"
                                     @click="eliminarVuelta(index)"
@@ -190,10 +208,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <button class="btn btn-primary col-1 m-2">Guardar</button>
-                <a class="btn btn-secondary col-1 m-2" @click="cerrar()"
-                    >Cerrar</a
-                >
+                <hr>
+                <div class="d-flex justify-content-end mx-5">
+                    <button class="btn btn-primary col-1 m-2">Guardar</button>
+                    <button class="btn btn-secondary col-1 m-2" @click="cerrar()">Cerrar</button>
+                </div>
             </form>
         </main>
 </template>
@@ -206,33 +225,13 @@ import {  getTurno, updateTurno } from "../../services/turnosService";
 import { Registro } from "../../interfaces/IRegistro";
 import { createRegistro } from "../../services/registrosService";
 import { AxiosError } from "axios";
+import { defaultTurnos } from "../../utils/funciones";
 
 export default defineComponent({
     data() {
         return {
             id:"",
-            newTurno: {
-                _id: "",
-                turno: "",
-                itinerario: "",
-                circular: "",
-                personal: "",
-                toma: "",
-                deja: "",
-                viewDetail: false,
-                vueltas: [
-                    {
-                        vuelta: 1,
-                        tren: 0,
-                        refer: "",
-                        origen: "",
-                        sale: "",
-                        destino: "",
-                        llega: "",
-                        observaciones: "",
-                    },
-                ],
-            } as ITurno,
+            newTurno: defaultTurnos() as ITurno,
             today: new Date(),
             alerta: "" as string,
         };
@@ -278,7 +277,7 @@ export default defineComponent({
         agregarVuelta() {
             this.newTurno.vueltas.push({
                 vuelta: this.newTurno.vueltas.length + 1,
-                tren: 0, // Valor inicial
+                tren: "", // Valor inicial
                 refer: "",
                 origen: "",
                 sale: "",

@@ -566,9 +566,7 @@ export default defineComponent({
                 let accion = ""
                 // Crear la novedad
                 if (this.$route.params.id && typeof this.$route.params.id === "string") {
-
                     accion = "Edito"
-                    console.log(this.novedad._id);
                     await updateNovedad(this.novedad._id, this.novedad);
                 } else {
                     this.ultimoId++;
@@ -578,6 +576,14 @@ export default defineComponent({
                     this.novedad.novedadInactiva = false;
                     accion = "Creo"
                     await createNovedad(this.novedad);
+                }
+                if(this.novedad.turno.toLowerCase().includes('ciclo')){
+                    //TODO guarda en la tarjeta correspondiente
+                    
+                    console.error('TODO guardar en la tarjeta correspondiente');
+                }
+                if(this.novedad.remplazo.length > 0){
+                    console.error('TODO guardar en la tarjeta correspondiente');
                 }
 
                 // guardamos registro
@@ -590,7 +596,7 @@ export default defineComponent({
                 await createRegistro(registro);
 
                 // Redireccionar
-                this.goBack()
+                // this.goBack()
             } catch (error) {
                 this.handleRequestError(error as AxiosError);
             }
@@ -717,7 +723,6 @@ export default defineComponent({
         },
         esInicioRelevoMayorIgualFechaBaja() {
             if (this.novedad.remplazo !== undefined && this.novedad.remplazo.length > 0) {
-                console.log(this.novedad.remplazo);
                 
                 if (this.esFechaMayor(
                         this.novedad.fechaBaja,
